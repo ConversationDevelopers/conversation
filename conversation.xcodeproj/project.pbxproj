@@ -15,6 +15,9 @@
 		DA1A4ACB19E1770700565763 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA1A4ACA19E1770700565763 /* Images.xcassets */; };
 		DA1A4ACE19E1770700565763 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = DA1A4ACC19E1770700565763 /* LaunchScreen.xib */; };
 		DA1A4ADA19E1770700565763 /* conversationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AD919E1770700565763 /* conversationTests.m */; };
+		DA1A4AE719E178CF00565763 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AE619E178CF00565763 /* AsyncSocket.m */; };
+		DA1A4AEA19E17D6800565763 /* IRCConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AE919E17D6800565763 /* IRCConnection.m */; };
+		DA1A4AF019E181C400565763 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1A4AEF19E181C400565763 /* CFNetwork.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +46,11 @@
 		DA1A4AD319E1770700565763 /* conversationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = conversationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA1A4AD819E1770700565763 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DA1A4AD919E1770700565763 /* conversationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = conversationTests.m; sourceTree = "<group>"; };
+		DA1A4AE519E178CF00565763 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
+		DA1A4AE619E178CF00565763 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
+		DA1A4AE819E17D6800565763 /* IRCConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCConnection.h; sourceTree = "<group>"; };
+		DA1A4AE919E17D6800565763 /* IRCConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCConnection.m; sourceTree = "<group>"; };
+		DA1A4AEF19E181C400565763 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA1A4AF019E181C400565763 /* CFNetwork.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,6 +75,7 @@
 		DA1A4AAE19E1770700565763 = {
 			isa = PBXGroup;
 			children = (
+				DA1A4AEF19E181C400565763 /* CFNetwork.framework */,
 				DA1A4AB919E1770700565763 /* conversation */,
 				DA1A4AD619E1770700565763 /* conversationTests */,
 				DA1A4AB819E1770700565763 /* Products */,
@@ -84,6 +94,10 @@
 		DA1A4AB919E1770700565763 /* conversation */ = {
 			isa = PBXGroup;
 			children = (
+				DA1A4AE519E178CF00565763 /* AsyncSocket.h */,
+				DA1A4AE619E178CF00565763 /* AsyncSocket.m */,
+				DA1A4AE819E17D6800565763 /* IRCConnection.h */,
+				DA1A4AE919E17D6800565763 /* IRCConnection.m */,
 				DA1A4ABE19E1770700565763 /* AppDelegate.h */,
 				DA1A4ABF19E1770700565763 /* AppDelegate.m */,
 				DA1A4AC119E1770700565763 /* MasterViewController.h */,
@@ -224,6 +238,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA1A4AEA19E17D6800565763 /* IRCConnection.m in Sources */,
+				DA1A4AE719E178CF00565763 /* AsyncSocket.m in Sources */,
 				DA1A4AC019E1770700565763 /* AppDelegate.m in Sources */,
 				DA1A4AC319E1770700565763 /* MasterViewController.m in Sources */,
 				DA1A4ABD19E1770700565763 /* main.m in Sources */,

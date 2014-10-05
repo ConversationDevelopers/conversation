@@ -15,13 +15,14 @@
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
     UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
     navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
     splitViewController.delegate = self;
+    IRCConnection *connection = [[IRCConnection alloc] init];
+    [connection connectToHost:@"127.0.0.1" onPort:6667 withPassword:nil nick:nil ident:nil realName:nil];
     return YES;
 }
 
