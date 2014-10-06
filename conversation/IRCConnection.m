@@ -12,7 +12,7 @@
 
 - (id)init
 {
-    if((self = [super init]))
+    if ((self = [super init]))
     {
         return self;
     }
@@ -24,7 +24,7 @@
     NSLog(@"Ready");
     NSError *err = nil;
     asyncSocket = [[AsyncSocket alloc] initWithDelegate:self];
-    if(![asyncSocket connectToHost:host onPort:port error:&err]) {
+    if (![asyncSocket connectToHost:host onPort:port error:&err]) {
         NSLog(@"Error: %@", err);
     } else {
         NSLog(@"Connected!");
@@ -71,8 +71,7 @@
 
 - (void)onSocket:(AsyncSocket *)sock didWriteDataWithTag:(long)tag
 {
-    if(tag == 0)
-    {
+    if (tag == 0) {
         [sock readDataToData:[AsyncSocket CRLFData] withTimeout:-1 tag:0];
     }
     NSLog(@"Data send");
@@ -82,13 +81,10 @@
 {
     NSData *strData = [data subdataWithRange:NSMakeRange(0, [data length] - 2)];
     NSString *msg = [[NSString alloc] initWithData: strData encoding:NSUTF8StringEncoding];
-    if(msg)
-    {
+    if (msg) {
         NSLog(@"Readed msg: %@",msg);
         //[self logMessage:msg];
-    }
-    else
-    {
+    } else {
         NSLog(@"Readed msg error: %@",msg);
         //[self logError:@"Error converting received data into UTF-8 String"];
     }
