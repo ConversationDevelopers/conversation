@@ -98,6 +98,8 @@
     // You can also pass nil to the startTLS method, which is the same as passing an empty dictionary.
     // Again, you should understand the security implications of doing so.
     // Please see the documentation for the startTLS method in AsyncSocket.h for a full discussion.
+    
+    [asyncSocket readDataWithTimeout:120 tag:1];
 }
 
 - (void)onSocket:(AsyncSocket *)sock didWriteDataWithTag:(long)tag
@@ -123,6 +125,8 @@
     // Even if we were unable to write the incoming data to the log,
     // we're still going to echo it back to the client.
     //[sock writeData:data withTimeout:-1 tag:1];
+    
+    [asyncSocket readDataWithTimeout:120 tag:1];
 }
 
 - (void)onSocketDidSecure:(AsyncSocket *)sock
