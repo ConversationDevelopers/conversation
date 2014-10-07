@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "IRCConnection.h"
+#import "IRC/IRCConnection.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
