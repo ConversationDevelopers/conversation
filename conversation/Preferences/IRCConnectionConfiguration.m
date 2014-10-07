@@ -42,7 +42,8 @@
         self.usernameForRegistration = @"user";
         self.primaryNickname = @"Guest";
         self.secondaryNickname = @"Guest_";
-        self.serverAddress = @"";
+        self.serverAddress = @"127.0.0.1";
+        self.connectionPort = 6667;
         
         self.disconnectMessage = @"Conversation IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)";
         self.channelDepartMessage = [self.disconnectMessage copy];
@@ -56,6 +57,12 @@
         return self;
     }
     return nil;
+}
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    IRCConnectionConfiguration *config = [[IRCConnectionConfiguration allocWithZone:zone] init];
+    return config;
 }
 
 @end
