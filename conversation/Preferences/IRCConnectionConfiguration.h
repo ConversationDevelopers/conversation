@@ -28,13 +28,29 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <UIKit/UIKit.h>
-#import "IRC/IRCClient.h"
+#import <Foundation/Foundation.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface IRCConnectionConfiguration : NSObject <NSCopying>
 
-@property (strong, nonatomic) UIWindow *window;
+@property (nonatomic, copy) NSString *uniqueIdentifier;
+@property (nonatomic, copy) NSString *connectionName;
+@property (nonatomic, copy) NSString *authenticationPasswordReference;
+@property (nonatomic, copy) NSString *serverPasswordReference;
+@property (nonatomic, copy) NSString *realNameForRegistration;
+@property (nonatomic, copy) NSString *usernameForRegistration;
+@property (nonatomic, copy) NSString *primaryNickname;
+@property (nonatomic, copy) NSString *secondaryNickname;
+@property (nonatomic, copy) NSString *serverAddress;
 
+@property (nonatomic, copy) NSString *disconnectMessage;
+@property (nonatomic, copy) NSString *channelDepartMessage;
+@property (nonatomic, assign) NSInteger socketEncodingType;
+@property (nonatomic, assign) NSInteger connectionPort;
+
+@property (nonatomic, assign) BOOL automaticallyReconnect;
+@property (nonatomic, assign) BOOL automaticallyConnect;
+@property (nonatomic, assign) BOOL connectUsingSecureLayer;
+@property (nonatomic, assign) BOOL ignoreSSLVerificationErrors;
+@property (nonatomic, assign) BOOL useServerAuthenticationService;
 
 @end
-

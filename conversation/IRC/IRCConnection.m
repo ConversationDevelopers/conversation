@@ -34,14 +34,13 @@
 
 - (id)init
 {
-    if ((self = [super init]))
-    {
+    if ((self = [super init])) {
         return self;
     }
     return nil;
 }
 
-- (void)connectToHost:(NSString *)host onPort:(UInt16)port withPassword:(NSString *)password nick:(NSString *)nick ident:(NSString *)ident realName:(NSString *)realname
+- (void)connectToHost:(NSString *)host onPort:(UInt16)port useSSL:(BOOL)sslEnabled
 {
     NSLog(@"Ready");
     NSError *err = nil;

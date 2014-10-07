@@ -28,13 +28,24 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <UIKit/UIKit.h>
-#import "IRC/IRCClient.h"
+#import <Foundation/Foundation.h>
+#import "IRCConnection.h"
+#import "IRCConnectionConfiguration.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface IRCClient : NSObject
 
-@property (strong, nonatomic) UIWindow *window;
+@property (nonatomic, copy) IRCConnectionConfiguration *configuration;
+@property (nonatomic, assign) BOOL isConnected;
+@property (nonatomic, assign) BOOL isAttemptingConnection;
+@property (nonatomic, assign) BOOL hasSuccessfullyAuthenticated;
+@property (nonatomic, assign) BOOL isAwaitingAuthenticationResponse;
+@property (nonatomic, assign) BOOL isAttemptingRegistration;
+@property (nonatomic, assign) BOOL isBNCConnection;
+@property (nonatomic, assign) BOOL isProcessingTermination;
 
+@property (nonatomic, copy) NSDictionary *channels;
+
+- (instancetype)initWithConfiguration:(IRCConnectionConfiguration *)config;
+- (void)connect;
 
 @end
-

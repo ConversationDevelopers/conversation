@@ -28,13 +28,34 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <UIKit/UIKit.h>
-#import "IRC/IRCClient.h"
+#import "IRCConnectionConfiguration.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@implementation IRCConnectionConfiguration
 
-@property (strong, nonatomic) UIWindow *window;
-
+- (id)init
+{
+    if ((self = [super init])) {
+        /* Initialise default values for the configuration */
+        self.uniqueIdentifier = [[NSUUID UUID] UUIDString];
+        self.connectionName = @"Untitled Connection";
+        self.realNameForRegistration = @"A Conversation IRC User";
+        self.usernameForRegistration = @"user";
+        self.primaryNickname = @"Guest";
+        self.secondaryNickname = @"Guest_";
+        self.serverAddress = @"";
+        
+        self.disconnectMessage = @"Conversation IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)";
+        self.channelDepartMessage = [self.disconnectMessage copy];
+        
+        self.automaticallyConnect =             NO;
+        self.automaticallyReconnect =           NO;
+        self.connectUsingSecureLayer =          NO;
+        self.ignoreSSLVerificationErrors =      NO;
+        self.useServerAuthenticationService =   NO;
+        
+        return self;
+    }
+    return nil;
+}
 
 @end
-

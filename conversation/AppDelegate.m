@@ -44,8 +44,14 @@
     UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
     navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
     splitViewController.delegate = self;
-    IRCConnection *connection = [[IRCConnection alloc] init];
-    [connection connectToHost:@"127.0.0.1" onPort:6667 withPassword:nil nick:nil ident:nil realName:nil];
+    
+    IRCConnectionConfiguration *testConfiguration = [[IRCConnectionConfiguration alloc] init];
+    testConfiguration.serverAddress = @"127.0.0.1";
+    
+    IRCClient *client = [[IRCClient alloc] initWithConfiguration:testConfiguration];
+    
+    [client connect];
+    
     return YES;
 }
 
