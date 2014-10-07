@@ -30,11 +30,18 @@
 
 #import "IRCConnection.h"
 
+@interface IRCConnection ()
+
+@property (nonatomic, assign) BOOL sslEnabled;
+
+@end
+
 @implementation IRCConnection
 
 - (id)init
 {
     if ((self = [super init])) {
+        self.sslEnabled = NO;
         return self;
     }
     return nil;
@@ -43,6 +50,7 @@
 - (void)connectToHost:(NSString *)host onPort:(UInt16)port useSSL:(BOOL)sslEnabled
 {
     NSLog(@"Ready");
+    self.sslEnabled = sslEnabled;
     NSError *err = nil;
     asyncSocket = [[AsyncSocket alloc] initWithDelegate:self];
     if (![asyncSocket connectToHost:host onPort:port error:&err]) {
@@ -83,7 +91,9 @@
     //	// In fact, don't even validate the certificate chain
     //	[settings setObject:[NSNumber numberWithBool:NO] forKey:(NSString *)kCFStreamSSLValidatesCertificateChain];
     
-    [sock startTLS:settings];
+    if (self.sslEnabled) {
+        [sock startTLS:settings];
+    }
     
     // You can also pass nil to the startTLS method, which is the same as passing an empty dictionary.
     // Again, you should understand the security implications of doing so.
@@ -103,16 +113,16 @@
     NSData *strData = [data subdataWithRange:NSMakeRange(0, [data length] - 2)];
     NSString *msg = [[NSString alloc] initWithData: strData encoding:NSUTF8StringEncoding];
     if (msg) {
-        NSLog(@"Readed msg: %@",msg);
+        NSLog(@"Read msg: %@",msg);
         //[self logMessage:msg];
     } else {
-        NSLog(@"Readed msg error: %@",msg);
+        NSLog(@"Read msg error: %@",msg);
         //[self logError:@"Error converting received data into UTF-8 String"];
     }
     
     // Even if we were unable to write the incoming data to the log,
     // we're still going to echo it back to the client.
-    [sock writeData:data withTimeout:-1 tag:1];
+    //[sock writeData:data withTimeout:-1 tag:1];
 }
 
 - (void)onSocketDidSecure:(AsyncSocket *)sock
