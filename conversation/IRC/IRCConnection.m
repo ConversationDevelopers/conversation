@@ -47,7 +47,7 @@
     // You should understand the security implications if you do not specify the peer name.
     // Please see the documentation for the startTLS method in AsyncSocket.h for a full discussion.
     
-    [settings setObject:@"somedomain.com" forKey:(NSString *)kCFStreamSSLPeerName];
+    [settings setObject:host forKey:(NSString *)kCFStreamSSLPeerName];
     
     // To connect to a test server, with a self-signed certificate, use settings similar to this:
     
