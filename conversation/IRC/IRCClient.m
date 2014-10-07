@@ -29,6 +29,7 @@
  */
 
 #import "IRCClient.h"
+#import "IRCConnection.h"
 
 #define CONNECTION_RETRY_INTERVAL       30
 #define CONNECTION_RETRY_ATTEMPTS       10
@@ -60,7 +61,7 @@
         
         
         /* Setup the client to a state where it is ready for a future connection attempt */
-        self.connection = [[IRCConnection alloc] init];
+        self.connection = [[IRCConnection alloc] initWithClient:self];
         self.isConnected =                      NO;
         self.isAttemptingRegistration =         NO;
         self.isAttemptingConnection =           NO;
@@ -89,6 +90,38 @@
     
     [self.connection connectToHost:self.configuration.serverAddress onPort:self.configuration.connectionPort useSSL:self.configuration.connectUsingSecureLayer];
     
+}
+
+- (void)clientDidConnect
+{
+    self.isConnected = YES;
+    self.isAttemptingConnection = NO;
+    
+    NSLog(@"sending registration");
+    /* Send initial registration */
+    [self sendData:[NSString stringWithFormat:@"NICK %@",
+                    self.configuration.primaryNickname]];
+    [self sendData:[NSString stringWithFormat:@"USER %@ 0 * :%@",
+                    self.configuration.usernameForRegistration,
+                    self.configuration.realNameForRegistration]];
+}
+
+- (void)clientDidReceiveData:(const char *)decodedData
+{
+    NSLog(@"Received: %s", decodedData);
+}
+
+- (void)clientDidSendData
+{
+}
+
+- (void)sendData:(NSString *)line
+{
+    if ([line hasSuffix:@"\n"] == NO) {
+        line = [line stringByAppendingString:@"\n"];
+    }
+    NSData *data = [line dataUsingEncoding:NSUTF8StringEncoding];
+    [self.connection writeDataToSocket:data];
 }
 
 @end

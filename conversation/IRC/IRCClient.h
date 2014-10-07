@@ -29,8 +29,9 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "IRCConnection.h"
 #import "IRCConnectionConfiguration.h"
+
+@class IRCConnection;
 
 @interface IRCClient : NSObject
 
@@ -47,5 +48,8 @@
 
 - (instancetype)initWithConfiguration:(IRCConnectionConfiguration *)config;
 - (void)connect;
+- (void)clientDidConnect;
+- (void)clientDidReceiveData:(const char *)decodedData;
+- (void)clientDidSendData;
 
 @end

@@ -29,19 +29,22 @@
 */
 
 #import "IRCConnection.h"
+#import "IRCClient.h"
 
 @interface IRCConnection ()
 
 @property (nonatomic, assign) BOOL sslEnabled;
+@property (nonatomic, strong) IRCClient *client;
 
 @end
 
 @implementation IRCConnection
 
-- (id)init
+- (id)initWithClient:(IRCClient *)client
 {
     if ((self = [super init])) {
         self.sslEnabled = NO;
+        self.client = client;
         return self;
     }
     return nil;
@@ -98,6 +101,7 @@
     // You can also pass nil to the startTLS method, which is the same as passing an empty dictionary.
     // Again, you should understand the security implications of doing so.
     // Please see the documentation for the startTLS method in AsyncSocket.h for a full discussion.
+    [self.client clientDidConnect];
     
     [asyncSocket readDataWithTimeout:120 tag:1];
 }
@@ -107,24 +111,19 @@
     if (tag == 0) {
         [sock readDataToData:[AsyncSocket CRLFData] withTimeout:-1 tag:0];
     }
+    [self.client clientDidSendData];
     NSLog(@"Data send");
 }
 
 - (void)onSocket:(AsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
     NSData *strData = [data subdataWithRange:NSMakeRange(0, [data length] - 2)];
-    NSString *msg = [[NSString alloc] initWithData: strData encoding:NSUTF8StringEncoding];
-    if (msg) {
-        NSLog(@"Read msg: %@",msg);
-        //[self logMessage:msg];
+    const char *message = [strData bytes];
+    if (message) {
+        [self.client clientDidReceiveData:message];
     } else {
-        NSLog(@"Read msg error: %@",msg);
-        //[self logError:@"Error converting received data into UTF-8 String"];
+        NSLog(@"Read msg error: %s",message);
     }
-    
-    // Even if we were unable to write the incoming data to the log,
-    // we're still going to echo it back to the client.
-    //[sock writeData:data withTimeout:-1 tag:1];
     
     [asyncSocket readDataWithTimeout:120 tag:1];
 }
@@ -142,6 +141,11 @@
 - (void)onSocketDidDisconnect:(AsyncSocket *)sock
 {
     NSLog(@"onSocketDidDisconnect:%p", sock);
+}
+
+- (void)writeDataToSocket:(NSData *)data
+{
+    [asyncSocket writeData:data withTimeout:-1 tag:1];
 }
 
 @end
