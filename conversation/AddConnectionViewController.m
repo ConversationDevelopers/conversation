@@ -93,7 +93,7 @@ static unsigned short AutomaticTableSection = 2;
     if (section == ServerTableSection)
         return 5;
     if (section == IdentityTableSection)
-        return 4;
+        return 5;
     if (section == AutomaticTableSection)
         return 3;
     return 0;
@@ -183,13 +183,21 @@ static unsigned short AutomaticTableSection = 2;
             return cell;
         } else if (indexPath.row == 1) {
             PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
+            cell.textLabel.text = @"Alt. Nick";
+            cell.textField.text = @"";
+            cell.textField.placeholder = @"Guest_";
+            cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+            cell.textEditAction = @selector(altnickChanged:);
+            return cell;
+        } else if (indexPath.row == 2) {
+            PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
             cell.textLabel.text = @"User Name";
             cell.textField.text = @"";
             cell.textField.placeholder = @"Guest";
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
             cell.textEditAction = @selector(realnameChanged:);
             return cell;
-        } else if (indexPath.row == 2) {
+        } else if (indexPath.row == 3) {
             PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
             cell.textLabel.text = @"Real Name";
             cell.textField.text = @"";
@@ -197,7 +205,7 @@ static unsigned short AutomaticTableSection = 2;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
             cell.textEditAction = @selector(realnameChanged:);
             return cell;
-        } else if (indexPath.row == 3) {
+        } else if (indexPath.row == 4) {
             PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
             cell.textLabel.text = @"Nick Password";
             cell.textField.text = @"";
@@ -263,6 +271,11 @@ static unsigned short AutomaticTableSection = 2;
 - (void) nicknameChanged:(id)sender
 {
     NSLog(@"Nickname changed");
+}
+
+- (void) altnickChanged:(id)sender
+{
+    NSLog(@"Alt Nick changed");
 }
 
 - (void) realnameChanged:(id)sender
