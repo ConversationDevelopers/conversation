@@ -106,9 +106,74 @@
                     self.configuration.realNameForRegistration]];
 }
 
-- (void)clientDidReceiveData:(const char *)decodedData
+- (void)clientDidReceiveData:(const char *)line
 {
-    NSLog(@"Received: %s", decodedData);
+    NSLog(@"Received: %s", line);
+    BOOL isServerMessage = NO;
+    
+    long messageLength = strlen(line);
+    const char* messageBounds = line + messageLength - 2;
+    
+    if (*line != ':' || messageLength < 3) {
+        /* This is not a valid IRC message, we will ignore it. */
+        return;
+    }
+    
+    /* Consume the : at the start of the message. */
+    line++;
+    
+    long senderLength   = 0;
+    long nicknameLength = 0;
+    long usernameLength = 0;
+    
+    char* lineBeforeIteration = malloc(strlen(line));
+    strcpy(lineBeforeIteration, line);
+    
+    
+    while (line != messageBounds && *line != ' ' && *line != '!') {
+        nicknameLength++;
+        line++;
+        senderLength++;
+    }
+    if (*line != ' ') {
+        while (line != messageBounds && *line != ' ' && *line != '@') {
+            usernameLength++;
+            line++;
+            senderLength++;
+        }
+        while (line != messageBounds && *line != ' ') {
+            senderLength++;
+            line++;
+        }
+    } else {
+        isServerMessage = YES;
+    }
+    
+    char* sender = malloc(senderLength);
+    strncpy(sender, lineBeforeIteration, senderLength);
+    
+    char* nickname = malloc(nicknameLength);
+    strncpy(nickname, lineBeforeIteration, nicknameLength);
+    lineBeforeIteration = lineBeforeIteration + nicknameLength + 1;
+    
+    
+    NSLog(@"sender: %s\n", sender);
+    NSLog(@"nick: %s\n", nickname);
+    
+    char* username = malloc(usernameLength -1);
+    if (usernameLength > 0) {
+        strncpy(username, lineBeforeIteration, usernameLength -1);
+        lineBeforeIteration = lineBeforeIteration + usernameLength;
+        
+        NSLog(@"username: %s\n", username);
+    }
+    
+    long hostnameLength = (senderLength - usernameLength - nicknameLength -2);
+    char* hostname = malloc(hostnameLength);
+    if (hostnameLength > 0) {
+        strncpy(hostname, lineBeforeIteration, hostnameLength);
+        NSLog(@"host: %s\n", hostname);
+    }
 }
 
 - (void)clientDidSendData
