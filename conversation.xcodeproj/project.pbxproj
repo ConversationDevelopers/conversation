@@ -18,6 +18,7 @@
 		DA1A4AF019E181C400565763 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1A4AEF19E181C400565763 /* CFNetwork.framework */; };
 		DAA3229E19E56CBF0068E2B6 /* AddConnectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA3229D19E56CBF0068E2B6 /* AddConnectionViewController.m */; };
 		DAA322A419E596830068E2B6 /* PreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A319E596830068E2B6 /* PreferencesTextCell.m */; };
+		FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */; };
 		FA109B2A19E3E6D60068DC29 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B2719E3E6D60068DC29 /* AsyncSocket.m */; };
 		FA109B2B19E3E6D60068DC29 /* IRCConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B2919E3E6D60068DC29 /* IRCConnection.m */; };
 		FA109B3419E410D80068DC29 /* IRCClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B3319E410D80068DC29 /* IRCClient.m */; };
@@ -57,6 +58,8 @@
 		DAA3229D19E56CBF0068E2B6 /* AddConnectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddConnectionViewController.m; sourceTree = "<group>"; };
 		DAA322A219E596830068E2B6 /* PreferencesTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesTextCell.h; path = ../PreferencesTextCell.h; sourceTree = "<group>"; };
 		DAA322A319E596830068E2B6 /* PreferencesTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesTextCell.m; path = ../PreferencesTextCell.m; sourceTree = "<group>"; };
+		FA00A38219E5A69F00E7B4D7 /* IRCMessageIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCMessageIndex.h; sourceTree = "<group>"; };
+		FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCMessageIndex.m; sourceTree = "<group>"; };
 		FA109B2619E3E6D60068DC29 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
 		FA109B2719E3E6D60068DC29 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
 		FA109B2819E3E6D60068DC29 /* IRCConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCConnection.h; sourceTree = "<group>"; };
@@ -161,8 +164,6 @@
 		FA109B2519E3E6D60068DC29 /* IRC */ = {
 			isa = PBXGroup;
 			children = (
-				FA00A37F19E5853E00E7B4D7 /* IRCMessageIndex.h */,
-				FA00A38019E5853E00E7B4D7 /* IRCMessageIndex.m */,
 				FA109B2619E3E6D60068DC29 /* AsyncSocket.h */,
 				FA109B2719E3E6D60068DC29 /* AsyncSocket.m */,
 				FA109B2819E3E6D60068DC29 /* IRCConnection.h */,
@@ -171,6 +172,8 @@
 				FA109B3319E410D80068DC29 /* IRCClient.m */,
 				FA109B3C19E420320068DC29 /* IRCChannel.h */,
 				FA109B3D19E420320068DC29 /* IRCChannel.m */,
+				FA00A38219E5A69F00E7B4D7 /* IRCMessageIndex.h */,
+				FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */,
 			);
 			path = IRC;
 			sourceTree = "<group>";
@@ -297,6 +300,7 @@
 				DAA3229E19E56CBF0068E2B6 /* AddConnectionViewController.m in Sources */,
 				FA109B3B19E41D540068DC29 /* IRCChannelConfiguration.m in Sources */,
 				FA109B3419E410D80068DC29 /* IRCClient.m in Sources */,
+				FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */,
 				DA1A4AC619E1770700565763 /* DetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
