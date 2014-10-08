@@ -56,7 +56,7 @@ typedef enum IRCMessage : NSUInteger {
     N905
 } IRCMessage;
 
-+ (int)indexValueFromString:(NSString *)key;
++ (NSUInteger)indexValueFromString:(NSString *)key;
 + (void)initialiseMessageIndex;
 
 @end
