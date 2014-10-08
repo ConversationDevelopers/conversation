@@ -212,22 +212,24 @@
     line++;
     lineBeforeIteration++;
     
-    /* Pass over the string to the next space or end of the line to get the range of the recipient. */
-    int recipientLength = 0;
-    while (line != messageBounds && *line != ' ') {
-        recipientLength++;
+    if (*line != ':') {
+        /* Pass over the string to the next space or end of the line to get the range of the recipient. */
+        int recipientLength = 0;
+        while (line != messageBounds && *line != ' ') {
+            recipientLength++;
+            line++;
+        }
+        
+        /* Copy the characters from the recipient range we calculated earlier */
+        char* recipient = malloc(recipientLength + 1);
+        strncpy(recipient, lineBeforeIteration, recipientLength);
+        command[commandLength] = '\0';
+        lineBeforeIteration = lineBeforeIteration + recipientLength;
+        
+        /* Consume the following space leading to the message */
         line++;
+        lineBeforeIteration++;
     }
-    
-    /* Copy the characters from the recipient range we calculated earlier */
-    char* recipient = malloc(recipientLength + 1);
-    strncpy(recipient, lineBeforeIteration, recipientLength);
-    command[commandLength] = '\0';
-    lineBeforeIteration = lineBeforeIteration + recipientLength;
-    
-    /* Consume the following space leading to the message */
-    line++;
-    lineBeforeIteration++;
     
     /* The message may start with a colon. We will trim this before continuing */
     if (*line == ':') {
