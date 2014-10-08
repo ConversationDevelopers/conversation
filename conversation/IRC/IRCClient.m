@@ -45,6 +45,8 @@
 @property (nonatomic, strong) NSString *currentNicknameOnConnection;
 @property (nonatomic, strong) NSTimer *connectionRetryTimer;
 
+@property (nonatomic, strong) NSMutableDictionary *featuresSupportedByServer;
+
 @end
 
 @implementation IRCClient
@@ -72,6 +74,7 @@
         
         self.alternativeNickNameAttempts = 0;
         self.channels = [[NSDictionary alloc] init];
+        self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
         
         return self;
     }
@@ -283,8 +286,66 @@
             
             break;
             
+        case RPL_ISUPPORT:
+            [self updateServerSupportedFeatures:line];
+            break;
+            
         default:
             break;
+    }
+}
+
+- (void)updateServerSupportedFeatures:(const char*)data
+{
+    /* Create a mutable copy of the data */
+    char* line = malloc(strlen(data));
+    strcpy(line, data);
+    
+    /* Split the string by spaces and iterate over the result. This will give us key value pairs seperated by '=' or
+     just simply keys which we will translate to booleans */
+    const char delimeter[2] = " ";
+    char *token;
+    token = strtok(line, delimeter);
+    
+    /* Iterate over the key-value pair */
+    while(token != NULL) {
+        /* This is the end of the key-value list, we will break here.  */
+        if (*token == ':') {
+            break;
+        }
+        
+        /* Make a copy of key-value pair that we will use to retrieve the key. */
+        char* tokenBeforeIteration = malloc(strlen(token));
+        strcpy(tokenBeforeIteration, token);
+        
+        /* Iterate over the string until we reach either the end, or a '=' */
+        long keyLength = 0;
+        while (*token != '\0' && *token != '=') {
+            keyLength++;
+            token++;
+        }
+        
+        /* Set the key to the result of our previous iteration */
+        char* key = malloc(keyLength);
+        strncpy(key, tokenBeforeIteration, keyLength);
+        key[keyLength] = '\0';
+        
+        NSString *keyString = [NSString stringWithCString:key encoding:NSUTF8StringEncoding];
+        
+        /* If the next character is an '=', this is a key-value pair, and we will continue iterating to get the value.
+         If not, we will interpret it as a positive boolean. */
+        if (*token == '=') {
+            token++;
+            NSString *valueString = [NSString stringWithCString:token encoding:NSUTF8StringEncoding];
+            
+            /* Save key value pair to dictionary */
+            [self.featuresSupportedByServer setObject:valueString forKey:keyString];
+        } else {
+            /* Save boolean to dictionary */
+            [self.featuresSupportedByServer setObject:@YES forKey:keyString];
+        }
+        
+        token = strtok(NULL, delimeter);
     }
 }
 

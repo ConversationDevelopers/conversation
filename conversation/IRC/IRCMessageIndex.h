@@ -50,7 +50,7 @@ typedef enum IRCMessage : NSUInteger {
     RPL_YOURHOST,           /* 002 */
     RPL_CREATED,            /* 003 */
     RPL_MYINFO,             /* 004 */
-    RPL_BOUNCE,             /* 005 */
+    RPL_ISUPPORT,           /* 005 */
     RPL_TRACELINK,          /* 200 */
     RPL_TRACECONNECTING,    /* 201 */
     RPL_TRACEHANDSHAKE,     /* 202 */
