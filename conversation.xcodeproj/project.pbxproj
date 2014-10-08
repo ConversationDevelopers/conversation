@@ -20,6 +20,8 @@
 		DAA322A419E596830068E2B6 /* PreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A319E596830068E2B6 /* PreferencesTextCell.m */; };
 		DAA322A719E5D0F90068E2B6 /* PreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A619E5D0F90068E2B6 /* PreferencesSwitchCell.m */; };
 		FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */; };
+		FA00A39219E5DD3D00E7B4D7 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A38F19E5DD3D00E7B4D7 /* SSKeychain.m */; };
+		FA00A39319E5DD3D00E7B4D7 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A39119E5DD3D00E7B4D7 /* SSKeychainQuery.m */; };
 		FA109B2A19E3E6D60068DC29 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B2719E3E6D60068DC29 /* AsyncSocket.m */; };
 		FA109B2B19E3E6D60068DC29 /* IRCConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B2919E3E6D60068DC29 /* IRCConnection.m */; };
 		FA109B3419E410D80068DC29 /* IRCClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B3319E410D80068DC29 /* IRCClient.m */; };
@@ -63,6 +65,10 @@
 		DAA322A619E5D0F90068E2B6 /* PreferencesSwitchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesSwitchCell.m; path = ../PreferencesSwitchCell.m; sourceTree = "<group>"; };
 		FA00A38219E5A69F00E7B4D7 /* IRCMessageIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCMessageIndex.h; sourceTree = "<group>"; };
 		FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCMessageIndex.m; sourceTree = "<group>"; };
+		FA00A38E19E5DD3D00E7B4D7 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSKeychain.h; path = Preferences/SSKeychain.h; sourceTree = "<group>"; };
+		FA00A38F19E5DD3D00E7B4D7 /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSKeychain.m; path = Preferences/SSKeychain.m; sourceTree = "<group>"; };
+		FA00A39019E5DD3D00E7B4D7 /* SSKeychainQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSKeychainQuery.h; path = Preferences/SSKeychainQuery.h; sourceTree = "<group>"; };
+		FA00A39119E5DD3D00E7B4D7 /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSKeychainQuery.m; path = Preferences/SSKeychainQuery.m; sourceTree = "<group>"; };
 		FA109B2619E3E6D60068DC29 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
 		FA109B2719E3E6D60068DC29 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
 		FA109B2819E3E6D60068DC29 /* IRCConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCConnection.h; sourceTree = "<group>"; };
@@ -186,6 +192,10 @@
 		FA109B3819E4190C0068DC29 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
+				FA00A38E19E5DD3D00E7B4D7 /* SSKeychain.h */,
+				FA00A38F19E5DD3D00E7B4D7 /* SSKeychain.m */,
+				FA00A39019E5DD3D00E7B4D7 /* SSKeychainQuery.h */,
+				FA00A39119E5DD3D00E7B4D7 /* SSKeychainQuery.m */,
 				FA109B3519E419040068DC29 /* IRCConnectionConfiguration.h */,
 				FA109B3619E419040068DC29 /* IRCConnectionConfiguration.m */,
 				FA109B3919E41D540068DC29 /* IRCChannelConfiguration.h */,
@@ -298,6 +308,7 @@
 				DA1A4AC019E1770700565763 /* AppDelegate.m in Sources */,
 				FA109B2A19E3E6D60068DC29 /* AsyncSocket.m in Sources */,
 				DAA322A419E596830068E2B6 /* PreferencesTextCell.m in Sources */,
+				FA00A39319E5DD3D00E7B4D7 /* SSKeychainQuery.m in Sources */,
 				DA1A4AC319E1770700565763 /* MasterViewController.m in Sources */,
 				DA1A4ABD19E1770700565763 /* main.m in Sources */,
 				FA109B3719E419040068DC29 /* IRCConnectionConfiguration.m in Sources */,
@@ -308,6 +319,7 @@
 				FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */,
 				DAA322A719E5D0F90068E2B6 /* PreferencesSwitchCell.m in Sources */,
 				DA1A4AC619E1770700565763 /* DetailViewController.m in Sources */,
+				FA00A39219E5DD3D00E7B4D7 /* SSKeychain.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
