@@ -126,21 +126,25 @@
     long nicknameLength = 0;
     long usernameLength = 0;
     
+    /* Make a copy of the full message string */
     char* lineBeforeIteration = malloc(strlen(line));
     strcpy(lineBeforeIteration, line);
     
-    
+    /* Pass over the string until we either reach a space, end of message, or an exclamation mark (Part of a user's hostmask) */
     while (line != messageBounds && *line != ' ' && *line != '!') {
         nicknameLength++;
         line++;
         senderLength++;
     }
+    /* If there was not an ! in this message and we have reached a space already, the sender was the server, which does not have a hostmask. */
     if (*line != ' ') {
+        /* Pass over the string until we reach a space, end of message, or an @ sign (Part of the user's hostmask) */
         while (line != messageBounds && *line != ' ' && *line != '@') {
             usernameLength++;
             line++;
             senderLength++;
         }
+        /* Pass over the rest of the string leading to a space, to get the position of the host address. */
         while (line != messageBounds && *line != ' ') {
             senderLength++;
             line++;
@@ -149,30 +153,133 @@
         isServerMessage = YES;
     }
     
+    /* Copy the characters of the entire sender */
     char* sender = malloc(senderLength);
     strncpy(sender, lineBeforeIteration, senderLength);
+    sender[senderLength] = '\0';
     
-    char* nickname = malloc(nicknameLength);
+    /* Copy the characters of the nickname range we calculated earlier, and consume the same characters from the string as well as the following '!' */
+    char* nickname = malloc(nicknameLength+1);
     strncpy(nickname, lineBeforeIteration, nicknameLength);
+    nickname[nicknameLength] = '\0';
     lineBeforeIteration = lineBeforeIteration + nicknameLength + 1;
     
-    
-    NSLog(@"sender: %s\n", sender);
-    NSLog(@"nick: %s\n", nickname);
-    
-    char* username = malloc(usernameLength -1);
+    /* Copy the characters from the username range we calculated earlier, and consume the same characters from the string as well as the following '@' */
+    char* username = malloc(usernameLength);
     if (usernameLength > 0) {
         strncpy(username, lineBeforeIteration, usernameLength -1);
+        username[usernameLength] = '\0';
         lineBeforeIteration = lineBeforeIteration + usernameLength;
-        
-        NSLog(@"username: %s\n", username);
     }
     
-    long hostnameLength = (senderLength - usernameLength - nicknameLength -2);
+    /* Copy the characters from the hostname range we calculated earlier */
+    long hostnameLength = (senderLength - usernameLength - nicknameLength -1);
     char* hostname = malloc(hostnameLength);
     if (hostnameLength > 0) {
         strncpy(hostname, lineBeforeIteration, hostnameLength);
-        NSLog(@"host: %s\n", hostname);
+        hostname[hostnameLength] = '\0';
+    }
+    
+    lineBeforeIteration = lineBeforeIteration + hostnameLength;
+    
+    /* Consume the following space leading to the IRC command */
+    line++;
+    lineBeforeIteration++;
+    
+    /* Pass over the string to the next space or end of the line to get the range of the IRC command */
+    int commandLength = 0;
+    while (line != messageBounds && *line != ' ') {
+        commandLength++;
+        line++;
+    }
+    
+    /* Copy the characters from the IRC command range we calculated earlier */
+    char* command = malloc(commandLength + 1);
+    strncpy(command, lineBeforeIteration, commandLength);
+    command[commandLength] = '\0';
+    lineBeforeIteration = lineBeforeIteration + commandLength;
+    
+    /* Consume the following space leading to the recepient */
+    line++;
+    lineBeforeIteration++;
+    
+    /* Pass over the string to the next space or end of the line to get the range of the recipient. */
+    int recipientLength = 0;
+    while (line != messageBounds && *line != ' ') {
+        recipientLength++;
+        line++;
+    }
+    
+    /* Copy the characters from the recipient range we calculated earlier */
+    char* recipient = malloc(recipientLength + 1);
+    strncpy(recipient, lineBeforeIteration, recipientLength);
+    command[commandLength] = '\0';
+    lineBeforeIteration = lineBeforeIteration + recipientLength;
+    
+    /* Consume the following space leading to the message */
+    line++;
+    lineBeforeIteration++;
+    
+    /* The message may start with a colon. We will trim this before continuing */
+    if (*line == ':') {
+        line++;
+        lineBeforeIteration++;
+    }
+    
+    NSString *commandString = [NSString stringWithCString:command encoding:NSUTF8StringEncoding];
+    IRCMessage commandIndexValue = [IRCMessageIndex indexValueFromString:commandString];
+    
+    switch (commandIndexValue) {
+        case PING:
+            [self sendData:[NSString stringWithFormat:@"PONG :%s", line]];
+            break;
+            
+        case ERROR:
+            
+            break;
+            
+        case CAP:
+            
+            break;
+            
+        case PRIVMSG:
+            
+            break;
+            
+        case NOTICE:
+            
+            break;
+            
+        case JOIN:
+            
+            break;
+            
+        case PART:
+            
+            break;
+            
+        case QUIT:
+            
+            break;
+            
+        case TOPIC:
+            
+            break;
+            
+        case KICK:
+            
+            break;
+            
+        case MODE:
+            
+            break;
+            
+        case NICK:
+            
+            break;
+            
+        default:
+            break;
     }
 }
 

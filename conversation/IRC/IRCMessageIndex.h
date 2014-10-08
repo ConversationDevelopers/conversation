@@ -29,28 +29,34 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "IRCConnectionConfiguration.h"
-#import "IRCMessageIndex.h"
 
-@class IRCConnection;
+@interface IRCMessageIndex : NSObject
 
-@interface IRCClient : NSObject
+typedef enum IRCMessage : NSUInteger {
+    PING,
+    ERROR,
+    CAP,
+    PRIVMSG,
+    NOTICE,
+    JOIN,
+    PART,
+    QUIT,
+    TOPIC,
+    KICK,
+    MODE,
+    NICK,
+    N004,
+    N005,
+    N352,
+    N376,
+    N422,
+    N443,
+    N903,
+    N904,
+    N905
+} IRCMessage;
 
-@property (nonatomic, copy) IRCConnectionConfiguration *configuration;
-@property (nonatomic, assign) BOOL isConnected;
-@property (nonatomic, assign) BOOL isAttemptingConnection;
-@property (nonatomic, assign) BOOL hasSuccessfullyAuthenticated;
-@property (nonatomic, assign) BOOL isAwaitingAuthenticationResponse;
-@property (nonatomic, assign) BOOL isAttemptingRegistration;
-@property (nonatomic, assign) BOOL isBNCConnection;
-@property (nonatomic, assign) BOOL isProcessingTermination;
-
-@property (nonatomic, copy) NSDictionary *channels;
-
-- (instancetype)initWithConfiguration:(IRCConnectionConfiguration *)config;
-- (void)connect;
-- (void)clientDidConnect;
-- (void)clientDidReceiveData:(const char *)decodedData;
-- (void)clientDidSendData;
++ (int)indexValueFromString:(NSString *)key;
++ (void)initialiseMessageIndex;
 
 @end

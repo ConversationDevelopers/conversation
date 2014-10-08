@@ -30,6 +30,7 @@
 
 #import <UIKit/UIKit.h>
 #import "IRC/IRCClient.h"
+#import "IRC/IRCMessageIndex.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

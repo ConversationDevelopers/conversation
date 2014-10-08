@@ -161,6 +161,8 @@
 		FA109B2519E3E6D60068DC29 /* IRC */ = {
 			isa = PBXGroup;
 			children = (
+				FA00A37F19E5853E00E7B4D7 /* IRCMessageIndex.h */,
+				FA00A38019E5853E00E7B4D7 /* IRCMessageIndex.m */,
 				FA109B2619E3E6D60068DC29 /* AsyncSocket.h */,
 				FA109B2719E3E6D60068DC29 /* AsyncSocket.m */,
 				FA109B2819E3E6D60068DC29 /* IRCConnection.h */,

@@ -53,6 +53,7 @@
     splitViewController.delegate = self;
     
     IRCConnectionConfiguration *testConfiguration = [[IRCConnectionConfiguration alloc] init];
+    [IRCMessageIndex initialiseMessageIndex];
     
     IRCClient *client = [[IRCClient alloc] initWithConfiguration:testConfiguration];
     
