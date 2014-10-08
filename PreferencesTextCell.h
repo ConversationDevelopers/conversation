@@ -28,9 +28,19 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 #import <UIKit/UIKit.h>
 
-@interface AddConnectionViewController : UITableViewController
+typedef void (^UITextFieldBlock)(UITextField *textField);
+
+@interface PreferencesTextCell : UITableViewCell <UITextFieldDelegate> {
+    BOOL _enabled;
+    @protected UITextField *_textField;
+}
+
++ (PreferencesTextCell *) currentEditingCell;
+@property (nonatomic, readonly) UITextField *textField;
+@property (nonatomic, getter = isEnabled) BOOL enabled;
+@property (nonatomic) SEL textEditAction;
+@property (nonatomic, copy) UITextFieldBlock textFieldBlock;
 
 @end
