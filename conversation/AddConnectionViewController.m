@@ -45,9 +45,14 @@ static unsigned short IdentityTableSection = 1;
 - (void) viewDidLoad {
     [super viewDidLoad];
     
-    self.title = @"Add Connection";
+    self.title = @"New Connection";
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = cancelButton;
+    
+    UIBarButtonItem *connectButton = [[UIBarButtonItem alloc] initWithTitle:@"Connect" style:UIBarButtonItemStylePlain target:self action:@selector(connect:)];
+    [connectButton setTintColor:[UIColor lightGrayColor]];
+    connectButton.enabled = NO;
+    self.navigationItem.rightBarButtonItem = connectButton;
 
 }
 
@@ -58,6 +63,11 @@ static unsigned short IdentityTableSection = 1;
 - (void) cancel:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void) connect:(id)sender
+{
+    NSLog(@"Connect");
 }
      
 #pragma mark -
