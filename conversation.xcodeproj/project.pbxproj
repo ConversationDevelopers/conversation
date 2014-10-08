@@ -17,8 +17,8 @@
 		DA1A4ADA19E1770700565763 /* conversationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AD919E1770700565763 /* conversationTests.m */; };
 		DA1A4AF019E181C400565763 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1A4AEF19E181C400565763 /* CFNetwork.framework */; };
 		DAA3229E19E56CBF0068E2B6 /* AddConnectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA3229D19E56CBF0068E2B6 /* AddConnectionViewController.m */; };
-		DAA322A419E596830068E2B6 /* PreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A319E596830068E2B6 /* PreferencesTextCell.m */; };
-		DAA322A719E5D0F90068E2B6 /* PreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A619E5D0F90068E2B6 /* PreferencesSwitchCell.m */; };
+		DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */; };
+		DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322AB19E5DE490068E2B6 /* PreferencesTextCell.m */; };
 		FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */; };
 		FA00A39219E5DD3D00E7B4D7 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A38F19E5DD3D00E7B4D7 /* SSKeychain.m */; };
 		FA00A39319E5DD3D00E7B4D7 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A39119E5DD3D00E7B4D7 /* SSKeychainQuery.m */; };
@@ -59,10 +59,10 @@
 		DA1A4AEF19E181C400565763 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		DAA3229C19E56CBF0068E2B6 /* AddConnectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddConnectionViewController.h; sourceTree = "<group>"; };
 		DAA3229D19E56CBF0068E2B6 /* AddConnectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddConnectionViewController.m; sourceTree = "<group>"; };
-		DAA322A219E596830068E2B6 /* PreferencesTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesTextCell.h; path = ../PreferencesTextCell.h; sourceTree = "<group>"; };
-		DAA322A319E596830068E2B6 /* PreferencesTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesTextCell.m; path = ../PreferencesTextCell.m; sourceTree = "<group>"; };
-		DAA322A519E5D0F90068E2B6 /* PreferencesSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesSwitchCell.h; path = ../PreferencesSwitchCell.h; sourceTree = "<group>"; };
-		DAA322A619E5D0F90068E2B6 /* PreferencesSwitchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesSwitchCell.m; path = ../PreferencesSwitchCell.m; sourceTree = "<group>"; };
+		DAA322A819E5DE490068E2B6 /* PreferencesSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesSwitchCell.h; sourceTree = "<group>"; };
+		DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesSwitchCell.m; sourceTree = "<group>"; };
+		DAA322AA19E5DE490068E2B6 /* PreferencesTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesTextCell.h; sourceTree = "<group>"; };
+		DAA322AB19E5DE490068E2B6 /* PreferencesTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesTextCell.m; sourceTree = "<group>"; };
 		FA00A38219E5A69F00E7B4D7 /* IRCMessageIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCMessageIndex.h; sourceTree = "<group>"; };
 		FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCMessageIndex.m; sourceTree = "<group>"; };
 		FA00A38E19E5DD3D00E7B4D7 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSKeychain.h; path = Preferences/SSKeychain.h; sourceTree = "<group>"; };
@@ -125,10 +125,10 @@
 			isa = PBXGroup;
 			children = (
 				FA109B2519E3E6D60068DC29 /* IRC */,
-				DAA322A519E5D0F90068E2B6 /* PreferencesSwitchCell.h */,
-				DAA322A619E5D0F90068E2B6 /* PreferencesSwitchCell.m */,
-				DAA322A219E596830068E2B6 /* PreferencesTextCell.h */,
-				DAA322A319E596830068E2B6 /* PreferencesTextCell.m */,
+				DAA322A819E5DE490068E2B6 /* PreferencesSwitchCell.h */,
+				DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */,
+				DAA322AA19E5DE490068E2B6 /* PreferencesTextCell.h */,
+				DAA322AB19E5DE490068E2B6 /* PreferencesTextCell.m */,
 				DA1A4ABE19E1770700565763 /* AppDelegate.h */,
 				DA1A4ABF19E1770700565763 /* AppDelegate.m */,
 				DA1A4AC119E1770700565763 /* MasterViewController.h */,
@@ -307,7 +307,6 @@
 				FA109B2B19E3E6D60068DC29 /* IRCConnection.m in Sources */,
 				DA1A4AC019E1770700565763 /* AppDelegate.m in Sources */,
 				FA109B2A19E3E6D60068DC29 /* AsyncSocket.m in Sources */,
-				DAA322A419E596830068E2B6 /* PreferencesTextCell.m in Sources */,
 				FA00A39319E5DD3D00E7B4D7 /* SSKeychainQuery.m in Sources */,
 				DA1A4AC319E1770700565763 /* MasterViewController.m in Sources */,
 				DA1A4ABD19E1770700565763 /* main.m in Sources */,
@@ -317,8 +316,9 @@
 				FA109B3B19E41D540068DC29 /* IRCChannelConfiguration.m in Sources */,
 				FA109B3419E410D80068DC29 /* IRCClient.m in Sources */,
 				FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */,
-				DAA322A719E5D0F90068E2B6 /* PreferencesSwitchCell.m in Sources */,
 				DA1A4AC619E1770700565763 /* DetailViewController.m in Sources */,
+				DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */,
+				DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */,
 				FA00A39219E5DD3D00E7B4D7 /* SSKeychain.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
