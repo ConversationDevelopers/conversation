@@ -55,7 +55,7 @@
     [settingsButton setTintColor:[UIColor lightGrayColor]];
     self.navigationItem.leftBarButtonItem = settingsButton;
     
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
+    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addConversation:)];
     [addButton setTintColor:[UIColor lightGrayColor]];
     self.navigationItem.rightBarButtonItem = addButton;
     
@@ -73,14 +73,25 @@
     NSLog(@"Show Settings");
 }
 
-- (void)insertNewObject:(id)sender
+- (void)addConversation:(id)sender
 {
+    AddConnectionViewController *addController = [[AddConnectionViewController alloc] init];
+//    addController.delegate = self;
+
+    UINavigationController *navigationController = [[UINavigationController alloc]
+                                                    
+                                                    initWithRootViewController:addController];
+    
+    [self presentViewController:navigationController animated:YES completion: nil];
+    
+/*
     if (!self.objects) {
         self.objects = [[NSMutableArray alloc] init];
     }
     [self.objects insertObject:[NSDate date] atIndex:0];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+*/
 }
 
 #pragma mark - Segues
