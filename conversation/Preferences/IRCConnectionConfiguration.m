@@ -54,6 +54,7 @@
         self.ignoreSSLVerificationErrors =      NO;
         self.useServerAuthenticationService =   NO;
         
+        self.channels = [[NSDictionary alloc] init];
         return self;
     }
     return nil;

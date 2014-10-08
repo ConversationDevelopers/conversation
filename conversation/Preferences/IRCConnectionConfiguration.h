@@ -53,4 +53,6 @@
 @property (nonatomic, assign) BOOL ignoreSSLVerificationErrors;
 @property (nonatomic, assign) BOOL useServerAuthenticationService;
 
+@property (nonatomic, copy) NSDictionary *channels;
+
 @end
