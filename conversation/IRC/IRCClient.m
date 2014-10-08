@@ -97,7 +97,6 @@
     self.isConnected = YES;
     self.isAttemptingConnection = NO;
     
-    NSLog(@"sending registration");
     /* Send initial registration */
     [self sendData:[NSString stringWithFormat:@"NICK %@",
                     self.configuration.primaryNickname]];
