@@ -30,10 +30,12 @@
 
 
 #import "AddConnectionViewController.h"
+#import "PreferencesSwitchCell.h"
 #import "PreferencesTextCell.h"
 
 static unsigned short ServerTableSection = 0;
 static unsigned short IdentityTableSection = 1;
+static unsigned short AutomaticTableSection = 2;
 
 @implementation AddConnectionViewController
 - (id) init {
@@ -69,7 +71,16 @@ static unsigned short IdentityTableSection = 1;
 {
     NSLog(@"Connect");
 }
-     
+
+- (id) reuseCellWithClassName:(NSString *)identifier inTableView:(UITableView*)tableView
+{
+    id cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if(!cell)
+        cell = [[NSClassFromString(identifier) alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    return cell;
+}
+
+
 #pragma mark -
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView
@@ -80,14 +91,31 @@ static unsigned short IdentityTableSection = 1;
      
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
     if (section == ServerTableSection)
-        return 2;
+        return 5;
     if (section == IdentityTableSection)
-        return 2;
+        return 4;
+    if (section == AutomaticTableSection)
+        return 3;
     return 0;
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+    if (indexPath.section == AutomaticTableSection && indexPath.row == 2)
+        return indexPath;
     return nil;
+}
+
+- (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath
+{
+	if (indexPath.section == AutomaticTableSection && indexPath.row == 2) {
+        UITableViewController *autoJoinViewController = [[UITableViewController alloc] init];
+        
+        autoJoinViewController.title = @"Join Rooms";
+        
+        [self.navigationController pushViewController:autoJoinViewController animated:YES];
+        
+        return;
+    }
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
@@ -95,18 +123,25 @@ static unsigned short IdentityTableSection = 1;
         return @"Server Details";
     if (section == IdentityTableSection)
         return @"Identity";
+    if (section == AutomaticTableSection)
+        return @"Automatic Actions";
     return nil;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == ServerTableSection) {
-        NSString *identifier = NSStringFromClass([PreferencesTextCell class]);
-        PreferencesTextCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-        if(!cell)
-            cell = [[PreferencesTextCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-        
-        if (indexPath.row == 1) {
+        if (indexPath.row == 0) {
+            PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
+            cell.textLabel.text = @"Description";
+            cell.textField.text = @"";
+            cell.textField.placeholder = @"Optional";
+            cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+            cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+            cell.textEditAction = @selector(descriptionChanged:);
+            return cell;
+        } else if (indexPath.row == 1) {
+            PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
             cell.textLabel.text = @"Address";
             cell.textField.text = @"";
             cell.textField.placeholder = @"irc.example.com";
@@ -114,37 +149,95 @@ static unsigned short IdentityTableSection = 1;
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textField.keyboardType = UIKeyboardTypeURL;            
             cell.textEditAction = @selector(serverChanged:);
-        } else if (indexPath.row == 0) {
-            cell.textLabel.text = @"Description";
+            return cell;
+        } else if (indexPath.row == 2) {
+            PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
+            cell.textLabel.text = @"Port";
+            cell.textField.text = @"";
+            cell.textField.placeholder = @"6667";
+            cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+            cell.textEditAction = @selector(portChanged:);
+            return cell;
+        } else if (indexPath.row == 3) {
+            PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
+            cell.textLabel.text = @"Password";
             cell.textField.text = @"";
             cell.textField.placeholder = @"Optional";
-            cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-            cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-            cell.textEditAction = @selector(descriptionChanged:);
+			cell.textField.secureTextEntry = YES;
+            cell.textEditAction = @selector(passwordChanged:);
+            return cell;
+        } else if (indexPath.row == 4) {
+            PreferencesSwitchCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesSwitchCell class]) inTableView:tableView];
+            cell.switchAction = @selector(secureChanged:);
+            cell.textLabel.text = @"Use SSL";
+            return cell;
         }
-        return cell;
     } else if (indexPath.section == IdentityTableSection) {
-        NSString *identifier = NSStringFromClass([PreferencesTextCell class]);
-        PreferencesTextCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-        if(!cell)
-            cell = [[PreferencesTextCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-        
         if (indexPath.row == 0) {
+            PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
             cell.textLabel.text = @"Nick Name";
             cell.textField.text = @"";
             cell.textField.placeholder = @"Guest";
+            cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
 			cell.textEditAction = @selector(nicknameChanged:);
+            return cell;
         } else if (indexPath.row == 1) {
+            PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
+            cell.textLabel.text = @"User Name";
+            cell.textField.text = @"";
+            cell.textField.placeholder = @"Guest";
+            cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+            cell.textEditAction = @selector(realnameChanged:);
+            return cell;
+        } else if (indexPath.row == 2) {
+            PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
             cell.textLabel.text = @"Real Name";
             cell.textField.text = @"";
             cell.textField.placeholder = @"Guest";
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
             cell.textEditAction = @selector(realnameChanged:);
+            return cell;
+        } else if (indexPath.row == 3) {
+            PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
+            cell.textLabel.text = @"Nick Password";
+            cell.textField.text = @"";
+            cell.textField.placeholder = @"Optional";
+			cell.textField.secureTextEntry = YES;
+            cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
+            cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+            cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+            cell.textEditAction = @selector(nickpassChanged:);
+            return cell;
         }
-        return cell;
+    } else if (indexPath.section == AutomaticTableSection) {
+        if (indexPath.row == 0) {
+            PreferencesSwitchCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesSwitchCell class]) inTableView:tableView];
+            cell.switchAction = @selector(autoconnectChanged:);
+            cell.textLabel.text = @"Connect at Launch";
+            return cell;
+        } else if (indexPath.row == 1) {
+            PreferencesSwitchCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesSwitchCell class]) inTableView:tableView];
+            cell.switchAction = @selector(showconsoleChanged:);
+            cell.textLabel.text = @"Show Console";
+            return cell;
+        } else if (indexPath.row == 2) {
+            UITableViewCell *cell = [self reuseCellWithClassName:NSStringFromClass([UITableViewCell class]) inTableView:tableView];
+            
+            cell.textLabel.text = @"Join Rooms";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            
+            cell.detailTextLabel.text = @"None";
+            
+            return cell;
+        }
     }
     NSLog(@"Ooooops...");
     return nil;
+}
+
+- (void) descriptionChanged:(id)sender
+{
+    NSLog(@"Description changed");
 }
 
 - (void) serverChanged:(id)sender
@@ -152,9 +245,19 @@ static unsigned short IdentityTableSection = 1;
     NSLog(@"Server changed");
 }
 
-- (void) descriptionChanged:(id)sender
+- (void) portChanged:(id)sender
 {
-    NSLog(@"Description changed");
+    NSLog(@"Port changed");
+}
+
+- (void) passwordChanged:(id)sender
+{
+    NSLog(@"Password changed");
+}
+
+- (void) secureChanged:(id)sender
+{
+    NSLog(@"Secure changed");
 }
 
 - (void) nicknameChanged:(id)sender
@@ -165,5 +268,20 @@ static unsigned short IdentityTableSection = 1;
 - (void) realnameChanged:(id)sender
 {
     NSLog(@"Realname changed");    
+}
+
+- (void) nickpassChanged:(id)sender
+{
+    NSLog(@"Nickpass changed");
+}
+
+- (void) autoconnectChanged:(id)sender
+{
+    NSLog(@"Auto Connect changed");
+}
+
+- (void) showconsoleChanged:(id)sender
+{
+    NSLog(@"Show Console changed");
 }
 @end
