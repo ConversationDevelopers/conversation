@@ -31,6 +31,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AddConnectionViewController : UITableViewController
+@interface EditConnectionViewController : UITableViewController
 
 @end

@@ -29,7 +29,7 @@
  */
 
 
-#import "AddConnectionViewController.h"
+#import "EditConnectionViewController.h"
 #import "PreferencesSwitchCell.h"
 #import "PreferencesTextCell.h"
 
@@ -37,7 +37,7 @@ static unsigned short ServerTableSection = 0;
 static unsigned short IdentityTableSection = 1;
 static unsigned short AutomaticTableSection = 2;
 
-@implementation AddConnectionViewController
+@implementation EditConnectionViewController
 - (id) init {
     if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
         return nil;
