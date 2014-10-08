@@ -104,7 +104,7 @@
     [self.client clientDidConnect];
     
     NSData *term = [@"\r\n" dataUsingEncoding:NSUTF8StringEncoding];
-    [asyncSocket readDataToData:term withTimeout:120 tag:1];
+    [asyncSocket readDataToData:term withTimeout:-1 tag:1];
 }
 
 - (void)onSocket:(AsyncSocket *)sock didWriteDataWithTag:(long)tag
@@ -126,7 +126,7 @@
         NSLog(@"Read msg error: %s",message);
     }
     NSData *term = [@"\r\n" dataUsingEncoding:NSUTF8StringEncoding];
-    [asyncSocket readDataToData:term withTimeout:120 tag:1];
+    [asyncSocket readDataToData:term withTimeout:-1 tag:1];
 }
 
 - (void)onSocketDidSecure:(AsyncSocket *)sock
