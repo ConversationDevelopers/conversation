@@ -108,7 +108,7 @@
 
 - (void)clientDidReceiveData:(const char *)line
 {
-    NSLog(@"Received: %s", line);
+    NSLog(@"<< %s", line);
     BOOL isServerMessage = NO;
     
     long messageLength = strlen(line);
@@ -232,11 +232,9 @@
         line++;
         lineBeforeIteration++;
     }
-    NSLog(@"COMMAND: \"%s\"", command);
     
     NSString *commandString = [NSString stringWithCString:command encoding:NSUTF8StringEncoding];
     IRCMessage commandIndexValue = [IRCMessageIndex indexValueFromString:commandString];
-    NSLog(@"Index Value: %ld", commandIndexValue);
     
     switch (commandIndexValue) {
         case PING:
@@ -300,6 +298,7 @@
     if ([line hasSuffix:@"\n"] == NO) {
         line = [line stringByAppendingString:@"\n"];
     }
+    NSLog(@">> %@", line);
     NSData *data = [line dataUsingEncoding:NSUTF8StringEncoding];
     [self.connection writeDataToSocket:data];
 }
