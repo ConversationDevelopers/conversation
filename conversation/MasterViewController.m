@@ -30,6 +30,7 @@
 
 #import "MasterViewController.h"
 #import "DetailViewController.h"
+#import "EditConnectionViewController.h"
 
 @interface MasterViewController ()
 
@@ -75,12 +76,12 @@
 
 - (void)addConversation:(id)sender
 {
-    AddConnectionViewController *addController = [[AddConnectionViewController alloc] init];
+    EditConnectionViewController *editController = [[EditConnectionViewController alloc] init];
 //    addController.delegate = self;
 
     UINavigationController *navigationController = [[UINavigationController alloc]
                                                     
-                                                    initWithRootViewController:addController];
+                                                    initWithRootViewController:editController];
     
     [self presentViewController:navigationController animated:YES completion: nil];
     

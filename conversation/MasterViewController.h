@@ -29,7 +29,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "AddConnectionViewController.h"
 
 @class DetailViewController;
 
