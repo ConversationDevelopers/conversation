@@ -186,22 +186,52 @@
     line++;
     lineBeforeIteration++;
     
+    /* Pass over the string to the next space or end of the line to get the range of the IRC command */
     int commandLength = 0;
     while (line != messageBounds && *line != ' ') {
         commandLength++;
         line++;
     }
     
-    char* command = malloc(commandLength);
+    /* Copy the characters from the IRC command range we calculated earlier */
+    char* command = malloc(commandLength + 1);
     strncpy(command, lineBeforeIteration, commandLength);
+    command[commandLength] = '\0';
     lineBeforeIteration = lineBeforeIteration + commandLength;
+    
+    /* Consume the following space leading to the recepient */
+    line++;
+    lineBeforeIteration++;
+    
+    /* Pass over the string to the next space or end of the line to get the range of the recipient. */
+    int recipientLength = 0;
+    while (line != messageBounds && *line != ' ') {
+        recipientLength++;
+        line++;
+    }
+    
+    /* Copy the characters from the recipient range we calculated earlier */
+    char* recipient = malloc(recipientLength + 1);
+    strncpy(recipient, lineBeforeIteration, recipientLength);
+    command[commandLength] = '\0';
+    lineBeforeIteration = lineBeforeIteration + recipientLength;
+    
+    /* Consume the following space leading to the message */
+    line++;
+    lineBeforeIteration++;
+    
+    /* The message may start with a colon. We will trim this before continuing */
+    if (*line == ':') {
+        line++;
+        lineBeforeIteration++;
+    }
     
     NSString *commandString = [NSString stringWithCString:command encoding:NSUTF8StringEncoding];
     IRCMessage commandIndexValue = [IRCMessageIndex indexValueFromString:commandString];
     
     switch (commandIndexValue) {
         case PING:
-            
+            [self sendData:[NSString stringWithFormat:@"PONG :%s", line]];
             break;
             
         case ERROR:
