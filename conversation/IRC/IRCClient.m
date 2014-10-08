@@ -179,6 +179,78 @@
         strncpy(hostname, lineBeforeIteration, hostnameLength);
         hostname[hostnameLength] = '\0';
     }
+    
+    lineBeforeIteration = lineBeforeIteration + hostnameLength;
+    
+    /* Consume the following space leading to the IRC command */
+    line++;
+    lineBeforeIteration++;
+    
+    int commandLength = 0;
+    while (line != messageBounds && *line != ' ') {
+        commandLength++;
+        line++;
+    }
+    
+    char* command = malloc(commandLength);
+    strncpy(command, lineBeforeIteration, commandLength);
+    lineBeforeIteration = lineBeforeIteration + commandLength;
+    
+    NSString *commandString = [NSString stringWithCString:command encoding:NSUTF8StringEncoding];
+    IRCMessage commandIndexValue = [IRCMessageIndex indexValueFromString:commandString];
+    
+    switch (commandIndexValue) {
+        case PING:
+            
+            break;
+            
+        case ERROR:
+            
+            break;
+            
+        case CAP:
+            
+            break;
+            
+        case PRIVMSG:
+            
+            break;
+            
+        case NOTICE:
+            
+            break;
+            
+        case JOIN:
+            
+            break;
+            
+        case PART:
+            
+            break;
+            
+        case QUIT:
+            
+            break;
+            
+        case TOPIC:
+            
+            break;
+            
+        case KICK:
+            
+            break;
+            
+        case MODE:
+            
+            break;
+            
+        case NICK:
+            
+            break;
+            
+        default:
+            break;
+    }
 }
 
 - (void)clientDidSendData

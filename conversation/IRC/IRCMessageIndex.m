@@ -28,29 +28,46 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Foundation/Foundation.h>
-#import "IRCConnectionConfiguration.h"
 #import "IRCMessageIndex.h"
 
-@class IRCConnection;
+@implementation IRCMessageIndex
 
-@interface IRCClient : NSObject
+static NSArray *IRCMessageIndexReference = nil;
 
-@property (nonatomic, copy) IRCConnectionConfiguration *configuration;
-@property (nonatomic, assign) BOOL isConnected;
-@property (nonatomic, assign) BOOL isAttemptingConnection;
-@property (nonatomic, assign) BOOL hasSuccessfullyAuthenticated;
-@property (nonatomic, assign) BOOL isAwaitingAuthenticationResponse;
-@property (nonatomic, assign) BOOL isAttemptingRegistration;
-@property (nonatomic, assign) BOOL isBNCConnection;
-@property (nonatomic, assign) BOOL isProcessingTermination;
++ (NSUInteger)indexValueFromString:(NSString *)key
+{
+    NSUInteger indexFromArray = [IRCMessageIndexReference indexOfObject:key];
+    if (indexFromArray) {
+        return indexFromArray;
+    }
+    return 0;
+}
 
-@property (nonatomic, copy) NSDictionary *channels;
-
-- (instancetype)initWithConfiguration:(IRCConnectionConfiguration *)config;
-- (void)connect;
-- (void)clientDidConnect;
-- (void)clientDidReceiveData:(const char *)decodedData;
-- (void)clientDidSendData;
++ (void)initialiseMessageIndex
+{
+    IRCMessageIndexReference = @[
+        @"PING",
+        @"ERROR",
+        @"CAP",
+        @"PRIVMSG",
+        @"NOTICE",
+        @"JOIN",
+        @"PART",
+        @"QUIT",
+        @"TOPIC",
+        @"KICK",
+        @"MODE",
+        @"NICK",
+        @"004",
+        @"005",
+        @"352",
+        @"376",
+        @"422",
+        @"443",
+        @"903",
+        @"904",
+        @"905"
+    ];
+}
 
 @end
