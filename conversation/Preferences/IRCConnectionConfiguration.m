@@ -40,9 +40,9 @@
         self.connectionName = @"Untitled Connection";
         self.realNameForRegistration = @"A Conversation IRC User";
         self.usernameForRegistration = @"user";
-        self.primaryNickname = @"__init__";
+        self.primaryNickname = @"Guest";
         self.secondaryNickname = @"Guest_";
-        self.serverAddress = @"irc.freenode.net";
+        self.serverAddress = @"";
         self.connectionPort = 6667;
         
         self.disconnectMessage = @"Conversation IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)";
