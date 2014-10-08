@@ -151,28 +151,25 @@
     
     char* sender = malloc(senderLength);
     strncpy(sender, lineBeforeIteration, senderLength);
+    sender[senderLength] = '\0';
     
-    char* nickname = malloc(nicknameLength);
+    char* nickname = malloc(nicknameLength+1);
     strncpy(nickname, lineBeforeIteration, nicknameLength);
+    nickname[nicknameLength] = '\0';
     lineBeforeIteration = lineBeforeIteration + nicknameLength + 1;
     
-    
-    NSLog(@"sender: %s\n", sender);
-    NSLog(@"nick: %s\n", nickname);
-    
-    char* username = malloc(usernameLength -1);
+    char* username = malloc(usernameLength);
     if (usernameLength > 0) {
         strncpy(username, lineBeforeIteration, usernameLength -1);
+        username[usernameLength] = '\0';
         lineBeforeIteration = lineBeforeIteration + usernameLength;
-        
-        NSLog(@"username: %s\n", username);
     }
     
-    long hostnameLength = (senderLength - usernameLength - nicknameLength -2);
+    long hostnameLength = (senderLength - usernameLength - nicknameLength -1);
     char* hostname = malloc(hostnameLength);
     if (hostnameLength > 0) {
         strncpy(hostname, lineBeforeIteration, hostnameLength);
-        NSLog(@"host: %s\n", hostname);
+        hostname[hostnameLength] = '\0';
     }
 }
 
