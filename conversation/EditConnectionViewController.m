@@ -33,6 +33,7 @@
 #import "PreferencesSwitchCell.h"
 #import "PreferencesTextCell.h"
 #import "IRCClient.h"
+#import "AppPreferences.h"
 
 static unsigned short ServerTableSection = 0;
 static unsigned short IdentityTableSection = 1;
@@ -74,12 +75,13 @@ static unsigned short AutomaticTableSection = 2;
     NSLog(@"Connect");
     
     IRCClient *client = [[IRCClient alloc] initWithConfiguration:_configuration];
+    [[AppPreferences sharedPrefs] addConnectionConfiguration:_configuration];
     
     [self.conversationsController.connections addObject:client];
     [self.conversationsController reloadData];
     
     [client connect];
-
+    NSLog(@"PREFS JO: %@", [[AppPreferences sharedPrefs] preferences]);
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

@@ -29,6 +29,7 @@
  */
 
 #import "IRCConnectionConfiguration.h"
+#import <objc/runtime.h>
 
 @implementation IRCConnectionConfiguration
 
@@ -61,10 +62,57 @@
     return nil;
 }
 
+- (id)initWithDictionary:(NSDictionary *)dict
+{
+    if ((self = [super init])) {
+        self.uniqueIdentifier = dict[@"uniqueIdentifier"];
+        self.connectionName = dict[@"connectionName"];
+        self.realNameForRegistration = dict[@"realNameForRegistration"];
+        self.usernameForRegistration = dict[@"usernameForRegistration"];
+        self.primaryNickname = dict[@"primaryNickname"];
+        self.secondaryNickname = dict[@"secondaryNickname"];
+        self.serverAddress = dict[@"serverAddress"];
+        self.connectionPort = [dict[@"connectionPort"] integerValue];
+        
+        self.disconnectMessage = dict[@"disconnectMessage"];
+        self.channelDepartMessage = dict[@"channelDepartMessage"];
+        
+        self.automaticallyConnect = [dict[@"automaticallyConnect"] boolValue];
+        self.automaticallyReconnect = [dict[@"automaticallyReconnect"] boolValue];
+        self.connectUsingSecureLayer = [dict[@"connectUsingSecureLayer"] boolValue];
+        self.ignoreSSLVerificationErrors = [dict[@"ignoreSSLVerificationErrors"] boolValue];
+        self.useServerAuthenticationService = [dict[@"useServerAuthenticationService"] boolValue];
+        self.showConsoleOnConnect = [dict[@"showConsoleOnConnect"] boolValue];
+        
+        self.channels = dict[@"channels"];
+    }
+    return self;
+}
+
 - (id)copyWithZone:(NSZone *)zone
 {
     IRCConnectionConfiguration *config = [[IRCConnectionConfiguration allocWithZone:zone] init];
     return config;
+}
+
+- (NSDictionary *)getDictionary
+{
+    
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    
+    unsigned int numberOfProperties;
+    objc_property_t *properties = class_copyPropertyList([self class], &numberOfProperties);
+    for (int i = 0; i < numberOfProperties; i++) {
+        objc_property_t property = properties[i];
+        NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
+        id valueForProperty = [self valueForKey:propertyName];
+        if(valueForProperty != nil) {
+            dict[propertyName] = valueForProperty;
+        }
+    }
+    free(properties);
+    return dict;
+    
 }
 
 @end

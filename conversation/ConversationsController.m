@@ -32,6 +32,7 @@
 #import "DetailViewController.h"
 #import "EditConnectionViewController.h"
 #import "IRCClient.h"
+#import "AppPreferences.h"
 
 @interface ConversationsController ()
 
@@ -65,6 +66,13 @@
     self.navigationItem.rightBarButtonItem = addButton;
     
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+    
+    NSArray *configurations = [[AppPreferences sharedPrefs] getConnectionConfigurations];
+    for (NSDictionary *dict in configurations) {
+        IRCConnectionConfiguration *configuration = [[IRCConnectionConfiguration alloc] initWithDictionary:dict];
+        IRCClient *client = [[IRCClient alloc] initWithConfiguration:configuration];
+        [self.connections addObject:client];
+    }
 }
 
 - (void)didReceiveMemoryWarning

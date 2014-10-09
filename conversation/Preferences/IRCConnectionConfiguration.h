@@ -32,6 +32,9 @@
 
 @interface IRCConnectionConfiguration : NSObject <NSCopying>
 
+-(id)initWithDictionary:(NSDictionary *)dict;
+-(NSDictionary *)getDictionary;
+
 @property (nonatomic, copy) NSString *uniqueIdentifier;
 @property (nonatomic, copy) NSString *connectionName;
 @property (nonatomic, copy) NSString *authenticationPasswordReference;
