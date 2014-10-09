@@ -81,7 +81,6 @@ static unsigned short AutomaticTableSection = 2;
     [self.conversationsController reloadData];
     
     [client connect];
-    NSLog(@"PREFS JO: %@", [[AppPreferences sharedPrefs] preferences]);
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
