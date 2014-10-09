@@ -120,7 +120,7 @@
     long messageLength = strlen(line);
     const char* messageBounds = line + messageLength - 2;
     
-    char* lineBeforeIteration;
+    const char* lineBeforeIteration;
     char* sender;
     char* nickname;
     char* username;
@@ -128,9 +128,7 @@
     
     
     /* Make a copy of the full message string */
-    lineBeforeIteration = malloc(strlen(line) + 1);
-    strcpy(lineBeforeIteration, line);
-    char* initialPointerPosition = lineBeforeIteration;
+    lineBeforeIteration = line;
     
     if (*line == ':') {
         /* Consume the : at the start of the message. */
@@ -170,6 +168,8 @@
             sender = malloc(senderLength);
             strncpy(sender, lineBeforeIteration, senderLength);
             sender[senderLength] = '\0';
+        } else {
+            sender = NULL;
         }
         
         /* Copy the characters of the nickname range we calculated earlier, and consume the same characters from the string as well as the following '!' */
@@ -184,14 +184,18 @@
             strncpy(username, lineBeforeIteration, usernameLength -1);
             username[usernameLength] = '\0';
             lineBeforeIteration = lineBeforeIteration + usernameLength;
+        } else {
+            username = NULL;
         }
         
         /* Copy the characters from the hostname range we calculated earlier */
         long hostnameLength = (senderLength - usernameLength - nicknameLength -1);
-        hostname = malloc(hostnameLength);
         if (hostnameLength > 0) {
+            hostname = malloc(hostnameLength);
             strncpy(hostname, lineBeforeIteration, hostnameLength);
             hostname[hostnameLength] = '\0';
+        } else {
+            hostname = NULL;
         }
         
         lineBeforeIteration = lineBeforeIteration + hostnameLength;
@@ -200,8 +204,11 @@
         line++;
         lineBeforeIteration++;
     } else {
-        lineBeforeIteration = malloc(strlen(line));
-        strcpy(lineBeforeIteration, line);
+        sender   = NULL;
+        username = NULL;
+        hostname = NULL;
+        nickname = NULL;
+        lineBeforeIteration = line;
     }
     char *senderDict[] = {
         sender,
@@ -254,8 +261,6 @@
         line++;
         lineBeforeIteration++;
     }
-    lineBeforeIteration = initialPointerPosition;
-    free(lineBeforeIteration);
     
     NSString *commandString = [NSString stringWithCString:command encoding:NSUTF8StringEncoding];
     IRCMessage commandIndexValue = [IRCMessageIndex indexValueFromString:commandString];
@@ -273,7 +278,9 @@
             break;
             
         case PRIVMSG:
-            [self userReceivedMessage:line onRecepient:recipient byUser:senderDict];
+            if (nickname) {
+                [self userReceivedMessage:line onRecepient:recipient byUser:senderDict];
+            }
             break;
             
         case NOTICE:
@@ -346,6 +353,10 @@
             break;
     }
     free(command);
+    free(sender);
+    free(recipient);
+    free(nickname);
+    free(username);
 }
 
 - (void)updateServerSupportedFeatures:(const char*)data
@@ -367,15 +378,15 @@
             break;
         }
         
-        /* Make a copy of key-value pair that we will use to retrieve the key. */
-        char* tokenBeforeIteration = malloc(strlen(token));
-        strcpy(tokenBeforeIteration, token);
+        /* Make a pointer to the key-value pair that we will use to retrieve the key. */
+        char* tokenBeforeIteration = token;
+        char* keySearchToken = token;
         
         /* Iterate over the string until we reach either the end, or a '=' */
         long keyLength = 0;
-        while (*token != '\0' && *token != '=') {
+        while (*keySearchToken != '\0' && *keySearchToken != '=' && *keySearchToken != ' ') {
             keyLength++;
-            token++;
+            keySearchToken++;
         }
         
         /* Set the key to the result of our previous iteration */
@@ -389,9 +400,9 @@
             
             /* If the next character is an '=', this is a key-value pair, and we will continue iterating to get the value.
              If not, we will interpret it as a positive boolean. */
-            if (*token == '=') {
-                token++;
-                NSString *valueString = [NSString stringWithCString:token encoding:NSUTF8StringEncoding];
+            if (*keySearchToken == '=') {
+                keySearchToken++;
+                NSString *valueString = [NSString stringWithCString:keySearchToken encoding:NSUTF8StringEncoding];
                 
                 /* Save key value pair to dictionary */
                 [self.featuresSupportedByServer setObject:valueString forKey:keyString];
@@ -400,10 +411,9 @@
                 [self.featuresSupportedByServer setObject:@YES forKey:keyString];
             }
             
-            token = strtok(NULL, delimeter);
-            free(tokenBeforeIteration);
-            free(key);
         }
+        
+        token = strtok(NULL, delimeter);
     }
     free(mline);
 }
@@ -433,6 +443,7 @@
 
 - (void)userReceivedCTCPMessage:(const char *)message onRecepient:(char *)recepient byUser:(char **)senderDict
 {
+    
     /* Consume the begining CTCP character (0x01) */
     message++;
     
@@ -467,6 +478,7 @@
              The current way of doing this is a placeholder. */
             [self sendData:[NSString stringWithFormat:@"NOTICE %s :\001VERSION Conversation IRC Client (https://github.com/ConversationDevelopers/conversation)\001", senderDict[1]]];
         }
+        free(ctcpCommand);
     }
     free(messageCopy);
 }

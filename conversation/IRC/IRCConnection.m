@@ -117,8 +117,7 @@
 
 - (void)onSocket:(AsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
-    NSData *strData = [data subdataWithRange:NSMakeRange(0, [data length] - 2)];
-    const char *message = [strData bytes];
+    const char *message = [data bytes] + '\0';
     if (message) {
         [self.client clientDidReceiveData:message];
     } else {
