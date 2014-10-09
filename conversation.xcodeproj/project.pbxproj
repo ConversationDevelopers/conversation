@@ -22,6 +22,7 @@
 		FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */; };
 		FA00A39219E5DD3D00E7B4D7 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A38F19E5DD3D00E7B4D7 /* SSKeychain.m */; };
 		FA00A39319E5DD3D00E7B4D7 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A39119E5DD3D00E7B4D7 /* SSKeychainQuery.m */; };
+		FA00A39C19E6AD1200E7B4D7 /* NSString+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A39B19E6AD1200E7B4D7 /* NSString+Methods.m */; };
 		FA109B2A19E3E6D60068DC29 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B2719E3E6D60068DC29 /* AsyncSocket.m */; };
 		FA109B2B19E3E6D60068DC29 /* IRCConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B2919E3E6D60068DC29 /* IRCConnection.m */; };
 		FA109B3419E410D80068DC29 /* IRCClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B3319E410D80068DC29 /* IRCClient.m */; };
@@ -69,6 +70,8 @@
 		FA00A38F19E5DD3D00E7B4D7 /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSKeychain.m; path = Preferences/SSKeychain.m; sourceTree = "<group>"; };
 		FA00A39019E5DD3D00E7B4D7 /* SSKeychainQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSKeychainQuery.h; path = Preferences/SSKeychainQuery.h; sourceTree = "<group>"; };
 		FA00A39119E5DD3D00E7B4D7 /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSKeychainQuery.m; path = Preferences/SSKeychainQuery.m; sourceTree = "<group>"; };
+		FA00A39A19E6AD1200E7B4D7 /* NSString+Methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Methods.h"; sourceTree = "<group>"; };
+		FA00A39B19E6AD1200E7B4D7 /* NSString+Methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Methods.m"; sourceTree = "<group>"; };
 		FA109B2619E3E6D60068DC29 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
 		FA109B2719E3E6D60068DC29 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
 		FA109B2819E3E6D60068DC29 /* IRCConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCConnection.h; sourceTree = "<group>"; };
@@ -185,6 +188,8 @@
 				FA109B3D19E420320068DC29 /* IRCChannel.m */,
 				FA00A38219E5A69F00E7B4D7 /* IRCMessageIndex.h */,
 				FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */,
+				FA00A39A19E6AD1200E7B4D7 /* NSString+Methods.h */,
+				FA00A39B19E6AD1200E7B4D7 /* NSString+Methods.m */,
 			);
 			path = IRC;
 			sourceTree = "<group>";
@@ -306,6 +311,7 @@
 			files = (
 				FA109B2B19E3E6D60068DC29 /* IRCConnection.m in Sources */,
 				DA1A4AC019E1770700565763 /* AppDelegate.m in Sources */,
+				FA00A39C19E6AD1200E7B4D7 /* NSString+Methods.m in Sources */,
 				FA109B2A19E3E6D60068DC29 /* AsyncSocket.m in Sources */,
 				FA00A39319E5DD3D00E7B4D7 /* SSKeychainQuery.m in Sources */,
 				DA1A4AC319E1770700565763 /* MasterViewController.m in Sources */,
