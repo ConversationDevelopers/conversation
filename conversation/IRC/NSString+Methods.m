@@ -76,7 +76,6 @@
         struct in_addr dst;
         int isIPv4Address = inet_pton(AF_INET, addressAsCharArray, &(dst.s_addr));
         if (isIPv4Address == 1) {
-            NSLog(@"ipv4");
             return YES;
         }
         
@@ -84,7 +83,6 @@
         struct in6_addr dst6;
         int isIPv6Address = inet_pton(AF_INET6, addressAsCharArray, &dst6);
         if (isIPv6Address == 1) {
-            NSLog(@"ipv6");
             return YES;
         }
         
