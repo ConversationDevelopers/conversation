@@ -163,9 +163,11 @@
         }
         
         /* Copy the characters of the entire sender */
-        sender = malloc(senderLength);
-        strncpy(sender, lineBeforeIteration, senderLength);
-        sender[senderLength] = '\0';
+        if (senderLength > 0) {
+            sender = malloc(senderLength);
+            strncpy(sender, lineBeforeIteration, senderLength);
+            sender[senderLength] = '\0';
+        }
         
         /* Copy the characters of the nickname range we calculated earlier, and consume the same characters from the string as well as the following '!' */
         nickname = malloc(nicknameLength+1);
@@ -174,8 +176,8 @@
         lineBeforeIteration = lineBeforeIteration + nicknameLength + 1;
         
         /* Copy the characters from the username range we calculated earlier, and consume the same characters from the string as well as the following '@' */
-        username = malloc(usernameLength);
         if (usernameLength > 0) {
+            username = malloc(usernameLength);
             strncpy(username, lineBeforeIteration, usernameLength -1);
             username[usernameLength] = '\0';
             lineBeforeIteration = lineBeforeIteration + usernameLength;
@@ -338,6 +340,7 @@
         default:
             break;
     }
+    free(command);
 }
 
 - (void)updateServerSupportedFeatures:(const char*)data
@@ -371,31 +374,38 @@
         }
         
         /* Set the key to the result of our previous iteration */
-        char* key = malloc(keyLength);
-        strncpy(key, tokenBeforeIteration, keyLength);
-        key[keyLength] = '\0';
-        
-        NSString *keyString = [NSString stringWithCString:key encoding:NSUTF8StringEncoding];
-        
-        /* If the next character is an '=', this is a key-value pair, and we will continue iterating to get the value.
-         If not, we will interpret it as a positive boolean. */
-        if (*token == '=') {
-            token++;
-            NSString *valueString = [NSString stringWithCString:token encoding:NSUTF8StringEncoding];
+        char* key;
+        if (keyLength > 0) {
+            key = malloc(keyLength);
+            strncpy(key, tokenBeforeIteration, keyLength);
+            key[keyLength] = '\0';
             
-            /* Save key value pair to dictionary */
-            [self.featuresSupportedByServer setObject:valueString forKey:keyString];
-        } else {
-            /* Save boolean to dictionary */
-            [self.featuresSupportedByServer setObject:@YES forKey:keyString];
+            NSString *keyString = [NSString stringWithCString:key encoding:NSUTF8StringEncoding];
+            
+            /* If the next character is an '=', this is a key-value pair, and we will continue iterating to get the value.
+             If not, we will interpret it as a positive boolean. */
+            if (*token == '=') {
+                token++;
+                NSString *valueString = [NSString stringWithCString:token encoding:NSUTF8StringEncoding];
+                
+                /* Save key value pair to dictionary */
+                [self.featuresSupportedByServer setObject:valueString forKey:keyString];
+            } else {
+                /* Save boolean to dictionary */
+                [self.featuresSupportedByServer setObject:@YES forKey:keyString];
+            }
+            
+            token = strtok(NULL, delimeter);
+            free(tokenBeforeIteration);
+            free(key);
         }
-        
-        token = strtok(NULL, delimeter);
     }
+    free(mline);
 }
 
 - (void)userReceivedMessage:(const char *)message onRecepient:(char *)recepient byUser:(char **)senderDict
 {
+    
     NSString *recipientString = [NSString stringWithCString:recepient encoding:NSUTF8StringEncoding];
     
     /* Check if this message is a channel message or a private message */
@@ -406,7 +416,6 @@
             /* We do not have a channel object with this channel, we must create one. */
             channel = [IRCChannel createNewFromString:recipientString WithClient:self];
         }
-        NSLog(@"Message on channel %@ by %s: %s", recipientString, senderDict[1], message);
     } else {
     
     }

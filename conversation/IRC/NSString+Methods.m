@@ -59,9 +59,13 @@
         
         while (*prefixes != '\0') {
             if (*prefixes == *channel) {
+                free(channel);
+                free(prefixes);
                 return YES;
             }
         }
+        free(channel);
+        free(prefixes);
     }
     return NO;
 }
