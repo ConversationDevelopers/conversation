@@ -33,5 +33,6 @@
 @interface NSString (Helpers)
 
 - (BOOL) isValidChannelName:(IRCClient *)client;
+- (BOOL) isValidServerAddress;
 
 @end

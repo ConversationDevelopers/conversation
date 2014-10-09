@@ -29,6 +29,7 @@
  */
 
 #import "NSString+Methods.h"
+#include <arpa/inet.h>
 
 @implementation NSString (Helpers)
 
@@ -61,6 +62,35 @@
                 return YES;
             }
         }
+    }
+    return NO;
+}
+
+- (BOOL) isValidServerAddress
+{
+    if ([self isKindOfClass:[NSString class]]) {
+        /* Convert address to character array */
+        const char* addressAsCharArray = [self UTF8String];
+        
+        /* Check if the address is a valid IPv4 address */
+        struct in_addr dst;
+        int isIPv4Address = inet_pton(AF_INET, addressAsCharArray, &(dst.s_addr));
+        if (isIPv4Address == 1) {
+            NSLog(@"ipv4");
+            return YES;
+        }
+        
+        /* Check if the address is a valid IPv6 address */
+        struct in6_addr dst6;
+        int isIPv6Address = inet_pton(AF_INET6, addressAsCharArray, &dst6);
+        if (isIPv6Address == 1) {
+            NSLog(@"ipv6");
+            return YES;
+        }
+        
+        NSString *regex = @"^(([a-zA-Z]{1})|([a-zA-Z]{1}[a-zA-Z]{1})|([a-zA-Z]{1}[0-9]{1})|([0-9]{1}[a-zA-Z]{1})|([a-zA-Z0-9][a-zA-Z0-9-_]{1,61}[a-zA-Z0-9]))\\.([a-zA-Z]{2,6}|[a-zA-Z0-9-]{2,30}\\.[a-zA-Z]{2,3})$";
+        NSPredicate *hostValidation = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
+        return [hostValidation evaluateWithObject: self];
     }
     return NO;
 }
