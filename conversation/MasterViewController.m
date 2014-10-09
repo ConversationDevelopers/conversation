@@ -46,6 +46,7 @@
         self.clearsSelectionOnViewWillAppear = NO;
         self.preferredContentSize = CGSizeMake(320.0, 600.0);
     }
+    self.connections = [[NSArray alloc] init];
 }
 
 - (void)viewDidLoad
@@ -77,8 +78,9 @@
 - (void)addConversation:(id)sender
 {
     EditConnectionViewController *editController = [[EditConnectionViewController alloc] init];
-//    addController.delegate = self;
 
+    editController.connectionController = self;
+    
     UINavigationController *navigationController = [[UINavigationController alloc]
                                                     
                                                     initWithRootViewController:editController];
@@ -93,6 +95,11 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 */
+}
+
+- (void)reloadData
+{
+    [self.tableView reloadData];
 }
 
 #pragma mark - Segues
@@ -110,6 +117,33 @@
 }
 
 #pragma mark - Table View
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    
+    if(self.connections.count > 0) {
+        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0,0,tableView.frame.size.width,20)];
+        headerView.backgroundColor = [UIColor lightGrayColor];
+        
+        UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, headerView.frame.size.width, headerView.frame.size.height)];
+        
+        headerLabel.textAlignment = NSTextAlignmentLeft;
+        
+        IRCConnectionConfiguration *configuration = [self.connections objectAtIndex:section];
+        headerLabel.text = configuration.connectionName;
+        
+        [headerView addSubview:headerLabel];
+        return headerView;
+    }
+    return nil;
+    
+}
+
+- (double)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    
+    return  20.0;
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {

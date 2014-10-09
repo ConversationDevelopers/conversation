@@ -30,7 +30,12 @@
 
 
 #import <UIKit/UIKit.h>
+#import "IRCConnectionConfiguration.h"
+#import "MasterViewController.h"
 
-@interface EditConnectionViewController : UITableViewController
+@interface EditConnectionViewController : UITableViewController {
+    IRCConnectionConfiguration *_configuration;
+}
 
+@property (nonatomic, strong) MasterViewController *connectionController;
 @end

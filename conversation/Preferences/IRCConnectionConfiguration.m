@@ -53,6 +53,7 @@
         self.connectUsingSecureLayer =          NO;
         self.ignoreSSLVerificationErrors =      NO;
         self.useServerAuthenticationService =   NO;
+        self.showConsoleOnConnect =             NO;
         
         self.channels = [[NSDictionary alloc] init];
         return self;

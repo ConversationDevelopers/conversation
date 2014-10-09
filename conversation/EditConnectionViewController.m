@@ -32,6 +32,7 @@
 #import "EditConnectionViewController.h"
 #import "PreferencesSwitchCell.h"
 #import "PreferencesTextCell.h"
+#import "IRCClient.h"
 
 static unsigned short ServerTableSection = 0;
 static unsigned short IdentityTableSection = 1;
@@ -55,7 +56,8 @@ static unsigned short AutomaticTableSection = 2;
     [connectButton setTintColor:[UIColor lightGrayColor]];
     connectButton.enabled = NO;
     self.navigationItem.rightBarButtonItem = connectButton;
-
+    
+    _configuration = [[IRCConnectionConfiguration alloc] init];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -70,6 +72,13 @@ static unsigned short AutomaticTableSection = 2;
 - (void) connect:(id)sender
 {
     NSLog(@"Connect");
+    NSMutableArray *connections = [self.connectionController.connections mutableCopy];
+    [connections addObject:_configuration];
+    self.connectionController.connections = [connections copy];
+    [self.connectionController reloadData];
+    IRCClient *client = [[IRCClient alloc] initWithConfiguration:_configuration];    
+    [client connect];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (id) reuseCellWithClassName:(NSString *)identifier inTableView:(UITableView*)tableView
@@ -243,58 +252,74 @@ static unsigned short AutomaticTableSection = 2;
     return nil;
 }
 
-- (void) descriptionChanged:(id)sender
+- (void) descriptionChanged:(PreferencesTextCell*)sender
 {
     NSLog(@"Description changed");
+    _configuration.connectionName = sender.textField.text;
 }
 
-- (void) serverChanged:(id)sender
+- (void) serverChanged:(PreferencesTextCell *)sender
 {
     NSLog(@"Server changed");
+    _configuration.serverAddress = sender.textField.text;
+    // TODO: validate user input
+    if([_configuration.serverAddress isEqualToString:@""] == NO && _configuration.connectionPort > 0) {
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+    }
 }
 
-- (void) portChanged:(id)sender
+- (void) portChanged:(PreferencesTextCell *)sender
 {
     NSLog(@"Port changed");
+    _configuration.connectionPort = [sender.textField.text integerValue];
 }
 
-- (void) passwordChanged:(id)sender
+- (void) passwordChanged:(PreferencesTextCell *)sender
 {
     NSLog(@"Password changed");
+    _configuration.serverPasswordReference = sender.textField.text;
 }
 
-- (void) secureChanged:(id)sender
+- (void) secureChanged:(PreferencesSwitchCell *)sender
 {
     NSLog(@"Secure changed");
+    _configuration.connectUsingSecureLayer = sender.on;
 }
 
-- (void) nicknameChanged:(id)sender
+- (void) nicknameChanged:(PreferencesTextCell *)sender
 {
     NSLog(@"Nickname changed");
+    _configuration.primaryNickname = sender.textField.text;
 }
 
-- (void) altnickChanged:(id)sender
+- (void) altnickChanged:(PreferencesTextCell *)sender
 {
     NSLog(@"Alt Nick changed");
+    _configuration.secondaryNickname = sender.textField.text;
 }
 
-- (void) realnameChanged:(id)sender
+- (void) realnameChanged:(PreferencesTextCell *)sender
 {
-    NSLog(@"Realname changed");    
+    NSLog(@"Realname changed");
+    _configuration.realNameForRegistration = sender.textField.text;
 }
 
-- (void) nickpassChanged:(id)sender
+- (void) nickpassChanged:(PreferencesTextCell *)sender
 {
     NSLog(@"Nickpass changed");
+    _configuration.authenticationPasswordReference = sender.textField.text;
 }
 
-- (void) autoconnectChanged:(id)sender
+- (void) autoconnectChanged:(PreferencesTextCell *)sender
 {
     NSLog(@"Auto Connect changed");
+    _configuration.automaticallyConnect = sender.textField.text;
 }
 
-- (void) showconsoleChanged:(id)sender
+- (void) showconsoleChanged:(PreferencesSwitchCell *)sender
 {
     NSLog(@"Show Console changed");
+    _configuration.showConsoleOnConnect = sender.on;
+
 }
 @end

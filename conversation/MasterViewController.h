@@ -35,7 +35,9 @@
 @interface MasterViewController : UITableViewController
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
+@property (nonatomic) NSArray *connections;
 
+- (void)reloadData;
 
 @end
 
