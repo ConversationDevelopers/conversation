@@ -31,6 +31,7 @@
 #import "ConversationsController.h"
 #import "DetailViewController.h"
 #import "EditConnectionViewController.h"
+#import "IRCClient.h"
 
 @interface ConversationsController ()
 
@@ -46,7 +47,9 @@
         self.clearsSelectionOnViewWillAppear = NO;
         self.preferredContentSize = CGSizeMake(320.0, 600.0);
     }
-    self.connections = [[NSArray alloc] init];
+    if (!self.connections) {
+        self.connections = [[NSMutableArray alloc] init];
+    }
 }
 
 - (void)viewDidLoad
@@ -129,8 +132,9 @@
         
         headerLabel.textAlignment = NSTextAlignmentLeft;
         
-        IRCConnectionConfiguration *configuration = [self.connections objectAtIndex:section];
-        headerLabel.text = configuration.connectionName;
+        IRCClient *client = [self.connections objectAtIndex:section];
+        headerLabel.text = client.configuration.connectionName;
+        NSLog(@"TITLE: %@", headerLabel.text);
         
         [headerView addSubview:headerLabel];
         return headerView;

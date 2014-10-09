@@ -35,7 +35,7 @@
 @interface ConversationsController : UITableViewController
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
-@property (nonatomic) NSArray *connections;
+@property (nonatomic, retain) NSMutableArray *connections;
 
 - (void)reloadData;
 
