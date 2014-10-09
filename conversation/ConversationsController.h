@@ -32,7 +32,7 @@
 
 @class DetailViewController;
 
-@interface MasterViewController : UITableViewController
+@interface ConversationsController : UITableViewController
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
 @property (nonatomic) NSArray *connections;

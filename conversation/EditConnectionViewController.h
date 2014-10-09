@@ -31,11 +31,11 @@
 
 #import <UIKit/UIKit.h>
 #import "IRCConnectionConfiguration.h"
-#import "MasterViewController.h"
+#import "ConversationsController.h"
 
 @interface EditConnectionViewController : UITableViewController {
     IRCConnectionConfiguration *_configuration;
 }
 
-@property (nonatomic, strong) MasterViewController *connectionController;
+@property (nonatomic, strong) ConversationsController *conversationsController;
 @end

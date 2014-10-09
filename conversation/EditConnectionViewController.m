@@ -72,10 +72,10 @@ static unsigned short AutomaticTableSection = 2;
 - (void) connect:(id)sender
 {
     NSLog(@"Connect");
-    NSMutableArray *connections = [self.connectionController.connections mutableCopy];
+    NSMutableArray *connections = [self.conversationsController.connections mutableCopy];
     [connections addObject:_configuration];
-    self.connectionController.connections = [connections copy];
-    [self.connectionController reloadData];
+    self.conversationsController.connections = [connections copy];
+    [self.conversationsController reloadData];
     IRCClient *client = [[IRCClient alloc] initWithConfiguration:_configuration];    
     [client connect];
     [self dismissViewControllerAnimated:YES completion:nil];

@@ -28,16 +28,16 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "MasterViewController.h"
+#import "ConversationsController.h"
 #import "DetailViewController.h"
 #import "EditConnectionViewController.h"
 
-@interface MasterViewController ()
+@interface ConversationsController ()
 
 @property NSMutableArray *objects;
 @end
 
-@implementation MasterViewController
+@implementation ConversationsController
 
 - (void)awakeFromNib
 {
@@ -79,7 +79,7 @@
 {
     EditConnectionViewController *editController = [[EditConnectionViewController alloc] init];
 
-    editController.connectionController = self;
+    editController.conversationsController = self;
     
     UINavigationController *navigationController = [[UINavigationController alloc]
                                                     
