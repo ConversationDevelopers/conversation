@@ -322,8 +322,8 @@
                     /* The secondary nickname has already been attempted, so we will append an underscore to the nick until
                      we find one that the server accepts. If we cannot find a nick within 25 characters, we will abort. */
                     if ([self.currentNicknameOnConnection length] < 25) {
-                        NSString *newNickName = [NSString stringWithFormat:@"NICK %@_", self.currentNicknameOnConnection];
-                        [self sendData:newNickName];
+                        NSString *newNickName = [NSString stringWithFormat:@"%@_", self.currentNicknameOnConnection];
+                        [self sendData:[@"NICK " stringByAppendingString:newNickName]];
                         self.currentNicknameOnConnection = newNickName;
                     } else {
                         //TODO: Disconnect
