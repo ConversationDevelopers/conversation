@@ -135,7 +135,7 @@
 - (void)onSocket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err
 {
     NSLog(@"onSocket:%p willDisconnectWithError:%@", sock, err);
-    [client clientDidDisconnectWithError:err];
+    [self.client clientDidDisconnectWithError:err];
 }
 
 - (void)onSocketDidDisconnect:(AsyncSocket *)sock
