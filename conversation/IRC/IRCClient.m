@@ -499,9 +499,9 @@
     [self.connection close];
 }
 
-- (void)clientDidDisconnectWithError:(NSError *)error
+- (void)clientDidDisconnectWithError:(NSString *)error
 {
-
+    NSLog(@"Disconnected: %@", error);
 }
 
 - (void)sendData:(NSString *)line

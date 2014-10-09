@@ -52,14 +52,13 @@
 
 - (void)connectToHost:(NSString *)host onPort:(UInt16)port useSSL:(BOOL)sslEnabled
 {
-    NSLog(@"Ready");
     self.sslEnabled = sslEnabled;
     NSError *err = nil;
     asyncSocket = [[AsyncSocket alloc] initWithDelegate:self];
     if (![asyncSocket connectToHost:host onPort:port error:&err]) {
         NSLog(@"Error: %@", err);
     } else {
-        NSLog(@"Connected!");
+        NSLog(@"Connecting..");
     }
 }
 
@@ -134,13 +133,14 @@
 
 - (void)onSocket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err
 {
-    NSLog(@"onSocket:%p willDisconnectWithError:%@", sock, err);
-    [self.client clientDidDisconnectWithError:err];
+    self.client.isConnected = NO;
+    [self.client clientDidDisconnectWithError:[err localizedFailureReason]];
 }
 
 - (void)onSocketDidDisconnect:(AsyncSocket *)sock
 {
     self.client.isProcessingTermination = NO;
+    self.client.isConnected = NO;
 }
 
 - (void)writeDataToSocket:(NSData *)data
