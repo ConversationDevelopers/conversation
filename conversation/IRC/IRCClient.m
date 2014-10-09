@@ -317,11 +317,14 @@
                 if ([self.currentNicknameOnConnection isEqualToString:self.configuration.primaryNickname]) {
                     /* This is the first occurance of this error, so we will try registration again with the secondary nickname. */
                     [self sendData:[NSString stringWithFormat:@"NICK %@", self.configuration.secondaryNickname]];
+                    self.currentNicknameOnConnection = self.configuration.secondaryNickname;
                 } else {
                     /* The secondary nickname has already been attempted, so we will append an underscore to the nick until
                      we find one that the server accepts. If we cannot find a nick within 25 characters, we will abort. */
                     if ([self.currentNicknameOnConnection length] < 25) {
-                        [self sendData:[NSString stringWithFormat:@"NICK %@_", self.currentNicknameOnConnection]];
+                        NSString *newNickName = [NSString stringWithFormat:@"NICK %@_", self.currentNicknameOnConnection];
+                        [self sendData:newNickName];
+                        self.currentNicknameOnConnection = newNickName;
                     } else {
                         //TODO: Disconnect
                     }
