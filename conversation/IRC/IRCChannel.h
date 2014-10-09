@@ -29,7 +29,11 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "IRCClient.h"
 
 @interface IRCChannel : NSObject
+
++ (IRCChannel *) fromString:(NSString *)channelName WithClient:(IRCClient *)client;
++ (IRCChannel *) createNewFromString:(NSString *)channelName WithClient:(IRCClient *)client;
 
 @end

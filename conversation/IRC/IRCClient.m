@@ -31,7 +31,7 @@
 #import "IRCClient.h"
 #import "IRCConnection.h"
 #import "NSString+Methods.h"
-#import "IRCChannel.m"
+#import "IRCChannel.h"
 
 #define CONNECTION_RETRY_INTERVAL       30
 #define CONNECTION_RETRY_ATTEMPTS       10
