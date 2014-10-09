@@ -53,7 +53,9 @@
 - (instancetype)initWithConfiguration:(IRCConnectionConfiguration *)config;
 - (void)connect;
 - (void)clientDidConnect;
+- (void)clientDidDisconnectWithError:(NSError *)error;
 - (void)clientDidReceiveData:(const char *)decodedData;
 - (void)clientDidSendData;
+- (void)disconnect;
 
 @end

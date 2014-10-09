@@ -135,16 +135,22 @@
 - (void)onSocket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err
 {
     NSLog(@"onSocket:%p willDisconnectWithError:%@", sock, err);
+    [client clientDidDisconnectWithError:err];
 }
 
 - (void)onSocketDidDisconnect:(AsyncSocket *)sock
 {
-    NSLog(@"onSocketDidDisconnect:%p", sock);
+    self.client.isProcessingTermination = NO;
 }
 
 - (void)writeDataToSocket:(NSData *)data
 {
     [asyncSocket writeData:data withTimeout:-1 tag:1];
+}
+
+- (void)close
+{
+    [asyncSocket disconnectAfterReadingAndWriting];
 }
 
 @end

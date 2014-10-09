@@ -492,6 +492,18 @@
 {
 }
 
+- (void)disconnect
+{
+    self.isProcessingTermination = YES;
+    [self sendData:[NSString stringWithFormat:@"QUIT %@", self.configuration.disconnectMessage]];
+    [self.connection close];
+}
+
+- (void)clientDidDisconnectWithError:(NSError *)error
+{
+
+}
+
 - (void)sendData:(NSString *)line
 {
     if ([line hasSuffix:@"\n"] == NO) {

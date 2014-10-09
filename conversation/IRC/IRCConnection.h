@@ -40,5 +40,6 @@
 - (id)initWithClient:(IRCClient *)client;
 - (void)connectToHost:(NSString *)host onPort:(UInt16)port useSSL:(BOOL)sslEnabled;
 - (void)writeDataToSocket:(NSData *)data;
+- (void)close;
 
 @end
