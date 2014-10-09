@@ -100,6 +100,9 @@
 {
     self.isConnected = YES;
     self.isAttemptingConnection = NO;
+    self.isAttemptingRegistration = YES;
+    
+    self.currentNicknameOnConnection = self.configuration.primaryNickname;
     
     /* Send initial registration */
     [self sendData:[NSString stringWithFormat:@"NICK %@",
@@ -298,9 +301,36 @@
             
             break;
             
+        case RPL_WELCOME:
+            self.isAttemptingRegistration = NO;
+            break;
+            
         case RPL_ISUPPORT:
             [self updateServerSupportedFeatures:line];
             break;
+            
+        case ERR_ERRONEUSNICKNAME:
+        case ERR_NICKNAMEINUSE:
+            /* The server did not accept our nick request, let's see if this happened during initial registration. */
+            if ([self isAttemptingRegistration]) {
+                /* The nick error did happen during initial registration, we will check if we have already tried the secondary nickname */
+                if ([self.currentNicknameOnConnection isEqualToString:self.configuration.primaryNickname]) {
+                    /* This is the first occurance of this error, so we will try registration again with the secondary nickname. */
+                    [self sendData:[NSString stringWithFormat:@"NICK %@", self.configuration.secondaryNickname]];
+                } else {
+                    /* The secondary nickname has already been attempted, so we will append an underscore to the nick until
+                     we find one that the server accepts. If we cannot find a nick within 25 characters, we will abort. */
+                    if ([self.currentNicknameOnConnection length] < 25) {
+                        [self sendData:[NSString stringWithFormat:@"NICK %@_", self.currentNicknameOnConnection]];
+                    } else {
+                        //TODO: Disconnect
+                    }
+                }
+            }
+            break;
+            
+        case RPL_ENDOFMOTD:
+            [self sendData:@"JOIN #conversation"];
             
         default:
             break;
@@ -373,6 +403,7 @@
             /* We do not have a channel object with this channel, we must create one. */
             channel = [IRCChannel createNewFromString:recipientString WithClient:self];
         }
+        NSLog(@"Message on channel %@ by %s: %s", recipientString, senderDict[1], message);
     } else {
     
     }
