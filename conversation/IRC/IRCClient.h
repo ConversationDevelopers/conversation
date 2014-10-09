@@ -46,6 +46,9 @@
 @property (nonatomic, assign) BOOL isProcessingTermination;
 
 @property (nonatomic, copy) NSDictionary *channels;
+@property (nonatomic, copy) NSDictionary *queries;
+
+@property (nonatomic, strong) NSMutableDictionary *featuresSupportedByServer;
 
 - (instancetype)initWithConfiguration:(IRCConnectionConfiguration *)config;
 - (void)connect;

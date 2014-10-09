@@ -29,7 +29,18 @@
  */
 
 #import "IRCChannel.h"
+#import "IRCClient.h"
 
 @implementation IRCChannel
+
++ (IRCChannel *) fromString:(NSString *)channelName WithClient:(IRCClient *)client
+{
+    return [[client channels] objectForKey:channelName];
+}
+
++ (IRCChannel *) createNewFromString:(NSString *)channelName WithClient:(IRCClient *)client
+{
+    return nil;
+}
 
 @end

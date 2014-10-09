@@ -30,6 +30,8 @@
 
 #import "IRCClient.h"
 #import "IRCConnection.h"
+#import "NSString+Methods.h"
+#import "IRCChannel.m"
 
 #define CONNECTION_RETRY_INTERVAL       30
 #define CONNECTION_RETRY_ATTEMPTS       10
@@ -45,7 +47,6 @@
 @property (nonatomic, strong) NSString *currentNicknameOnConnection;
 @property (nonatomic, strong) NSTimer *connectionRetryTimer;
 
-@property (nonatomic, strong) NSMutableDictionary *featuresSupportedByServer;
 
 @end
 
@@ -194,6 +195,12 @@
         lineBeforeIteration = malloc(strlen(line));
         strcpy(lineBeforeIteration, line);
     }
+    char *senderDict[] = {
+        sender,
+        nickname,
+        username,
+        hostname
+    };
     
         /* Pass over the string to the next space or end of the line to get the range of the IRC command */
     int commandLength = 0;
@@ -212,6 +219,7 @@
     line++;
     lineBeforeIteration++;
     
+    char* recipient;
     if (*line != ':') {
         /* Pass over the string to the next space or end of the line to get the range of the recipient. */
         int recipientLength = 0;
@@ -221,7 +229,7 @@
         }
         
         /* Copy the characters from the recipient range we calculated earlier */
-        char* recipient = malloc(recipientLength + 1);
+        recipient = malloc(recipientLength + 1);
         strncpy(recipient, lineBeforeIteration, recipientLength);
         command[commandLength] = '\0';
         lineBeforeIteration = lineBeforeIteration + recipientLength;
@@ -229,6 +237,8 @@
         /* Consume the following space leading to the message */
         line++;
         lineBeforeIteration++;
+    } else {
+        recipient = NULL;
     }
     
     /* The message may start with a colon. We will trim this before continuing */
@@ -253,7 +263,7 @@
             break;
             
         case PRIVMSG:
-            
+            [self userReceivedMessage:line onRecepient:recipient byUser:senderDict];
             break;
             
         case NOTICE:
@@ -300,14 +310,14 @@
 - (void)updateServerSupportedFeatures:(const char*)data
 {
     /* Create a mutable copy of the data */
-    char* line = malloc(strlen(data));
-    strcpy(line, data);
+    char* mline = malloc(strlen(data));
+    strcpy(mline, data);
     
     /* Split the string by spaces and iterate over the result. This will give us key value pairs seperated by '=' or
      just simply keys which we will translate to booleans */
     const char delimeter[2] = " ";
     char *token;
-    token = strtok(line, delimeter);
+    token = strtok(mline, delimeter);
     
     /* Iterate over the key-value pair */
     while(token != NULL) {
@@ -348,6 +358,23 @@
         }
         
         token = strtok(NULL, delimeter);
+    }
+}
+
+- (void)userReceivedMessage:(const char *)message onRecepient:(char *)recepient byUser:(char **)senderDict
+{
+    NSString *recipientString = [NSString stringWithCString:recepient encoding:NSUTF8StringEncoding];
+    
+    /* Check if this message is a channel message or a private message */
+    if ([recipientString isValidChannelName:self]) {
+        /* Get the channel object associated with this channel */
+        IRCChannel *channel = [IRCChannel fromString:recipientString WithClient:self];
+        if (channel == nil) {
+            /* We do not have a channel object with this channel, we must create one. */
+            channel = [IRCChannel createNewFromString:recipientString WithClient:self];
+        }
+    } else {
+    
     }
 }
 
