@@ -113,7 +113,6 @@
         [sock readDataToData:[AsyncSocket CRLFData] withTimeout:-1 tag:0];
     }
     [self.client clientDidSendData];
-    NSLog(@"Data send");
 }
 
 - (void)onSocket:(AsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
