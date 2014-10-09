@@ -36,7 +36,7 @@
 
 @interface IRCClient : NSObject
 
-@property (nonatomic, copy) IRCConnectionConfiguration *configuration;
+@property (nonatomic, assign) IRCConnectionConfiguration *configuration;
 @property (nonatomic, assign) BOOL isConnected;
 @property (nonatomic, assign) BOOL isAttemptingConnection;
 @property (nonatomic, assign) BOOL hasSuccessfullyAuthenticated;
