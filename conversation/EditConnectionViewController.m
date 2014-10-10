@@ -49,11 +49,14 @@ static unsigned short AutomaticTableSection = 2;
 - (void) viewDidLoad {
     [super viewDidLoad];
     
-    self.title = @"New Connection";
+    self.title = NSLocalizedString(@"New Connection", @"Title of edit connection view");
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = cancelButton;
     
-    UIBarButtonItem *connectButton = [[UIBarButtonItem alloc] initWithTitle:@"Connect" style:UIBarButtonItemStylePlain target:self action:@selector(connect:)];
+    UIBarButtonItem *connectButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", @"Left button in edit connection view")
+                                                                      style:UIBarButtonItemStylePlain
+                                                                     target:self
+                                                                     action:@selector(connect:)];
     [connectButton setTintColor:[UIColor lightGrayColor]];
     connectButton.enabled = NO;
     self.navigationItem.rightBarButtonItem = connectButton;
@@ -72,8 +75,6 @@ static unsigned short AutomaticTableSection = 2;
 
 - (void) connect:(id)sender
 {
-    NSLog(@"Connect");
-    
     IRCClient *client = [[IRCClient alloc] initWithConfiguration:_configuration];
     [[AppPreferences sharedPrefs] addConnectionConfiguration:_configuration];
     
@@ -122,7 +123,7 @@ static unsigned short AutomaticTableSection = 2;
 	if (indexPath.section == AutomaticTableSection && indexPath.row == 2) {
         UITableViewController *autoJoinViewController = [[UITableViewController alloc] init];
         
-        autoJoinViewController.title = @"Join Rooms";
+        autoJoinViewController.title = NSLocalizedString(@"Join Rooms", @"Title of auto join channels view");
         
         [self.navigationController pushViewController:autoJoinViewController animated:YES];
         
@@ -145,16 +146,16 @@ static unsigned short AutomaticTableSection = 2;
     if (indexPath.section == ServerTableSection) {
         if (indexPath.row == 0) {
             PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
-            cell.textLabel.text = @"Description";
+            cell.textLabel.text = NSLocalizedString(@"Description", @"Custom server name");
             cell.textField.text = @"";
-            cell.textField.placeholder = @"Optional";
+            cell.textField.placeholder = NSLocalizedString(@"Optional", @"User input is optional");
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textEditAction = @selector(descriptionChanged:);
             return cell;
         } else if (indexPath.row == 1) {
             PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
-            cell.textLabel.text = @"Address";
+            cell.textLabel.text = NSLocalizedString(@"Address", @"Server address");
             cell.textField.text = @"";
             cell.textField.placeholder = @"irc.example.com";
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -164,7 +165,7 @@ static unsigned short AutomaticTableSection = 2;
             return cell;
         } else if (indexPath.row == 2) {
             PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
-            cell.textLabel.text = @"Port";
+            cell.textLabel.text = NSLocalizedString(@"Port", @"Server port to connect to");
             cell.textField.text = @"";
             cell.textField.placeholder = @"6667";
             cell.textField.keyboardType = UIKeyboardTypeNumberPad;
@@ -172,22 +173,22 @@ static unsigned short AutomaticTableSection = 2;
             return cell;
         } else if (indexPath.row == 3) {
             PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
-            cell.textLabel.text = @"Password";
+            cell.textLabel.text = NSLocalizedString(@"Password", @"Server password");
             cell.textField.text = @"";
-            cell.textField.placeholder = @"Optional";
+            cell.textField.placeholder = NSLocalizedString(@"Optional", @"User input is optional");
 			cell.textField.secureTextEntry = YES;
             cell.textEditAction = @selector(passwordChanged:);
             return cell;
         } else if (indexPath.row == 4) {
             PreferencesSwitchCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesSwitchCell class]) inTableView:tableView];
             cell.switchAction = @selector(secureChanged:);
-            cell.textLabel.text = @"Use SSL";
+            cell.textLabel.text = NSLocalizedString(@"Use SSL", @"Use ssl encrypted connection");
             return cell;
         }
     } else if (indexPath.section == IdentityTableSection) {
         if (indexPath.row == 0) {
             PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
-            cell.textLabel.text = @"Nick Name";
+            cell.textLabel.text = NSLocalizedString(@"Nick Name", @"Nick name to use on IRC");
             cell.textField.text = @"";
             cell.textField.placeholder = @"Guest";
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
@@ -195,7 +196,7 @@ static unsigned short AutomaticTableSection = 2;
             return cell;
         } else if (indexPath.row == 1) {
             PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
-            cell.textLabel.text = @"Alt. Nick";
+            cell.textLabel.text = NSLocalizedString(@"Alt. Nick", @"Alternative nick to use on IRC");
             cell.textField.text = @"";
             cell.textField.placeholder = @"Guest_";
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
@@ -203,7 +204,7 @@ static unsigned short AutomaticTableSection = 2;
             return cell;
         } else if (indexPath.row == 2) {
             PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
-            cell.textLabel.text = @"User Name";
+            cell.textLabel.text = NSLocalizedString(@"User Name", @"User name to use on IRC");
             cell.textField.text = @"";
             cell.textField.placeholder = @"Guest";
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
@@ -211,7 +212,7 @@ static unsigned short AutomaticTableSection = 2;
             return cell;
         } else if (indexPath.row == 3) {
             PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
-            cell.textLabel.text = @"Real Name";
+            cell.textLabel.text = NSLocalizedString(@"Real Name", @"Real name to use on IRC");
             cell.textField.text = @"";
             cell.textField.placeholder = @"Guest";
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
@@ -219,9 +220,9 @@ static unsigned short AutomaticTableSection = 2;
             return cell;
         } else if (indexPath.row == 4) {
             PreferencesTextCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesTextCell class]) inTableView:tableView];
-            cell.textLabel.text = @"Nick Password";
+            cell.textLabel.text = NSLocalizedString(@"Nick Password", @"Nick authentication password");
             cell.textField.text = @"";
-            cell.textField.placeholder = @"Optional";
+            cell.textField.placeholder = NSLocalizedString(@"Optional", @"User input is optional");
 			cell.textField.secureTextEntry = YES;
             cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -233,20 +234,20 @@ static unsigned short AutomaticTableSection = 2;
         if (indexPath.row == 0) {
             PreferencesSwitchCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesSwitchCell class]) inTableView:tableView];
             cell.switchAction = @selector(autoconnectChanged:);
-            cell.textLabel.text = @"Connect at Launch";
+            cell.textLabel.text = NSLocalizedString(@"Connect at Launch", @"Connect on app launch");
             return cell;
         } else if (indexPath.row == 1) {
             PreferencesSwitchCell *cell = [self reuseCellWithClassName:NSStringFromClass([PreferencesSwitchCell class]) inTableView:tableView];
             cell.switchAction = @selector(showconsoleChanged:);
-            cell.textLabel.text = @"Show Console";
+            cell.textLabel.text = NSLocalizedString(@"Show Console", @"Show debug console on connect");
             return cell;
         } else if (indexPath.row == 2) {
             UITableViewCell *cell = [self reuseCellWithClassName:NSStringFromClass([UITableViewCell class]) inTableView:tableView];
             
-            cell.textLabel.text = @"Join Rooms";
+            cell.textLabel.text = NSLocalizedString(@"Join Rooms", @"Title of auto join channels view");
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             
-            cell.detailTextLabel.text = @"None";
+            cell.detailTextLabel.text = NSLocalizedString(@"None", @"No entries");
             
             return cell;
         }

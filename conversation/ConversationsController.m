@@ -57,7 +57,10 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithTitle:@"Settings" style:UIBarButtonItemStylePlain target:self action:@selector(showSettings:)];
+    UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Settings", @"Left navigation button in the conversation list")
+                                                                       style:UIBarButtonItemStylePlain
+                                                                      target:self
+                                                                      action:@selector(showSettings:)];
     [settingsButton setTintColor:[UIColor lightGrayColor]];
     self.navigationItem.leftBarButtonItem = settingsButton;
     
@@ -142,7 +145,6 @@
         
         IRCClient *client = [self.connections objectAtIndex:section];
         headerLabel.text = client.configuration.connectionName;
-        NSLog(@"TITLE: %@", headerLabel.text);
         
         [headerView addSubview:headerLabel];
         return headerView;
