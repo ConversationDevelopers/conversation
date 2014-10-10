@@ -34,6 +34,7 @@
 #import "PreferencesTextCell.h"
 #import "IRCClient.h"
 #import "AppPreferences.h"
+#import "NSString+Methods.h"
 
 static unsigned short ServerTableSection = 0;
 static unsigned short IdentityTableSection = 1;
@@ -265,10 +266,19 @@ static unsigned short AutomaticTableSection = 2;
 - (void) serverChanged:(PreferencesTextCell *)sender
 {
     NSLog(@"Server changed");
-    _configuration.serverAddress = sender.textField.text;
-    // TODO: validate user input
-    if([_configuration.serverAddress isEqualToString:@""] == NO && _configuration.connectionPort > 0) {
+
+    // Check if the user input is a valid server address
+    if([sender.textField.text isValidServerAddress]) {
+        _configuration.serverAddress = sender.textField.text;
         self.navigationItem.rightBarButtonItem.enabled = YES;
+    } else {
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not a valid server address"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
     }
 }
 
