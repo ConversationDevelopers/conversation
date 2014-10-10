@@ -132,25 +132,19 @@
 
 #pragma mark - Table View
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
 {
-    
     if(self.connections.count > 0) {
-        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0,0,tableView.frame.size.width,20)];
-        headerView.backgroundColor = [UIColor lightGrayColor];
+        UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
         
-        UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, headerView.frame.size.width, headerView.frame.size.height)];
+        // Set colors
+        [header.textLabel setTextColor:[UIColor darkGrayColor]];
+        header.contentView.backgroundColor = [UIColor whiteColor];
         
-        headerLabel.textAlignment = NSTextAlignmentLeft;
-        
+        // Set Label
         IRCClient *client = [self.connections objectAtIndex:section];
-        headerLabel.text = client.configuration.connectionName;
-        
-        [headerView addSubview:headerLabel];
-        return headerView;
+        header.textLabel.text = client.configuration.connectionName;
     }
-    return nil;
-    
 }
 
 - (double)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
