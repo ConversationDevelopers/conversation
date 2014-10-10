@@ -34,5 +34,6 @@
 
 - (BOOL) isValidChannelName:(IRCClient *)client;
 - (BOOL) isValidServerAddress;
+- (BOOL) isValidNickname;
 
 @end

@@ -303,13 +303,36 @@ static unsigned short AutomaticTableSection = 2;
 - (void) nicknameChanged:(PreferencesTextCell *)sender
 {
     NSLog(@"Nickname changed");
-    _configuration.primaryNickname = sender.textField.text;
+    
+    // Check if user input is a valid nickname
+    if([sender.textField.text isValidNickname]) {
+        _configuration.primaryNickname = sender.textField.text;
+    } else {
+        sender.textField.text = @"";
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Not a valid nick name", @"User entered not a valid nick name")
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 - (void) altnickChanged:(PreferencesTextCell *)sender
 {
     NSLog(@"Alt Nick changed");
-    _configuration.secondaryNickname = sender.textField.text;
+    
+    if([sender.textField.text isValidNickname]) {
+        _configuration.secondaryNickname = sender.textField.text;
+    } else {
+        sender.textField.text = @"";
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Not a valid nick name", @"User entered not a valid nick name")
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 - (void) realnameChanged:(PreferencesTextCell *)sender

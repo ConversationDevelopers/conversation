@@ -97,4 +97,26 @@
     return NO;
 }
 
+- (BOOL) isValidNickname
+{
+    if ([self isKindOfClass:[NSString class]]) {
+        
+        // Check length
+        if (self.length < 2 && self.length > 16)
+            return NO;
+
+        // Check for invalid characters
+        NSCharacterSet *allowed = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_-\[]|{}^`"] invertedSet];
+        if([self rangeOfCharacterFromSet:allowed].location != NSNotFound)
+            return NO;
+        
+        // Check if first character is a digit
+        NSCharacterSet *number = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+        if([self rangeOfCharacterFromSet:number].location == 0)
+            return NO;
+        return YES;
+    }
+    return NO;
+}
+
 @end
