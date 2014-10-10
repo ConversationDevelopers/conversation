@@ -273,7 +273,7 @@ static unsigned short AutomaticTableSection = 2;
         self.navigationItem.rightBarButtonItem.enabled = YES;
     } else {
         self.navigationItem.rightBarButtonItem.enabled = NO;
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not a valid server address"
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Not a valid server address", @"User entered not a valid server address")
                                                         message:nil
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
