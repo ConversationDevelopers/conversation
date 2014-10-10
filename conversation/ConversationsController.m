@@ -91,15 +91,17 @@
 
 - (void)addConversation:(id)sender
 {
-    EditConnectionViewController *editController = [[EditConnectionViewController alloc] init];
-
-    editController.conversationsController = self;
-    
-    UINavigationController *navigationController = [[UINavigationController alloc]
-                                                    
-                                                    initWithRootViewController:editController];
-    
-    [self presentViewController:navigationController animated:YES completion: nil];
+    if(self.connections.count == 0) {
+        [self addConnection];
+    } else {
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add Conversation", @"Add Conversation")
+                                                           delegate:self
+                                                  cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                                             destructiveButtonTitle:nil
+                                                  otherButtonTitles:NSLocalizedString(@"Join a Channel", @"Join a Channel"), NSLocalizedString(@"Message a User", @"Message a User"), NSLocalizedString(@"Add Connection", @"Add Connection"), nil];
+        [sheet setTag:-1];
+        [sheet showInView:self.view];
+    }
     
 /*
     if (!self.objects) {
@@ -114,6 +116,19 @@
 - (void)reloadData
 {
     [self.tableView reloadData];
+}
+
+- (void)addConnection
+{
+    EditConnectionViewController *editController = [[EditConnectionViewController alloc] init];
+    
+    editController.conversationsController = self;
+    
+    UINavigationController *navigationController = [[UINavigationController alloc]
+                                                    
+                                                    initWithRootViewController:editController];
+    
+    [self presentViewController:navigationController animated:YES completion: nil];
 }
 
 #pragma mark - Segues
@@ -163,7 +178,8 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return self.connections.count;
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -221,32 +237,51 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    IRCClient *client = [self.connections objectAtIndex:actionSheet.tag];
-    UIAlertView *alertView;
-    
-    switch (buttonIndex) {
-        case 0:
-            // Connect or disconnect
-            if(client.isConnected)
-               [client disconnect];
-            else
-                [client connect];
-            break;
-        case 1:
-            // Edit
-            break;
-        case 2:
-            // Delete
-            alertView = [[UIAlertView alloc] initWithTitle:client.configuration.connectionName
-                                                   message:NSLocalizedString(@"Do you really want to delete this connection?", @"Delete connection confirmation")
-                                                  delegate:self
-                                         cancelButtonTitle:NSLocalizedString(@"no", @"no")
-                                         otherButtonTitles:NSLocalizedString(@"yes", @"yes"), nil];
-            alertView.tag = actionSheet.tag;
-            [alertView show];
-            break;
-        default:
-            break;
+    if (actionSheet.tag == -1) {
+        // Conversations action sheet
+        switch (buttonIndex) {
+            case 0:
+                // Join a Channel
+                break;
+            case 1:
+                // Message a User
+                break;
+            case 2:
+                // Add Connection
+                [self addConnection];
+                break;
+            default:
+                break;
+        }
+    } else {
+        // Connections action sheet
+        IRCClient *client = [self.connections objectAtIndex:actionSheet.tag];
+        UIAlertView *alertView;
+        
+        switch (buttonIndex) {
+            case 0:
+                // Connect or disconnect
+                if(client.isConnected)
+                   [client disconnect];
+                else
+                    [client connect];
+                break;
+            case 1:
+                // Edit
+                break;
+            case 2:
+                // Delete
+                alertView = [[UIAlertView alloc] initWithTitle:client.configuration.connectionName
+                                                       message:NSLocalizedString(@"Do you really want to delete this connection?", @"Delete connection confirmation")
+                                                      delegate:self
+                                             cancelButtonTitle:NSLocalizedString(@"no", @"no")
+                                             otherButtonTitles:NSLocalizedString(@"yes", @"yes"), nil];
+                alertView.tag = actionSheet.tag;
+                [alertView show];
+                break;
+            default:
+                break;
+        }
     }
 }
 
