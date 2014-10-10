@@ -38,6 +38,7 @@
 
 + (id)sharedPrefs;
 - (void)addConnectionConfiguration:(IRCConnectionConfiguration *)configuration;
+- (void)deleteConnectionWithIdentifier:(NSString *)identifier;
 - (NSArray *)getConnectionConfigurations;
 - (void)save;
 

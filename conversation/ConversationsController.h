@@ -32,7 +32,7 @@
 
 @class DetailViewController;
 
-@interface ConversationsController : UITableViewController
+@interface ConversationsController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
 @property (nonatomic, retain) NSMutableArray *connections;

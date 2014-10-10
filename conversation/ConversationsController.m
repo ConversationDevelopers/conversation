@@ -144,6 +144,14 @@
         // Set Label
         IRCClient *client = [self.connections objectAtIndex:section];
         header.textLabel.text = client.configuration.connectionName;
+        header.tag = section;
+        
+        // Add Tap Event
+        UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(headerViewSelected:)];
+        [singleTapRecogniser setDelegate:self];
+        singleTapRecogniser.numberOfTouchesRequired = 1;
+        singleTapRecogniser.numberOfTapsRequired = 1;
+        [header addGestureRecognizer:singleTapRecogniser];
     }
 }
 
@@ -185,6 +193,73 @@
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+    }
+}
+
+- (void)headerViewSelected:(UIGestureRecognizer *)sender
+{
+    // Get relevant client
+    IRCClient *client = [self.connections objectAtIndex:sender.view.tag];
+    
+    // Connect or disconnect
+    NSString *firstAction;
+    if([client isConnected])
+        firstAction = NSLocalizedString(@"Disconnect", @"Disconnect server");
+    else
+        firstAction = NSLocalizedString(@"Connect", @"Connect server");
+    
+    // Define action sheet
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:client.configuration.connectionName
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                                         destructiveButtonTitle:nil
+                                              otherButtonTitles:firstAction, NSLocalizedString(@"Edit", @"Edit Connection"), NSLocalizedString(@"Delete", @"Delete connection"), nil];
+    [sheet setTag:sender.view.tag];
+    [sheet setDestructiveButtonIndex:2];
+    [sheet showInView:self.view];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    IRCClient *client = [self.connections objectAtIndex:actionSheet.tag];
+    UIAlertView *alertView;
+    
+    switch (buttonIndex) {
+        case 0:
+            // Connect or disconnect
+            if(client.isConnected)
+               [client disconnect];
+            else
+                [client connect];
+            break;
+        case 1:
+            // Edit
+            break;
+        case 2:
+            // Delete
+            alertView = [[UIAlertView alloc] initWithTitle:client.configuration.connectionName
+                                                   message:NSLocalizedString(@"Do you really want to delete this connection?", @"Delete connection confirmation")
+                                                  delegate:self
+                                         cancelButtonTitle:NSLocalizedString(@"no", @"no")
+                                         otherButtonTitles:NSLocalizedString(@"yes", @"yes"), nil];
+            alertView.tag = actionSheet.tag;
+            [alertView show];
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    // Delete connection
+    if(buttonIndex == YES) {
+        IRCClient *client = [self.connections objectAtIndex:alertView.tag];
+        if(client.isConnected)
+            [client disconnect];
+        [[AppPreferences sharedPrefs] deleteConnectionWithIdentifier:client.configuration.uniqueIdentifier];
+        [self.connections removeObjectAtIndex:alertView.tag];
+        [self.tableView reloadData];
     }
 }
 

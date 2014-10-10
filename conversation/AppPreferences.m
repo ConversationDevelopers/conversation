@@ -46,6 +46,18 @@
     return prefs;
 }
 
+- (id)init
+{
+    if (self = [super init]) {
+        self.preferences = [[NSUserDefaults standardUserDefaults] objectForKey:@"preferences"];
+        if(!self.preferences) {
+            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+            self.preferences = dict;
+        }
+    }
+    return self;
+}
+
 - (void)addConnectionConfiguration:(IRCConnectionConfiguration *)configuration
 {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
@@ -61,15 +73,18 @@
     self.preferences = dict;
 }
 
-- (id)init {
-    if (self = [super init]) {
-        self.preferences = [[NSUserDefaults standardUserDefaults] objectForKey:@"preferences"];
-        if(!self.preferences) {
-            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-            self.preferences = dict;
+- (void)deleteConnectionWithIdentifier:(NSString *)identifier
+{
+    NSMutableDictionary *dict = [self.preferences mutableCopy];
+    NSArray *connections = [self.preferences objectForKey:@"configurations"];
+    NSMutableArray *newcons = [[NSMutableArray alloc] init];
+    for (NSDictionary *config in connections) {
+        if([config[@"uniqueIdentifier"] isEqualToString:identifier] == NO) {
+            [newcons addObject:config];
         }
     }
-    return self;
+    dict[@"configurations"] = newcons;
+    self.preferences = [dict copy];
 }
 
 - (void)save
