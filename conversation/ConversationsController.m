@@ -31,6 +31,7 @@
 #import "ConversationsController.h"
 #import "DetailViewController.h"
 #import "EditConnectionViewController.h"
+#import "AddConversationViewController.h"
 #import "IRCClient.h"
 #import "AppPreferences.h"
 
@@ -127,6 +128,22 @@
     UINavigationController *navigationController = [[UINavigationController alloc]
                                                     
                                                     initWithRootViewController:editController];
+    
+    [self presentViewController:navigationController animated:YES completion: nil];
+}
+
+- (void)addItemWithTag:(NSInteger)tag
+{
+    AddConversationViewController *addController = [[AddConversationViewController alloc] init];
+    addController.conversationsController = self;
+
+    // add Query
+    if(tag == 1)
+        addController.addChannel = NO;
+        
+    UINavigationController *navigationController = [[UINavigationController alloc]
+                                                    
+                                                    initWithRootViewController:addController];
     
     [self presentViewController:navigationController animated:YES completion: nil];
 }
@@ -242,9 +259,11 @@
         switch (buttonIndex) {
             case 0:
                 // Join a Channel
+                [self addItemWithTag:buttonIndex];
                 break;
             case 1:
                 // Message a User
+                [self addItemWithTag:buttonIndex];
                 break;
             case 2:
                 // Add Connection
