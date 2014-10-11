@@ -32,6 +32,7 @@
 
 @interface UITableView (Helpers)
 
+- (id)reuseCellWithIdentifier:(NSString *)identifier andStyle:(NSInteger)style;
 - (id)reuseCellWithIdentifier:(NSString *)identifier;
 
 @end

@@ -30,8 +30,10 @@
 
 
 #import "AddConversationViewController.h"
+#import "PreferencesListViewController.h"
 #import "PreferencesTextCell.h"
 #import "UITableView+Methods.h"
+#import "IRCClient.h"
 
 @implementation AddConversationViewController
 
@@ -42,6 +44,7 @@ static unsigned short ConversationTableSection = 1;
     if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
         return nil;
     self.addChannel = YES;
+
     return self;
 }
 
@@ -109,11 +112,20 @@ static unsigned short ConversationTableSection = 1;
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath
 {
     if (indexPath.section == ConnectionTableSection && indexPath.row == 0) {
-        UITableViewController *connectionsViewController = [[UITableViewController alloc] initWithStyle:UITableViewStyleGrouped];
         
-        connectionsViewController.title = NSLocalizedString(@"Connections", @"Connection");
+        PreferencesListViewController *connectionListViewController = [[PreferencesListViewController alloc] initWithStyle:UITableViewStyleGrouped];
         
-        [self.navigationController pushViewController:connectionsViewController animated:YES];
+        NSMutableArray *connections = [[NSMutableArray alloc] init];
+
+        for (IRCClient *client in self.conversationsController.connections) {
+            [connections addObject:client.configuration.connectionName];
+        }
+
+        connectionListViewController.title = NSLocalizedString(@"Connections", @"Connection");
+        connectionListViewController.items = [connections copy];
+        connectionListViewController.previousViewController = self;
+        
+        [self.navigationController pushViewController:connectionListViewController animated:YES];
         
         return;
     }
@@ -134,11 +146,12 @@ static unsigned short ConversationTableSection = 1;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == ConnectionTableSection) {
-        UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+
+        // Connection Picker
+        UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];
         
         cell.textLabel.text = NSLocalizedString(@"Connection", @"Connection");
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        
         cell.detailTextLabel.text = @"";
         
         return cell;

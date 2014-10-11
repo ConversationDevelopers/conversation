@@ -28,24 +28,11 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UITableView+Methods.h"
+#import <UIKit/UIKit.h>
 
-@implementation UITableView (Helpers)
+@interface PreferencesListViewController : UITableViewController
 
-- (id)reuseCellWithIdentifier:(NSString *)identifier andStyle:(NSInteger)style
-{
-    UITableViewCell *cell = [self dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
-    if(!cell)
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:NSStringFromClass([UITableViewCell class])];
-    return cell;
-}
-
-- (id)reuseCellWithIdentifier:(NSString *)identifier
-{
-    id cell = [self dequeueReusableCellWithIdentifier:identifier];
-    if(!cell)
-        cell = [[NSClassFromString(identifier) alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-    return cell;
-}
+@property (nonatomic, copy) NSArray *items;
+@property (nonatomic, strong) UITableViewController *previousViewController;
 
 @end

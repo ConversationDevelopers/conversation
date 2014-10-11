@@ -35,6 +35,7 @@
 @interface AddConversationViewController : UITableViewController
 
 @property (nonatomic, assign) BOOL addChannel;
+@property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) ConversationsController *conversationsController;
 
 @end
