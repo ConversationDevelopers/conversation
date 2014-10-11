@@ -45,7 +45,8 @@
     [[UINavigationBar appearance] setTranslucent:NO];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0]];
-    [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0]];
+    [[UINavigationBar appearance] setTintColor:[UIColor lightGrayColor]];
+    [[UINavigationBar appearance] setBackgroundColor:[UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0]];
     [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor lightGrayColor]} forState:UIControlStateNormal];
 
     UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
