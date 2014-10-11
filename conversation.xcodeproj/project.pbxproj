@@ -19,7 +19,7 @@
 		DA79EA1E19E6F8C50027A370 /* AppPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA1D19E6F8C50027A370 /* AppPreferences.m */; };
 		DA79EA2319E80AB20027A370 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DA79EA2119E80AB20027A370 /* Localizable.strings */; };
 		DA79EA2619E909CD0027A370 /* AddConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA2519E909CD0027A370 /* AddConversationViewController.m */; };
-		DA79EA2919E914FF0027A370 /* UITableView+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA2819E914FF0027A370 /* UITableView+Methods.m */; };
+		DA79EA2C19E9237A0027A370 /* UITableView+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA2B19E9237A0027A370 /* UITableView+Methods.m */; };
 		DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */; };
 		DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */; };
 		DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322AB19E5DE490068E2B6 /* PreferencesTextCell.m */; };
@@ -67,8 +67,8 @@
 		DA79EA2219E80AB20027A370 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = conversation/Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA79EA2419E909CD0027A370 /* AddConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddConversationViewController.h; sourceTree = "<group>"; };
 		DA79EA2519E909CD0027A370 /* AddConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddConversationViewController.m; sourceTree = "<group>"; };
-		DA79EA2719E914FF0027A370 /* UITableView+Methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITableView+Methods.h"; path = "../UITableView+Methods.h"; sourceTree = "<group>"; };
-		DA79EA2819E914FF0027A370 /* UITableView+Methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITableView+Methods.m"; path = "../UITableView+Methods.m"; sourceTree = "<group>"; };
+		DA79EA2A19E9237A0027A370 /* UITableView+Methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITableView+Methods.h"; path = "conversation/UITableView+Methods.h"; sourceTree = "<group>"; };
+		DA79EA2B19E9237A0027A370 /* UITableView+Methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UITableView+Methods.m"; path = "conversation/UITableView+Methods.m"; sourceTree = "<group>"; };
 		DAA3229C19E56CBF0068E2B6 /* EditConnectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditConnectionViewController.h; sourceTree = "<group>"; };
 		DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditConnectionViewController.m; sourceTree = "<group>"; };
 		DAA322A819E5DE490068E2B6 /* PreferencesSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesSwitchCell.h; sourceTree = "<group>"; };
@@ -81,8 +81,8 @@
 		FA00A38F19E5DD3D00E7B4D7 /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSKeychain.m; path = Preferences/SSKeychain.m; sourceTree = "<group>"; };
 		FA00A39019E5DD3D00E7B4D7 /* SSKeychainQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSKeychainQuery.h; path = Preferences/SSKeychainQuery.h; sourceTree = "<group>"; };
 		FA00A39119E5DD3D00E7B4D7 /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSKeychainQuery.m; path = Preferences/SSKeychainQuery.m; sourceTree = "<group>"; };
-		FA00A39A19E6AD1200E7B4D7 /* NSString+Methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Methods.h"; sourceTree = "<group>"; };
-		FA00A39B19E6AD1200E7B4D7 /* NSString+Methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Methods.m"; sourceTree = "<group>"; };
+		FA00A39A19E6AD1200E7B4D7 /* NSString+Methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Methods.h"; path = "conversation/IRC/NSString+Methods.h"; sourceTree = "<group>"; };
+		FA00A39B19E6AD1200E7B4D7 /* NSString+Methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Methods.m"; path = "conversation/IRC/NSString+Methods.m"; sourceTree = "<group>"; };
 		FA109B2619E3E6D60068DC29 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
 		FA109B2719E3E6D60068DC29 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
 		FA109B2819E3E6D60068DC29 /* IRCConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCConnection.h; sourceTree = "<group>"; };
@@ -139,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				FA109B2519E3E6D60068DC29 /* IRC */,
+				DA79EA2D19E923870027A370 /* Helpers */,
 				DAA322A819E5DE490068E2B6 /* PreferencesSwitchCell.h */,
 				DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */,
 				DAA322AA19E5DE490068E2B6 /* PreferencesTextCell.h */,
@@ -153,8 +154,6 @@
 				DA79EA2519E909CD0027A370 /* AddConversationViewController.m */,
 				DA1A4AC419E1770700565763 /* DetailViewController.h */,
 				DA1A4AC519E1770700565763 /* DetailViewController.m */,
-				DA79EA2719E914FF0027A370 /* UITableView+Methods.h */,
-				DA79EA2819E914FF0027A370 /* UITableView+Methods.m */,
 				DA1A4AC719E1770700565763 /* Main.storyboard */,
 				DA1A4ACA19E1770700565763 /* Images.xcassets */,
 				DA1A4ACC19E1770700565763 /* LaunchScreen.xib */,
@@ -191,6 +190,18 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		DA79EA2D19E923870027A370 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				FA00A39A19E6AD1200E7B4D7 /* NSString+Methods.h */,
+				FA00A39B19E6AD1200E7B4D7 /* NSString+Methods.m */,
+				DA79EA2A19E9237A0027A370 /* UITableView+Methods.h */,
+				DA79EA2B19E9237A0027A370 /* UITableView+Methods.m */,
+			);
+			name = Helpers;
+			path = ..;
+			sourceTree = "<group>";
+		};
 		FA109B2519E3E6D60068DC29 /* IRC */ = {
 			isa = PBXGroup;
 			children = (
@@ -204,8 +215,6 @@
 				FA109B3D19E420320068DC29 /* IRCChannel.m */,
 				FA00A38219E5A69F00E7B4D7 /* IRCMessageIndex.h */,
 				FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */,
-				FA00A39A19E6AD1200E7B4D7 /* NSString+Methods.h */,
-				FA00A39B19E6AD1200E7B4D7 /* NSString+Methods.m */,
 			);
 			path = IRC;
 			sourceTree = "<group>";
@@ -337,10 +346,10 @@
 				DA1A4AC319E1770700565763 /* ConversationsController.m in Sources */,
 				DA1A4ABD19E1770700565763 /* main.m in Sources */,
 				FA109B3719E419040068DC29 /* IRCConnectionConfiguration.m in Sources */,
+				DA79EA2C19E9237A0027A370 /* UITableView+Methods.m in Sources */,
 				FA109B3E19E420320068DC29 /* IRCChannel.m in Sources */,
 				DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */,
 				DA79EA1E19E6F8C50027A370 /* AppPreferences.m in Sources */,
-				DA79EA2919E914FF0027A370 /* UITableView+Methods.m in Sources */,
 				FA109B3B19E41D540068DC29 /* IRCChannelConfiguration.m in Sources */,
 				FA109B3419E410D80068DC29 /* IRCClient.m in Sources */,
 				FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */,
