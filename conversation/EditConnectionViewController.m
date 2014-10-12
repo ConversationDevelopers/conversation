@@ -266,12 +266,12 @@ static unsigned short AutomaticTableSection = 2;
         self.navigationItem.rightBarButtonItem.enabled = YES;
     } else {
         self.navigationItem.rightBarButtonItem.enabled = NO;
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Not a valid server address", @"User entered not a valid server address")
+        /*UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Not a valid server address", @"User entered not a valid server address")
                                                         message:nil
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
-        [alert show];
+        [alert show];*/
     }
 }
 
@@ -302,12 +302,12 @@ static unsigned short AutomaticTableSection = 2;
         _configuration.primaryNickname = sender.textField.text;
     } else {
         sender.textField.text = @"";
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Not a valid nick name", @"User entered not a valid nick name")
+        /*UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Not a valid nick name", @"User entered not a valid nick name")
                                                         message:nil
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
-        [alert show];
+        [alert show];*/
     }
 }
 
@@ -319,12 +319,12 @@ static unsigned short AutomaticTableSection = 2;
         _configuration.secondaryNickname = sender.textField.text;
     } else {
         sender.textField.text = @"";
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Not a valid nick name", @"User entered not a valid nick name")
+        /*UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Not a valid nick name", @"User entered not a valid nick name")
                                                         message:nil
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
-        [alert show];
+        [alert show];*/
     }
 }
 
