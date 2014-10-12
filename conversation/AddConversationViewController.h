@@ -31,8 +31,12 @@
 
 #import <UIKit/UIKit.h>
 #import "ConversationsController.h"
+#import "IRCChannel.h"
 
 @interface AddConversationViewController : UITableViewController
+{
+    IRCChannel *_conversation;
+}
 
 @property (nonatomic, assign) BOOL addChannel;
 @property (nonatomic, strong) UITableView *tableView;

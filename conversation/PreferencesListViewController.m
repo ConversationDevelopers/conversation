@@ -83,11 +83,11 @@
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSIndexPath *path = [tableView indexPathForSelectedRow];
-    UITableViewCell *cell = [self.previousViewController.tableView cellForRowAtIndexPath:path];
-    cell.detailTextLabel.text = [self.items objectAtIndex:indexPath.row];
-    cell.tag = indexPath.row;
-
+    _selectedItem = indexPath.row;
+    
+    if (!_target || [_target respondsToSelector:_action])
+        if ([[UIApplication sharedApplication] sendAction:_action to:_target from:self forEvent:nil])
+            
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 

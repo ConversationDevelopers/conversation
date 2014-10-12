@@ -28,34 +28,18 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Foundation/Foundation.h>
-#import "IRCConnectionConfiguration.h"
-#import "IRCMessageIndex.h"
+#import "ConversationItemView.h"
 
-@class IRCConnection;
+@implementation ConversationItemView
 
-@interface IRCClient : NSObject
+- (void)awakeFromNib {
+    // Initialization code
+}
 
-@property (nonatomic, strong) IRCConnectionConfiguration *configuration;
-@property (nonatomic, assign) BOOL isConnected;
-@property (nonatomic, assign) BOOL isAttemptingConnection;
-@property (nonatomic, assign) BOOL hasSuccessfullyAuthenticated;
-@property (nonatomic, assign) BOOL isAwaitingAuthenticationResponse;
-@property (nonatomic, assign) BOOL isAttemptingRegistration;
-@property (nonatomic, assign) BOOL isBNCConnection;
-@property (nonatomic, assign) BOOL isProcessingTermination;
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
 
-@property (nonatomic, copy) NSArray *channels;
-@property (nonatomic, copy) NSArray *queries;
-
-@property (nonatomic, strong) NSMutableDictionary *featuresSupportedByServer;
-
-- (instancetype)initWithConfiguration:(IRCConnectionConfiguration *)config;
-- (void)connect;
-- (void)clientDidConnect;
-- (void)clientDidDisconnectWithError:(NSString *)error;
-- (void)clientDidReceiveData:(const char *)decodedData;
-- (void)clientDidSendData;
-- (void)disconnect;
+    // Configure the view for the selected state
+}
 
 @end

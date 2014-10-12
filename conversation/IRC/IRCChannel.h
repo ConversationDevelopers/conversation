@@ -36,4 +36,8 @@
 + (IRCChannel *) fromString:(NSString *)channelName WithClient:(IRCClient *)client;
 + (IRCChannel *) createNewFromString:(NSString *)channelName WithClient:(IRCClient *)client;
 
+@property (nonatomic, assign) IRCClient *client;
+@property (nonatomic) NSString *name;
+@property (nonatomic) NSString *password;
+
 @end

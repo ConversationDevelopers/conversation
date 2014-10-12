@@ -74,7 +74,7 @@
         self.isProcessingTermination =          NO;
         
         self.alternativeNickNameAttempts = 0;
-        self.channels = [[NSDictionary alloc] init];
+        self.channels = [[NSArray alloc] init];
         self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
         
         return self;

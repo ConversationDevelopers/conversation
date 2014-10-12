@@ -66,7 +66,8 @@ static unsigned short ConversationTableSection = 1;
     [chatButton setTintColor:[UIColor lightGrayColor]];
     chatButton.enabled = NO;
     self.navigationItem.rightBarButtonItem = chatButton;
-
+    _conversation = [[IRCChannel alloc] init];
+    
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -80,6 +81,31 @@ static unsigned short ConversationTableSection = 1;
 
 - (void) chat:(id)sender
 {
+    // Add conversation to client
+    NSMutableArray *connections = [_conversationsController.connections mutableCopy];
+    
+    IRCClient *client;
+    int i;
+    for (i=0; i<_conversationsController.connections.count; i++) {
+        client = [_conversationsController.connections objectAtIndex:i];
+        if([client.configuration.uniqueIdentifier isEqualToString:_conversation.client.configuration.uniqueIdentifier])
+            break;
+    }
+    
+    if(_addChannel) {
+        NSMutableArray *channels = [client.channels mutableCopy];
+        [channels addObject:_conversation];
+        client.channels = [channels copy];
+    } else {
+        NSMutableArray *queries = [client.queries mutableCopy];
+        [queries addObject:_conversation];
+        client.queries = [queries copy];
+    }
+    
+    [connections setObject:client atIndexedSubscript:i];
+    
+    _conversationsController.connections = connections;
+    [_conversationsController reloadData];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -123,7 +149,8 @@ static unsigned short ConversationTableSection = 1;
 
         connectionListViewController.title = NSLocalizedString(@"Connections", @"Connection");
         connectionListViewController.items = [connections copy];
-        connectionListViewController.previousViewController = self;
+        connectionListViewController.target = self;
+        connectionListViewController.action = @selector(connectionDidChanged:);
         
         [self.navigationController pushViewController:connectionListViewController animated:YES];
         
@@ -152,7 +179,7 @@ static unsigned short ConversationTableSection = 1;
         
         cell.textLabel.text = NSLocalizedString(@"Connection", @"Connection");
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        cell.detailTextLabel.text = @"";
+        cell.detailTextLabel.text = _conversation.client.configuration.connectionName;
         
         return cell;
         
@@ -181,14 +208,26 @@ static unsigned short ConversationTableSection = 1;
     }
     return nil;
 }
-    
-- (void) nameChanged:(id)sender
+
+- (void) connectionDidChanged:(PreferencesListViewController *)sender
 {
-    NSLog(@"name changed");
+    _conversation.client = [_conversationsController.connections objectAtIndex:sender.selectedItem];
+    [self.tableView reloadData];
+    if(_conversation.client != nil && [_conversation.name isEqualToString:@""] == NO) {
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+    }
 }
 
-- (void) passwordChanged:(id)sender
+- (void) nameChanged:(PreferencesTextCell *)sender
 {
-    NSLog(@"password changed");    
+    _conversation.name = sender.textField.text;
+    if(_conversation.client != nil && [_conversation.name isEqualToString:@""] == NO) {
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+    }
+}
+
+- (void) passwordChanged:(PreferencesTextCell *)sender
+{
+    _conversation.password = sender.textField.text;
 }
 @end

@@ -35,7 +35,11 @@
 
 + (IRCChannel *) fromString:(NSString *)channelName WithClient:(IRCClient *)client
 {
-    return [[client channels] objectForKey:channelName];
+    for (IRCChannel *channel in client.channels) {
+        if([channel.name isEqualToString:channelName])
+            return channel;
+    }
+    return nil;
 }
 
 + (IRCChannel *) createNewFromString:(NSString *)channelName WithClient:(IRCClient *)client

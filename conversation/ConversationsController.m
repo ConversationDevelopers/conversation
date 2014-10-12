@@ -34,6 +34,7 @@
 #import "AddConversationViewController.h"
 #import "IRCClient.h"
 #import "AppPreferences.h"
+#import "ConversationItemView.h"
 
 @interface ConversationsController ()
 
@@ -195,21 +196,24 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return self.connections.count;
+    return _connections.count;
     
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.objects.count;
+    return [[[_connections objectAtIndex:section] channels] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    IRCClient *client = [_connections objectAtIndex:indexPath.section];
+    IRCChannel *channel = [client.channels objectAtIndex:indexPath.row];
+
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
 
-    NSDate *object = self.objects[indexPath.row];
-    cell.textLabel.text = [object description];
+    cell.textLabel.text = channel.name;
+          
     return cell;
 }
 

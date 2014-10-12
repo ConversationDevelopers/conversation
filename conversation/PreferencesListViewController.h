@@ -32,7 +32,10 @@
 
 @interface PreferencesListViewController : UITableViewController
 
+@property (nonatomic, weak) id target;
+@property (nonatomic) SEL action;
 @property (nonatomic, copy) NSArray *items;
-@property (nonatomic, strong) UITableViewController *previousViewController;
+@property (nonatomic, assign) NSInteger selectedItem;
+
 
 @end
