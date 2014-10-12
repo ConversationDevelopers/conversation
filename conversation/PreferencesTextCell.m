@@ -58,7 +58,7 @@ static PreferencesTextCell *currentEditingCell;
     _textField.returnKeyType = UIReturnKeyDone;
     
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-    [defaultCenter addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
+    [defaultCenter addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidEndEditingNotification object:nil];
     
     CGRect subviewFrame = _textField.frame;
     subviewFrame.size.height = [_textField sizeThatFits:_textField.bounds.size].height;
