@@ -35,6 +35,7 @@
 #import "IRCClient.h"
 #import "AppPreferences.h"
 #import "ConversationItemView.h"
+#import "UITableView+Methods.h"
 
 @interface ConversationsController ()
 
@@ -149,21 +150,23 @@
     [self presentViewController:navigationController animated:YES completion: nil];
 }
 
-#pragma mark - Segues
+#pragma mark - Table View
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([[segue identifier] isEqualToString:@"showDetail"]) {
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSDate *object = self.objects[indexPath.row];
-        DetailViewController *controller = (DetailViewController *)[[segue destinationViewController] topViewController];
-        [controller setDetailItem:object];
-        controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
-        controller.navigationItem.leftItemsSupplementBackButton = YES;
-    }
+- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+    return indexPath;
 }
 
-#pragma mark - Table View
+- (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath
+{
+    IRCClient *client = [self.connections objectAtIndex:indexPath.section];
+    IRCChannel *channel = [client.channels objectAtIndex:indexPath.row];
+    
+    DetailViewController *controller = [[DetailViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    controller.title = channel.name;
+    [self.navigationController pushViewController:controller animated:YES];
+
+}
+
 
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
 {
@@ -194,6 +197,11 @@
     return  20.0;
 }
 
+- (double)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 50;
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return _connections.count;
@@ -209,11 +217,20 @@
 {
     IRCClient *client = [_connections objectAtIndex:indexPath.section];
     IRCChannel *channel = [client.channels objectAtIndex:indexPath.row];
+    
+    static NSString *CellIdentifier = @"cell";
+    ConversationItemView *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        cell = [[ConversationItemView alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+    }
+    
+    [[cell imageView] setImage:[UIImage imageNamed:@"channelicon.png"]];
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
+    cell.name = channel.name;
+    cell.unreadCount = 350;
+    cell.detail = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. \nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. ";
 
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-
-    cell.textLabel.text = channel.name;
-          
     return cell;
 }
 

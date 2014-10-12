@@ -32,4 +32,8 @@
 
 @interface ConversationItemView : UITableViewCell
 
+@property (nonatomic) NSString *name;
+@property (nonatomic) NSString *detail;
+@property (nonatomic) NSInteger unreadCount;
+
 @end

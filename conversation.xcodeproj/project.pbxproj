@@ -11,13 +11,9 @@
 		DA1A4AC019E1770700565763 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4ABF19E1770700565763 /* AppDelegate.m */; };
 		DA1A4AC319E1770700565763 /* ConversationsController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AC219E1770700565763 /* ConversationsController.m */; };
 		DA1A4AC619E1770700565763 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AC519E1770700565763 /* DetailViewController.m */; };
-		DA1A4AC919E1770700565763 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DA1A4AC719E1770700565763 /* Main.storyboard */; };
-		DA1A4ACB19E1770700565763 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA1A4ACA19E1770700565763 /* Images.xcassets */; };
-		DA1A4ACE19E1770700565763 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = DA1A4ACC19E1770700565763 /* LaunchScreen.xib */; };
 		DA1A4ADA19E1770700565763 /* conversationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AD919E1770700565763 /* conversationTests.m */; };
 		DA1A4AF019E181C400565763 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1A4AEF19E181C400565763 /* CFNetwork.framework */; };
 		DA79EA1E19E6F8C50027A370 /* AppPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA1D19E6F8C50027A370 /* AppPreferences.m */; };
-		DA79EA2319E80AB20027A370 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DA79EA2119E80AB20027A370 /* Localizable.strings */; };
 		DA79EA2619E909CD0027A370 /* AddConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA2519E909CD0027A370 /* AddConversationViewController.m */; };
 		DA79EA2C19E9237A0027A370 /* UITableView+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA2B19E9237A0027A370 /* UITableView+Methods.m */; };
 		DA79EA3019E92AF20027A370 /* PreferencesListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA2F19E92AF20027A370 /* PreferencesListViewController.m */; };
@@ -25,6 +21,11 @@
 		DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */; };
 		DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */; };
 		DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322AB19E5DE490068E2B6 /* PreferencesTextCell.m */; };
+		DAC65A4419EAA2ED00E00A73 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A3B19EAA2ED00E00A73 /* LaunchScreen.xib */; };
+		DAC65A4519EAA2ED00E00A73 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A3D19EAA2ED00E00A73 /* Localizable.strings */; };
+		DAC65A4719EAA2ED00E00A73 /* channelicon.png in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A4119EAA2ED00E00A73 /* channelicon.png */; };
+		DAC65A4819EAA2ED00E00A73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A4219EAA2ED00E00A73 /* Images.xcassets */; };
+		DAC65A4919EAA2ED00E00A73 /* queryicon.png in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A4319EAA2ED00E00A73 /* queryicon.png */; };
 		FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */; };
 		FA00A39219E5DD3D00E7B4D7 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A38F19E5DD3D00E7B4D7 /* SSKeychain.m */; };
 		FA00A39319E5DD3D00E7B4D7 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A39119E5DD3D00E7B4D7 /* SSKeychainQuery.m */; };
@@ -57,16 +58,12 @@
 		DA1A4AC219E1770700565763 /* ConversationsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConversationsController.m; sourceTree = "<group>"; };
 		DA1A4AC419E1770700565763 /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		DA1A4AC519E1770700565763 /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
-		DA1A4AC819E1770700565763 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		DA1A4ACA19E1770700565763 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		DA1A4ACD19E1770700565763 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		DA1A4AD319E1770700565763 /* conversationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = conversationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA1A4AD819E1770700565763 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DA1A4AD919E1770700565763 /* conversationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = conversationTests.m; sourceTree = "<group>"; };
 		DA1A4AEF19E181C400565763 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		DA79EA1C19E6F8C50027A370 /* AppPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppPreferences.h; sourceTree = "<group>"; };
 		DA79EA1D19E6F8C50027A370 /* AppPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppPreferences.m; sourceTree = "<group>"; };
-		DA79EA2219E80AB20027A370 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = conversation/Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA79EA2419E909CD0027A370 /* AddConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddConversationViewController.h; sourceTree = "<group>"; };
 		DA79EA2519E909CD0027A370 /* AddConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddConversationViewController.m; sourceTree = "<group>"; };
 		DA79EA2A19E9237A0027A370 /* UITableView+Methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UITableView+Methods.h"; path = "conversation/UITableView+Methods.h"; sourceTree = "<group>"; };
@@ -81,6 +78,11 @@
 		DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesSwitchCell.m; sourceTree = "<group>"; };
 		DAA322AA19E5DE490068E2B6 /* PreferencesTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesTextCell.h; sourceTree = "<group>"; };
 		DAA322AB19E5DE490068E2B6 /* PreferencesTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesTextCell.m; sourceTree = "<group>"; };
+		DAC65A3C19EAA2ED00E00A73 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = LaunchScreen.xib; sourceTree = "<group>"; };
+		DAC65A3E19EAA2ED00E00A73 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Localizable.strings; sourceTree = "<group>"; };
+		DAC65A4119EAA2ED00E00A73 /* channelicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = channelicon.png; path = conversation/Resources/channelicon.png; sourceTree = "<group>"; };
+		DAC65A4219EAA2ED00E00A73 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = conversation/Resources/Images.xcassets; sourceTree = "<group>"; };
+		DAC65A4319EAA2ED00E00A73 /* queryicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = queryicon.png; path = conversation/Resources/queryicon.png; sourceTree = "<group>"; };
 		FA00A38219E5A69F00E7B4D7 /* IRCMessageIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCMessageIndex.h; sourceTree = "<group>"; };
 		FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCMessageIndex.m; sourceTree = "<group>"; };
 		FA00A38E19E5DD3D00E7B4D7 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSKeychain.h; path = Preferences/SSKeychain.h; sourceTree = "<group>"; };
@@ -164,10 +166,7 @@
 				DA79EA2519E909CD0027A370 /* AddConversationViewController.m */,
 				DA1A4AC419E1770700565763 /* DetailViewController.h */,
 				DA1A4AC519E1770700565763 /* DetailViewController.m */,
-				DA1A4AC719E1770700565763 /* Main.storyboard */,
-				DA1A4ACA19E1770700565763 /* Images.xcassets */,
-				DA1A4ACC19E1770700565763 /* LaunchScreen.xib */,
-				DA79EA2119E80AB20027A370 /* Localizable.strings */,
+				DAC65A3519EAA24300E00A73 /* Resources */,
 				DA1A4ABA19E1770700565763 /* Supporting Files */,
 				FA109B3819E4190C0068DC29 /* Preferences */,
 			);
@@ -210,6 +209,28 @@
 			);
 			name = Helpers;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		DAC65A3519EAA24300E00A73 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DAC65A3A19EAA2ED00E00A73 /* Base.lproj */,
+				DAC65A4119EAA2ED00E00A73 /* channelicon.png */,
+				DAC65A4219EAA2ED00E00A73 /* Images.xcassets */,
+				DAC65A4319EAA2ED00E00A73 /* queryicon.png */,
+			);
+			name = Resources;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		DAC65A3A19EAA2ED00E00A73 /* Base.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				DAC65A3B19EAA2ED00E00A73 /* LaunchScreen.xib */,
+				DAC65A3D19EAA2ED00E00A73 /* Localizable.strings */,
+			);
+			name = Base.lproj;
+			path = conversation/Resources/Base.lproj;
 			sourceTree = "<group>";
 		};
 		FA109B2519E3E6D60068DC29 /* IRC */ = {
@@ -326,10 +347,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA1A4AC919E1770700565763 /* Main.storyboard in Resources */,
-				DA79EA2319E80AB20027A370 /* Localizable.strings in Resources */,
-				DA1A4ACE19E1770700565763 /* LaunchScreen.xib in Resources */,
-				DA1A4ACB19E1770700565763 /* Images.xcassets in Resources */,
+				DAC65A4919EAA2ED00E00A73 /* queryicon.png in Resources */,
+				DAC65A4419EAA2ED00E00A73 /* LaunchScreen.xib in Resources */,
+				DAC65A4819EAA2ED00E00A73 /* Images.xcassets in Resources */,
+				DAC65A4519EAA2ED00E00A73 /* Localizable.strings in Resources */,
+				DAC65A4719EAA2ED00E00A73 /* channelicon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -391,29 +413,20 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		DA1A4AC719E1770700565763 /* Main.storyboard */ = {
+		DAC65A3B19EAA2ED00E00A73 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				DA1A4AC819E1770700565763 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		DA1A4ACC19E1770700565763 /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DA1A4ACD19E1770700565763 /* Base */,
+				DAC65A3C19EAA2ED00E00A73 /* Base */,
 			);
 			name = LaunchScreen.xib;
 			sourceTree = "<group>";
 		};
-		DA79EA2119E80AB20027A370 /* Localizable.strings */ = {
+		DAC65A3D19EAA2ED00E00A73 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				DA79EA2219E80AB20027A370 /* Base */,
+				DAC65A3E19EAA2ED00E00A73 /* Base */,
 			);
 			name = Localizable.strings;
-			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
