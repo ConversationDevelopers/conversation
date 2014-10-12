@@ -181,8 +181,6 @@ static PreferencesTextCell *currentEditingCell;
 }
 
 - (void) textFieldDidEndEditing:(UITextField *) textField {
-    if (self.textEditAction)
-        [[UIApplication sharedApplication] sendAction:self.textEditAction to:nil from:self forEvent:nil];
     if (self.textFieldBlock)
         self.textFieldBlock(textField);
     
