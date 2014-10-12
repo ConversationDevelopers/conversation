@@ -57,6 +57,9 @@ static PreferencesTextCell *currentEditingCell;
     _textField.enablesReturnKeyAutomatically = NO;
     _textField.returnKeyType = UIReturnKeyDone;
     
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
+    
     CGRect subviewFrame = _textField.frame;
     subviewFrame.size.height = [_textField sizeThatFits:_textField.bounds.size].height;
     _textField.frame = subviewFrame;
@@ -157,6 +160,12 @@ static PreferencesTextCell *currentEditingCell;
 }
 
 #pragma mark -
+
+- (void)textFieldDidChange:(id)sender
+{
+    if (self.textEditAction)
+        [[UIApplication sharedApplication] sendAction:self.textEditAction to:nil from:self forEvent:nil];
+}
 
 - (BOOL) textFieldShouldBeginEditing:(UITextField *) textField {
     return _enabled;
