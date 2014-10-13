@@ -314,8 +314,8 @@
                 alertView = [[UIAlertView alloc] initWithTitle:client.configuration.connectionName
                                                        message:NSLocalizedString(@"Do you really want to delete this connection?", @"Delete connection confirmation")
                                                       delegate:self
-                                             cancelButtonTitle:NSLocalizedString(@"no", @"no")
-                                             otherButtonTitles:NSLocalizedString(@"yes", @"yes"), nil];
+                                             cancelButtonTitle:NSLocalizedString(@"No", @"no")
+                                             otherButtonTitles:NSLocalizedString(@"Yes", @"yes"), nil];
                 alertView.tag = actionSheet.tag;
                 [alertView show];
                 break;
