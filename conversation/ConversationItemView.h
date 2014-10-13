@@ -30,8 +30,14 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ConversationItemView : UITableViewCell
+@interface ConversationItemView : UITableViewCell {
+    UILabel *_nameLabel;
+    UILabel *_firstDetailLabel;
+    UILabel *_secondDetailLabel;
+    UILabel *_unreadCountLabel;
+}
 
+@property (nonatomic) BOOL isChannel;
 @property (nonatomic) UIImage *image;
 @property (nonatomic) NSString *name;
 @property (nonatomic) NSString *detail;

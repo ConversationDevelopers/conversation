@@ -38,6 +38,37 @@
     if(!self)
         return nil;
     
+    [self.textLabel removeFromSuperview];
+    self.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
+    
+    _nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    _nameLabel.font = [UIFont boldSystemFontOfSize:16];
+    _nameLabel.textColor = [UIColor darkGrayColor];
+    
+    _firstDetailLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    _firstDetailLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
+    _firstDetailLabel.textColor = [UIColor lightGrayColor];
+
+    _secondDetailLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    _secondDetailLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
+    _secondDetailLabel.textColor = [UIColor lightGrayColor];
+    
+    _unreadCountLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    _unreadCountLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
+    _unreadCountLabel.textColor = [UIColor lightGrayColor];
+
+    [self.contentView addSubview:_nameLabel];
+    [self.contentView addSubview:_firstDetailLabel];
+    [self.contentView addSubview:_secondDetailLabel];
+    [self.contentView addSubview:_unreadCountLabel];
+    
+    _isChannel = YES;
+    
+    if(_isChannel)
+        self.imageView.image = [UIImage imageNamed:@"channelicon.png"];
+    else
+        self.imageView.image = [UIImage imageNamed:@"queryicon.png"];
+    
     return self;
 }
 
@@ -45,19 +76,45 @@
 {
     [super prepareForReuse];
     
-    self.textLabel.text = @"";
 }
 
 -(void)layoutSubviews
 {
-    if(self.editing)
-        return;
+    
     [super layoutSubviews];
     
-    self.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
-
-    self.imageView.image = self.image;
-    self.imageView.frame = CGRectMake(self.imageView.frame.origin.x, self.imageView.frame.origin.y+10.0, self.imageView.frame.size.width-17.0, self.imageView.frame.size.height-17.0);
+    self.imageView.frame = CGRectMake(self.imageView.frame.origin.x,
+                                      self.imageView.frame.origin.y+10.0,
+                                      self.imageView.frame.size.width-17.0,
+                                      self.imageView.frame.size.height-17.0);
+    
+    CGSize size = [_name sizeWithAttributes:@{NSFontAttributeName: _nameLabel.font}];
+    
+    CGRect frame = self.imageView.frame;
+    frame.origin.x = frame.origin.x*2+frame.size.width;
+    frame.size = size;
+    
+    _nameLabel.text = self.name;
+    _nameLabel.frame = frame;
+    
+    
+    NSArray *detail = [self.detail componentsSeparatedByString:@"\n"];
+    NSString *firstdetail = detail[0];
+    NSString *seconddetail = detail[1];
+    
+    frame.origin.y = round(self.imageView.frame.size.height / 2) + self.imageView.frame.origin.y - 5;
+    size = [firstdetail sizeWithAttributes:@{NSFontAttributeName: _firstDetailLabel.font}];
+    frame.size = size;
+    frame.size.width = self.contentView.frame.size.width - frame.origin.x;
+    
+    _firstDetailLabel.text = firstdetail;
+    _firstDetailLabel.frame = frame;
+    
+    frame.origin.y += 15;
+    
+    _secondDetailLabel.text = seconddetail;
+    _secondDetailLabel.frame = frame;
+    
     
     if (self.accessoryType != UITableViewCellAccessoryNone) {
         
@@ -73,17 +130,14 @@
                     
                     // Add unread count label
                     NSString *value = [NSString stringWithFormat:@"%li", (long)_unreadCount];
-                    UILabel *unread = [[UILabel alloc] initWithFrame:CGRectNull];
-                    unread.textColor = [UIColor lightGrayColor];
-                    unread.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
-                    unread.text = [NSString stringWithFormat:@"%li", (long)_unreadCount];
+                    _unreadCountLabel.textColor = [UIColor lightGrayColor];
+                    _unreadCountLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
+                    _unreadCountLabel.text = value;
                     
                     // Calculate frame size
-                    NSDictionary *dict = @{NSFontAttributeName: unread.font };
-                    CGSize size = [value sizeWithAttributes:dict];
-                    unread.frame = CGRectMake(frame.origin.x-size.width-5, frame.origin.y-2, size.width, size.height);
-                    
-                    [self.contentView addSubview:unread];
+                    CGSize size = [value sizeWithAttributes:@{NSFontAttributeName: _unreadCountLabel.font }];
+                    _unreadCountLabel.frame = CGRectMake(frame.origin.x-size.width-5, frame.origin.y-2, size.width, size.height);
+                
                 }
                 
                 break;
@@ -91,46 +145,6 @@
         }
     }
     
-    self.textLabel.text = _name;
-    
-    NSArray *lines = [_detail componentsSeparatedByString:@"\n"];
-    self.detailTextLabel.text = [lines objectAtIndex:0];
-    
-    CGRect contentRect = self.contentView.frame;
-    CGRect nameFrame = self.textLabel.frame;
-    nameFrame.origin.x -= 15;
-    nameFrame.origin.y = round((contentRect.size.height / 2.) - 25);
-    self.textLabel.frame = nameFrame;
-    self.textLabel.textColor = [UIColor darkGrayColor];
-    self.textLabel.font = [UIFont boldSystemFontOfSize:16];
-    
-    // Add first detail line
-    CGRect detailFrame = self.detailTextLabel.frame;
-    double width = self.contentView.frame.size.width - self.imageView.frame.size.width - 5;
-
-    self.detailTextLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
-    self.detailTextLabel.textColor = [UIColor lightGrayColor];
-    self.detailTextLabel.frame = CGRectMake(nameFrame.origin.x-4, nameFrame.origin.y+20, width, detailFrame.size.height);
-
-    
-    if([lines count] > 1 && self.contentView.subviews.count < 7) {
-        
-        // Add second detail line
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(nameFrame.origin.x, nameFrame.origin.y+35, width, detailFrame.size.height)];
-        label.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
-        label.textColor = [UIColor lightGrayColor];
-        label.text = [lines objectAtIndex:1];
-        [self.contentView addSubview:label];
-        
-    }
-
-}
-
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
 
 @end
