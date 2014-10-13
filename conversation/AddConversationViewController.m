@@ -103,13 +103,9 @@ static unsigned short ConversationTableSection = 1;
     }
     
     if(_addChannel) {
-        NSMutableArray *channels = [client.channels mutableCopy];
-        [channels addObject:_conversation];
-        client.channels = [channels copy];
+        [client.channels addObject:_conversation];
     } else {
-        NSMutableArray *queries = [client.queries mutableCopy];
-        [queries addObject:_conversation];
-        client.queries = [queries copy];
+        [client.queries addObject:_conversation];
     }
     
     [connections setObject:client atIndexedSubscript:i];

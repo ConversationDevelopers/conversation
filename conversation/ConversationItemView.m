@@ -49,9 +49,10 @@
     self.textLabel.text = @"";
 }
 
-
 -(void)layoutSubviews
 {
+    if(self.editing)
+        return;
     [super layoutSubviews];
     
     if (self.accessoryType != UITableViewCellAccessoryNone) {
@@ -63,6 +64,8 @@
                 subview != self.contentView &&
                 subview != self.selectedBackgroundView &&
                 subview != self.imageView) {
+                
+                NSLog(@"SUBVIEW: %@", subview.description);
                 
                 // This subview should be the accessory view, change its frame
                 CGRect frame = subview.frame;

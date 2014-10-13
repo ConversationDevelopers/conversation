@@ -45,8 +45,8 @@
 @property (nonatomic, assign) BOOL isBNCConnection;
 @property (nonatomic, assign) BOOL isProcessingTermination;
 
-@property (nonatomic, copy) NSArray *channels;
-@property (nonatomic, copy) NSArray *queries;
+@property (nonatomic, retain) NSMutableArray *channels;
+@property (nonatomic, retain) NSMutableArray *queries;
 
 @property (nonatomic, strong) NSMutableDictionary *featuresSupportedByServer;
 
