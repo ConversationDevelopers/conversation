@@ -43,6 +43,8 @@
 
 @property (nonatomic, strong) IRCConnection *connection;
 @property (nonatomic, assign) BOOL connectionIsBeingClosed;
+@property (nonatomic, retain) NSMutableArray *channels;
+@property (nonatomic, retain) NSMutableArray *queries;
 @property (nonatomic, assign) NSInteger alternativeNickNameAttempts;
 @property (nonatomic, strong) NSString *currentNicknameOnConnection;
 @property (nonatomic, assign) int connectionRetries;
@@ -556,6 +558,16 @@
     NSLog(@">> %@", line);
     NSData *data = [line dataUsingEncoding:NSUTF8StringEncoding];
     [self.connection writeDataToSocket:data];
+}
+
+- (NSMutableArray *)getChannels
+{
+    return self.channels;
+}
+
+- (NSMutableArray *)getQueries;
+{
+    return self.queries;
 }
 
 @end
