@@ -46,7 +46,7 @@
 @property (nonatomic, assign) NSInteger alternativeNickNameAttempts;
 @property (nonatomic, strong) NSString *currentNicknameOnConnection;
 @property (nonatomic, strong) NSTimer *connectionRetryTimer;
-
+@property (nonatomic, assign) int connectionRetries;
 
 @end
 
@@ -99,6 +99,7 @@
 - (void)clientDidConnect
 {
     self.isConnected = YES;
+    self.connectionRetries = 0;
     self.isAttemptingConnection = NO;
     self.isAttemptingRegistration = YES;
     
@@ -499,10 +500,34 @@
     [self.connection close];
 }
 
+- (void)clientDidDisconnect {
+    NSLog(@"Disconnected");
+    [self clearStatus];
+}
+
+
 - (void)clientDidDisconnectWithError:(NSString *)error
 {
     NSLog(@"Disconnected: %@", error);
+    [self clearStatus];
+    
 }
+
+- (void)clearStatus
+{
+    self.isConnected =                      NO;
+    self.isAttemptingRegistration =         NO;
+    self.isAttemptingConnection =           NO;
+    self.hasSuccessfullyAuthenticated =     NO;
+    self.isAwaitingAuthenticationResponse = NO;
+    self.isBNCConnection =                  NO;
+    self.isProcessingTermination =          NO;
+    
+    self.alternativeNickNameAttempts = 0;
+    self.channels = [[NSArray alloc] init];
+    self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
+}
+
 
 - (void)sendData:(NSString *)line
 {
