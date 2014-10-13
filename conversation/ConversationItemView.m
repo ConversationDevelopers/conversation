@@ -57,7 +57,7 @@
     self.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
 
     self.imageView.image = self.image;
-    self.imageView.frame = CGRectMake(self.imageView.frame.origin.x+5.0, self.imageView.frame.origin.y+10.0, self.imageView.frame.size.width-17.0, self.imageView.frame.size.height-17.0);
+    self.imageView.frame = CGRectMake(self.imageView.frame.origin.x, self.imageView.frame.origin.y+10.0, self.imageView.frame.size.width-17.0, self.imageView.frame.size.height-17.0);
     
     if (self.accessoryType != UITableViewCellAccessoryNone) {
         
@@ -98,6 +98,7 @@
     
     CGRect contentRect = self.contentView.frame;
     CGRect nameFrame = self.textLabel.frame;
+    nameFrame.origin.x -= 15;
     nameFrame.origin.y = round((contentRect.size.height / 2.) - 25);
     self.textLabel.frame = nameFrame;
     self.textLabel.textColor = [UIColor darkGrayColor];
@@ -109,7 +110,7 @@
 
     self.detailTextLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
     self.detailTextLabel.textColor = [UIColor lightGrayColor];
-    self.detailTextLabel.frame = CGRectMake(nameFrame.origin.x-5, nameFrame.origin.y+20, width, detailFrame.size.height);
+    self.detailTextLabel.frame = CGRectMake(nameFrame.origin.x-4, nameFrame.origin.y+20, width, detailFrame.size.height);
 
     
     if([lines count] > 1 && self.contentView.subviews.count < 7) {
