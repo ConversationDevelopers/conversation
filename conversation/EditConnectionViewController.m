@@ -61,6 +61,7 @@ static unsigned short AutomaticTableSection = 2;
                                                                      action:@selector(connect:)];
     [connectButton setTintColor:[UIColor lightGrayColor]];
     connectButton.enabled = NO;
+    badInput = NO;
     self.navigationItem.rightBarButtonItem = connectButton;
     
     _configuration = [[IRCConnectionConfiguration alloc] init];
@@ -77,6 +78,16 @@ static unsigned short AutomaticTableSection = 2;
 
 - (void) connect:(id)sender
 {
+    if(badInput) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Please check input values", @"Please check input values")
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+        
+    }
     IRCClient *client = [[IRCClient alloc] initWithConfiguration:_configuration];
     [[AppPreferences sharedPrefs] addConnectionConfiguration:_configuration];
     
@@ -253,7 +264,17 @@ static unsigned short AutomaticTableSection = 2;
 - (void) descriptionChanged:(PreferencesTextCell*)sender
 {
     NSLog(@"Description changed");
-    _configuration.connectionName = sender.textField.text;
+    _configuration.connectionName = sender.textField.text;    
+    if(sender.textField.text.length == 0) {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = NO;
+    } else if(sender.textField.text.length > 2) {
+        sender.accessoryType = UITableViewCellAccessoryCheckmark;
+        badInput = NO;
+    } else {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = YES;
+    }
 }
 
 - (void) serverChanged:(PreferencesTextCell *)sender
@@ -261,24 +282,36 @@ static unsigned short AutomaticTableSection = 2;
     NSLog(@"Server changed");
 
     // Check if the user input is a valid server address
-    if([sender.textField.text isValidServerAddress]) {
-        _configuration.serverAddress = sender.textField.text;
+    _configuration.serverAddress = sender.textField.text;
+    if(sender.textField.text.length == 0) {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = NO;
+    } else if([sender.textField.text isValidServerAddress]) {
+        sender.accessoryType = UITableViewCellAccessoryCheckmark;
         self.navigationItem.rightBarButtonItem.enabled = YES;
+        badInput = NO;
     } else {
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Not a valid server address", @"User entered not a valid server address")
-                                                        message:nil
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = YES;
     }
 }
 
 - (void) portChanged:(PreferencesTextCell *)sender
 {
     NSLog(@"Port changed");
-    _configuration.connectionPort = [sender.textField.text integerValue];
+    _configuration.connectionPort = 6667;
+    if(sender.textField.text.length == 0) {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = NO;
+    } else if(sender.textField.text.length > 1) {
+        _configuration.connectionPort = [sender.textField.text integerValue];
+        sender.accessoryType = UITableViewCellAccessoryCheckmark;
+        badInput = NO;
+    } else {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = YES;
+    }
+    
 }
 
 - (void) passwordChanged:(PreferencesTextCell *)sender
@@ -298,33 +331,31 @@ static unsigned short AutomaticTableSection = 2;
     NSLog(@"Nickname changed");
     
     // Check if user input is a valid nickname
-    if([sender.textField.text isValidNickname]) {
-        _configuration.primaryNickname = sender.textField.text;
+    _configuration.primaryNickname = sender.textField.text;
+    if(sender.textField.text.length == 0) {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+    } else if([sender.textField.text isValidNickname]) {
+        sender.accessoryType = UITableViewCellAccessoryCheckmark;
+        badInput = NO;
     } else {
-        sender.textField.text = @"";
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Not a valid nick name", @"User entered not a valid nick name")
-                                                        message:nil
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = YES;
     }
 }
 
 - (void) altnickChanged:(PreferencesTextCell *)sender
 {
     NSLog(@"Alt Nick changed");
-    
-    if([sender.textField.text isValidNickname]) {
-        _configuration.secondaryNickname = sender.textField.text;
+    _configuration.secondaryNickname = sender.textField.text;
+    if(sender.textField.text.length == 0) {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = NO;
+    } else if([sender.textField.text isValidNickname]) {
+        sender.accessoryType = UITableViewCellAccessoryCheckmark;
+        badInput = NO;
     } else {
-        sender.textField.text = @"";
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Not a valid nick name", @"User entered not a valid nick name")
-                                                        message:nil
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = YES;
     }
 }
 

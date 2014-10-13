@@ -34,6 +34,7 @@
 #import "ConversationsController.h"
 
 @interface EditConnectionViewController : UITableViewController {
+    BOOL badInput;
     IRCConnectionConfiguration *_configuration;
 }
 
