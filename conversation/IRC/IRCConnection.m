@@ -133,14 +133,12 @@
 
 - (void)onSocket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err
 {
-    self.client.isConnected = NO;
     [self.client clientDidDisconnectWithError:[err localizedFailureReason]];
 }
 
 - (void)onSocketDidDisconnect:(AsyncSocket *)sock
 {
-    self.client.isProcessingTermination = NO;
-    self.client.isConnected = NO;
+    [self.client clientDidDisconnect];
 }
 
 - (void)writeDataToSocket:(NSData *)data
