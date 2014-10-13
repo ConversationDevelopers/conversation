@@ -37,6 +37,7 @@
 		FA109B3B19E41D540068DC29 /* IRCChannelConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B3A19E41D540068DC29 /* IRCChannelConfiguration.m */; };
 		FA109B3E19E420320068DC29 /* IRCChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B3D19E420320068DC29 /* IRCChannel.m */; };
 		FAEE1E6019EBEA040041439F /* Messages.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEE1E5F19EBEA040041439F /* Messages.m */; };
+		FAEE1E6319EBFBA20041439F /* IRCConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEE1E6219EBFBA20041439F /* IRCConversation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,6 +107,8 @@
 		FA109B3D19E420320068DC29 /* IRCChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCChannel.m; sourceTree = "<group>"; };
 		FAEE1E5E19EBEA040041439F /* Messages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Messages.h; sourceTree = "<group>"; };
 		FAEE1E5F19EBEA040041439F /* Messages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Messages.m; sourceTree = "<group>"; };
+		FAEE1E6119EBFBA20041439F /* IRCConversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCConversation.h; sourceTree = "<group>"; };
+		FAEE1E6219EBFBA20041439F /* IRCConversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCConversation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,6 +254,8 @@
 				FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */,
 				FAEE1E5E19EBEA040041439F /* Messages.h */,
 				FAEE1E5F19EBEA040041439F /* Messages.m */,
+				FAEE1E6119EBFBA20041439F /* IRCConversation.h */,
+				FAEE1E6219EBFBA20041439F /* IRCConversation.m */,
 			);
 			path = IRC;
 			sourceTree = "<group>";
@@ -395,6 +400,7 @@
 				DA1A4AC619E1770700565763 /* DetailViewController.m in Sources */,
 				DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */,
 				FAEE1E6019EBEA040041439F /* Messages.m in Sources */,
+				FAEE1E6319EBFBA20041439F /* IRCConversation.m in Sources */,
 				DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */,
 				FA00A39219E5DD3D00E7B4D7 /* SSKeychain.m in Sources */,
 			);
