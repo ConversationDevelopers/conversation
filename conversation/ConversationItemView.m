@@ -58,14 +58,7 @@
     if (self.accessoryType != UITableViewCellAccessoryNone) {
         
         for (UIView *subview in self.subviews) {
-            if (subview != self.textLabel &&
-                subview != self.detailTextLabel &&
-                subview != self.backgroundView &&
-                subview != self.contentView &&
-                subview != self.selectedBackgroundView &&
-                subview != self.imageView) {
-                
-                NSLog(@"SUBVIEW: %@", subview.description);
+            if([NSStringFromClass(subview.class) isEqualToString:@"UIButton"]) {
                 
                 // This subview should be the accessory view, change its frame
                 CGRect frame = subview.frame;
