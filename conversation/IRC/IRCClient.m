@@ -497,6 +497,13 @@
     [self validateQueryStatusOnAllItems];
 }
 
+- (BOOL)isConnectedAndCompleted
+{
+    if (self.isAttemptingRegistration ||  self.isAwaitingAuthenticationResponse || self.isProcessingTermination) return NO;
+    
+    return self.isConnected;
+}
+
 - (void)validateQueryStatusOnAllItems
 {
     NSString *requestString = @"";
@@ -536,7 +543,9 @@
     }
     [self.channels addObject:channel];
     
-    [self sendData:[NSString stringWithFormat:@"JOIN %@", [channel name]]];
+    if ([self isConnectedAndCompleted]) {
+        [self sendData:[NSString stringWithFormat:@"JOIN %@", [channel name]]];
+    }
     
     return YES;
 }
