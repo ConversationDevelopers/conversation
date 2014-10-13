@@ -532,6 +532,8 @@
     }
     [self.channels addObject:channel];
     
+    [self sendData:[NSString stringWithFormat:@"JOIN %@", [channel name]]];
+    
     return YES;
 }
 
