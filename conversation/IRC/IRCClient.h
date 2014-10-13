@@ -57,4 +57,7 @@
 - (void)clientDidSendData;
 - (void)disconnect;
 
+- (NSMutableArray *)getChannels;
+- (NSMutableArray *)getQueries;
+
 @end

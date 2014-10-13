@@ -35,7 +35,7 @@
 
 + (IRCChannel *) fromString:(NSString *)channelName WithClient:(IRCClient *)client
 {
-    for (IRCChannel *channel in client.channels) {
+    for (IRCChannel *channel in [client getChannels]) {
         if([channel.name isEqualToString:channelName])
             return channel;
     }
