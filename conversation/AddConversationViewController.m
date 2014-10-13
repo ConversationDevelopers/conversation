@@ -103,9 +103,9 @@ static unsigned short ConversationTableSection = 1;
     }
     
     if(_addChannel) {
-        [client.channels addObject:_conversation];
+        [client.getChannels addObject:_conversation];
     } else {
-        [client.queries addObject:_conversation];
+        [client.getQueries addObject:_conversation];
     }
     
     [connections setObject:client atIndexedSubscript:i];
@@ -246,7 +246,7 @@ static unsigned short ConversationTableSection = 1;
 
 - (void) passwordChanged:(PreferencesTextCell *)sender
 {
-    _conversation.password = sender.textField.text;
+    //_conversation.password = sender.textField.text;
     if(sender.textField.text.length == 0) {
         sender.accessoryType = UITableViewCellAccessoryNone;
         badInput = NO;

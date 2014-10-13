@@ -435,8 +435,6 @@
         /* Get the channel object associated with this channel */
         IRCChannel *channel = [IRCChannel fromString:recipientString WithClient:self];
         if (channel == nil) {
-            /* We do not have a channel object with this channel, we must create one. */
-            channel = [IRCChannel createNewFromString:recipientString WithClient:self];
         }
     } else {
     
@@ -568,6 +566,29 @@
 - (NSMutableArray *)getQueries;
 {
     return self.queries;
+}
+
+- (BOOL)addChannel:(IRCChannel *)channel
+{
+    NSUInteger i = [self.channels indexOfObjectPassingTest:^BOOL(id element,NSUInteger idx,BOOL *stop) {
+        return [[element name] isEqualToString:channel.name];
+    }];
+    if (i != NSNotFound) {
+        return NO;
+    }
+    [self.channels addObject:channel];
+    
+    return YES;
+}
+
+- (BOOL)removeChannel:(IRCChannel *)channel
+{
+    NSUInteger indexOfObject = [self.channels indexOfObject:channel];
+    if (indexOfObject != NSNotFound) {
+        [self.channels removeObjectAtIndex:indexOfObject];
+        return YES;
+    }
+    return NO;
 }
 
 @end

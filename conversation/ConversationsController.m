@@ -159,7 +159,7 @@
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath
 {
     IRCClient *client = [self.connections objectAtIndex:indexPath.section];
-    IRCChannel *channel = [client.channels objectAtIndex:indexPath.row];
+    IRCChannel *channel = [client.getChannels objectAtIndex:indexPath.row];
     
     DetailViewController *controller = [[DetailViewController alloc] initWithStyle:UITableViewStyleGrouped];
     controller.title = channel.name;
@@ -216,7 +216,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     IRCClient *client = [_connections objectAtIndex:indexPath.section];
-    IRCChannel *channel = [client.channels objectAtIndex:indexPath.row];
+    IRCChannel *channel = [client.getChannels objectAtIndex:indexPath.row];
     
     static NSString *CellIdentifier = @"cell";
     ConversationItemView *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];

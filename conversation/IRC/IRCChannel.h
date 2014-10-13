@@ -30,14 +30,16 @@
 
 #import <Foundation/Foundation.h>
 #import "IRCClient.h"
+#import "IRCChannelConfiguration.h"
 
 @interface IRCChannel : NSObject
 
+- (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;
+
 + (IRCChannel *) fromString:(NSString *)channelName WithClient:(IRCClient *)client;
-+ (IRCChannel *) createNewFromString:(NSString *)channelName WithClient:(IRCClient *)client;
 
 @property (nonatomic, assign) IRCClient *client;
+@property (nonatomic, assign) IRCChannelConfiguration *configuration;
 @property (nonatomic) NSString *name;
-@property (nonatomic) NSString *password;
 
 @end

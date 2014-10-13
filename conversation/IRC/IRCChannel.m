@@ -29,9 +29,35 @@
  */
 
 #import "IRCChannel.h"
-#import "IRCClient.h"
+
+@interface IRCChannel ()
+
+@property (nonatomic, strong) NSString *topic;
+@property (nonatomic, strong) NSMutableArray *users;
+@property (nonatomic, strong) NSMutableArray *channelModes;
+@property (nonatomic, assign) BOOL channelIsActive;
+
+@end
 
 @implementation IRCChannel
+
+- (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client
+{
+    if ((self = [super init])) {
+        self.name = config.name;
+        self.client = client;
+        self.topic = @"(No Topic)";
+        self.users = [[NSMutableArray alloc] init];
+        self.channelModes = [[NSMutableArray alloc] init];
+        return self;
+    }
+    return nil;
+}
+
+- (BOOL)isActive
+{
+    return [self channelIsActive];
+}
 
 + (IRCChannel *) fromString:(NSString *)channelName WithClient:(IRCClient *)client
 {
@@ -39,11 +65,6 @@
         if([channel.name isEqualToString:channelName])
             return channel;
     }
-    return nil;
-}
-
-+ (IRCChannel *) createNewFromString:(NSString *)channelName WithClient:(IRCClient *)client
-{
     return nil;
 }
 
