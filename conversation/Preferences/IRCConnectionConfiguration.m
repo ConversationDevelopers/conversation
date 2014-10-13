@@ -50,11 +50,11 @@
         self.channelDepartMessage = [self.disconnectMessage copy];
         
         self.automaticallyConnect =             NO;
-        self.automaticallyReconnect =           NO;
         self.connectUsingSecureLayer =          NO;
         self.ignoreSSLVerificationErrors =      NO;
         self.useServerAuthenticationService =   NO;
         self.showConsoleOnConnect =             NO;
+        self.automaticallyReconnect =           YES;
         
         self.channels = [[NSDictionary alloc] init];
         return self;
