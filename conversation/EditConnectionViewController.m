@@ -223,7 +223,7 @@ static unsigned short AutomaticTableSection = 2;
             cell.textLabel.text = NSLocalizedString(@"Real Name", @"Real name to use on IRC");
             cell.textField.text = @"";
             cell.textField.placeholder = @"Guest";
-            cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;            
+            cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
             cell.textEditAction = @selector(realnameChanged:);
             return cell;
@@ -367,12 +367,33 @@ static unsigned short AutomaticTableSection = 2;
 {
     NSLog(@"Realname changed");
     _configuration.realNameForRegistration = sender.textField.text;
+    if(sender.textField.text.length == 0) {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = NO;
+    } else if(sender.textField.text.length > 1) {
+        sender.accessoryType = UITableViewCellAccessoryCheckmark;
+        badInput = NO;
+    } else {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = YES;
+    }
+
 }
 
 - (void) nickpassChanged:(PreferencesTextCell *)sender
 {
     NSLog(@"Nickpass changed");
     _configuration.authenticationPasswordReference = sender.textField.text;
+    if(sender.textField.text.length == 0) {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = NO;
+    } else if(sender.textField.text.length > 1) {
+        sender.accessoryType = UITableViewCellAccessoryCheckmark;
+        badInput = NO;
+    } else {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = YES;
+    }
 }
 
 - (void) autoconnectChanged:(PreferencesTextCell *)sender

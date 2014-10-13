@@ -65,6 +65,7 @@ static unsigned short ConversationTableSection = 1;
                                                                      action:@selector(chat:)];
     [chatButton setTintColor:[UIColor lightGrayColor]];
     chatButton.enabled = NO;
+    badInput = NO;
     self.navigationItem.rightBarButtonItem = chatButton;
     _conversation = [[IRCChannel alloc] init];
     
@@ -82,6 +83,15 @@ static unsigned short ConversationTableSection = 1;
 - (void) chat:(id)sender
 {
     // Add conversation to client
+    if(badInput) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Please check input values", @"Please check input values")
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
     NSMutableArray *connections = [_conversationsController.connections mutableCopy];
     
     IRCClient *client;
@@ -213,7 +223,7 @@ static unsigned short ConversationTableSection = 1;
 {
     _conversation.client = [_conversationsController.connections objectAtIndex:sender.selectedItem];
     [self.tableView reloadData];
-    if(_conversation.client != nil && [_conversation.name isEqualToString:@""] == NO) {
+    if(_conversation.client != nil && _conversation.name) {
         self.navigationItem.rightBarButtonItem.enabled = YES;
     }
 }
@@ -221,13 +231,38 @@ static unsigned short ConversationTableSection = 1;
 - (void) nameChanged:(PreferencesTextCell *)sender
 {
     _conversation.name = sender.textField.text;
-    if(_conversation.client != nil && [_conversation.name isEqualToString:@""] == NO) {
-        self.navigationItem.rightBarButtonItem.enabled = YES;
+    
+    if(sender.textField.text.length == 0) {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+        badInput = YES;
+    } else if(sender.textField.text.length > 1) {
+        sender.accessoryType = UITableViewCellAccessoryCheckmark;
+        badInput = NO;
+        if(_conversation.client != nil) {
+            self.navigationItem.rightBarButtonItem.enabled = YES;
+        }
+    } else {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = YES;
     }
 }
 
 - (void) passwordChanged:(PreferencesTextCell *)sender
 {
     _conversation.password = sender.textField.text;
+    if(sender.textField.text.length == 0) {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = NO;
+        if(_conversation.client != nil) {
+            self.navigationItem.rightBarButtonItem.enabled = YES;
+        }
+    } else if(sender.textField.text.length > 1) {
+        sender.accessoryType = UITableViewCellAccessoryCheckmark;
+        badInput = NO;
+    } else {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = YES;
+    }
 }
 @end

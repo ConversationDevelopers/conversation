@@ -35,6 +35,7 @@
 
 @interface AddConversationViewController : UITableViewController
 {
+    BOOL badInput;
     IRCChannel *_conversation;
 }
 
