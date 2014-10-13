@@ -533,11 +533,10 @@
     return self.queries;
 }
 
-- (BOOL)addChannel:(id)channel
+- (BOOL)addChannel:(IRCChannel *)channel
 {
-    IRCChannel *channelObj = (IRCChannel *)channel;
     NSUInteger i = [self.channels indexOfObjectPassingTest:^BOOL(id element,NSUInteger idx,BOOL *stop) {
-        return [[element name] isEqualToString:channelObj.name];
+        return [[element name] isEqualToString:channel.name];
     }];
     if (i != NSNotFound) {
         return NO;
@@ -551,10 +550,9 @@
     return YES;
 }
 
-- (BOOL)removeChannel:(id)channel
+- (BOOL)removeChannel:(IRCChannel *)channel
 {
-    IRCChannel *channelObj = (IRCChannel *)channel;
-    NSUInteger indexOfObject = [self.channels indexOfObject:channelObj];
+    NSUInteger indexOfObject = [self.channels indexOfObject:channel];
     if (indexOfObject != NSNotFound) {
         [self.channels removeObjectAtIndex:indexOfObject];
         return YES;
