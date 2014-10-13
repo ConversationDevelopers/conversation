@@ -112,7 +112,7 @@
     self.detailTextLabel.frame = CGRectMake(nameFrame.origin.x-5, nameFrame.origin.y+20, width, detailFrame.size.height);
 
     
-    if([lines count] > 1) {
+    if([lines count] > 1 && self.contentView.subviews.count < 7) {
         
         // Add second detail line
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(nameFrame.origin.x, nameFrame.origin.y+35, width, detailFrame.size.height)];
