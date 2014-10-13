@@ -44,10 +44,10 @@
     return nil;
 }
 
-+ (IRCConversation *) fromString:(NSString *)name withClient:(IRCClient *)client
++ (id) fromString:(NSString *)name withClient:(IRCClient *)client
 {
     if ([name isValidChannelName:client]) {
-        for (IRCConversation *channel in [client getChannels]) {
+        for (IRCChannel *channel in [client getChannels]) {
             if ([channel.name isEqualToString:name])
                 return channel;
         }
