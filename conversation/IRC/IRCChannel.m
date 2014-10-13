@@ -60,6 +60,9 @@
     return [self.client isConnected] && self.isJoinedByUser;
 }
 
-
+- (void)setTopic:(NSString *)topic
+{
+    self.topic = topic;
+}
 
 @end

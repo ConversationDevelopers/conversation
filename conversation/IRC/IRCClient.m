@@ -301,7 +301,7 @@
             break;
             
         case TOPIC:
-            
+            [Messages userReceivedTOPIC:line onChannel:recipient byUser:senderDict onClient:self];
             break;
             
         case KICK:
@@ -337,6 +337,10 @@
             }
             break;
         }
+            
+        case RPL_TOPIC:
+            [Messages userReceivedTOPIC:line onChannel:recipient byUser:nil onClient:self];
+            break;
         
         case ERR_ERRONEUSNICKNAME:
         case ERR_NICKNAMEINUSE:

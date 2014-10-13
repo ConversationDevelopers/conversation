@@ -101,4 +101,17 @@
     
 }
 
++ (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(char **)senderDict onClient:(IRCClient *)client
+{
+    NSString *topicString = [NSString stringWithCString:topic encoding:NSUTF8StringEncoding];
+    NSString *channelString = [NSString stringWithCString:rchannel encoding:NSUTF8StringEncoding];
+    
+    IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:channelString withClient:client];
+    if (channel == nil) {
+        return;
+    }
+    
+    [channel setTopic:topicString];
+}
+
 @end

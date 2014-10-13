@@ -38,6 +38,7 @@
 @interface IRCChannel : IRCConversation
 
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;
+- (void)setTopic:(NSString *)topic;
 
 @property (nonatomic, assign) IRCChannelConfiguration *configuration;
 
