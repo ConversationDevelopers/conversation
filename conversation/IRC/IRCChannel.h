@@ -32,6 +32,8 @@
 #import "IRCClient.h"
 #import "IRCChannelConfiguration.h"
 
+@class IRCClient;
+
 @interface IRCChannel : NSObject
 
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;

@@ -29,7 +29,9 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "IRCClient.h"
+
+@class IRCClient;
+
 @interface NSString (Helpers)
 
 - (BOOL) isValidChannelName:(IRCClient *)client;

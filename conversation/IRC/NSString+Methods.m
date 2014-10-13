@@ -29,6 +29,7 @@
  */
 
 #import "NSString+Methods.h"
+#import "IRCClient.h"
 #include <arpa/inet.h>
 
 @implementation NSString (Helpers)

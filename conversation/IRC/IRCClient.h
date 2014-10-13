@@ -31,8 +31,10 @@
 #import <Foundation/Foundation.h>
 #import "IRCConnectionConfiguration.h"
 #import "IRCMessageIndex.h"
+#import "Messages.h"
 
 @class IRCConnection;
+@class IRCChannel;
 
 @interface IRCClient : NSObject
 
@@ -56,6 +58,10 @@
 - (void)clientDidReceiveData:(const char *)decodedData;
 - (void)clientDidSendData;
 - (void)disconnect;
+- (void)sendData:(NSString *)data;
+
+- (BOOL)addChannel:(IRCChannel *)channel;
+- (BOOL)removeChannel:(IRCChannel *)channel;
 
 - (NSMutableArray *)getChannels;
 - (NSMutableArray *)getQueries;

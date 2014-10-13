@@ -29,6 +29,7 @@
  */
 
 #import "IRCChannel.h"
+#import "IRCClient.h"
 
 @interface IRCChannel ()
 
