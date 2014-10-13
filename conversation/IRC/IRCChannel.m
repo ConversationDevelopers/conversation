@@ -36,7 +36,7 @@
 @property (nonatomic, strong) NSString *topic;
 @property (nonatomic, strong) NSMutableArray *users;
 @property (nonatomic, strong) NSMutableArray *channelModes;
-@property (nonatomic, assign) BOOL channelIsActive;
+@property (nonatomic, assign) BOOL isJoinedByUser;
 
 @end
 
@@ -57,16 +57,9 @@
 
 - (BOOL)isActive
 {
-    return [self channelIsActive];
+    return [self.client isConnected] && self.isJoinedByUser;
 }
 
-+ (IRCChannel *) fromString:(NSString *)channelName WithClient:(IRCClient *)client
-{
-    for (IRCChannel *channel in [client getChannels]) {
-        if([channel.name isEqualToString:channelName])
-            return channel;
-    }
-    return nil;
-}
+
 
 @end
