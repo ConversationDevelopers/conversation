@@ -354,7 +354,8 @@
                         [self sendData:[@"NICK " stringByAppendingString:newNickName]];
                         self.currentNicknameOnConnection = newNickName;
                     } else {
-                        //TODO: Disconnect
+                        NSLog(@"Registration failed. Disconnecting..");
+                        [self disconnect];
                     }
                 }
             }
