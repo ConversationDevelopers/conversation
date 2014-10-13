@@ -31,6 +31,7 @@
 #import <Foundation/Foundation.h>
 
 @class IRCClient;
+@class IRCChannelConfiguration;
 
 @interface IRCConversation : NSObject 
 
@@ -38,7 +39,7 @@
 @property (nonatomic, assign) IRCClient *client;
 @property (nonatomic, assign) BOOL conversationPartnerIsOnline;
 
-- (instancetype) initWithName:(NSString *)name withClient:(IRCClient *)client;
+- (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;
 
 + (IRCConversation *) fromString:(NSString *)name withClient:(IRCClient *)client;
 

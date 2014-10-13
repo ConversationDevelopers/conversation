@@ -33,12 +33,12 @@
 
 @implementation IRCConversation
 
-- (instancetype) initWithName:(NSString *)name withClient:(IRCClient *)client
+- (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client
 {
     if ((self = [super init])) {
-        self.name = name;
-        // TODO: Send ISON command to verify that conversation partner is connected.
-        
+        self.name = config.name;
+        self.client = client;
+        self.conversationPartnerIsOnline = NO;
         return self;
     }
     return nil;

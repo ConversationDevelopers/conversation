@@ -497,6 +497,13 @@
     [self validateQueryStatusOnAllItems];
 }
 
+- (BOOL)isConnectedAndCompleted
+{
+    if (self.isAttemptingRegistration ||  self.isAwaitingAuthenticationResponse || self.isProcessingTermination) return NO;
+    
+    return self.isConnected;
+}
+
 - (void)validateQueryStatusOnAllItems
 {
     NSString *requestString = @"";
@@ -526,24 +533,28 @@
     return self.queries;
 }
 
-- (BOOL)addChannel:(IRCChannel *)channel
+- (BOOL)addChannel:(id)channel
 {
+    IRCChannel *channelObj = (IRCChannel *)channel;
     NSUInteger i = [self.channels indexOfObjectPassingTest:^BOOL(id element,NSUInteger idx,BOOL *stop) {
-        return [[element name] isEqualToString:channel.name];
+        return [[element name] isEqualToString:channelObj.name];
     }];
     if (i != NSNotFound) {
         return NO;
     }
     [self.channels addObject:channel];
     
-    [self sendData:[NSString stringWithFormat:@"JOIN %@", [channel name]]];
+    if ([self isConnectedAndCompleted]) {
+        [self sendData:[NSString stringWithFormat:@"JOIN %@", [channel name]]];
+    }
     
     return YES;
 }
 
-- (BOOL)removeChannel:(IRCChannel *)channel
+- (BOOL)removeChannel:(id)channel
 {
-    NSUInteger indexOfObject = [self.channels indexOfObject:channel];
+    IRCChannel *channelObj = (IRCChannel *)channel;
+    NSUInteger indexOfObject = [self.channels indexOfObject:channelObj];
     if (indexOfObject != NSNotFound) {
         [self.channels removeObjectAtIndex:indexOfObject];
         return YES;
