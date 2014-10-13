@@ -228,7 +228,6 @@
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     cell.name = channel.name;
-    cell.image = [UIImage imageNamed:@"channelicon.png"];
     cell.unreadCount = 350;
     cell.detail = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. ";
 
