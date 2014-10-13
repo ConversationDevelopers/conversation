@@ -46,7 +46,7 @@
     /* Check if this message is a channel message or a private message */
     if ([recipientString isValidChannelName:client]) {
         /* Get the channel object associated with this channel */
-        IRCChannel *channel = [IRCChannel fromString:recipientString withClient:client];
+        IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:recipientString withClient:client];
         if (channel == nil) {
         }
     } else {

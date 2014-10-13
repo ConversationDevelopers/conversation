@@ -324,6 +324,19 @@
             [self updateServerSupportedFeatures:line];
             break;
             
+        case RPL_ISON: {
+            NSString *messageString = [NSString stringWithCString:line encoding:NSUTF8StringEncoding];
+            NSArray *users = [messageString componentsSeparatedByString:@" "];
+            for (IRCConversation *conversation in self.queries) {
+                if ([users containsObject:conversation.name]) {
+                    conversation.conversationPartnerIsOnline = YES;
+                } else {
+                    conversation.conversationPartnerIsOnline = NO;
+                }
+            }
+            break;
+        }
+        
         case ERR_ERRONEUSNICKNAME:
         case ERR_NICKNAMEINUSE:
             /* The server did not accept our nick request, let's see if this happened during initial registration. */
@@ -474,6 +487,17 @@
     self.isProcessingTermination =          NO;
     self.alternativeNickNameAttempts = 0;
     self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
+    
+    [self validateQueryStatusOnAllItems];
+}
+
+- (void)validateQueryStatusOnAllItems
+{
+    NSString *requestString = @"";
+    for (IRCConversation *query in self.queries) {
+        requestString = [requestString stringByAppendingString:[NSString stringWithFormat:@"%@ ", query.name]];
+    }
+    [self sendData:[NSString stringWithFormat:@"ISON :%@", requestString]];
 }
 
 - (void)sendData:(NSString *)line
