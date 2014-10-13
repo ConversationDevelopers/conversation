@@ -494,9 +494,11 @@
 
 - (void)disconnect
 {
-    self.isProcessingTermination = YES;
-    [self sendData:[NSString stringWithFormat:@"QUIT %@", self.configuration.disconnectMessage]];
-    [self.connection close];
+    if (self.isConnected) {
+        self.isProcessingTermination = YES;
+        [self sendData:[NSString stringWithFormat:@"QUIT %@", self.configuration.disconnectMessage]];
+        [self.connection close];
+    }
 }
 
 - (void)clientDidDisconnect {
