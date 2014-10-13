@@ -40,6 +40,6 @@
 
 - (instancetype) initWithName:(NSString *)name withClient:(IRCClient *)client;
 
-+ (IRCConversation *) fromString:(NSString *)name WithClient:(IRCClient *)client;
++ (IRCConversation *) fromString:(NSString *)name withClient:(IRCClient *)client;
 
 @end
