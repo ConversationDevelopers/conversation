@@ -554,6 +554,7 @@
         return NO;
     }
     [self.queries addObject:query];
+    [self validateQueryStatusOnAllItems];
     
     return YES;
 }
