@@ -472,11 +472,9 @@
     self.isAwaitingAuthenticationResponse = NO;
     self.isBNCConnection =                  NO;
     self.isProcessingTermination =          NO;
-    
     self.alternativeNickNameAttempts = 0;
     self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
 }
-
 
 - (void)sendData:(NSString *)line
 {
@@ -516,6 +514,29 @@
     NSUInteger indexOfObject = [self.channels indexOfObject:channel];
     if (indexOfObject != NSNotFound) {
         [self.channels removeObjectAtIndex:indexOfObject];
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL)addQuery:(IRCConversation *)query
+{
+    NSUInteger i = [self.queries indexOfObjectPassingTest:^BOOL(id element,NSUInteger idx,BOOL *stop) {
+        return [[element name] isEqualToString:query.name];
+    }];
+    if (i != NSNotFound) {
+        return NO;
+    }
+    [self.queries addObject:query];
+    
+    return YES;
+}
+
+- (BOOL)removeQuery:(IRCConversation *)query
+{
+    NSUInteger indexOfObject = [self.queries indexOfObject:query];
+    if (indexOfObject != NSNotFound) {
+        [self.queries removeObjectAtIndex:indexOfObject];
         return YES;
     }
     return NO;
