@@ -45,7 +45,6 @@
 @property (nonatomic, assign) BOOL connectionIsBeingClosed;
 @property (nonatomic, assign) NSInteger alternativeNickNameAttempts;
 @property (nonatomic, strong) NSString *currentNicknameOnConnection;
-@property (nonatomic, strong) NSTimer *connectionRetryTimer;
 @property (nonatomic, assign) int connectionRetries;
 
 @end
@@ -495,9 +494,11 @@
 
 - (void)disconnect
 {
-    self.isProcessingTermination = YES;
-    [self sendData:[NSString stringWithFormat:@"QUIT %@", self.configuration.disconnectMessage]];
-    [self.connection close];
+    if (self.isConnected) {
+        self.isProcessingTermination = YES;
+        [self sendData:[NSString stringWithFormat:@"QUIT %@", self.configuration.disconnectMessage]];
+        [self.connection close];
+    }
 }
 
 - (void)clientDidDisconnect {
@@ -510,8 +511,26 @@
 {
     NSLog(@"Disconnected: %@", error);
     [self clearStatus];
-    
+    if ([self.configuration automaticallyReconnect]) {
+        if (self.connectionRetries == CONNECTION_RETRY_ATTEMPTS) {
+            NSLog(@"Connection attempt failed %i times. Connection aborted.", self.connectionRetries);
+        } else {
+            NSLog(@"Retrying in 5 seconds..");
+            [NSTimer scheduledTimerWithTimeInterval:5.0
+                                             target:self
+                                           selector:@selector(attemptClientReconnect)
+                                           userInfo:nil
+                                            repeats:NO];
+        }
+    }
 }
+
+- (void)attemptClientReconnect
+{
+    self.connectionRetries++;
+    [self connect];
+}
+
 
 - (void)clearStatus
 {
