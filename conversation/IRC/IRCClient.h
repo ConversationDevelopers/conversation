@@ -63,6 +63,9 @@
 - (BOOL)addChannel:(IRCChannel *)channel;
 - (BOOL)removeChannel:(IRCChannel *)channel;
 
+- (BOOL)addQuery:(IRCConversation *)query;
+- (BOOL)removeQuery:(IRCConversation *)query;
+
 - (NSMutableArray *)getChannels;
 - (NSMutableArray *)getQueries;
 
