@@ -318,6 +318,7 @@
             
         case RPL_WELCOME:
             self.isAttemptingRegistration = NO;
+            [self validateQueryStatusOnAllItems];
             break;
             
         case RPL_ISUPPORT:
