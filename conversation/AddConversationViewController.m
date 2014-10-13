@@ -67,7 +67,8 @@ static unsigned short ConversationTableSection = 1;
     chatButton.enabled = NO;
     badInput = NO;
     self.navigationItem.rightBarButtonItem = chatButton;
-    _conversation = [[IRCChannel alloc] init];
+    _client = [[IRCClient alloc] init];
+    _conversation = [[IRCChannelConfiguration alloc] init];
     
 }
 
@@ -98,14 +99,16 @@ static unsigned short ConversationTableSection = 1;
     int i;
     for (i=0; i<_conversationsController.connections.count; i++) {
         client = [_conversationsController.connections objectAtIndex:i];
-        if([client.configuration.uniqueIdentifier isEqualToString:_conversation.client.configuration.uniqueIdentifier])
+        if([client.configuration.uniqueIdentifier isEqualToString:_client.configuration.uniqueIdentifier])
             break;
     }
     
     if(_addChannel) {
-        [client addChannel:_conversation];
+        IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:_conversation withClient:_client];
+        [client addChannel:channel];
     } else {
-        [client addQuery:_conversation];
+        IRCConversation *query = [[IRCConversation alloc] initWithConfiguration:_conversation withClient:_client];
+        [client addQuery:query];
     }
     
     [connections setObject:client atIndexedSubscript:i];
@@ -185,7 +188,7 @@ static unsigned short ConversationTableSection = 1;
         
         cell.textLabel.text = NSLocalizedString(@"Connection", @"Connection");
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        cell.detailTextLabel.text = _conversation.client.configuration.connectionName;
+        cell.detailTextLabel.text = _client.configuration.connectionName;
         
         return cell;
         
@@ -217,9 +220,9 @@ static unsigned short ConversationTableSection = 1;
 
 - (void) connectionDidChanged:(PreferencesListViewController *)sender
 {
-    _conversation.client = [_conversationsController.connections objectAtIndex:sender.selectedItem];
+    _client = [_conversationsController.connections objectAtIndex:sender.selectedItem];
     [self.tableView reloadData];
-    if(_conversation.client != nil && _conversation.name) {
+    if(_client != nil && _conversation.name) {
         self.navigationItem.rightBarButtonItem.enabled = YES;
     }
 }
@@ -235,7 +238,7 @@ static unsigned short ConversationTableSection = 1;
     } else if(sender.textField.text.length > 1) {
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
         badInput = NO;
-        if(_conversation.client != nil) {
+        if(_client != nil) {
             self.navigationItem.rightBarButtonItem.enabled = YES;
         }
     } else {
@@ -250,7 +253,7 @@ static unsigned short ConversationTableSection = 1;
     if(sender.textField.text.length == 0) {
         sender.accessoryType = UITableViewCellAccessoryNone;
         badInput = NO;
-        if(_conversation.client != nil) {
+        if(_client != nil) {
             self.navigationItem.rightBarButtonItem.enabled = YES;
         }
     } else if(sender.textField.text.length > 1) {

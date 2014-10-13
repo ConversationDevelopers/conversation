@@ -210,13 +210,13 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[[_connections objectAtIndex:section] channels] count];
+    IRCClient *client = [_connections objectAtIndex:section];
+    NSLog(@"COUNT %i", (int)(client.getChannels.count + client.getQueries.count));
+    return client.getChannels.count + client.getQueries.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    IRCClient *client = [_connections objectAtIndex:indexPath.section];
-    IRCChannel *channel = [client.getChannels objectAtIndex:indexPath.row];
     
     static NSString *CellIdentifier = @"cell";
     ConversationItemView *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -224,12 +224,30 @@
         cell = [[ConversationItemView alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
     
-//    [[cell imageView] setImage:[UIImage imageNamed:@"channelicon.png"]];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-    cell.name = channel.name;
-    cell.unreadCount = 350;
-    cell.detail = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. ";
+    IRCClient *client = [_connections objectAtIndex:indexPath.section];
+    
+    if(indexPath.row > client.getChannels.count) {
+        NSInteger index;
+        index = indexPath.row - client.getChannels.count;
+        IRCConversation *query = [client.getChannels objectAtIndex:index];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+        cell.name = query.name;
+        cell.isChannel = NO;
+        cell.unreadCount = 350;
+        cell.detail = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. ";
+        
+    } else {
+        IRCChannel *channel = [client.getChannels objectAtIndex:indexPath.row];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+        cell.name = channel.name;
+        cell.unreadCount = 350;
+        cell.detail = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. ";
+        
+    }
+
 
     return cell;
 }
