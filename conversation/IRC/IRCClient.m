@@ -474,7 +474,6 @@
     self.isProcessingTermination =          NO;
     
     self.alternativeNickNameAttempts = 0;
-    self.channels = [[NSMutableArray alloc] init];
     self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
 }
 
