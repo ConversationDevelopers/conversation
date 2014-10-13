@@ -105,7 +105,7 @@ static unsigned short ConversationTableSection = 1;
     if(_addChannel) {
         [client addChannel:_conversation];
     } else {
-        [client removeChannel:_conversation];
+        [client addQuery:_conversation];
     }
     
     [connections setObject:client atIndexedSubscript:i];
