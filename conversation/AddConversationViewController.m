@@ -103,9 +103,9 @@ static unsigned short ConversationTableSection = 1;
     }
     
     if(_addChannel) {
-        [client.getChannels addObject:_conversation];
+        [client addChannel:_conversation];
     } else {
-        [client.getQueries addObject:_conversation];
+        [client removeChannel:_conversation];
     }
     
     [connections setObject:client atIndexedSubscript:i];

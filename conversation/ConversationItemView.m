@@ -38,7 +38,6 @@
     if(!self)
         return nil;
     
-    
     return self;
 }
 
@@ -54,6 +53,11 @@
     if(self.editing)
         return;
     [super layoutSubviews];
+    
+    self.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
+
+    self.imageView.image = self.image;
+    self.imageView.frame = CGRectMake(self.imageView.frame.origin.x+5.0, self.imageView.frame.origin.y+10.0, self.imageView.frame.size.width-17.0, self.imageView.frame.size.height-17.0);
     
     if (self.accessoryType != UITableViewCellAccessoryNone) {
         
@@ -91,18 +95,20 @@
     
     NSArray *lines = [_detail componentsSeparatedByString:@"\n"];
     self.detailTextLabel.text = [lines objectAtIndex:0];
-
+    
     CGRect contentRect = self.contentView.frame;
     CGRect nameFrame = self.textLabel.frame;
     nameFrame.origin.y = round((contentRect.size.height / 2.) - 25);
     self.textLabel.frame = nameFrame;
+    self.textLabel.textColor = [UIColor darkGrayColor];
+    self.textLabel.font = [UIFont boldSystemFontOfSize:16];
     
     // Add first detail line
     CGRect detailFrame = self.detailTextLabel.frame;
     double width = self.contentView.frame.size.width - self.imageView.frame.size.width - 5;
 
-    [self.detailTextLabel setFont:[UIFont fontWithName:@"Helvetica Neue" size:14.0]];
-    [self.detailTextLabel setTextColor:[UIColor lightGrayColor]];
+    self.detailTextLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
+    self.detailTextLabel.textColor = [UIColor lightGrayColor];
     self.detailTextLabel.frame = CGRectMake(nameFrame.origin.x-5, nameFrame.origin.y+20, width, detailFrame.size.height);
 
     
@@ -110,8 +116,8 @@
         
         // Add second detail line
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(nameFrame.origin.x, nameFrame.origin.y+35, width, detailFrame.size.height)];
-        [label setFont:[UIFont fontWithName:@"Helvetica Neue" size:14.0]];
-        [label setTextColor:[UIColor lightGrayColor]];
+        label.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
+        label.textColor = [UIColor lightGrayColor];
         label.text = [lines objectAtIndex:1];
         [self.contentView addSubview:label];
         

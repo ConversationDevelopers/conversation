@@ -199,7 +199,7 @@
 
 - (double)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 50;
+    return 60;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -224,12 +224,13 @@
         cell = [[ConversationItemView alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
     
-    [[cell imageView] setImage:[UIImage imageNamed:@"channelicon.png"]];
+//    [[cell imageView] setImage:[UIImage imageNamed:@"channelicon.png"]];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     cell.name = channel.name;
+    cell.image = [UIImage imageNamed:@"channelicon.png"];
     cell.unreadCount = 350;
-    cell.detail = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. \nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. ";
+    cell.detail = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. ";
 
     return cell;
 }
