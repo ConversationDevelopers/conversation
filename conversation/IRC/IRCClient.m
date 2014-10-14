@@ -31,6 +31,7 @@
 #import "IRCClient.h"
 #import "IRCConnection.h"
 #import "IRCChannel.h"
+#import "IRCConversation.h"
 
 #define CONNECTION_RETRY_INTERVAL       30
 #define CONNECTION_RETRY_ATTEMPTS       10
@@ -75,6 +76,7 @@
         
         self.alternativeNickNameAttempts = 0;
         self.channels = [[NSMutableArray alloc] init];
+        self.queries = [[NSMutableArray alloc] init];
         self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
         
         return self;
