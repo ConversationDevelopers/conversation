@@ -72,7 +72,7 @@
     for (NSDictionary *d in configurations) {
         if([d[@"uniqueIdentifier"] isEqualToString:connection.uniqueIdentifier]) {
             NSMutableDictionary *dict = [d mutableCopy];
-            NSMutableArray *channels = dict[@"queries"];
+            NSMutableArray *channels = [dict[@"queries"] mutableCopy];
             [channels addObject:[configuration getDictionary]];
             dict[@"queries"] = channels;
             configurations[i] = dict;
@@ -98,7 +98,7 @@
     for (NSDictionary *d in configurations) {
         if([d[@"uniqueIdentifier"] isEqualToString:connection.uniqueIdentifier]) {
             NSMutableDictionary *dict = [d mutableCopy];
-            NSMutableArray *channels = dict[@"channels"];
+            NSMutableArray *channels = [dict[@"channels"] mutableCopy];
             [channels addObject:[configuration getDictionary]];
             dict[@"channels"] = channels;
             configurations[i] = dict;
