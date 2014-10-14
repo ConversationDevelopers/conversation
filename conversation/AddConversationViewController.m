@@ -69,15 +69,13 @@ static unsigned short ConversationTableSection = 1;
     _badInput = NO;
     self.navigationItem.rightBarButtonItem = chatButton;
 
-    _client = [[IRCClient alloc] init];
+    _client = nil;
+    ConnectionTableSection = 0;
     
     // There is only one client, lets use that
     if(_conversationsController.connections.count == 1) {
         _client = _conversationsController.connections[0];
         ConnectionTableSection = -1;
-    } else {
-        _client = nil;
-        ConnectionTableSection = 0;
     }
        
     _configuration = [[IRCChannelConfiguration alloc] init];
@@ -253,21 +251,19 @@ static unsigned short ConversationTableSection = 1;
 - (void) nameChanged:(PreferencesTextCell *)sender
 {
     _configuration.name = sender.textField.text;
+    sender.accessoryType = UITableViewCellAccessoryNone;
+    _badInput = YES;
     
-    if(sender.textField.text.length == 0) {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-        _badInput = YES;
-    } else if(sender.textField.text.length > 1) {
+    if (_addChannel && [sender.textField.text isValidChannelName:_client]) {
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
         _badInput = NO;
-        if(_client != nil) {
-            self.navigationItem.rightBarButtonItem.enabled = YES;
-        }
-    } else {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-        _badInput = YES;
     }
+    
+    if (!_addChannel && [sender.textField.text isValidNickname]) {
+        sender.accessoryType = UITableViewCellAccessoryCheckmark;
+        _badInput = NO;
+    }
+
 }
 
 - (void) passwordChanged:(PreferencesTextCell *)sender
