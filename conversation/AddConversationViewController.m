@@ -113,25 +113,25 @@ static unsigned short ConversationTableSection = 1;
         if([client.configuration.uniqueIdentifier isEqualToString:_client.configuration.uniqueIdentifier])
             break;
     }
-    
-    if(_addChannel) {
-        IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:_configuration withClient:_client];
-        [client addChannel:channel];
+    if(client) {
+        if(_addChannel) {
+            IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:_configuration withClient:_client];
+            [client addChannel:channel];
+            
+            // Save config
+            [[AppPreferences sharedPrefs] addChannelConfiguration:_configuration forConnectionConfiguration:_client.configuration];
+            
+        } else {
+            IRCConversation *query = [[IRCConversation alloc] initWithConfiguration:_configuration withClient:_client];
+            [client addQuery:query];
+            
+            // Save config
+            [[AppPreferences sharedPrefs] addQueryConfiguration:_configuration forConnectionConfiguration:_client.configuration];
+            
+        }
         
-        // Save config
-        [[AppPreferences sharedPrefs] addChannelConfiguration:_configuration forConnectionConfiguration:_client.configuration];
-        
-    } else {
-        IRCConversation *query = [[IRCConversation alloc] initWithConfiguration:_configuration withClient:_client];
-        [client addQuery:query];
-        
-        // Save config
-        [[AppPreferences sharedPrefs] addQueryConfiguration:_configuration forConnectionConfiguration:_client.configuration];
-        
+        [connections setObject:client atIndexedSubscript:i];
     }
-    
-    [connections setObject:client atIndexedSubscript:i];
-    
     _conversationsController.connections = connections;
     [_conversationsController reloadData];
     [self dismissViewControllerAnimated:YES completion:nil];
