@@ -28,47 +28,8 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Foundation/Foundation.h>
-#import "IRCConnectionConfiguration.h"
-#import "IRCMessageIndex.h"
-#import "Messages.h"
+#import "IRCUser.h"
 
-@class IRCConnection;
-@class IRCChannel;
-@class IRCConversation;
-
-@interface IRCClient : NSObject
-
-@property (nonatomic, strong) IRCConnectionConfiguration *configuration;
-@property (nonatomic, assign) BOOL isConnected;
-@property (nonatomic, assign) BOOL isAttemptingConnection;
-@property (nonatomic, assign) BOOL hasSuccessfullyAuthenticated;
-@property (nonatomic, assign) BOOL isAwaitingAuthenticationResponse;
-@property (nonatomic, assign) BOOL isAttemptingRegistration;
-@property (nonatomic, assign) BOOL isBNCConnection;
-@property (nonatomic, assign) BOOL isProcessingTermination;
-
-
-@property (nonatomic, strong) NSMutableDictionary *featuresSupportedByServer;
-
-- (instancetype)initWithConfiguration:(IRCConnectionConfiguration *)config;
-- (void)connect;
-- (void)clientDidConnect;
-- (void)clientDidDisconnect;
-- (void)clientDidDisconnectWithError:(NSString *)error;
-- (void)clientDidReceiveData:(const char *)decodedData;
-- (void)clientDidSendData;
-+ (NSString *)getChannelPrefixCharacters:(IRCClient *)client;
-- (void)disconnect;
-- (void)sendData:(NSString *)data;
-
-- (BOOL)addChannel:(IRCChannel *)channel;
-- (BOOL)removeChannel:(IRCChannel *)channel;
-
-- (BOOL)addQuery:(IRCConversation *)query;
-- (BOOL)removeQuery:(IRCConversation *)query;
-
-- (NSMutableArray *)getChannels;
-- (NSMutableArray *)getQueries;
+@implementation IRCUser
 
 @end
