@@ -46,6 +46,7 @@
         self.client = client;
         self.topic = @"(No Topic)";
         self.users = [[NSMutableArray alloc] init];
+        self.configuration = config;
         self.channelModes = [[NSMutableArray alloc] init];
         return self;
     }

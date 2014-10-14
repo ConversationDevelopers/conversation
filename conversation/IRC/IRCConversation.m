@@ -39,6 +39,7 @@
         self.name = config.name;
         self.client = client;
         self.conversationPartnerIsOnline = NO;
+        self.configuration = config;
         return self;
     }
     return nil;
