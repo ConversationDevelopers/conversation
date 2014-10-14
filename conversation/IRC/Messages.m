@@ -101,6 +101,11 @@
     
 }
 
++ (void)userReceivedJOIN:(const char **)senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client
+{
+    
+}
+
 + (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(char **)senderDict onClient:(IRCClient *)client
 {
     NSString *topicString = [NSString stringWithCString:topic encoding:NSUTF8StringEncoding];
