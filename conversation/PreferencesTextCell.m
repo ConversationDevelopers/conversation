@@ -117,6 +117,8 @@ static PreferencesTextCell *currentEditingCell;
 - (void) layoutSubviews {
     [super layoutSubviews];
     
+    _textField.textColor = [UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0];
+    
     CGRect contentRect = self.contentView.frame;
     
     UILabel *label = self.textLabel;
