@@ -192,7 +192,7 @@
         }
         
         /* Copy the characters from the hostname range we calculated earlier */
-        long hostnameLength = (senderLength - usernameLength - nicknameLength -1);
+        long hostnameLength = (senderLength - usernameLength - nicknameLength);
         if (hostnameLength > 0) {
             hostname = malloc(hostnameLength);
             strncpy(hostname, lineBeforeIteration, hostnameLength);
