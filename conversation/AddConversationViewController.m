@@ -221,6 +221,8 @@ static unsigned short ConversationTableSection = 1;
             else
                 cell.textLabel.text = NSLocalizedString(@"Nick Name", @"Nick Name");
             cell.textField.text = @"";
+            if(_configuration.name)
+                cell.textField.text = _configuration.name;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textEditAction = @selector(nameChanged:);
@@ -229,6 +231,8 @@ static unsigned short ConversationTableSection = 1;
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"Password", @"Channel Password");
             cell.textField.text = @"";
+            if(_configuration.passwordReference)
+                cell.textField.text = _configuration.passwordReference;
             cell.textField.placeholder = @"Optional";
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
