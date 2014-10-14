@@ -76,6 +76,11 @@
     }
 }
 
+- (void)enableItem:(IRCClient *)sender
+{
+    NSLog(@"ENABLE ITEM");
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
