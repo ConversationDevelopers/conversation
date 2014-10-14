@@ -168,7 +168,7 @@
         
         /* Copy the characters of the entire sender */
         if (senderLength > 0) {
-            sender = malloc(senderLength);
+            sender = malloc(senderLength+1);
             strncpy(sender, lineBeforeIteration, senderLength);
             sender[senderLength] = '\0';
         } else {
