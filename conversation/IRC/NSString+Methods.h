@@ -38,6 +38,7 @@
 - (BOOL) isValidChannelName:(IRCClient *)client;
 - (BOOL) isValidServerAddress;
 - (BOOL) isValidNickname;
+- (BOOL) isValidUsername;
 
 + (NSString *) stringWithCString:(const char *)string usingEncodingPreference:(IRCConnectionConfiguration *)configuration;
 

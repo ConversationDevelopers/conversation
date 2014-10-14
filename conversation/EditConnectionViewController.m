@@ -216,7 +216,7 @@ static unsigned short AutomaticTableSection = 2;
             cell.textField.placeholder = @"Guest";
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
-            cell.textEditAction = @selector(realnameChanged:);
+            cell.textEditAction = @selector(usernameChanged:);
             return cell;
         } else if (indexPath.row == 3) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
@@ -344,6 +344,19 @@ static unsigned short AutomaticTableSection = 2;
     } else {
         sender.accessoryType = UITableViewCellAccessoryNone;
         badInput = YES;
+    }
+}
+
+- (void) usernameChanged:(PreferencesTextCell *)sender
+{
+    NSLog(@"User Name changed");
+    _configuration.usernameForRegistration = sender.textField.text;
+    sender.accessoryType = UITableViewCellAccessoryNone;
+    badInput = YES;
+    
+    if([sender.textField.text isValidUsername]) {
+        sender.accessoryType = UITableViewCellAccessoryCheckmark;
+        badInput = NO;
     }
 }
 
