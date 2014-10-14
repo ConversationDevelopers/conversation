@@ -535,7 +535,7 @@
     if (acceptedChannelPrefixesByServer == nil) {
         /* The server does not provide this information or we are not connected to one, so we will use
          the standard characters defined by the RFC http://tools.ietf.org/html/rfc1459#section-1.3  */
-        acceptedChannelPrefixesByServer = @"#&";
+        acceptedChannelPrefixesByServer = @"#&+!";
     }
     return acceptedChannelPrefixesByServer;
 }

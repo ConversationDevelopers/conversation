@@ -53,16 +53,31 @@
             channel++;
         }
         
-        /* Iterate over prefixes accepted by the server and return YES from the method if we find a match. */
+        BOOL channelHasPrefix = NO;
+        
+        /* Iterate over prefixes accepted by the server and set YES if we find a match. */
         while (*prefixes != '\0') {
             if (*prefixes == *channel) {
-                free(channel);
-                free(prefixes);
-                return YES;
+                channelHasPrefix = YES;
+                break;
             }
+            prefixes++;
         }
-        free(channel);
-        free(prefixes);
+        if (channelHasPrefix) {
+            /* Continue iterating on the channel name and halt if we find an invalid character */
+            while (*channel != '\0') {
+                if (*channel == ' ' || *channel == '\007' || *channel == ',') {
+                    free(prefixes);
+                    return NO;
+                }
+                channel++;
+            }
+            free(prefixes);
+            return YES;
+        } else {
+            free(prefixes);
+            return NO;
+        }
     }
     return NO;
 }
