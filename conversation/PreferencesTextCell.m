@@ -53,7 +53,7 @@ static PreferencesTextCell *currentEditingCell;
     _textField.font = [UIFont systemFontOfSize:17.];
     _textField.adjustsFontSizeToFitWidth = YES;
     _textField.minimumFontSize = 14.;
-    _textField.textColor = [UIColor colorWithRed:(64. / 255.) green:(118. / 255.) blue:(251. / 255.) alpha:1.];
+    _textField.textColor = [UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0];
     _textField.enablesReturnKeyAutomatically = NO;
     _textField.returnKeyType = UIReturnKeyDone;
     
