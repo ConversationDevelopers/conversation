@@ -18,6 +18,7 @@
 		DA79EA2C19E9237A0027A370 /* UITableView+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA2B19E9237A0027A370 /* UITableView+Methods.m */; };
 		DA79EA3019E92AF20027A370 /* PreferencesListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA2F19E92AF20027A370 /* PreferencesListViewController.m */; };
 		DA79EA3319EA6C810027A370 /* ConversationItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA3219EA6C810027A370 /* ConversationItemView.m */; };
+		DA96223F19EDE217008D42EB /* networks.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA96223E19EDE217008D42EB /* networks.plist */; };
 		DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */; };
 		DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */; };
 		DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322AB19E5DE490068E2B6 /* PreferencesTextCell.m */; };
@@ -73,6 +74,7 @@
 		DA79EA2F19E92AF20027A370 /* PreferencesListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesListViewController.m; sourceTree = "<group>"; };
 		DA79EA3119EA6C810027A370 /* ConversationItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationItemView.h; sourceTree = "<group>"; };
 		DA79EA3219EA6C810027A370 /* ConversationItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationItemView.m; sourceTree = "<group>"; };
+		DA96223E19EDE217008D42EB /* networks.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = networks.plist; path = Resources/networks.plist; sourceTree = "<group>"; };
 		DAA3229C19E56CBF0068E2B6 /* EditConnectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditConnectionViewController.h; sourceTree = "<group>"; };
 		DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditConnectionViewController.m; sourceTree = "<group>"; };
 		DAA322A819E5DE490068E2B6 /* PreferencesSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesSwitchCell.h; sourceTree = "<group>"; };
@@ -181,6 +183,7 @@
 		DA1A4ABA19E1770700565763 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DA96223E19EDE217008D42EB /* networks.plist */,
 				DA1A4ABB19E1770700565763 /* Info.plist */,
 				DA1A4ABC19E1770700565763 /* main.m */,
 			);
@@ -357,6 +360,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DAC65A4419EAA2ED00E00A73 /* LaunchScreen.xib in Resources */,
+				DA96223F19EDE217008D42EB /* networks.plist in Resources */,
 				DAC65A4819EAA2ED00E00A73 /* Images.xcassets in Resources */,
 				DAC65A4519EAA2ED00E00A73 /* Localizable.strings in Resources */,
 			);
