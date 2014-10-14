@@ -44,11 +44,13 @@
 @property (nonatomic, copy) NSString *primaryNickname;
 @property (nonatomic, copy) NSString *secondaryNickname;
 @property (nonatomic, copy) NSString *serverAddress;
-
 @property (nonatomic, copy) NSString *disconnectMessage;
 @property (nonatomic, copy) NSString *channelDepartMessage;
+
 @property (nonatomic, assign) NSInteger socketEncodingType;
 @property (nonatomic, assign) NSInteger connectionPort;
+
+@property (nonatomic) unsigned long messageEncoding;
 
 @property (nonatomic, assign) BOOL automaticallyReconnect;
 @property (nonatomic, assign) BOOL automaticallyConnect;

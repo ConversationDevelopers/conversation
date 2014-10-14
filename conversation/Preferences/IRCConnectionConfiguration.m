@@ -56,6 +56,8 @@
         self.showConsoleOnConnect =             NO;
         self.automaticallyReconnect =           YES;
         
+        self.messageEncoding = (unsigned long) NSUTF8StringEncoding;
+        
         self.channels = [[NSArray alloc] init];
         self.queries = [[NSArray alloc] init];
         
@@ -85,6 +87,8 @@
         self.ignoreSSLVerificationErrors = [dict[@"ignoreSSLVerificationErrors"] boolValue];
         self.useServerAuthenticationService = [dict[@"useServerAuthenticationService"] boolValue];
         self.showConsoleOnConnect = [dict[@"showConsoleOnConnect"] boolValue];
+        
+        self.messageEncoding = (unsigned long) [dict[@"messageEncoding"] integerValue];
         
         self.channels = dict[@"channels"];
         self.queries = dict[@"queries"];

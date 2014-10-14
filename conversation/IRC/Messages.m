@@ -41,7 +41,7 @@
         return;
     }
     
-    NSString *recipientString = [NSString stringWithCString:recepient encoding:NSUTF8StringEncoding];
+    NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:[client configuration]];
     
     /* Check if this message is a channel message or a private message */
     if ([recipientString isValidChannelName:client]) {
@@ -108,8 +108,8 @@
 
 + (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(char **)senderDict onClient:(IRCClient *)client
 {
-    NSString *topicString = [NSString stringWithCString:topic encoding:NSUTF8StringEncoding];
-    NSString *channelString = [NSString stringWithCString:rchannel encoding:NSUTF8StringEncoding];
+    NSString *topicString = [NSString stringWithCString:topic usingEncodingPreference:[client configuration]];
+    NSString *channelString = [NSString stringWithCString:rchannel usingEncodingPreference:[client configuration]];
     
     IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:channelString withClient:client];
     if (channel == nil) {

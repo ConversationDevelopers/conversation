@@ -116,4 +116,20 @@
     return NO;
 }
 
++ (NSString *) stringWithCString:(const char *)string usingEncodingPreference:(IRCConnectionConfiguration *)configuration
+{
+    NSStringEncoding encoding;
+    if (configuration && configuration.messageEncoding) {
+        encoding = configuration.messageEncoding;
+    } else {
+        encoding = NSUTF8StringEncoding;
+    }
+    NSString *encodedString;
+    encodedString = [NSString stringWithCString:string encoding:encoding];
+    if (encodedString == nil) {
+        encodedString = [NSString stringWithCString:string encoding:NSASCIIStringEncoding];
+    }
+    return encodedString;
+}
+
 @end

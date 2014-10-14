@@ -32,6 +32,7 @@
 #import "IRCConnectionConfiguration.h"
 #import "IRCMessageIndex.h"
 #import "Messages.h"
+#import "NSString+Methods.h"
 
 @class IRCConnection;
 @class IRCChannel;

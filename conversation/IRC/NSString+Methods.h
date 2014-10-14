@@ -29,6 +29,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "IRCConnectionConfiguration.h"
 
 @class IRCClient;
 
@@ -37,5 +38,7 @@
 - (BOOL) isValidChannelName:(IRCClient *)client;
 - (BOOL) isValidServerAddress;
 - (BOOL) isValidNickname;
+
++ (NSString *) stringWithCString:(const char *)string usingEncodingPreference:(IRCConnectionConfiguration *)configuration;
 
 @end

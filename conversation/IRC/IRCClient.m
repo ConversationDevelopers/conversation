@@ -265,7 +265,7 @@
         lineBeforeIteration++;
     }
     
-    NSString *commandString = [NSString stringWithCString:command encoding:NSUTF8StringEncoding];
+    NSString *commandString = [NSString stringWithCString:command usingEncodingPreference:[self configuration]];
     IRCMessage commandIndexValue = [IRCMessageIndex indexValueFromString:commandString];
     
     switch (commandIndexValue) {
@@ -328,7 +328,7 @@
             break;
             
         case RPL_ISON: {
-            NSString *messageString = [NSString stringWithCString:line encoding:NSUTF8StringEncoding];
+            NSString *messageString = [NSString stringWithCString:line usingEncodingPreference:[self configuration]];
             NSArray *users = [messageString componentsSeparatedByString:@" "];
             for (IRCConversation *conversation in self.queries) {
                 if ([users containsObject:conversation.name]) {
@@ -418,13 +418,13 @@
             strncpy(key, tokenBeforeIteration, keyLength);
             key[keyLength] = '\0';
             
-            NSString *keyString = [NSString stringWithCString:key encoding:NSUTF8StringEncoding];
+            NSString *keyString = [NSString stringWithCString:key usingEncodingPreference:[self configuration]];
             
             /* If the next character is an '=', this is a key-value pair, and we will continue iterating to get the value.
              If not, we will interpret it as a positive boolean. */
             if (*keySearchToken == '=') {
                 keySearchToken++;
-                NSString *valueString = [NSString stringWithCString:keySearchToken encoding:NSUTF8StringEncoding];
+                NSString *valueString = [NSString stringWithCString:keySearchToken usingEncodingPreference:[self configuration]];
                 
                 /* Save key value pair to dictionary */
                 [self.featuresSupportedByServer setObject:valueString forKey:keyString];
