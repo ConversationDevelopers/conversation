@@ -432,9 +432,10 @@
                 /* Save boolean to dictionary */
                 [self.featuresSupportedByServer setObject:@YES forKey:keyString];
             }
-            
+        } else {
+            key = NULL;
         }
-        
+        free(key);
         token = strtok(NULL, delimeter);
     }
     free(mline);

@@ -45,8 +45,11 @@
         /* Turn both strings into character arrays for parsing */
         char* prefixes = malloc([acceptedChannelPrefixesByServer length]);
         strcpy(prefixes, [acceptedChannelPrefixesByServer UTF8String]);
+        char* prefixesBeforeIteration = prefixes;
+        
         char*  channel = malloc([self length]);
         strcpy(channel, [self UTF8String]);
+        char* channelBeforeIteration = channel;
         
         /* Some IRC bouncers prefix special channels with a '~' we will skip this */
         if (*channel == '~') {
@@ -67,14 +70,23 @@
             /* Continue iterating on the channel name and halt if we find an invalid character */
             while (*channel != '\0') {
                 if (*channel == ' ' || *channel == '\007' || *channel == ',') {
+                    channel = channelBeforeIteration;
+                    free(channel);
+                    prefixes = prefixesBeforeIteration;
                     free(prefixes);
                     return NO;
                 }
                 channel++;
             }
+            channel = channelBeforeIteration;
+            free(channel);
+            prefixes = prefixesBeforeIteration;
             free(prefixes);
             return YES;
         } else {
+            channel = channelBeforeIteration;
+            free(channel);
+            prefixes = prefixesBeforeIteration;
             free(prefixes);
             return NO;
         }
