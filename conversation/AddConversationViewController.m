@@ -75,6 +75,9 @@ static unsigned short ConversationTableSection = 1;
     if(_conversationsController.connections.count == 1) {
         _client = _conversationsController.connections[0];
         ConnectionTableSection = -1;
+    } else {
+        _client = nil;
+        ConnectionTableSection = 0;
     }
        
     _configuration = [[IRCChannelConfiguration alloc] init];
