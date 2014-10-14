@@ -113,7 +113,7 @@ static unsigned short ConversationTableSection = 1;
         if([client.configuration.uniqueIdentifier isEqualToString:_client.configuration.uniqueIdentifier])
             break;
     }
-    if(client) {
+    if(client != nil) {
         if(_addChannel) {
             IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:_configuration withClient:_client];
             [client addChannel:channel];
@@ -262,6 +262,9 @@ static unsigned short ConversationTableSection = 1;
     if (!_addChannel && [sender.textField.text isValidNickname]) {
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
         _badInput = NO;
+    }
+    if(_client && _configuration.name) {
+        self.navigationItem.rightBarButtonItem.enabled = YES;        
     }
 
 }
