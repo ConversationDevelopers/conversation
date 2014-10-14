@@ -217,7 +217,6 @@
         index = indexPath.row - client.getChannels.count;
         IRCConversation *query = [client.getQueries objectAtIndex:index];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        
         cell.name = query.name;
         cell.isChannel = NO;
         cell.unreadCount = 350;
@@ -226,7 +225,6 @@
     } else {
         IRCChannel *channel = [client.getChannels objectAtIndex:indexPath.row];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        
         cell.name = channel.name;
         cell.isChannel = YES;
         cell.unreadCount = 350;

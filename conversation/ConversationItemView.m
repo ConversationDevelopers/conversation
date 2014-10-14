@@ -63,6 +63,7 @@
     [self.contentView addSubview:_unreadCountLabel];
     
     _isChannel = YES;
+    _enabled = YES;
     
     self.imageView.image = [UIImage imageNamed:@"channelicon.png"];
 
@@ -81,19 +82,23 @@
     
     [super layoutSubviews];
     
-    if(!_isChannel)
+    if (!_isChannel)
         self.imageView.image = [UIImage imageNamed:@"queryicon.png"];
     else
         self.imageView.image = [UIImage imageNamed:@"channelicon.png"];
     
+    if (!_enabled)
+        self.alpha = 0.5;
+        
     self.imageView.frame = CGRectMake(self.imageView.frame.origin.x,
-                                      self.imageView.frame.origin.y+10.0,
-                                      self.imageView.frame.size.width-17.0,
-                                      self.imageView.frame.size.height-17.0);
+                                      self.imageView.frame.origin.y+12.0,
+                                      self.imageView.frame.size.width-20.0,
+                                      self.imageView.frame.size.height-20.0);
     
     CGSize size = [_name sizeWithAttributes:@{NSFontAttributeName: _nameLabel.font}];
     
     CGRect frame = self.imageView.frame;
+    frame.origin.y -= 6;
     frame.origin.x = frame.origin.x*2+frame.size.width;
     frame.size = size;
     
@@ -107,8 +112,9 @@
     
     frame.origin.y = round(self.imageView.frame.size.height / 2) + self.imageView.frame.origin.y - 5;
     size = [firstdetail sizeWithAttributes:@{NSFontAttributeName: _firstDetailLabel.font}];
+    frame.origin.y -= 5;
     frame.size = size;
-    frame.size.width = self.contentView.frame.size.width - frame.origin.x;
+    frame.size.width = self.contentView.frame.size.width - self.imageView.frame.size.width;
     
     _firstDetailLabel.text = firstdetail;
     _firstDetailLabel.frame = frame;

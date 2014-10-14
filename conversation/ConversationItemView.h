@@ -38,6 +38,7 @@
 }
 
 @property (nonatomic) BOOL isChannel;
+@property (nonatomic) BOOL enabled;
 @property (nonatomic) UIImage *image;
 @property (nonatomic) NSString *name;
 @property (nonatomic) NSString *detail;
