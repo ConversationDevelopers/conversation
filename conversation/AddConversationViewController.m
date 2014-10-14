@@ -67,7 +67,15 @@ static unsigned short ConversationTableSection = 1;
     chatButton.enabled = NO;
     _badInput = NO;
     self.navigationItem.rightBarButtonItem = chatButton;
+
     _client = [[IRCClient alloc] init];
+    
+    // There is only one client, lets use that
+    if(_conversationsController.connections.count == 1) {
+        _client = _conversationsController.connections[0];
+        ConnectionTableSection = -1;
+    }
+       
     _configuration = [[IRCChannelConfiguration alloc] init];
     
 }
@@ -122,7 +130,9 @@ static unsigned short ConversationTableSection = 1;
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView
 {
-    NSInteger count = 8;
+    NSInteger count = 7;
+    if(_conversationsController.connections.count > 1)
+        count = 8;
     return count;
 }
 
@@ -146,7 +156,7 @@ static unsigned short ConversationTableSection = 1;
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath
 {
-    if (indexPath.section == ConnectionTableSection && indexPath.row == 0) {
+    if (indexPath.section == ConnectionTableSection) {
         
         PreferencesListViewController *connectionListViewController = [[PreferencesListViewController alloc] initWithStyle:UITableViewStyleGrouped];
         
@@ -181,7 +191,7 @@ static unsigned short ConversationTableSection = 1;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == ConnectionTableSection) {
+    if (indexPath.section == ConnectionTableSection && _conversationsController.connections.count > 1) {
 
         // Connection Picker
         UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];
