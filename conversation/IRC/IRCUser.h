@@ -29,7 +29,31 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "IRCClient.h"
+#import "IRCChannel.h"
+#import "NSString+Methods.h"
 
 @interface IRCUser : NSObject
+
+@property (nonatomic) NSString *nick;
+@property (nonatomic) NSString *username;
+@property (nonatomic) NSString *hostname;
+@property (nonatomic) NSString *realname;
+
+@property (nonatomic, assign) BOOL isIRCOperator;
+@property (nonatomic, assign) BOOL isAway;
+
+@property (nonatomic) int channelPrivileges;
+
+- (instancetype) initWithSenderDict:(char **)senderDict onClient:(IRCClient *)client;
+
+typedef enum ChannelPrivileges : NSUInteger {
+    NORMAL,
+    VOICE,
+    HALFOP,
+    OPERATOR,
+    ADMIN,
+    FOUNDER
+} ChannelPrivileges;
 
 @end

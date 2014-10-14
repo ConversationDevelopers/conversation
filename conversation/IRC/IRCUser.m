@@ -32,4 +32,37 @@
 
 @implementation IRCUser
 
+- (instancetype) initWithSenderDict:(char **)senderDict onClient:(IRCClient *)client
+{
+    if ((self = [super init])) {
+        self.nick = [NSString stringWithCString:senderDict[1] usingEncodingPreference:[client configuration]];
+        self.username = [NSString stringWithCString:senderDict[2] usingEncodingPreference:[client configuration]];
+        self.hostname = [NSString stringWithCString:senderDict[3] usingEncodingPreference:[client configuration]];
+        
+        self.isIRCOperator = NO;
+        self.isAway = NO;
+        
+        self.channelPrivileges = 0;
+        return self;
+    }
+    return nil;
+}
+
++ (IRCUser *)fromSender:(char **)senderDict onChannel:(IRCChannel *)channel createIfMissing:(BOOL)createIfMissing
+{
+    NSString *nickString = [NSString stringWithCString:senderDict[1] usingEncodingPreference:[[channel client] configuration]];
+    
+    IRCUser *userFromUserlist = nil;
+    for (IRCUser *user in [channel users]) {
+        if ([[user nick] isEqualToString:nickString]) {
+            userFromUserlist = user;
+            break;
+        }
+    }
+    if (userFromUserlist == nil && createIfMissing) {
+        return [[IRCUser alloc] initWithSenderDict:senderDict onClient:[channel client]];
+    }
+    return userFromUserlist;
+}
+
 @end
