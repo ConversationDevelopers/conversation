@@ -216,10 +216,12 @@ static unsigned short ConversationTableSection = 1;
     } else if (indexPath.section == ConversationTableSection) {
         if (indexPath.row == 0) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
-            if(self.addChannel)
+            if(self.addChannel) {
                 cell.textLabel.text = NSLocalizedString(@"Channel Name", @"Channel Name");
-            else
+                cell.textField.placeholder = @"#lobby";
+            } else {
                 cell.textLabel.text = NSLocalizedString(@"Nick Name", @"Nick Name");
+            }
             cell.textField.text = @"";
             if(_configuration.name)
                 cell.textField.text = _configuration.name;
