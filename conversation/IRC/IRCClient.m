@@ -571,7 +571,10 @@
         return NO;
     }
     [self.queries addObject:query];
-    [self validateQueryStatusOnAllItems];
+    
+    if ([self isConnectedAndCompleted]) {
+        [self validateQueryStatusOnAllItems];
+    }
     
     return YES;
 }
