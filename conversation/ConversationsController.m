@@ -37,11 +37,6 @@
 #import "ConversationItemView.h"
 #import "UITableView+Methods.h"
 
-@interface ConversationsController ()
-
-@property NSMutableArray *objects;
-@end
-
 @implementation ConversationsController
 
 - (void)awakeFromNib
@@ -105,15 +100,6 @@
         [sheet setTag:-1];
         [sheet showInView:self.view];
     }
-    
-/*
-    if (!self.objects) {
-        self.objects = [[NSMutableArray alloc] init];
-    }
-    [self.objects insertObject:[NSDate date] atIndex:0];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-*/
 }
 
 - (void)reloadData
@@ -260,7 +246,7 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self.objects removeObjectAtIndex:indexPath.row];
+//        [self.objects removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
