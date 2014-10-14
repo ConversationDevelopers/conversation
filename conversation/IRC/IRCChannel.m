@@ -33,9 +33,6 @@
 
 @interface IRCChannel ()
 
-@property (nonatomic, strong) NSString *topic;
-@property (nonatomic, strong) NSMutableArray *users;
-@property (nonatomic, strong) NSMutableArray *channelModes;
 @property (nonatomic, assign) BOOL isJoinedByUser;
 
 @end

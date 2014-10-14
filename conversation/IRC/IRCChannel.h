@@ -37,6 +37,10 @@
 
 @interface IRCChannel : IRCConversation
 
+@property (nonatomic, strong) NSString *topic;
+@property (nonatomic, strong) NSMutableArray *users;
+@property (nonatomic, strong) NSMutableArray *channelModes;
+
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;
 - (void)setTopic:(NSString *)topic;
 
