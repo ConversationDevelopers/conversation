@@ -36,9 +36,9 @@
 
 @interface AddConversationViewController : UITableViewController
 {
-    BOOL badInput;
+    BOOL _badInput;
     IRCClient *_client;
-    IRCChannelConfiguration *_conversation;
+    IRCChannelConfiguration *_configuration;
 }
 
 @property (nonatomic, assign) BOOL addChannel;

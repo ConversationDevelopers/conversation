@@ -65,10 +65,10 @@ static unsigned short ConversationTableSection = 1;
                                                                      action:@selector(chat:)];
     [chatButton setTintColor:[UIColor lightGrayColor]];
     chatButton.enabled = NO;
-    badInput = NO;
+    _badInput = NO;
     self.navigationItem.rightBarButtonItem = chatButton;
     _client = [[IRCClient alloc] init];
-    _conversation = [[IRCChannelConfiguration alloc] init];
+    _configuration = [[IRCChannelConfiguration alloc] init];
     
 }
 
@@ -84,7 +84,7 @@ static unsigned short ConversationTableSection = 1;
 - (void) chat:(id)sender
 {
     // Add conversation to client
-    if(badInput) {
+    if(_badInput) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Please check input values", @"Please check input values")
                                                         message:nil
                                                        delegate:nil
@@ -104,10 +104,10 @@ static unsigned short ConversationTableSection = 1;
     }
     
     if(_addChannel) {
-        IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:_conversation withClient:_client];
+        IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:_configuration withClient:_client];
         [client addChannel:channel];
     } else {
-        IRCConversation *query = [[IRCConversation alloc] initWithConfiguration:_conversation withClient:_client];
+        IRCConversation *query = [[IRCConversation alloc] initWithConfiguration:_configuration withClient:_client];
         [client addQuery:query];
     }
     
@@ -222,28 +222,28 @@ static unsigned short ConversationTableSection = 1;
 {
     _client = [_conversationsController.connections objectAtIndex:sender.selectedItem];
     [self.tableView reloadData];
-    if(_client != nil && _conversation.name) {
+    if(_client != nil && _configuration.name) {
         self.navigationItem.rightBarButtonItem.enabled = YES;
     }
 }
 
 - (void) nameChanged:(PreferencesTextCell *)sender
 {
-    _conversation.name = sender.textField.text;
+    _configuration.name = sender.textField.text;
     
     if(sender.textField.text.length == 0) {
         sender.accessoryType = UITableViewCellAccessoryNone;
         self.navigationItem.rightBarButtonItem.enabled = NO;
-        badInput = YES;
+        _badInput = YES;
     } else if(sender.textField.text.length > 1) {
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
-        badInput = NO;
+        _badInput = NO;
         if(_client != nil) {
             self.navigationItem.rightBarButtonItem.enabled = YES;
         }
     } else {
         sender.accessoryType = UITableViewCellAccessoryNone;
-        badInput = YES;
+        _badInput = YES;
     }
 }
 
@@ -252,16 +252,16 @@ static unsigned short ConversationTableSection = 1;
     //_conversation.password = sender.textField.text;
     if(sender.textField.text.length == 0) {
         sender.accessoryType = UITableViewCellAccessoryNone;
-        badInput = NO;
+        _badInput = NO;
         if(_client != nil) {
             self.navigationItem.rightBarButtonItem.enabled = YES;
         }
     } else if(sender.textField.text.length > 1) {
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
-        badInput = NO;
+        _badInput = NO;
     } else {
         sender.accessoryType = UITableViewCellAccessoryNone;
-        badInput = YES;
+        _badInput = YES;
     }
 }
 @end
