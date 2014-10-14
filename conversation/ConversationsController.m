@@ -245,12 +245,15 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-//        [self.objects removeObjectAtIndex:indexPath.row];
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+    IRCClient *client = _connections[indexPath.section];
+    NSInteger index = indexPath.row;
+    if ((int)indexPath.row > (int)client.getChannels.count-1) {
+        index = indexPath.row - client.getChannels.count;
+        [client removeQuery:client.getQueries[index]];
+    } else {
+        [client removeChannel:client.getChannels[index]];
     }
+    [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (void)headerViewSelected:(UIGestureRecognizer *)sender
