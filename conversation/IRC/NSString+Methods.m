@@ -40,15 +40,7 @@
     if ([self isKindOfClass:[NSString class]]) {
         
         /* Get the channel prefix characters allowed by the server */
-        NSString *acceptedChannelPrefixesByServer = nil;
-        if (client) {
-            acceptedChannelPrefixesByServer = [[client featuresSupportedByServer] objectForKey:@"CHANTYPES"];
-        }
-        if (acceptedChannelPrefixesByServer == nil) {
-            /* The server does not provide this information or we are not connected to one, so we will use
-            the standard characters defined by the RFC http://tools.ietf.org/html/rfc1459#section-1.3  */
-            acceptedChannelPrefixesByServer = @"#&";
-        }
+        NSString *acceptedChannelPrefixesByServer = [IRCClient getChannelPrefixCharacters:client];
         
         /* Turn both strings into character arrays for parsing */
         char* prefixes = malloc([acceptedChannelPrefixesByServer length]);

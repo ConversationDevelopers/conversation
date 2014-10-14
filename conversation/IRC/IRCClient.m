@@ -525,13 +525,56 @@
     [self.connection writeDataToSocket:data];
 }
 
++ (NSString *)getChannelPrefixCharacters:(IRCClient *)client
+{
+    /* Get the channel prefix characters allowed by the server */
+    NSString *acceptedChannelPrefixesByServer = nil;
+    if (client) {
+        acceptedChannelPrefixesByServer = [[client featuresSupportedByServer] objectForKey:@"CHANTYPES"];
+    }
+    if (acceptedChannelPrefixesByServer == nil) {
+        /* The server does not provide this information or we are not connected to one, so we will use
+         the standard characters defined by the RFC http://tools.ietf.org/html/rfc1459#section-1.3  */
+        acceptedChannelPrefixesByServer = @"#&";
+    }
+    return acceptedChannelPrefixesByServer;
+}
+
 - (NSMutableArray *)getChannels
 {
     return self.channels;
 }
 
-- (NSMutableArray *)getQueries;
+- (NSMutableArray *)getQueries
 {
+    return self.queries;
+}
+
+- (NSMutableArray *)sortChannelItems
+{
+    NSCharacterSet *prefixes = [NSCharacterSet characterSetWithCharactersInString:[IRCClient getChannelPrefixCharacters:self]];
+    
+    NSArray *sortedArray;
+    sortedArray = [self.channels sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+        NSString *channel1 = [(IRCChannel *)a name];
+        NSString *channel2 = [(IRCChannel *)b name];
+        channel1 = [[channel1 componentsSeparatedByCharactersInSet:prefixes] componentsJoinedByString:@""];
+        channel2 = [[channel2 componentsSeparatedByCharactersInSet:prefixes] componentsJoinedByString:@""];
+        return [channel1 compare:channel2];
+    }];
+    self.channels = [sortedArray mutableCopy];
+    return self.channels;
+}
+
+- (NSMutableArray *)sortQueryItems
+{
+    NSArray *sortedArray;
+    sortedArray = [self.queries sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+        NSString *query1 = [(IRCConversation *)a name];
+        NSString *query2 = [(IRCConversation *)b name];
+        return [query1 compare:query2];
+    }];
+    self.queries = [sortedArray mutableCopy];
     return self.queries;
 }
 

@@ -58,6 +58,7 @@
 - (void)clientDidDisconnectWithError:(NSString *)error;
 - (void)clientDidReceiveData:(const char *)decodedData;
 - (void)clientDidSendData;
++ (NSString *)getChannelPrefixCharacters:(IRCClient *)client;
 - (void)disconnect;
 - (void)sendData:(NSString *)data;
 
