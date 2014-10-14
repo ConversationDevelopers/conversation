@@ -65,7 +65,7 @@
     _isChannel = YES;
     _enabled = YES;
     
-    self.imageView.image = [UIImage imageNamed:@"channelicon.png"];
+    self.imageView.image = [UIImage imageNamed:@"ChannelIcon"];
 
     
     return self;
@@ -83,18 +83,18 @@
     [super layoutSubviews];
     
     if (!_isChannel)
-        self.imageView.image = [UIImage imageNamed:@"queryicon.png"];
+        self.imageView.image = [UIImage imageNamed:@"QueryIcon"];
     else
-        self.imageView.image = [UIImage imageNamed:@"channelicon.png"];
+        self.imageView.image = [UIImage imageNamed:@"ChannelIcon"];
     
     if (!_enabled)
         self.alpha = 0.5;
-        
+/*
     self.imageView.frame = CGRectMake(self.imageView.frame.origin.x,
                                       self.imageView.frame.origin.y+12.0,
                                       self.imageView.frame.size.width-20.0,
                                       self.imageView.frame.size.height-20.0);
-    
+*/    
     CGSize size = [_name sizeWithAttributes:@{NSFontAttributeName: _nameLabel.font}];
     
     CGRect frame = self.imageView.frame;
