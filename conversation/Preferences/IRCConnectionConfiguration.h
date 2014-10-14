@@ -57,6 +57,7 @@
 @property (nonatomic, assign) BOOL useServerAuthenticationService;
 @property (nonatomic, assign) BOOL showConsoleOnConnect;
 
-@property (nonatomic, copy) NSDictionary *channels;
+@property (nonatomic, copy) NSArray *channels;
+@property (nonatomic, copy) NSArray *queries;
 
 @end

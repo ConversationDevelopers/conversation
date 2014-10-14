@@ -32,7 +32,10 @@
 
 @interface IRCChannelConfiguration : NSObject
 
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSString *passwordReference;
+- (id)initWithDictionary:(NSDictionary *)dict;
+-(NSDictionary *)getDictionary;
+
+@property (nonatomic) NSString *name;
+@property (nonatomic) NSString *passwordReference;
 
 @end

@@ -33,6 +33,8 @@
 #import "EditConnectionViewController.h"
 #import "AddConversationViewController.h"
 #import "IRCClient.h"
+#import "IRCConversation.h"
+#import "IRCChannel.h"
 #import "AppPreferences.h"
 #import "ConversationItemView.h"
 #import "UITableView+Methods.h"
@@ -72,6 +74,18 @@
     for (NSDictionary *dict in configurations) {
         IRCConnectionConfiguration *configuration = [[IRCConnectionConfiguration alloc] initWithDictionary:dict];
         IRCClient *client = [[IRCClient alloc] initWithConfiguration:configuration];
+        
+        // Initialize saved channels and queries
+        IRCChannelConfiguration *config;
+        for (NSDictionary *dict in configuration.channels) {
+            config = [[IRCChannelConfiguration alloc] initWithDictionary:dict];
+            [client addChannel:[[IRCChannel alloc] initWithConfiguration:config withClient:client]];
+        }
+        for (NSDictionary *dict in configuration.queries) {
+            config = [[IRCChannelConfiguration alloc] initWithDictionary:dict];
+            [client addQuery:[[IRCConversation alloc] initWithConfiguration:config withClient:client]];
+        }
+        
         [self.connections addObject:client];
     }
 }
@@ -252,9 +266,17 @@
     NSInteger index = indexPath.row;
     if ((int)indexPath.row > (int)client.getChannels.count-1) {
         index = indexPath.row - client.getChannels.count;
-        [client removeQuery:client.getQueries[index]];
+        IRCConversation *query = client.getQueries[index];
+        [client removeQuery:query];
+        
+        // Remove from prefs
+        [[AppPreferences sharedPrefs] deleteQueryWithName:query.name forConnectionConfiguration:client.configuration];
     } else {
-        [client removeChannel:client.getChannels[index]];
+        IRCChannel *channel = client.getChannels[index];
+        [client removeChannel:channel];
+        
+        // Remove from prefs
+        [[AppPreferences sharedPrefs] deleteChannelWithName:channel.name forConnectionConfiguration:client.configuration];
     }
     [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
 }

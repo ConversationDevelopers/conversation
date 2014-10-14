@@ -30,6 +30,7 @@
 
 
 #import "AddConversationViewController.h"
+#import "AppPreferences.h"
 #import "PreferencesListViewController.h"
 #import "PreferencesTextCell.h"
 #import "UITableView+Methods.h"
@@ -101,6 +102,7 @@ static unsigned short ConversationTableSection = 1;
         [alert show];
         return;
     }
+    
     NSMutableArray *connections = [_conversationsController.connections mutableCopy];
     
     IRCClient *client;
@@ -114,9 +116,17 @@ static unsigned short ConversationTableSection = 1;
     if(_addChannel) {
         IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:_configuration withClient:_client];
         [client addChannel:channel];
+        
+        // Save config
+        [[AppPreferences sharedPrefs] addChannelConfiguration:_configuration forConnectionConfiguration:_client.configuration];
+        
     } else {
         IRCConversation *query = [[IRCConversation alloc] initWithConfiguration:_configuration withClient:_client];
         [client addQuery:query];
+        
+        // Save config
+        [[AppPreferences sharedPrefs] addQueryConfiguration:_configuration forConnectionConfiguration:_client.configuration];
+        
     }
     
     [connections setObject:client atIndexedSubscript:i];

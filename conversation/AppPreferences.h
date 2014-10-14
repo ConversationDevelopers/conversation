@@ -31,6 +31,7 @@
 
 #import <Foundation/Foundation.h>
 #import "IRCConnectionConfiguration.h"
+#import "IRCChannelConfiguration.h"
 
 @interface AppPreferences : NSObject {
     NSString *_preferencesPath;
@@ -38,6 +39,13 @@
 
 + (id)sharedPrefs;
 - (void)addConnectionConfiguration:(IRCConnectionConfiguration *)configuration;
+
+- (void)addQueryConfiguration:(IRCChannelConfiguration *)configuration forConnectionConfiguration:(IRCConnectionConfiguration *)connection;
+- (void)addChannelConfiguration:(IRCChannelConfiguration *)configuration forConnectionConfiguration:(IRCConnectionConfiguration *)connection;
+
+- (void)deleteQueryWithName:(NSString *)queryName forConnectionConfiguration:(IRCConnectionConfiguration *)connection;
+- (void)deleteChannelWithName:(NSString *)channelName forConnectionConfiguration:(IRCConnectionConfiguration *)connection;
+
 - (void)deleteConnectionWithIdentifier:(NSString *)identifier;
 - (NSArray *)getConnectionConfigurations;
 - (void)save;

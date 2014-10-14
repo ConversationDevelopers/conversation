@@ -56,7 +56,9 @@
         self.showConsoleOnConnect =             NO;
         self.automaticallyReconnect =           YES;
         
-        self.channels = [[NSDictionary alloc] init];
+        self.channels = [[NSArray alloc] init];
+        self.queries = [[NSArray alloc] init];
+        
         return self;
     }
     return nil;
@@ -85,6 +87,7 @@
         self.showConsoleOnConnect = [dict[@"showConsoleOnConnect"] boolValue];
         
         self.channels = dict[@"channels"];
+        self.queries = dict[@"queries"];
     }
     return self;
 }

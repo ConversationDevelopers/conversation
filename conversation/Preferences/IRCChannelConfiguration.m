@@ -29,7 +29,37 @@
  */
 
 #import "IRCChannelConfiguration.h"
+#import <objc/runtime.h>
 
 @implementation IRCChannelConfiguration
+
+- (id)initWithDictionary:(NSDictionary *)dict
+{
+    if ((self = [super init])) {
+        self.name = dict[@"name"];
+        self.passwordReference = dict[@"passwordReference"];
+    }
+    return self;
+}
+
+- (NSDictionary *)getDictionary
+{
+    
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    
+    unsigned int numberOfProperties;
+    objc_property_t *properties = class_copyPropertyList([self class], &numberOfProperties);
+    for (int i = 0; i < numberOfProperties; i++) {
+        objc_property_t property = properties[i];
+        NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
+        id valueForProperty = [self valueForKey:propertyName];
+        if(valueForProperty != nil) {
+            dict[propertyName] = valueForProperty;
+        }
+    }
+    free(properties);
+    return dict;
+    
+}
 
 @end
