@@ -37,13 +37,16 @@
 - (BOOL) isValidChannelName:(IRCClient *)client
 {
     /* Validate that parameters are valid before continuing */
-    if ([self isKindOfClass:[NSString class]] && client) {
+    if ([self isKindOfClass:[NSString class]]) {
         
         /* Get the channel prefix characters allowed by the server */
-        NSString *acceptedChannelPrefixesByServer = [[client featuresSupportedByServer] objectForKey:@"CHANTYPES"];
+        NSString *acceptedChannelPrefixesByServer = nil;
+        if (client) {
+            acceptedChannelPrefixesByServer = [[client featuresSupportedByServer] objectForKey:@"CHANTYPES"];
+        }
         if (acceptedChannelPrefixesByServer == nil) {
-            /* For some reson the server does not provide this information, so we will use the
-             standard characters defined by the RFC http://tools.ietf.org/html/rfc1459#section-1.3  */
+            /* The server does not provide this information or we are not connected to one, so we will use
+            the standard characters defined by the RFC http://tools.ietf.org/html/rfc1459#section-1.3  */
             acceptedChannelPrefixesByServer = @"#&";
         }
         
@@ -58,6 +61,7 @@
             channel++;
         }
         
+        /* Iterate over prefixes accepted by the server and return YES from the method if we find a match. */
         while (*prefixes != '\0') {
             if (*prefixes == *channel) {
                 free(channel);
