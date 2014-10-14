@@ -64,10 +64,8 @@
     
     _isChannel = YES;
     
-    if(_isChannel)
-        self.imageView.image = [UIImage imageNamed:@"channelicon.png"];
-    else
-        self.imageView.image = [UIImage imageNamed:@"queryicon.png"];
+    self.imageView.image = [UIImage imageNamed:@"channelicon.png"];
+
     
     return self;
 }
@@ -82,6 +80,11 @@
 {
     
     [super layoutSubviews];
+    
+    if(!_isChannel)
+        self.imageView.image = [UIImage imageNamed:@"queryicon.png"];
+    else
+        self.imageView.image = [UIImage imageNamed:@"channelicon.png"];
     
     self.imageView.frame = CGRectMake(self.imageView.frame.origin.x,
                                       self.imageView.frame.origin.y+10.0,

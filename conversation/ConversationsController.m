@@ -211,7 +211,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     IRCClient *client = [_connections objectAtIndex:section];
-    NSLog(@"COUNT %i", (int)(client.getChannels.count + client.getQueries.count));
     return client.getChannels.count + client.getQueries.count;
 }
 
@@ -226,11 +225,11 @@
     
     
     IRCClient *client = [_connections objectAtIndex:indexPath.section];
-    
-    if(indexPath.row > client.getChannels.count) {
+    NSArray *channels = client.getChannels;
+    if((int)indexPath.row > (int)channels.count-1) {
         NSInteger index;
         index = indexPath.row - client.getChannels.count;
-        IRCConversation *query = [client.getChannels objectAtIndex:index];
+        IRCConversation *query = [client.getQueries objectAtIndex:index];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
         cell.name = query.name;
@@ -243,11 +242,11 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
         cell.name = channel.name;
+        cell.isChannel = YES;
         cell.unreadCount = 350;
         cell.detail = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. ";
         
     }
-
 
     return cell;
 }
