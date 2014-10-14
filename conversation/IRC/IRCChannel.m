@@ -59,7 +59,7 @@
 
 - (void)setTopic:(NSString *)topic
 {
-    self.topic = topic;
+    
 }
 
 @end
