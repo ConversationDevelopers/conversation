@@ -143,6 +143,26 @@
     return NO;
 }
 
+- (BOOL)isValidUsername
+{
+    if ([self isKindOfClass:[NSString class]]) {
+        /* Validate that length is 1 or larger */
+        if (self.length < 1) {
+            return NO;
+        }
+        
+        /* Parse username and ensure it does not contain carriage return, line feed, @, or !. */
+        const char* username = [self UTF8String];
+        while (*username != '\0') {
+            if (*username == '\010' || *username == '\014' || *username == '@' || *username == '!') {
+                return NO;
+            }
+        }
+        return YES;
+    }
+    return NO;
+}
+
 + (NSString *) stringWithCString:(const char *)string usingEncodingPreference:(IRCConnectionConfiguration *)configuration
 {
     NSStringEncoding encoding;
