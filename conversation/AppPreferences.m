@@ -59,6 +59,23 @@
     return self;
 }
 
+- (BOOL)hasConnectionWithIdentifier:(NSString *)identifier
+{
+    for (NSDictionary *con in self.preferences[@"configurations"]) {
+        if ([con[@"uniqueIdentifier"] isEqualToString:identifier])
+            return YES;
+    }
+    
+    return NO;
+}
+
+- (void)setConnectionConfiguration:(IRCConnectionConfiguration *)configuration atIndex:(NSInteger)index
+{
+    NSMutableDictionary *prefs = [self.preferences mutableCopy];
+    [prefs[@"configurations"] setObject:configuration.getDictionary atIndex:index];
+    self.preferences = prefs;
+}
+
 - (void)setChannels:(NSArray *)channels andQueries:(NSArray *)queries forConnectionConfiguration:(IRCConnectionConfiguration *)connection
 {
     NSMutableDictionary *prefs = [self.preferences mutableCopy];

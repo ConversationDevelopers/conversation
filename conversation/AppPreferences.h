@@ -38,7 +38,11 @@
 }
 
 + (id)sharedPrefs;
+
+- (BOOL)hasConnectionWithIdentifier:(NSString *)identifier;
+
 - (void)addConnectionConfiguration:(IRCConnectionConfiguration *)configuration;
+- (void)setConnectionConfiguration:(IRCConnectionConfiguration *)configuration atIndex:(NSInteger)index;
 
 - (void)setChannels:(NSArray *)channels andQueries:(NSArray *)queries forConnectionConfiguration:(IRCConnectionConfiguration *)connection;
 

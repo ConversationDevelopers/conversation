@@ -56,16 +56,25 @@ static unsigned short AutomaticTableSection = 2;
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = cancelButton;
     
-    UIBarButtonItem *connectButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", @"Left button in edit connection view")
+    NSString *buttonTitle = NSLocalizedString(@"Connect", @"Connect");
+
+    if (!_configuration)
+        _configuration = [[IRCConnectionConfiguration alloc] init];
+    else
+        buttonTitle = NSLocalizedString(@"Save", @"Save");
+        
+    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:buttonTitle
                                                                       style:UIBarButtonItemStylePlain
                                                                      target:self
-                                                                     action:@selector(connect:)];
-    [connectButton setTintColor:[UIColor lightGrayColor]];
-    connectButton.enabled = NO;
-    badInput = NO;
-    self.navigationItem.rightBarButtonItem = connectButton;
+                                                                     action:@selector(save:)];
+    [saveButton setTintColor:[UIColor lightGrayColor]];
     
-    _configuration = [[IRCConnectionConfiguration alloc] init];
+    if(!_configuration)
+        saveButton.enabled = NO;
+    
+    badInput = NO;
+    self.navigationItem.rightBarButtonItem = saveButton;
+    
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -77,7 +86,7 @@ static unsigned short AutomaticTableSection = 2;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void) connect:(id)sender
+- (void) save:(id)sender
 {
     if(badInput) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Please check input values", @"Please check input values")
@@ -89,13 +98,29 @@ static unsigned short AutomaticTableSection = 2;
         return;
         
     }
+    
     IRCClient *client = [[IRCClient alloc] initWithConfiguration:_configuration];
-    [[AppPreferences sharedPrefs] addConnectionConfiguration:_configuration];
+
+    // Does the connection already exist?
+    if ([[AppPreferences sharedPrefs] hasConnectionWithIdentifier:_configuration.uniqueIdentifier]) {
+        
+        int x=0;
+        NSArray *connections = self.conversationsController.connections;
+        for (IRCClient *cl in connections) {
+            if([cl.configuration.uniqueIdentifier isEqualToString:client.configuration.uniqueIdentifier]) {
+                [self.conversationsController.connections setObject:client atIndexedSubscript:x];
+                [[AppPreferences sharedPrefs] setConnectionConfiguration:_configuration atIndex:x];
+                break;
+            }
+            x++;
+        }
+    } else {
+        [self.conversationsController.connections addObject:client];
+        [[AppPreferences sharedPrefs] addConnectionConfiguration:_configuration];        
+        [client connect];
+    }
     
-    [self.conversationsController.connections addObject:client];
     [self.conversationsController reloadData];
-    
-    [client connect];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

@@ -109,7 +109,7 @@
 - (void)addConversation:(id)sender
 {
     if(self.connections.count == 0) {
-        [self addConnection];
+        [self editConnection:nil];
     } else {
         UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add Conversation", @"Add Conversation")
                                                            delegate:self
@@ -126,11 +126,16 @@
     [self.tableView reloadData];
 }
 
-- (void)addConnection
+- (void)editConnection:(IRCConnectionConfiguration *)configuration
 {
+        
     EditConnectionViewController *editController = [[EditConnectionViewController alloc] init];
     
+    if (configuration)
+        editController.configuration = configuration;
+
     editController.conversationsController = self;
+    
     
     UINavigationController *navigationController = [[UINavigationController alloc]
                                                     
@@ -211,7 +216,7 @@
 - (double)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     
-    return  20.0;
+    return 20.0;
 }
 
 - (double)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -335,7 +340,7 @@
                 break;
             case 2:
                 // Add Connection
-                [self addConnection];
+                [self editConnection:nil];
                 break;
             default:
                 break;
@@ -359,6 +364,7 @@
                 break;
             case 2:
                 // Edit
+                [self editConnection:client.configuration];
                 break;
             case 3:
                 // Delete
