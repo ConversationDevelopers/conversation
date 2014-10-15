@@ -204,7 +204,7 @@
         
         /* Consume the following space leading to the IRC command */
         line++;
-        lineBeforeIteration++;
+        
     } else {
         sender   = NULL;
         username = NULL;
