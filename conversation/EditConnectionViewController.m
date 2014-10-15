@@ -41,6 +41,7 @@
 static unsigned short ServerTableSection = 0;
 static unsigned short IdentityTableSection = 1;
 static unsigned short AutomaticTableSection = 2;
+static unsigned short EncodingTableSection = 3;
 
 @implementation EditConnectionViewController
 - (id) init {
@@ -167,13 +168,70 @@ static unsigned short AutomaticTableSection = 2;
         return 5;
     if (section == AutomaticTableSection)
         return 3;
+    if (section == EncodingTableSection)
+        return 1;
     return 0;
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
     if (indexPath.section == AutomaticTableSection && indexPath.row == 2)
         return indexPath;
+    if (indexPath.section == EncodingTableSection && indexPath.row == 0)
+        return indexPath;
     return nil;
+}
+
+- (NSArray *) encodingList
+{
+    return @[@(NSUTF8StringEncoding),
+             @(NSASCIIStringEncoding),
+             @(NSISOLatin1StringEncoding),
+             @(NSMacOSRomanStringEncoding),
+             @(NSWindowsCP1252StringEncoding),
+             @(NSISOLatin2StringEncoding),
+             @(NSWindowsCP1250StringEncoding),
+             @(NSWindowsCP1251StringEncoding),
+             @(NSWindowsCP1253StringEncoding),
+             @(NSISO2022JPStringEncoding),
+             @(NSJapaneseEUCStringEncoding),
+             @(NSShiftJISStringEncoding)];
+}
+
+static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
+{
+    NSString *result = [NSString localizedNameOfStringEncoding:encoding];
+    if (result.length)
+        return result;
+    
+    switch (encoding) {
+        case NSUTF8StringEncoding:
+            return NSLocalizedString(@"Unicode (UTF-8)", "Encoding name");
+        case NSASCIIStringEncoding:
+            return NSLocalizedString(@"Western (ASCII)", "Encoding name");
+        case NSISOLatin1StringEncoding:
+            return NSLocalizedString(@"Western (ISO Latin 1)", "Encoding name");
+        case NSMacOSRomanStringEncoding:
+            return NSLocalizedString(@"Western (Mac OS Roman)", "Encoding name");
+        case NSWindowsCP1252StringEncoding:
+            return NSLocalizedString(@"Western (Windows Latin 1)", "Encoding name");
+        case NSISOLatin2StringEncoding:
+            return NSLocalizedString(@"Central European (ISO Latin 2)", "Encoding name");
+        case NSWindowsCP1250StringEncoding:
+            return NSLocalizedString(@"Central European (Windows Latin 2)", "Encoding name");
+        case NSWindowsCP1251StringEncoding:
+            return NSLocalizedString(@"Cyrillic (Windows)", "Encoding name");
+        case NSWindowsCP1253StringEncoding:
+            return NSLocalizedString(@"Greek (Windows)", "Encoding name");
+        case NSISO2022JPStringEncoding:
+            return NSLocalizedString(@"Japanese (ISO 2022-JP)", "Encoding name");
+        case NSJapaneseEUCStringEncoding:
+            return NSLocalizedString(@"Japanese (EUC)", "Encoding name");
+        case NSShiftJISStringEncoding:
+            return NSLocalizedString(@"Japanese (Windows, DOS)", "Encoding name");
+    }
+    
+    NSCAssert(NO, @"Should not reach this point.");
+    return @"";
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath
@@ -187,6 +245,28 @@ static unsigned short AutomaticTableSection = 2;
         
         return;
     }
+	if (indexPath.section == EncodingTableSection && indexPath.row == 0) {
+        PreferencesListViewController *listViewController = [[PreferencesListViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        
+        NSUInteger selectedEncodingIndex = NSNotFound;
+        NSMutableArray *encodings = [[NSMutableArray alloc] init];
+    
+        for (NSNumber *encoding in [self encodingList]) {
+            [encodings addObject:localizedNameOfStringEncoding(encoding.intValue)];
+        }
+        
+        listViewController.title = NSLocalizedString(@"Encoding", @"Encoding view title");
+        listViewController.items = encodings;
+        listViewController.selectedItem = selectedEncodingIndex;
+        
+        listViewController.target = self;
+        listViewController.action = @selector(encodingChanged:);
+        
+        [self.navigationController pushViewController:listViewController animated:YES];
+        
+        return;
+        
+    }
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
@@ -196,6 +276,8 @@ static unsigned short AutomaticTableSection = 2;
         return @"Identity";
     if (section == AutomaticTableSection)
         return @"Automatic Actions";
+    if (section == EncodingTableSection)
+        return @"Encoding";
     return nil;
 }
 
@@ -305,13 +387,18 @@ static unsigned short AutomaticTableSection = 2;
             cell.textLabel.text = NSLocalizedString(@"Show Console", @"Show debug console on connect");
             return cell;
         } else if (indexPath.row == 2) {
-            UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
-            
+            UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];
             cell.textLabel.text = NSLocalizedString(@"Join Rooms", @"Title of auto join channels view");
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            
             cell.detailTextLabel.text = NSLocalizedString(@"None", @"No entries");
-            
+            return cell;
+        }
+    } else if (indexPath.section == EncodingTableSection) {
+        if (indexPath.row == 0) {
+            UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];
+            cell.textLabel.text = NSLocalizedString(@"Encoding", @"Encoding");
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.detailTextLabel.text = localizedNameOfStringEncoding(_configuration.socketEncodingType);
             return cell;
         }
     }
@@ -489,5 +576,16 @@ static unsigned short AutomaticTableSection = 2;
     NSLog(@"Show Console changed");
     _configuration.showConsoleOnConnect = sender.on;
 
+}
+
+- (void)encodingChanged:(PreferencesListViewController *)sender
+{
+    NSLog(@"SELECTED: %i", (int)[[[self encodingList] objectAtIndex:sender.selectedItem] integerValue]);
+    if (sender.selectedItem == NSNotFound)
+        return;
+    
+    _configuration.socketEncodingType = [[[self encodingList] objectAtIndex:sender.selectedItem] integerValue];
+    
+    [self.tableView reloadData];
 }
 @end

@@ -45,6 +45,7 @@
         self.secondaryNickname = @"Guest_";
         self.serverAddress = @"";
         self.connectionPort = 6667;
+        self.socketEncodingType = NSUTF8StringEncoding;
         
         self.disconnectMessage = @"Conversation IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)";
         self.channelDepartMessage = [self.disconnectMessage copy];
@@ -77,6 +78,7 @@
         self.secondaryNickname = dict[@"secondaryNickname"];
         self.serverAddress = dict[@"serverAddress"];
         self.connectionPort = [dict[@"connectionPort"] integerValue];
+        self.socketEncodingType = [dict[@"socketEncodingType"] integerValue];
         
         self.disconnectMessage = dict[@"disconnectMessage"];
         self.channelDepartMessage = dict[@"channelDepartMessage"];
