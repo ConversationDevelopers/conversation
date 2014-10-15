@@ -72,4 +72,8 @@
 - (NSMutableArray *)getChannels;
 - (NSMutableArray *)getQueries;
 
+- (NSMutableArray *)sortChannelItems;
+- (NSMutableArray *)sortQueryItems;
+
+
 @end
