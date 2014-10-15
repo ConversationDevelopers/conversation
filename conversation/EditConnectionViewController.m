@@ -165,7 +165,7 @@ static unsigned short AutomaticTableSection = 2;
             cell.textField.placeholder = @"irc.example.com";
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-            cell.textField.keyboardType = UIKeyboardTypeURL;            
+            cell.textField.keyboardType = UIKeyboardTypeURL;
             cell.textEditAction = @selector(serverChanged:);
             return cell;
         } else if (indexPath.row == 2) {

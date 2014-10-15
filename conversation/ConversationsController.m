@@ -41,21 +41,21 @@
 
 @implementation ConversationsController
 
-- (void)awakeFromNib
+- (id)init
 {
-    [super awakeFromNib];
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        self.clearsSelectionOnViewWillAppear = NO;
-        self.preferredContentSize = CGSizeMake(320.0, 600.0);
-    }
-    if (!self.connections) {
-        self.connections = [[NSMutableArray alloc] init];
-    }
+    if (!(self = [super init]))
+        return nil;
+    self.connections = [[NSMutableArray alloc] init];
+    
+    return self;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.title = NSLocalizedString(@"Conversations", @"Conversations");
+    
     // Do any additional setup after loading the view, typically from a nib.
     UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Settings", @"Left navigation button in the conversation list")
                                                                        style:UIBarButtonItemStylePlain
