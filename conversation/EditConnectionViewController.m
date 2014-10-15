@@ -382,7 +382,7 @@ static unsigned short AutomaticTableSection = 2;
     _configuration.primaryNickname = sender.textField.text;
     if(sender.textField.text.length == 0) {
         sender.accessoryType = UITableViewCellAccessoryNone;
-    } else if([sender.textField.text isValidNickname]) {
+    } else if([sender.textField.text isValidNickname:nil]) {
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
         badInput = NO;
     } else {
@@ -411,7 +411,7 @@ static unsigned short AutomaticTableSection = 2;
     if(sender.textField.text.length == 0) {
         sender.accessoryType = UITableViewCellAccessoryNone;
         badInput = NO;
-    } else if([sender.textField.text isValidNickname]) {
+    } else if([sender.textField.text isValidNickname:nil]) {
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
         badInput = NO;
     } else {
