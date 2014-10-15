@@ -30,6 +30,7 @@
 
 
 #import "EditConnectionViewController.h"
+#import "PreferencesListViewController.h"
 #import "PreferencesSwitchCell.h"
 #import "PreferencesTextCell.h"
 #import "IRCClient.h"
@@ -101,6 +102,33 @@ static unsigned short AutomaticTableSection = 2;
 
 #pragma mark -
 
+- (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
+    if (indexPath.section == ServerTableSection && indexPath.row == 1) {
+        if (!_networks)
+            _networks = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"networks" ofType:@"plist"]];
+        
+        PreferencesListViewController *listViewController = [[PreferencesListViewController alloc] initWithStyle:UITableViewStyleGrouped];
+
+        NSMutableArray *networks = [[NSMutableArray alloc] init];
+        NSUInteger selectedIndex = NSNotFound;
+        for (NSDictionary *serverInfo in _networks) {
+            NSString *name = serverInfo[@"Name"];
+            NSAssert(name.length, @"Server name required.");
+            [networks addObject:name];
+        }
+        
+        listViewController.title = NSLocalizedString(@"Servers", @"Servers view title");
+        listViewController.items = networks;
+        listViewController.selectedItem = selectedIndex;
+        listViewController.itemImage = [UIImage imageNamed:@"NetworkIcon"];
+        listViewController.target = self;
+        listViewController.action = @selector(defaultNetworkPicked:);
+        
+        [self.navigationController pushViewController:listViewController animated:YES];
+    }
+
+}
+
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView
 {
     NSInteger count = 8;
@@ -152,7 +180,7 @@ static unsigned short AutomaticTableSection = 2;
         if (indexPath.row == 0) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"Description", @"Custom server name");
-            cell.textField.text = @"";
+            cell.textField.text = _configuration.connectionName;
             cell.textField.placeholder = NSLocalizedString(@"Optional", @"User input is optional");
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -161,11 +189,12 @@ static unsigned short AutomaticTableSection = 2;
         } else if (indexPath.row == 1) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"Address", @"Server address");
-            cell.textField.text = @"";
+            cell.textField.text = _configuration.serverAddress;
             cell.textField.placeholder = @"irc.example.com";
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-            cell.textField.keyboardType = UIKeyboardTypeURL;            
+            cell.textField.keyboardType = UIKeyboardTypeURL;
+            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
             cell.textEditAction = @selector(serverChanged:);
             return cell;
         } else if (indexPath.row == 2) {
@@ -263,6 +292,21 @@ static unsigned short AutomaticTableSection = 2;
     }
     NSLog(@"Ooooops...");
     return nil;
+}
+
+- (void)defaultNetworkPicked:(PreferencesListViewController *)sender
+{
+    if (sender.selectedItem == NSNotFound)
+        return;
+    
+    NSDictionary *serverInfo = _networks[sender.selectedItem];
+    _configuration.connectionName = serverInfo[@"Name"];
+    _configuration.serverAddress = serverInfo[@"Address"];
+    
+
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+    
+    [self.tableView reloadData];
 }
 
 - (void) descriptionChanged:(PreferencesTextCell*)sender

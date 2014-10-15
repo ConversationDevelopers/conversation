@@ -31,6 +31,7 @@
 #import "AppDelegate.h"
 #import "DetailViewController.h"
 #import "AppPreferences.h"
+#import "ConversationsController.h"
 
 @interface AppDelegate () <UISplitViewControllerDelegate>
 
@@ -49,12 +50,21 @@
     [[UINavigationBar appearance] setBackgroundColor:[UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0]];
     [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor lightGrayColor]} forState:UIControlStateNormal];
     [[UITableView appearance] setTintColor:[UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0]];
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
+
+    ConversationsController *conversationsController = [[ConversationsController alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:conversationsController];
+    self.window.rootViewController = nav;
+    [self.window makeKeyAndVisible];
+    
+/*
     UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
     UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
     navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
     splitViewController.delegate = self;
-    
+*/
     [IRCMessageIndex initialiseMessageIndex];
 
     return YES;

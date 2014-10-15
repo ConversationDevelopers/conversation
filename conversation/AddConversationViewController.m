@@ -179,6 +179,7 @@ static unsigned short ConversationTableSection = 1;
 
         connectionListViewController.title = NSLocalizedString(@"Connections", @"Connection");
         connectionListViewController.items = [connections copy];
+        connectionListViewController.itemImage = [UIImage imageNamed:@"NetworkIcon"];
         connectionListViewController.target = self;
         connectionListViewController.action = @selector(connectionDidChanged:);
         

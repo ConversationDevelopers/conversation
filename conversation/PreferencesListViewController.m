@@ -73,6 +73,7 @@
 {
     
     UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+    cell.imageView.image = self.itemImage;
     cell.textLabel.text = [self.items objectAtIndex:indexPath.row];
     return cell;
 }

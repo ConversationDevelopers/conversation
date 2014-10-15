@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>Name</key>
+		<string>Abjects</string>
+		<key>Address</key>
+		<string>irc.abjects.net</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>DALnet</string>
+		<key>Address</key>
+		<string>irc.dal.net</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>EFNet</string>
+		<key>Address</key>
+		<string>irc.efnet.org</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Freenode</string>
+		<key>Address</key>
+		<string>chat.freenode.com</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>IRCNet</string>
+		<key>Address</key>
+		<string>irc.ircnet.com</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>QuakeNet</string>
+		<key>Address</key>
+		<string>irc.quakenet.org</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Rizon</string>
+		<key>Address</key>
+		<string>irc.rizon.net</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>SnooNet</string>
+		<key>Address</key>
+		<string>irc.snoonet.org</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>UnderNet</string>
+		<key>Address</key>
+		<string>irc.undernet.org</string>
+	</dict>
+</array>
+</plist>
