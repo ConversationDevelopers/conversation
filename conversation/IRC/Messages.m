@@ -87,9 +87,7 @@
             free(messageCopy);
             return;
         } else if (strcmp(ctcpCommand, "VERSION") == 0) {
-            /* This is a CTCP VERSION, we will respond to it automatically by sending our IRC client version information.
-             The current way of doing this is a placeholder. */
-            [client sendData:[NSString stringWithFormat:@"NOTICE %s :\001VERSION Conversation IRC Client (https://github.com/ConversationDevelopers/conversation)\001", senderDict[1]]];
+            
         }
         free(ctcpCommand);
     }

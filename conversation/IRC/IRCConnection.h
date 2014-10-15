@@ -30,6 +30,7 @@
 
 #import <Foundation/Foundation.h>
 #import "AsyncSocket.h"
+#import "NSString+Methods.h"
 
 @class IRCClient;
 
@@ -41,5 +42,8 @@
 - (void)connectToHost:(NSString *)host onPort:(UInt16)port useSSL:(BOOL)sslEnabled;
 - (void)writeDataToSocket:(NSData *)data;
 - (void)close;
+- (void)enableFloodControl;
+- (void)disableFloodControl;
+- (void)send:(NSString *)line;
 
 @end

@@ -41,6 +41,7 @@
 @interface IRCClient : NSObject
 
 @property (nonatomic, strong) IRCConnectionConfiguration *configuration;
+@property (nonatomic, strong) IRCConnection *connection;
 @property (nonatomic, assign) BOOL isConnected;
 @property (nonatomic, assign) BOOL isAttemptingConnection;
 @property (nonatomic, assign) BOOL hasSuccessfullyAuthenticated;
@@ -61,7 +62,6 @@
 - (void)clientDidSendData;
 + (NSString *)getChannelPrefixCharacters:(IRCClient *)client;
 - (void)disconnect;
-- (void)sendData:(NSString *)data;
 
 - (BOOL)addChannel:(IRCChannel *)channel;
 - (BOOL)removeChannel:(IRCChannel *)channel;

@@ -175,8 +175,8 @@
 + (NSString *) stringWithCString:(const char *)string usingEncodingPreference:(IRCConnectionConfiguration *)configuration
 {
     NSStringEncoding encoding;
-    if (configuration && configuration.messageEncoding) {
-        encoding = configuration.messageEncoding;
+    if (configuration && configuration.socketEncodingType) {
+        encoding = configuration.socketEncodingType;
     } else {
         encoding = NSUTF8StringEncoding;
     }
@@ -188,4 +188,14 @@
     return encodedString;
 }
 
+- (NSData *)dataUsingEncoding:(IRCConnectionConfiguration *)configuration
+{
+    NSStringEncoding encoding;
+    if (configuration && configuration.socketEncodingType) {
+        encoding = configuration.socketEncodingType;
+    } else {
+        encoding = NSUTF8StringEncoding;
+    }
+    return [self dataUsingEncoding:encoding allowLossyConversion:YES];
+}
 @end

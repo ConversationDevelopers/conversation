@@ -31,10 +31,17 @@
 #import "IRCConnection.h"
 #import "IRCClient.h"
 
+#define floodControlInterval 2
+#define floodControlMessageLimit 5
+
 @interface IRCConnection ()
 
 @property (nonatomic, assign) BOOL sslEnabled;
+@property (nonatomic, assign) BOOL floodControlEnabled;
 @property (nonatomic, strong) IRCClient *client;
+@property (nonatomic, strong) NSTimer *floodControlTimer;
+@property (nonatomic, strong) NSMutableArray *messageQueue;
+@property (nonatomic, assign) int messagesSentSinceLastTick;
 
 @end
 
@@ -45,6 +52,11 @@
     if ((self = [super init])) {
         self.sslEnabled = NO;
         self.client = client;
+        
+        self.messagesSentSinceLastTick = 0;
+        self.messageQueue = [[NSMutableArray alloc] init];
+        self.floodControlEnabled = NO;
+        self.floodControlTimer = nil;
         return self;
     }
     return nil;
@@ -102,7 +114,7 @@
     // Please see the documentation for the startTLS method in AsyncSocket.h for a full discussion.
     [self.client clientDidConnect];
     
-    NSData *term = [@"\r\n" dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *term = [@"\r\n" dataUsingEncoding:self.client.configuration];
     [asyncSocket readDataToData:term withTimeout:-1 tag:1];
 }
 
@@ -122,7 +134,7 @@
     } else {
         NSLog(@"Read msg error: %s",message);
     }
-    NSData *term = [@"\r\n" dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *term = [@"\r\n" dataUsingEncoding:self.client.configuration];
     [asyncSocket readDataToData:term withTimeout:-1 tag:1];
 }
 
@@ -138,6 +150,7 @@
 
 - (void)onSocketDidDisconnect:(AsyncSocket *)sock
 {
+    [self.messageQueue removeAllObjects];
     [self.client clientDidDisconnect];
 }
 
@@ -149,6 +162,64 @@
 - (void)close
 {
     [asyncSocket disconnectAfterReadingAndWriting];
+}
+
+- (void)sendData:(NSString *)line
+{
+    if ([line hasSuffix:@"\r\n"] == NO) {
+        line = [line stringByAppendingString:@"\r\n"];
+    }
+    NSLog(@">> %@", line);
+    NSData *data = [line dataUsingEncoding:self.client.configuration];
+    [self writeDataToSocket:data];
+}
+
+- (void)enableFloodControl {
+    self.floodControlEnabled = YES;
+    self.floodControlTimer = [NSTimer scheduledTimerWithTimeInterval:floodControlInterval
+                                                              target:self
+                                                            selector:@selector(floodTimerTick)
+                                                            userInfo:nil
+                                                             repeats:YES];
+}
+
+- (void)disableFloodControl {
+    self.floodControlEnabled = NO;
+    [self.floodControlTimer invalidate];
+    self.floodControlTimer = nil;
+}
+
+- (void)floodTimerTick {
+    self.messagesSentSinceLastTick = 0;
+    BOOL messageQueueIsSendingItems = YES;
+    while (messageQueueIsSendingItems) {
+        messageQueueIsSendingItems = [self continueSending];
+    }
+}
+
+- (void)send:(NSString *)line
+{
+    NSLog(@"Queueing: %@", line);
+    [self.messageQueue addObject:line];
+    [self continueSending];
+}
+
+- (BOOL)continueSending
+{
+    if ([self.messageQueue count] == 0) {
+        return NO;
+    }
+    
+    if (self.floodControlEnabled) {
+        if (self.messagesSentSinceLastTick > floodControlMessageLimit) {
+            return NO;
+        }
+        self.messagesSentSinceLastTick++;
+    }
+    NSString *queueItemToSend = [self.messageQueue objectAtIndex:0];
+    [self sendData:queueItemToSend];
+    [self.messageQueue removeObjectAtIndex:0];
+    return YES;
 }
 
 @end

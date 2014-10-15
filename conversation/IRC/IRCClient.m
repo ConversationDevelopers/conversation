@@ -41,7 +41,6 @@
 
 @interface IRCClient ()
 
-@property (nonatomic, strong) IRCConnection *connection;
 @property (nonatomic, assign) BOOL connectionIsBeingClosed;
 @property (nonatomic, retain) NSMutableArray *channels;
 @property (nonatomic, retain) NSMutableArray *queries;
@@ -108,9 +107,9 @@
     self.currentNicknameOnConnection = self.configuration.primaryNickname;
     
     /* Send initial registration */
-    [self sendData:[NSString stringWithFormat:@"NICK %@",
+    [self.connection send:[NSString stringWithFormat:@"NICK %@",
                     self.configuration.primaryNickname]];
-    [self sendData:[NSString stringWithFormat:@"USER %@ 0 * :%@",
+    [self.connection send:[NSString stringWithFormat:@"USER %@ 0 * :%@",
                     self.configuration.usernameForRegistration,
                     self.configuration.realNameForRegistration]];
 }
@@ -270,7 +269,7 @@
     
     switch (commandIndexValue) {
         case PING:
-            [self sendData:[NSString stringWithFormat:@"PONG :%s", line]];
+            [self.connection send:[NSString stringWithFormat:@"PONG :%s", line]];
             break;
         case ERROR:
             
@@ -321,6 +320,7 @@
         case RPL_WELCOME:
             self.isAttemptingRegistration = NO;
             [self validateQueryStatusOnAllItems];
+            [self.connection enableFloodControl];
             break;
             
         case RPL_ISUPPORT:
@@ -351,14 +351,14 @@
                 /* The nick error did happen during initial registration, we will check if we have already tried the secondary nickname */
                 if ([self.currentNicknameOnConnection isEqualToString:self.configuration.primaryNickname]) {
                     /* This is the first occurance of this error, so we will try registration again with the secondary nickname. */
-                    [self sendData:[NSString stringWithFormat:@"NICK %@", self.configuration.secondaryNickname]];
+                    [self.connection send:[NSString stringWithFormat:@"NICK %@", self.configuration.secondaryNickname]];
                     self.currentNicknameOnConnection = self.configuration.secondaryNickname;
                 } else {
                     /* The secondary nickname has already been attempted, so we will append an underscore to the nick until
                      we find one that the server accepts. If we cannot find a nick within 25 characters, we will abort. */
                     if ([self.currentNicknameOnConnection length] < 25) {
                         NSString *newNickName = [NSString stringWithFormat:@"%@_", self.currentNicknameOnConnection];
-                        [self sendData:[@"NICK " stringByAppendingString:newNickName]];
+                        [self.connection send:[@"NICK " stringByAppendingString:newNickName]];
                         self.currentNicknameOnConnection = newNickName;
                     } else {
                         NSLog(@"Registration failed. Disconnecting..");
@@ -369,7 +369,8 @@
             break;
             
         case RPL_ENDOFMOTD:
-            [self sendData:@"JOIN #conversation"];
+            NSLog(@"End of MOTD");
+            [self.connection send:@"JOIN #conversation"];
             
         default:
             break;
@@ -449,7 +450,7 @@
 {
     if (self.isConnected) {
         self.isProcessingTermination = YES;
-        [self sendData:[NSString stringWithFormat:@"QUIT %@", self.configuration.disconnectMessage]];
+        [self.connection send:[NSString stringWithFormat:@"QUIT %@", self.configuration.disconnectMessage]];
         [self.connection close];
     }
 }
@@ -496,6 +497,7 @@
     self.isProcessingTermination =          NO;
     self.alternativeNickNameAttempts = 0;
     self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
+    [self.connection disableFloodControl];
     
     [self validateQueryStatusOnAllItems];
 }
@@ -513,17 +515,7 @@
     for (IRCConversation *query in self.queries) {
         requestString = [requestString stringByAppendingString:[NSString stringWithFormat:@"%@ ", query.name]];
     }
-    [self sendData:[NSString stringWithFormat:@"ISON :%@", requestString]];
-}
-
-- (void)sendData:(NSString *)line
-{
-    if ([line hasSuffix:@"\n"] == NO) {
-        line = [line stringByAppendingString:@"\n"];
-    }
-    NSLog(@">> %@", line);
-    NSData *data = [line dataUsingEncoding:NSUTF8StringEncoding];
-    [self.connection writeDataToSocket:data];
+    [self.connection send:[NSString stringWithFormat:@"ISON :%@", requestString]];
 }
 
 + (NSString *)getChannelPrefixCharacters:(IRCClient *)client
@@ -590,7 +582,7 @@
     [self.channels addObject:channel];
     
     if ([self isConnectedAndCompleted]) {
-        [self sendData:[NSString stringWithFormat:@"JOIN %@", [channel name]]];
+        [self.connection send:[NSString stringWithFormat:@"JOIN %@", [channel name]]];
     }
     
     return YES;
