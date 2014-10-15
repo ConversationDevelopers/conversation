@@ -316,7 +316,7 @@
                             NSLocalizedString(@"Delete", @"Delete connection"), nil];
     
     [sheet setTag:sender.view.tag];
-    [sheet setDestructiveButtonIndex:2];
+    [sheet setDestructiveButtonIndex:3];
     [sheet showInView:self.view];
 }
 
