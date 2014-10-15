@@ -121,9 +121,17 @@
     return NO;
 }
 
-- (BOOL) isValidNickname
+- (BOOL) isValidNickname:(IRCClient *)client
 {
     if ([self isKindOfClass:[NSString class]]) {
+        
+        int maxNickLength = 0;
+        if (client) {
+            maxNickLength = [[[client featuresSupportedByServer] objectForKey:@"NICKLEN"] intValue];
+        }
+        if (maxNickLength == 0) {
+            maxNickLength = 16;
+        }
         
         // Check length
         if (self.length < 2 || self.length > 16)
