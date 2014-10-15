@@ -37,6 +37,7 @@
 #import "AppPreferences.h"
 #import "NSString+Methods.h"
 #import "UITableView+Methods.h"
+#import "SSKeychain.h"
 
 static unsigned short ServerTableSection = 0;
 static unsigned short IdentityTableSection = 1;
@@ -100,6 +101,17 @@ static unsigned short EncodingTableSection = 3;
         
     }
     
+    // Store passwords in keychain
+    NSString *identifier = [[NSUUID UUID] UUIDString];
+    if(_configuration.serverPasswordReference) {
+        [SSKeychain setPassword:_configuration.serverPasswordReference forService:@"conversation" account:identifier];
+        _configuration.serverPasswordReference = identifier;
+    }
+    if(_configuration.authenticationPasswordReference) {
+        [SSKeychain setPassword:_configuration.authenticationPasswordReference forService:@"conversation" account:identifier];
+        _configuration.authenticationPasswordReference = identifier;
+    }
+    
     IRCClient *client = [[IRCClient alloc] initWithConfiguration:_configuration];
 
     // Does the connection already exist?
@@ -122,6 +134,7 @@ static unsigned short EncodingTableSection = 3;
     }
     
     [self.conversationsController reloadData];
+    [[AppPreferences sharedPrefs] save];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -307,7 +320,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         } else if (indexPath.row == 2) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"Port", @"Server port to connect to");
-            cell.textField.text = @"";
+            cell.textField.text = [NSString stringWithFormat:@"%i", (int)_configuration.connectionPort];
             cell.textField.placeholder = @"6667";
             cell.textField.keyboardType = UIKeyboardTypeNumberPad;
             cell.textEditAction = @selector(portChanged:);
@@ -315,7 +328,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         } else if (indexPath.row == 3) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"Password", @"Server password");
-            cell.textField.text = @"";
+            cell.textField.text = [SSKeychain passwordForService:@"conversation" account:_configuration.serverPasswordReference];
             cell.textField.placeholder = NSLocalizedString(@"Optional", @"User input is optional");
 			cell.textField.secureTextEntry = YES;
             cell.textEditAction = @selector(passwordChanged:);
@@ -330,7 +343,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         if (indexPath.row == 0) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"Nick Name", @"Nick name to use on IRC");
-            cell.textField.text = @"";
+            cell.textField.text = _configuration.primaryNickname;
             cell.textField.placeholder = @"Guest";
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
@@ -339,7 +352,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         } else if (indexPath.row == 1) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"Alt. Nick", @"Alternative nick to use on IRC");
-            cell.textField.text = @"";
+            cell.textField.text = _configuration.primaryNickname;
             cell.textField.placeholder = @"Guest_";
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
@@ -348,7 +361,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         } else if (indexPath.row == 2) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"User Name", @"User name to use on IRC");
-            cell.textField.text = @"";
+            cell.textField.text = _configuration.usernameForRegistration;
             cell.textField.placeholder = @"Guest";
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
@@ -357,7 +370,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         } else if (indexPath.row == 3) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"Real Name", @"Real name to use on IRC");
-            cell.textField.text = @"";
+            cell.textField.text = _configuration.realNameForRegistration;
             cell.textField.placeholder = @"Guest";
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
@@ -366,7 +379,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         } else if (indexPath.row == 4) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"Nick Password", @"Nick authentication password");
-            cell.textField.text = @"";
+            cell.textField.text = [SSKeychain passwordForService:@"conversation" account:_configuration.authenticationPasswordReference];
             cell.textField.placeholder = NSLocalizedString(@"Optional", @"User input is optional");
 			cell.textField.secureTextEntry = YES;
             cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
@@ -378,11 +391,15 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
     } else if (indexPath.section == AutomaticTableSection) {
         if (indexPath.row == 0) {
             PreferencesSwitchCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesSwitchCell class])];
+            if(_configuration.automaticallyConnect)
+                cell.on = YES;
             cell.switchAction = @selector(autoconnectChanged:);
             cell.textLabel.text = NSLocalizedString(@"Connect at Launch", @"Connect on app launch");
             return cell;
         } else if (indexPath.row == 1) {
             PreferencesSwitchCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesSwitchCell class])];
+            if(_configuration.showConsoleOnConnect)
+                cell.on = YES;
             cell.switchAction = @selector(showconsoleChanged:);
             cell.textLabel.text = NSLocalizedString(@"Show Console", @"Show debug console on connect");
             return cell;

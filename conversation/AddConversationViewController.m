@@ -35,6 +35,7 @@
 #import "PreferencesTextCell.h"
 #import "UITableView+Methods.h"
 #import "IRCClient.h"
+#import "SSKeychain.h"
 
 @implementation AddConversationViewController
 
@@ -119,6 +120,11 @@ static unsigned short ConversationTableSection = 1;
             [client addChannel:channel];
             
             // Save config
+            if([_configuration.passwordReference isEqualToString:@""] == NO) {
+                NSString *identifier = [[NSUUID UUID] UUIDString];
+                [SSKeychain setPassword:_configuration.passwordReference forService:@"conversation" account:identifier];
+                _configuration.passwordReference = identifier;
+            }
             [[AppPreferences sharedPrefs] addChannelConfiguration:_configuration forConnectionConfiguration:_client.configuration];
             
         } else {
@@ -134,6 +140,9 @@ static unsigned short ConversationTableSection = 1;
     }
     _conversationsController.connections = connections;
     [_conversationsController reloadData];
+    
+    [[AppPreferences sharedPrefs] save];
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
