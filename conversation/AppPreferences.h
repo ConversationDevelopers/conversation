@@ -40,6 +40,8 @@
 + (id)sharedPrefs;
 - (void)addConnectionConfiguration:(IRCConnectionConfiguration *)configuration;
 
+- (void)setChannels:(NSArray *)channels andQueries:(NSArray *)queries forConnectionConfiguration:(IRCConnectionConfiguration *)connection;
+
 - (void)addQueryConfiguration:(IRCChannelConfiguration *)configuration forConnectionConfiguration:(IRCConnectionConfiguration *)connection;
 - (void)addChannelConfiguration:(IRCChannelConfiguration *)configuration forConnectionConfiguration:(IRCConnectionConfiguration *)connection;
 

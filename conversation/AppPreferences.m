@@ -30,6 +30,7 @@
 
 
 #import "AppPreferences.h"
+#import "IRCChannel.h"
 
 @implementation AppPreferences
 
@@ -56,6 +57,39 @@
         }
     }
     return self;
+}
+
+- (void)setChannels:(NSArray *)channels andQueries:(NSArray *)queries forConnectionConfiguration:(IRCConnectionConfiguration *)connection
+{
+    NSMutableDictionary *prefs = [self.preferences mutableCopy];
+    NSMutableArray *configurations;
+    if([self.preferences objectForKey:@"configurations"] != nil) {
+        configurations = [[self.preferences objectForKey:@"configurations"] mutableCopy];
+    } else {
+        configurations = [[NSMutableArray alloc] init];
+    }
+    
+    int i=0;
+    for (NSDictionary *d in configurations) {
+        if([d[@"uniqueIdentifier"] isEqualToString:connection.uniqueIdentifier]) {
+            NSMutableDictionary *dict = [d mutableCopy];
+            NSMutableArray *c = [[NSMutableArray alloc] init];
+            for (IRCChannel *channel in channels) {
+                [c addObject:channel.configuration.getDictionary];
+            }
+            dict[@"channels"] = c;
+            NSMutableArray *q = [[NSMutableArray alloc] init];
+            for (IRCConversation *query in queries) {
+                [q addObject:query.configuration.getDictionary];
+            }
+            dict[@"queries"] = q;
+            configurations[i] = dict;
+            break;
+        }
+        i++;
+    }
+    prefs[@"configurations"] = configurations;
+    self.preferences = prefs;
 }
 
 - (void)addQueryConfiguration:(IRCChannelConfiguration *)configuration forConnectionConfiguration:(IRCConnectionConfiguration *)connection

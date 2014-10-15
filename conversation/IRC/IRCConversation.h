@@ -38,9 +38,9 @@
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, assign) IRCClient *client;
 @property (nonatomic, assign) BOOL conversationPartnerIsOnline;
+@property (nonatomic, strong) IRCChannelConfiguration *configuration;
 
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;
-@property (nonatomic, assign) IRCChannelConfiguration *configuration;
 
 + (IRCConversation *) fromString:(NSString *)name withClient:(IRCClient *)client;
 

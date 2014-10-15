@@ -155,6 +155,18 @@
     [self presentViewController:navigationController animated:YES completion: nil];
 }
 
+- (void)sortConversationsForClientAtIndex:(NSInteger)index
+{
+    IRCClient *client = _connections[index];
+    if(client != nil) {
+        [client sortChannelItems];
+        [client sortQueryItems];
+        [_connections setObject:client atIndexedSubscript:index];
+        [[AppPreferences sharedPrefs] setChannels:client.getChannels andQueries:client.getQueries forConnectionConfiguration:client.configuration];
+        [self.tableView reloadData];        
+    }
+}
+
 #pragma mark - Table View
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -298,7 +310,11 @@
                                                        delegate:self
                                               cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
                                          destructiveButtonTitle:nil
-                                              otherButtonTitles:firstAction, NSLocalizedString(@"Edit", @"Edit Connection"), NSLocalizedString(@"Delete", @"Delete connection"), nil];
+                                              otherButtonTitles:firstAction,
+                            NSLocalizedString(@"Sort Conversations", "Sort Conversations"),
+                            NSLocalizedString(@"Edit", @"Edit Connection"),
+                            NSLocalizedString(@"Delete", @"Delete connection"), nil];
+    
     [sheet setTag:sender.view.tag];
     [sheet setDestructiveButtonIndex:2];
     [sheet showInView:self.view];
@@ -338,9 +354,13 @@
                     [client connect];
                 break;
             case 1:
-                // Edit
+                // Sort Conversations
+                [self sortConversationsForClientAtIndex:actionSheet.tag];
                 break;
             case 2:
+                // Edit
+                break;
+            case 3:
                 // Delete
                 alertView = [[UIAlertView alloc] initWithTitle:client.configuration.connectionName
                                                        message:NSLocalizedString(@"Do you really want to delete this connection?", @"Delete connection confirmation")
