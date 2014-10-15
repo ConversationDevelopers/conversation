@@ -266,7 +266,7 @@ static unsigned short ConversationTableSection = 1;
         _badInput = NO;
     }
     
-    if (!_addChannel && [sender.textField.text isValidNickname]) {
+    if (!_addChannel && [sender.textField.text isValidNickname:_client]) {
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
         _badInput = NO;
     }

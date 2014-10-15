@@ -52,7 +52,7 @@
             if ([channel.name isEqualToString:name])
                 return channel;
         }
-    } else if ([name isValidNickname]) {
+    } else if ([name isValidNickname:client]) {
         for (IRCConversation *query in [client getQueries]) {
             if ([query.name isEqualToString:name]) {
                 return query;
