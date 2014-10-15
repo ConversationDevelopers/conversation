@@ -582,10 +582,10 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
     }
 }
 
-- (void) autoconnectChanged:(PreferencesTextCell *)sender
+- (void) autoconnectChanged:(PreferencesSwitchCell *)sender
 {
     NSLog(@"Auto Connect changed");
-    _configuration.automaticallyConnect = sender.textField.text;
+    _configuration.automaticallyConnect = sender.on;
 }
 
 - (void) showconsoleChanged:(PreferencesSwitchCell *)sender

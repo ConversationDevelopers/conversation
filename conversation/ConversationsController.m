@@ -87,6 +87,9 @@
         }
         
         [self.connections addObject:client];
+        if(client.configuration.automaticallyConnect) {
+            [client connect];
+        }
     }
 }
 
