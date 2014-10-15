@@ -36,6 +36,7 @@
 @interface EditConnectionViewController : UITableViewController {
     BOOL badInput;
     IRCConnectionConfiguration *_configuration;
+    NSArray *_networks;
 }
 
 @property (nonatomic, strong) ConversationsController *conversationsController;

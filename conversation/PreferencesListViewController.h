@@ -36,6 +36,7 @@
 @property (nonatomic) SEL action;
 @property (nonatomic, copy) NSArray *items;
 @property (nonatomic, assign) NSInteger selectedItem;
+@property (nonatomic, strong) UIImage *itemImage;
 
 
 @end
