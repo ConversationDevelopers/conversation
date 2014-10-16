@@ -503,6 +503,8 @@
 
 - (void)validateQueryStatusOnAllItems
 {
+    if ([self.queries count] == 0) return;
+    
     NSString *requestString = @"";
     for (IRCConversation *query in self.queries) {
         requestString = [requestString stringByAppendingString:[NSString stringWithFormat:@"%@ ", query.name]];
