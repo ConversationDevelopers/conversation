@@ -48,23 +48,7 @@
     
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-//    self.addItemLabelText = NSLocalizedString(@"Add item", @"Add item label");
-//    self.noItemsLabelText = NSLocalizedString(@"No items", @"No items label");
-//    self.editViewTitle = NSLocalizedString(@"Edit", @"Edit view title");
-    
     return self;
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -72,14 +56,9 @@
     [super viewWillDisappear:animated];
     [[UIApplication sharedApplication] sendAction:_action to:_target from:self forEvent:nil];
 }
-    
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
-- (void) setAllowEditing:(BOOL) allowEditing {
+- (void) setAllowEditing:(BOOL) allowEditing
+{
     _allowEditing = allowEditing;
     
     if (allowEditing) {
@@ -91,24 +70,28 @@
     }
 }
 
-- (void) setSelectedItem:(NSInteger) index {
+- (void) setSelectedItem:(NSInteger) index
+{
     _selectedItem = (_allowEditing ? NSNotFound : index);
 }
 
-- (void) setItemImage:(UIImage *) image {
+- (void) setItemImage:(UIImage *) image
+{
     _itemImage = image;
     
     [self.tableView reloadData];
 }
 
-- (void) setItems:(NSArray *) items {
+- (void) setItems:(NSArray *) items
+{
     _pendingChanges = NO;
     _items = [items mutableCopy];
     
     [self.tableView reloadData];
 }
 
-- (void) setEditing:(BOOL) editing animated:(BOOL) animated {
+- (void) setEditing:(BOOL) editing animated:(BOOL) animated
+{
     [super setEditing:editing animated:animated];
     
     if (_items.count) {
@@ -186,7 +169,8 @@
     return cell;
 }
 
-- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath
+{
     return indexPath;
 }
 
@@ -216,7 +200,8 @@
     }
 }
 
-- (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath {
+- (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath
+{
     if (!self.editing)
         return UITableViewCellEditingStyleNone;
     
@@ -231,7 +216,8 @@
     return _allowEditing;
 }
 
-- (void) tableView:(UITableView *) tableView commitEditingStyle:(UITableViewCellEditingStyle) editingStyle forRowAtIndexPath:(NSIndexPath *) indexPath {
+- (void) tableView:(UITableView *) tableView commitEditingStyle:(UITableViewCellEditingStyle) editingStyle forRowAtIndexPath:(NSIndexPath *) indexPath
+{
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [_items removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:YES];
@@ -241,17 +227,20 @@
     }
 }
 
-- (BOOL) tableView:(UITableView *) tableView canMoveRowAtIndexPath:(NSIndexPath *) indexPath {
+- (BOOL) tableView:(UITableView *) tableView canMoveRowAtIndexPath:(NSIndexPath *) indexPath
+{
     return (indexPath.row < (NSInteger)_items.count);
 }
 
-- (NSIndexPath *) tableView:(UITableView *) tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *) sourceIndexPath toProposedIndexPath:(NSIndexPath *) proposedDestinationIndexPath {
+- (NSIndexPath *) tableView:(UITableView *) tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *) sourceIndexPath toProposedIndexPath:(NSIndexPath *) proposedDestinationIndexPath
+{
     if (proposedDestinationIndexPath.row >= (NSInteger)_items.count)
         return [NSIndexPath indexPathForRow:(_items.count - 1) inSection:0];
     return proposedDestinationIndexPath;
 }
 
-- (void) tableView:(UITableView *) tableView moveRowAtIndexPath:(NSIndexPath *) fromIndexPath toIndexPath:(NSIndexPath *) toIndexPath {
+- (void) tableView:(UITableView *) tableView moveRowAtIndexPath:(NSIndexPath *) fromIndexPath toIndexPath:(NSIndexPath *) toIndexPath
+{
     if (toIndexPath.row >= (NSInteger)_items.count)
         return;
     
