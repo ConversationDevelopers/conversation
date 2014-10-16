@@ -31,7 +31,6 @@
 #import "AppDelegate.h"
 #import "DetailViewController.h"
 #import "AppPreferences.h"
-#import "ConversationsController.h"
 
 @interface AppDelegate () <UISplitViewControllerDelegate>
 
@@ -54,8 +53,8 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
 
-    ConversationsController *conversationsController = [[ConversationsController alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:conversationsController];
+    _conversationsController = [[ConversationsController alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_conversationsController];
     self.window.rootViewController = nav;
     [self.window makeKeyAndVisible];
     
