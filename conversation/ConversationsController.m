@@ -95,9 +95,14 @@
     }
 }
 
-- (void)enableItem:(IRCClient *)sender
+- (void)enableItemAtIndex:(NSInteger)index forClient:(IRCClient *)client
 {
     NSLog(@"ENABLE ITEM");
+}
+
+- (void)disableItemAtIndex:(NSInteger)index forClient:(IRCClient *)client
+{
+    NSLog(@"DISABLE ITEM");
 }
 
 - (void)didReceiveMemoryWarning
