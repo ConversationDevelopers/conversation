@@ -38,6 +38,8 @@
 #import "AppPreferences.h"
 #import "ConversationItemView.h"
 #import "UITableView+Methods.h"
+#import "AppPreferences.h"
+#import "SSKeychain.h"
 
 @implementation ConversationsController
 
@@ -150,7 +152,10 @@
 - (void)addItemWithTag:(NSInteger)tag
 {
     AddConversationViewController *addController = [[AddConversationViewController alloc] init];
-    addController.conversationsController = self;
+    addController.target = self;
+    addController.action = @selector(conversationAdded:);
+    addController.connections = _connections;
+//    addController.conversationsController = self;
 
     // add Query
     if(tag == 1)
@@ -383,6 +388,52 @@
                 break;
         }
     }
+}
+
+- (void)conversationAdded:(AddConversationViewController *)sender
+{
+    NSLog(@"JAU");
+
+    NSMutableArray *connections = [sender.connections mutableCopy];
+    
+    IRCClient *client;
+    int i;
+    for (i=0; i<_connections.count; i++) {
+        client = [_connections objectAtIndex:i];
+        if([client.configuration.uniqueIdentifier isEqualToString:sender.client.configuration.uniqueIdentifier])
+            break;
+    }
+    if(client != nil) {
+        if(sender.addChannel) {
+            IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:sender.configuration withClient:sender.client];
+            [client addChannel:channel];
+            
+            // Save config
+            if([sender.configuration.passwordReference isEqualToString:@""] == NO) {
+                NSString *identifier = [[NSUUID UUID] UUIDString];
+                [SSKeychain setPassword:sender.configuration.passwordReference forService:@"conversation" account:identifier];
+                sender.configuration.passwordReference = identifier;
+            }
+            [[AppPreferences sharedPrefs] addChannelConfiguration:sender.configuration forConnectionConfiguration:sender.client.configuration];
+            
+        } else {
+            IRCConversation *query = [[IRCConversation alloc] initWithConfiguration:sender.configuration withClient:sender.client];
+            [client addQuery:query];
+            
+            // Save config
+            [[AppPreferences sharedPrefs] addQueryConfiguration:sender.configuration forConnectionConfiguration:sender.client.configuration];
+            
+        }
+        
+        [connections setObject:client atIndexedSubscript:i];
+    }
+    _connections = connections;
+    
+    
+    
+    [self.tableView reloadData];
+    [[AppPreferences sharedPrefs] save];
+    
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

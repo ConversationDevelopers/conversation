@@ -30,13 +30,21 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PreferencesListViewController : UITableViewController
+@interface PreferencesListViewController : UITableViewController {
+    BOOL _pendingChanges;
+}
 
 @property (nonatomic, weak) id target;
 @property (nonatomic) SEL action;
-@property (nonatomic, copy) NSArray *items;
+@property (nonatomic, retain) NSMutableArray *items;
+@property (nonatomic) BOOL allowEditing;
 @property (nonatomic, assign) NSInteger selectedItem;
 @property (nonatomic, strong) UIImage *itemImage;
+
+@property (nonatomic) NSString *noItemsText;
+@property (nonatomic) NSString *addItemText;
+@property (nonatomic) NSString *saveButtonTitle;
+@property (nonatomic) NSString *addViewTitle;
 
 
 @end

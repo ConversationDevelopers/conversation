@@ -59,6 +59,7 @@
 @property (nonatomic, assign) BOOL useServerAuthenticationService;
 @property (nonatomic, assign) BOOL showConsoleOnConnect;
 
+@property (nonatomic, copy) NSArray *autoJoinChannels;
 @property (nonatomic, copy) NSArray *channels;
 @property (nonatomic, copy) NSArray *queries;
 

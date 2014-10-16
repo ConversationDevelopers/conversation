@@ -30,19 +30,21 @@
 
 
 #import <UIKit/UIKit.h>
-#import "ConversationsController.h"
 #import "IRCClient.h"
 #import "IRCChannelConfiguration.h"
 
 @interface AddConversationViewController : UITableViewController
 {
     BOOL _badInput;
-    IRCClient *_client;
-    IRCChannelConfiguration *_configuration;
 }
 
+@property (nonatomic) IRCChannelConfiguration *configuration;
+@property (nonatomic) IRCClient *client;
+@property (nonatomic) NSArray *connections;
+@property (nonatomic, weak) id target;
+@property (nonatomic) SEL action;
 @property (nonatomic, assign) BOOL addChannel;
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) ConversationsController *conversationsController;
+@property (nonatomic) NSString *saveButtonTitle;
 
 @end

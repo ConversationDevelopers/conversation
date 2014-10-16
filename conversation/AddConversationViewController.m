@@ -30,7 +30,6 @@
 
 
 #import "AddConversationViewController.h"
-#import "AppPreferences.h"
 #import "PreferencesListViewController.h"
 #import "PreferencesTextCell.h"
 #import "UITableView+Methods.h"
@@ -45,23 +44,29 @@ static unsigned short ConversationTableSection = 1;
 - (id) init {
     if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
         return nil;
-    self.addChannel = YES;
-
+    
+    _addChannel = YES;
+    _connections = nil;
+    _client = nil;
+    _saveButtonTitle = NSLocalizedString(@"Chat", @"Right button in add conversation view");
+    
     return self;
 }
 
 - (void) viewDidLoad {
     [super viewDidLoad];
 
-    if(self.addChannel)
-        self.title = NSLocalizedString(@"Join a Channel", @"Join a Channel");
-    else
-        self.title = NSLocalizedString(@"Message a User", @"Message a User");        
+    if (!self.title) {
+        if(self.addChannel)
+            self.title = NSLocalizedString(@"Join a Channel", @"Join a Channel");
+        else
+            self.title = NSLocalizedString(@"Message a User", @"Message a User");
+    }
     
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = cancelButton;
     
-    UIBarButtonItem *chatButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Chat", @"Right button in add conversation view")
+    UIBarButtonItem *chatButton = [[UIBarButtonItem alloc] initWithTitle:_saveButtonTitle
                                                                       style:UIBarButtonItemStylePlain
                                                                      target:self
                                                                      action:@selector(chat:)];
@@ -70,21 +75,18 @@ static unsigned short ConversationTableSection = 1;
     _badInput = NO;
     self.navigationItem.rightBarButtonItem = chatButton;
 
-    _client = nil;
     ConnectionTableSection = 0;
     
     // There is only one client, lets use that
-    if(_conversationsController.connections.count == 1) {
-        _client = _conversationsController.connections[0];
+    if(!_connections || _connections.count == 1) {
+        _client = _connections[0];
         ConnectionTableSection = -1;
+        chatButton.enabled = YES;
     }
        
     _configuration = [[IRCChannelConfiguration alloc] init];
+    _configuration.autoJoin = YES;
     
-}
-
-- (void) viewWillAppear:(BOOL) animated {
-    [super viewWillAppear:animated];
 }
 
 - (void) cancel:(id)sender
@@ -105,45 +107,13 @@ static unsigned short ConversationTableSection = 1;
         return;
     }
     
-    NSMutableArray *connections = [_conversationsController.connections mutableCopy];
-    
-    IRCClient *client;
-    int i;
-    for (i=0; i<_conversationsController.connections.count; i++) {
-        client = [_conversationsController.connections objectAtIndex:i];
-        if([client.configuration.uniqueIdentifier isEqualToString:_client.configuration.uniqueIdentifier])
-            break;
+    if ([[UIApplication sharedApplication] sendAction:_action to:_target from:self forEvent:nil]) {
+        if(_client)
+            [self dismissViewControllerAnimated:YES completion:nil];
+        else
+            [self.navigationController popViewControllerAnimated:YES];
     }
-    if(client != nil) {
-        if(_addChannel) {
-            IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:_configuration withClient:_client];
-            [client addChannel:channel];
-            
-            // Save config
-            if([_configuration.passwordReference isEqualToString:@""] == NO) {
-                NSString *identifier = [[NSUUID UUID] UUIDString];
-                [SSKeychain setPassword:_configuration.passwordReference forService:@"conversation" account:identifier];
-                _configuration.passwordReference = identifier;
-            }
-            [[AppPreferences sharedPrefs] addChannelConfiguration:_configuration forConnectionConfiguration:_client.configuration];
-            
-        } else {
-            IRCConversation *query = [[IRCConversation alloc] initWithConfiguration:_configuration withClient:_client];
-            [client addQuery:query];
-            
-            // Save config
-            [[AppPreferences sharedPrefs] addQueryConfiguration:_configuration forConnectionConfiguration:_client.configuration];
-            
-        }
-        
-        [connections setObject:client atIndexedSubscript:i];
-    }
-    _conversationsController.connections = connections;
-    [_conversationsController reloadData];
-    
-    [[AppPreferences sharedPrefs] save];
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
+
 }
 
 #pragma mark -
@@ -151,7 +121,7 @@ static unsigned short ConversationTableSection = 1;
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView
 {
     NSInteger count = 7;
-    if(_conversationsController.connections.count > 1)
+    if(_connections && _connections.count > 1)
         count = 8;
     return count;
 }
@@ -178,11 +148,11 @@ static unsigned short ConversationTableSection = 1;
 {
     if (indexPath.section == ConnectionTableSection) {
         
-        PreferencesListViewController *connectionListViewController = [[PreferencesListViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        PreferencesListViewController *connectionListViewController = [[PreferencesListViewController alloc] init];
         
         NSMutableArray *connections = [[NSMutableArray alloc] init];
 
-        for (IRCClient *client in self.conversationsController.connections) {
+        for (IRCClient *client in _connections) {
             [connections addObject:client.configuration.connectionName];
         }
 
@@ -212,7 +182,7 @@ static unsigned short ConversationTableSection = 1;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == ConnectionTableSection && _conversationsController.connections.count > 1) {
+    if (indexPath.section == ConnectionTableSection && _connections.count > 1) {
 
         // Connection Picker
         UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];
@@ -232,7 +202,7 @@ static unsigned short ConversationTableSection = 1;
             } else {
                 cell.textLabel.text = NSLocalizedString(@"Nick Name", @"Nick Name");
             }
-            cell.textField.text = @"";
+            cell.textField.text = _configuration.name;
             if(_configuration.name)
                 cell.textField.text = _configuration.name;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
@@ -257,7 +227,7 @@ static unsigned short ConversationTableSection = 1;
 
 - (void) connectionDidChanged:(PreferencesListViewController *)sender
 {
-    _client = [_conversationsController.connections objectAtIndex:sender.selectedItem];
+    _client = [_connections objectAtIndex:sender.selectedItem];
     [self.tableView reloadData];
     if(_client != nil && _configuration.name) {
         self.navigationItem.rightBarButtonItem.enabled = YES;

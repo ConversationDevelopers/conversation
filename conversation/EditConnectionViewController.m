@@ -146,7 +146,7 @@ static unsigned short EncodingTableSection = 3;
         if (!_networks)
             _networks = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"networks" ofType:@"plist"]];
         
-        PreferencesListViewController *listViewController = [[PreferencesListViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        PreferencesListViewController *listViewController = [[PreferencesListViewController alloc] init];
 
         NSMutableArray *networks = [[NSMutableArray alloc] init];
         NSUInteger selectedIndex = NSNotFound;
@@ -250,16 +250,30 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath
 {
 	if (indexPath.section == AutomaticTableSection && indexPath.row == 2) {
-        UITableViewController *autoJoinViewController = [[UITableViewController alloc] init];
+        PreferencesListViewController *listViewController = [[PreferencesListViewController alloc] init];
+    
+        NSMutableArray *items = [[NSMutableArray alloc] init];
         
-        autoJoinViewController.title = NSLocalizedString(@"Join Rooms", @"Title of auto join channels view");
+        for (IRCChannel *channel in _configuration.channels) {
+            [items addObject:channel];
+        }
         
-        [self.navigationController pushViewController:autoJoinViewController animated:YES];
+        listViewController.title = NSLocalizedString(@"Join Channels", @"Title of auto join channels view");
+        listViewController.addItemText = NSLocalizedString(@"Add Channel", @"Title of add item label");
+        listViewController.saveButtonTitle = NSLocalizedString(@"Save", @"Save");
+        listViewController.noItemsText = NSLocalizedString(@"No Channels", @"No Channels");
+        
+        listViewController.items = items;
+        listViewController.allowEditing = YES;
+        listViewController.target = self;
+        listViewController.action = @selector(autoJoinChannelsChanged:);
+        
+        [self.navigationController pushViewController:listViewController animated:YES];
         
         return;
     }
 	if (indexPath.section == EncodingTableSection && indexPath.row == 0) {
-        PreferencesListViewController *listViewController = [[PreferencesListViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        PreferencesListViewController *listViewController = [[PreferencesListViewController alloc] init];
         
         NSUInteger selectedEncodingIndex = NSNotFound;
         NSMutableArray *encodings = [[NSMutableArray alloc] init];
@@ -405,9 +419,12 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             return cell;
         } else if (indexPath.row == 2) {
             UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];
-            cell.textLabel.text = NSLocalizedString(@"Join Rooms", @"Title of auto join channels view");
+            cell.textLabel.text = NSLocalizedString(@"Join Channels", @"Title of auto join channels view");
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            cell.detailTextLabel.text = NSLocalizedString(@"None", @"No entries");
+            if(_configuration.channels.count)
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%i", (int)_configuration.channels.count];
+            else
+                cell.detailTextLabel.text = NSLocalizedString(@"None", @"No entries");
             return cell;
         }
     } else if (indexPath.section == EncodingTableSection) {
@@ -595,9 +612,15 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 
 }
 
+- (void)autoJoinChannelsChanged:(PreferencesListViewController *)sender
+{
+    NSLog(@"Auto join channels changed");
+    _configuration.channels = sender.items;
+    [self.tableView reloadData];
+}
+
 - (void)encodingChanged:(PreferencesListViewController *)sender
 {
-    NSLog(@"SELECTED: %i", (int)[[[self encodingList] objectAtIndex:sender.selectedItem] integerValue]);
     if (sender.selectedItem == NSNotFound)
         return;
     

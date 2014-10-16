@@ -58,7 +58,7 @@
         self.automaticallyReconnect =           YES;
         
         self.messageEncoding = (unsigned long) NSUTF8StringEncoding;
-        
+
         self.channels = [[NSArray alloc] init];
         self.queries = [[NSArray alloc] init];
         
