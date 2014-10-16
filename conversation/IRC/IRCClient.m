@@ -369,8 +369,9 @@
             break;
             
         case RPL_ENDOFMOTD:
-            NSLog(@"End of MOTD");
-            [self.connection send:@"JOIN #conversation"];
+            if (self.configuration.useServerAuthenticationService == NO) {
+                [self autojoin];
+            }
             
         default:
             break;
@@ -623,6 +624,15 @@
         return YES;
     }
     return NO;
+}
+
+- (void)autojoin
+{
+    for (IRCChannel *channel in self.channels) {
+        if (channel.configuration.autoJoin) {
+            [self.connection send:[NSString stringWithFormat:@"JOIN %@", channel.name]];
+        }
+    }
 }
 
 @end
