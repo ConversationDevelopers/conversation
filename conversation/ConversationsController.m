@@ -32,7 +32,6 @@
 #import "DetailViewController.h"
 #import "EditConnectionViewController.h"
 #import "AddConversationViewController.h"
-#import "IRCClient.h"
 #import "IRCConversation.h"
 #import "IRCChannel.h"
 #import "AppPreferences.h"
@@ -396,6 +395,26 @@
         [self.connections removeObjectAtIndex:alertView.tag];
         [self.tableView reloadData];
     }
+}
+
+- (void)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client
+{
+    IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
+    configuration.name = name;
+    IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:configuration withClient:client];
+    [client addChannel:channel];
+    
+    int i=0;
+    for (IRCClient *cl in _connections) {
+        if([cl.configuration.uniqueIdentifier isEqualToString:client.configuration.uniqueIdentifier]) {
+            break;
+        }
+        i++;
+    }
+    [_connections setObject:client atIndexedSubscript:i];
+    [self.tableView reloadData];
+    [[AppPreferences sharedPrefs] addChannelConfiguration:configuration forConnectionConfiguration:client.configuration];
+    [[AppPreferences sharedPrefs] save];
 }
 
 @end

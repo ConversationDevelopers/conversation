@@ -29,6 +29,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "IRCClient.h"
 
 @class DetailViewController;
 
@@ -38,6 +39,7 @@
 @property (nonatomic, retain) NSMutableArray *connections;
 
 - (void)reloadData;
+- (void)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client;
 
 @end
 
