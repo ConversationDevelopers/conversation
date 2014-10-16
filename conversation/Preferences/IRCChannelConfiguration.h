@@ -35,6 +35,7 @@
 - (id)initWithDictionary:(NSDictionary *)dict;
 -(NSDictionary *)getDictionary;
 
+@property (nonatomic) BOOL autoJoin;
 @property (nonatomic) NSString *name;
 @property (nonatomic) NSString *passwordReference;
 
