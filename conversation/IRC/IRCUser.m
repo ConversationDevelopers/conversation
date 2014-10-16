@@ -32,7 +32,7 @@
 
 @implementation IRCUser
 
-- (instancetype) initWithSenderDict:(char **)senderDict onClient:(IRCClient *)client
+- (instancetype) initWithSenderDict:(const char **)senderDict onClient:(IRCClient *)client
 {
     if ((self = [super init])) {
         self.nick = [NSString stringWithCString:senderDict[1] usingEncodingPreference:[client configuration]];
@@ -48,7 +48,7 @@
     return nil;
 }
 
-+ (IRCUser *)fromSender:(char **)senderDict onChannel:(IRCChannel *)channel createIfMissing:(BOOL)createIfMissing
++ (IRCUser *)fromSender:(const char **)senderDict onChannel:(IRCChannel *)channel createIfMissing:(BOOL)createIfMissing
 {
     NSString *nickString = [NSString stringWithCString:senderDict[1] usingEncodingPreference:[[channel client] configuration]];
     

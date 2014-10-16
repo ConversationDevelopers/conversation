@@ -30,10 +30,11 @@
 
 #import "Messages.h"
 #import "IRCClient.h"
+#import "ConversationsController.h"
 
 @implementation Messages
 
-+ (void)userReceivedMessage:(const char *)message onRecepient:(char *)recepient byUser:(char **)senderDict onClient:(IRCClient *)client
++ (void)userReceivedMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client
 {
     /* Check if the message begins and ends with a 0x01 character, denoting this is a CTCP request. */
     if (*message == '\001' && message[strlen(message) -1] == '\001') {
@@ -54,7 +55,7 @@
     }
 }
 
-+ (void)userReceivedCTCPMessage:(const char *)message onRecepient:(char *)recepient byUser:(char **)senderDict onClient:(IRCClient *)client
++ (void)userReceivedCTCPMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client
 {
     
     /* Consume the begining CTCP character (0x01) */
@@ -94,17 +95,31 @@
     free(messageCopy);
 }
 
-+ (void)userReceivedACTIONMessage:(const char *)message onRecepient:(char *)recepient byUser:(char **)senderDict onClient:(IRCClient *)client
++ (void)userReceivedACTIONMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client
 {
     
 }
 
-+ (void)userReceivedJOIN:(const char **)senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client
++ (void)userReceivedJOIN:(const char *[4])senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client
 {
-    
+    /* Get the user that performed the JOIN */
+    IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
+    if ([[user nick] isEqualToString:client.currentNicknameOnConnection]) {
+        
+        /* The user that joined is ourselves, we need to check if this channel is already in our list. */
+        NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
+        IRCChannel *channel =  [IRCChannel fromString:channelName withClient:client];
+        if (channel == nil) {
+            /* We don't have this channel, let's make a request to the UI to create the channel. */
+            ConversationsController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+            [controller joinChannelWithName:channelName onClient:client];
+        } else {
+            
+        }
+    }
 }
 
-+ (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(char **)senderDict onClient:(IRCClient *)client
++ (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(const char *[4])senderDict onClient:(IRCClient *)client
 {
     NSString *topicString = [NSString stringWithCString:topic usingEncodingPreference:[client configuration]];
     NSString *channelString = [NSString stringWithCString:rchannel usingEncodingPreference:[client configuration]];

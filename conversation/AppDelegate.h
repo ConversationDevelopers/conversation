@@ -35,7 +35,7 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (strong, nonatomic) ConversationsController *conversationsController;
+@property (nonatomic) ConversationsController *conversationsController;
 @property (strong, nonatomic) UIWindow *window;
 
 

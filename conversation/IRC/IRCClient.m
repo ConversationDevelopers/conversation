@@ -45,7 +45,6 @@
 @property (nonatomic, retain) NSMutableArray *channels;
 @property (nonatomic, retain) NSMutableArray *queries;
 @property (nonatomic, assign) NSInteger alternativeNickNameAttempts;
-@property (nonatomic, strong) NSString *currentNicknameOnConnection;
 @property (nonatomic, assign) int connectionRetries;
 
 @end
@@ -212,7 +211,7 @@
         nickname = NULL;
         lineBeforeIteration = line;
     }
-    char *senderDict[] = {
+    const char *senderDict[] = {
         sender,
         nickname,
         username,
@@ -290,7 +289,7 @@
             break;
             
         case JOIN:
-            
+            [Messages userReceivedJOIN:senderDict onChannel:recipient onClient:self];
             break;
             
         case PART:
@@ -371,6 +370,7 @@
         case RPL_ENDOFMOTD:
             if (self.configuration.useServerAuthenticationService == NO) {
                 [self autojoin];
+                [self.connection send:@"JOIN #conversation"];
             }
             
         default:

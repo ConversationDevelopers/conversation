@@ -49,6 +49,7 @@
 @property (nonatomic, assign) BOOL isAttemptingRegistration;
 @property (nonatomic, assign) BOOL isBNCConnection;
 @property (nonatomic, assign) BOOL isProcessingTermination;
+@property (nonatomic, strong) NSString *currentNicknameOnConnection;
 
 
 @property (nonatomic, strong) NSMutableDictionary *featuresSupportedByServer;

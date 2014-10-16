@@ -45,7 +45,7 @@
 
 @property (nonatomic) int channelPrivileges;
 
-- (instancetype) initWithSenderDict:(char **)senderDict onClient:(IRCClient *)client;
+- (instancetype) initWithSenderDict:(const char **)senderDict onClient:(IRCClient *)client;
 
 typedef enum ChannelPrivileges : NSUInteger {
     NORMAL,

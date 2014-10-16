@@ -42,6 +42,6 @@
 
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;
 
-+ (IRCConversation *) fromString:(NSString *)name withClient:(IRCClient *)client;
++ (id) fromString:(NSString *)name withClient:(IRCClient *)client;
 
 @end

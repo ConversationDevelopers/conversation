@@ -29,9 +29,9 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "IRCClient.h"
 
 @class DetailViewController;
+@class IRCClient;
 
 @interface ConversationsController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 

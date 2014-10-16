@@ -29,21 +29,24 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "AppDelegate.h"
 #import "IRCChannel.h"
+#import "IRCUser.h"
 #import "NSString+Methods.h"
 
 @class IRCClient;
+@class ConversationsController;
 
 @interface Messages : NSObject
 
-+ (void)userReceivedMessage:(const char *)message onRecepient:(char *)recepient byUser:(char **)senderDict onClient:(IRCClient *)client;
++ (void)userReceivedMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client;
 
-+ (void)userReceivedCTCPMessage:(const char *)message onRecepient:(char *)recepient byUser:(char **)senderDict onClient:(IRCClient *)client;
++ (void)userReceivedCTCPMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client;
 
-+ (void)userReceivedACTIONMessage:(const char *)message onRecepient:(char *)recepient byUser:(char **)senderDict onClient:(IRCClient *)client;
++ (void)userReceivedACTIONMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client;
 
 + (void)userReceivedJOIN:(const char **)senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client;
 
-+ (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(char **)senderDict onClient:(IRCClient *)client;
++ (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(const char *[4])senderDict onClient:(IRCClient *)client;
 
 @end
