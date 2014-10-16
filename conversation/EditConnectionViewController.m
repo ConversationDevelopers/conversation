@@ -421,10 +421,17 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];
             cell.textLabel.text = NSLocalizedString(@"Join Channels", @"Title of auto join channels view");
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            if(_configuration.channels.count)
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%i", (int)_configuration.channels.count];
-            else
+            if(_configuration.channels.count) {
+                // Count channels with auto join turned on
+                int i=0;
+                for (IRCChannelConfiguration *channel in _configuration.channels) {
+                    if(channel.autoJoin)
+                        i++;
+                }
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%i", i];
+            } else {
                 cell.detailTextLabel.text = NSLocalizedString(@"None", @"No entries");
+            }
             return cell;
         }
     } else if (indexPath.section == EncodingTableSection) {
