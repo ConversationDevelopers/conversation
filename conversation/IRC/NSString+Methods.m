@@ -47,7 +47,7 @@
         strcpy(prefixes, [acceptedChannelPrefixesByServer UTF8String]);
         char* prefixesBeforeIteration = prefixes;
         
-        char*  channel = malloc([self length]);
+        char*  channel = malloc([self length]+1);
         strcpy(channel, [self UTF8String]);
         char* channelBeforeIteration = channel;
         
