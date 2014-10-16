@@ -262,6 +262,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         listViewController.addItemText = NSLocalizedString(@"Add Channel", @"Title of add item label");
         listViewController.saveButtonTitle = NSLocalizedString(@"Save", @"Save");
         listViewController.noItemsText = NSLocalizedString(@"No Channels", @"No Channels");
+        listViewController.itemImage = [UIImage imageNamed:@"ChannelIcon_small"];
         
         listViewController.items = items;
         listViewController.allowEditing = YES;
