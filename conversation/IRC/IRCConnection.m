@@ -199,7 +199,6 @@
 
 - (void)send:(NSString *)line
 {
-    NSLog(@"Queueing: %@", line);
     [self.messageQueue addObject:line];
     [self continueSending];
 }
