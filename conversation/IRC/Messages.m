@@ -140,12 +140,23 @@
     
     ConversationsController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     
+    int indexOfItem = 0;
     for (IRCConversation *conversation in client.getQueries) {
+        /* Get the index of the query in the conversation list. */
+        NSInteger indexOfQueryItemInList = [client.getChannels count] + indexOfItem - 1;
+        
         if ([users containsObject:conversation.name]) {
             conversation.conversationPartnerIsOnline = YES;
+            
+            /* Set the conversation item in "enabled" mode. */
+            [controller enableItemAtIndex:indexOfQueryItemInList forClient:client];
         } else {
             conversation.conversationPartnerIsOnline = NO;
+            
+            /* Set the conversation item in "disabled" mode */
+            [controller disableItemAtIndex:indexOfQueryItemInList forClient:client];
         }
+        indexOfItem++;
     }
 }
 
