@@ -565,10 +565,9 @@
 
 - (BOOL)addChannel:(IRCChannel *)channel
 {
-    NSUInteger i = [self.channels indexOfObjectPassingTest:^BOOL(id element,NSUInteger idx,BOOL *stop) {
-        return [[element name] isEqualToString:channel.name];
-    }];
-    if (i != NSNotFound) {
+    IRCChannel *channelExists = [IRCChannel fromString:channel.name withClient:self];
+    
+    if (channelExists != nil) {
         return NO;
     }
     [self.channels addObject:channel];
@@ -582,9 +581,9 @@
 
 - (BOOL)removeChannel:(IRCChannel *)channel
 {
-    NSUInteger indexOfObject = [self.channels indexOfObject:channel];
-    if (indexOfObject != NSNotFound) {
-        [self.channels removeObjectAtIndex:indexOfObject];
+    IRCChannel *channelExists = [IRCChannel fromString:channel.name withClient:self];
+    if (channelExists != nil) {
+        [self.channels removeObject:channelExists];
         return YES;
     }
     return NO;
