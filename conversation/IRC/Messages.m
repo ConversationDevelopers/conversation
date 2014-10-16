@@ -122,6 +122,23 @@
     }
 }
 
++ (void)userReceivedPART:(const char *[4])senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client withMessage:(char *)message
+{
+    /* Get the user that performed the PART */
+    IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
+    if ([[user nick] isEqualToString:client.currentNicknameOnConnection]) {
+        ConversationsController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+        
+        /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
+        NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
+        IRCChannel *channel =  [IRCChannel fromString:channelName withClient:client];
+        if (channel != nil) {
+            NSInteger indexOfChannel = [client.getChannels indexOfObject:channel];
+            [controller disableItemAtIndex:indexOfChannel forClient:client];
+        }
+    }
+}
+
 + (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(const char *[4])senderDict onClient:(IRCClient *)client
 {
     NSString *topicString = [NSString stringWithCString:topic usingEncodingPreference:[client configuration]];
