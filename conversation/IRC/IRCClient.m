@@ -327,15 +327,6 @@
             break;
             
         case RPL_ISON: {
-            NSString *messageString = [NSString stringWithCString:line usingEncodingPreference:[self configuration]];
-            NSArray *users = [messageString componentsSeparatedByString:@" "];
-            for (IRCConversation *conversation in self.queries) {
-                if ([users containsObject:conversation.name]) {
-                    conversation.conversationPartnerIsOnline = YES;
-                } else {
-                    conversation.conversationPartnerIsOnline = NO;
-                }
-            }
             break;
         }
             

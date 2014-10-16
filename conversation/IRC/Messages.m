@@ -30,6 +30,7 @@
 
 #import "Messages.h"
 #import "IRCClient.h"
+#import "IRCConnection.h"
 #import "ConversationsController.h"
 
 @implementation Messages
@@ -113,8 +114,7 @@
             /* We don't have this channel, let's make a request to the UI to create the channel. */
             ConversationsController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
             [controller joinChannelWithName:channelName onClient:client];
-        } else {
-            
+            channel =  [IRCChannel fromString:channelName withClient:client];
         }
     }
 }
@@ -130,6 +130,23 @@
     }
     
     [channel setTopic:topicString];
+}
+
++ (void)clientReceivedISONResponse:(const char *)message onClient:(IRCClient *)client;
+{
+    
+    NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:[client configuration]];
+    NSArray *users = [messageString componentsSeparatedByString:@" "];
+    
+    ConversationsController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    
+    for (IRCConversation *conversation in client.getQueries) {
+        if ([users containsObject:conversation.name]) {
+            conversation.conversationPartnerIsOnline = YES;
+        } else {
+            conversation.conversationPartnerIsOnline = NO;
+        }
+    }
 }
 
 @end
