@@ -31,7 +31,7 @@
 
 #import <UIKit/UIKit.h>
 #import "IRCConnectionConfiguration.h"
-#import "ConversationsController.h"
+#import "ConversationListViewController.h"
 
 @interface EditConnectionViewController : UITableViewController {
     BOOL badInput;
@@ -39,5 +39,5 @@
 }
 
 @property (nonatomic) IRCConnectionConfiguration *configuration;
-@property (nonatomic) ConversationsController *conversationsController;
+@property (nonatomic) ConversationListViewController *conversationsController;
 @end

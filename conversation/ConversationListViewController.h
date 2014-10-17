@@ -33,7 +33,7 @@
 @class DetailViewController;
 @class IRCClient;
 
-@interface ConversationsController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+@interface ConversationListViewController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
 @property (nonatomic, retain) NSMutableArray *connections;

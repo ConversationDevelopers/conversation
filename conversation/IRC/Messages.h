@@ -35,7 +35,7 @@
 #import "NSString+Methods.h"
 
 @class IRCClient;
-@class ConversationsController;
+@class ConversationListViewController;
 
 @interface Messages : NSObject
 

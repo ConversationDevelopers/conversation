@@ -28,7 +28,7 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "ConversationsController.h"
+#import "ConversationListViewController.h"
 #import "DetailViewController.h"
 #import "EditConnectionViewController.h"
 #import "AddConversationViewController.h"
@@ -41,7 +41,7 @@
 #import "AppPreferences.h"
 #import "SSKeychain.h"
 
-@implementation ConversationsController
+@implementation ConversationListViewController
 
 - (id)init
 {
@@ -160,7 +160,6 @@
     addController.target = self;
     addController.action = @selector(conversationAdded:);
     addController.connections = _connections;
-//    addController.conversationsController = self;
 
     // add Query
     if(tag == 1)

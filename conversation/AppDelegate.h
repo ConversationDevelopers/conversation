@@ -31,11 +31,11 @@
 #import <UIKit/UIKit.h>
 #import "IRC/IRCClient.h"
 #import "IRC/IRCMessageIndex.h"
-#import "ConversationsController.h"
+#import "ConversationListViewController.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (nonatomic) ConversationsController *conversationsController;
+@property (nonatomic) ConversationListViewController *conversationsController;
 @property (strong, nonatomic) UIWindow *window;
 
 

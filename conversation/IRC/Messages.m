@@ -31,7 +31,7 @@
 #import "Messages.h"
 #import "IRCClient.h"
 #import "IRCConnection.h"
-#import "ConversationsController.h"
+#import "ConversationListViewController.h"
 
 @implementation Messages
 
@@ -106,13 +106,14 @@
     /* Get the user that performed the JOIN */
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
     if ([[user nick] isEqualToString:client.currentNicknameOnConnection]) {
-        ConversationsController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+        ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         
         /* The user that joined is ourselves, we need to check if this channel is already in our list. */
         NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
         IRCChannel *channel =  [IRCChannel fromString:channelName withClient:client];
         if (channel == nil) {
             /* We don't have this channel, let's make a request to the UI to create the channel. */
+            ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
             [controller joinChannelWithName:channelName onClient:client];
             channel =  [IRCChannel fromString:channelName withClient:client];
         }
@@ -127,7 +128,7 @@
     /* Get the user that performed the PART */
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
     if ([[user nick] isEqualToString:client.currentNicknameOnConnection]) {
-        ConversationsController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+        ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         
         /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
         NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
@@ -158,7 +159,7 @@
     NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:[client configuration]];
     NSArray *users = [messageString componentsSeparatedByString:@" "];
     
-    ConversationsController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     
     int indexOfItem = 0;
     for (IRCConversation *conversation in client.getQueries) {

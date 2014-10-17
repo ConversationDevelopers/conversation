@@ -53,7 +53,7 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
 
-    _conversationsController = [[ConversationsController alloc] init];
+    _conversationsController = [[ConversationListViewController alloc] init];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_conversationsController];
     self.window.rootViewController = nav;
     [self.window makeKeyAndVisible];
