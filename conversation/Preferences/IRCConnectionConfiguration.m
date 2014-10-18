@@ -29,6 +29,7 @@
  */
 
 #import "IRCConnectionConfiguration.h"
+#import "IRCChannelConfiguration.h"
 #import <objc/runtime.h>
 
 @implementation IRCConnectionConfiguration
@@ -114,9 +115,17 @@
     for (int i = 0; i < numberOfProperties; i++) {
         objc_property_t property = properties[i];
         NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
-        id valueForProperty = [self valueForKey:propertyName];
-        if(valueForProperty != nil) {
-            dict[propertyName] = valueForProperty;
+        if([propertyName isEqualToString:@"channels"]) {
+            NSMutableArray *channels = [[NSMutableArray alloc] init];
+            for (IRCChannelConfiguration *channel in self.channels) {
+                [channels addObject:[channel getDictionary]];
+            }
+            dict[propertyName] = channels;
+        } else {
+            id valueForProperty = [self valueForKey:propertyName];
+            if(valueForProperty != nil) {
+                dict[propertyName] = valueForProperty;
+            }
         }
     }
     free(properties);
