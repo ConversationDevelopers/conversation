@@ -106,6 +106,7 @@ static PreferencesTextCell *currentEditingCell;
     _textField.textColor = [UIColor colorWithRed:(64. / 255.) green:(118. / 255.) blue:(251. / 255.) alpha:1.];
     _textField.clearButtonMode = UITextFieldViewModeNever;
     _textField.enabled = YES;
+    _textField.secureTextEntry = NO;
     
     [_textField endEditing:YES];
     [_textField resignFirstResponder];
