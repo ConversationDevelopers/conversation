@@ -93,7 +93,11 @@
         
         self.messageEncoding = (unsigned long) [dict[@"messageEncoding"] integerValue];
         
-        self.channels = dict[@"channels"];
+        NSMutableArray *channels = [[NSMutableArray alloc] init];
+        for (NSDictionary *channel in dict[@"channel"]) {
+            [channels addObject:[[IRCChannelConfiguration alloc] initWithDictionary:channel]];
+        }
+        self.channels = channels;
         self.queries = dict[@"queries"];
     }
     return self;
