@@ -44,7 +44,7 @@
         self.usernameForRegistration = @"user";
         self.primaryNickname = @"Guest";
         self.secondaryNickname = @"Guest_";
-        self.serverAddress = @"";
+        self.serverAddress = @"irc.example.net";
         self.connectionPort = 6667;
         self.socketEncodingType = NSUTF8StringEncoding;
         
