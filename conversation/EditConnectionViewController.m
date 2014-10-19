@@ -60,19 +60,20 @@ static unsigned short EncodingTableSection = 3;
     
     NSString *buttonTitle = NSLocalizedString(@"Connect", @"Connect");
 
-    if (!_configuration)
-        _configuration = [[IRCConnectionConfiguration alloc] init];
-    else
+    
+    if(_edit) {
+        _configuration = _connection;
         buttonTitle = NSLocalizedString(@"Save", @"Save");
-        
+    } else {
+        _connection = [[IRCConnectionConfiguration alloc] init];
+        _configuration = [[IRCConnectionConfiguration alloc] init];
+    }
+
     UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:buttonTitle
                                                                       style:UIBarButtonItemStylePlain
                                                                      target:self
                                                                      action:@selector(save:)];
     [saveButton setTintColor:[UIColor lightGrayColor]];
-    
-    if(!_configuration)
-        saveButton.enabled = NO;
     
     badInput = NO;
     self.navigationItem.rightBarButtonItem = saveButton;
@@ -316,7 +317,12 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"Description", @"Custom server name");
             cell.textField.text = _configuration.connectionName;
-            cell.textField.placeholder = NSLocalizedString(@"Optional", @"User input is optional");
+
+            // Display default values as placeholder
+            if(!_edit && [_connection.connectionName isEqualToString:_configuration.connectionName]) {
+                cell.textField.text = @"";
+                cell.textField.placeholder = _configuration.connectionName;
+            }
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textEditAction = @selector(descriptionChanged:);
@@ -325,7 +331,12 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"Address", @"Server address");
             cell.textField.text = _configuration.serverAddress;
-            cell.textField.placeholder = @"irc.example.com";
+
+            // Display default values as placeholder
+            if(!_edit && [_connection.serverAddress isEqualToString:_configuration.serverAddress]) {
+                cell.textField.text = @"";
+                cell.textField.placeholder = _configuration.serverAddress;
+            }
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textField.keyboardType = UIKeyboardTypeURL;
@@ -336,7 +347,12 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"Port", @"Server port to connect to");
             cell.textField.text = [NSString stringWithFormat:@"%i", (int)_configuration.connectionPort];
-            cell.textField.placeholder = @"6667";
+            
+            // Display default values as placeholder
+            if(!_edit && _connection.connectionPort == _configuration.connectionPort) {
+                cell.textField.text = @"";
+                cell.textField.placeholder = [NSString stringWithFormat:@"%i", (int)_configuration.connectionPort];
+            }
             cell.textField.keyboardType = UIKeyboardTypeNumberPad;
             cell.textEditAction = @selector(portChanged:);
             return cell;
@@ -359,7 +375,12 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"Nick Name", @"Nick name to use on IRC");
             cell.textField.text = _configuration.primaryNickname;
-            cell.textField.placeholder = @"Guest";
+            
+            // Display default values as placeholder
+            if(!_edit && [_connection.primaryNickname isEqualToString:_configuration.primaryNickname]) {
+                cell.textField.text = @"";
+                cell.textField.placeholder = _configuration.primaryNickname;
+            }
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
 			cell.textEditAction = @selector(nicknameChanged:);
@@ -367,8 +388,13 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         } else if (indexPath.row == 1) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"Alt. Nick", @"Alternative nick to use on IRC");
-            cell.textField.text = _configuration.primaryNickname;
-            cell.textField.placeholder = @"Guest_";
+            cell.textField.text = _configuration.secondaryNickname;
+            
+            // Display default values as placeholder
+            if(!_edit && [_connection.secondaryNickname isEqualToString:_configuration.secondaryNickname]) {
+                cell.textField.text = @"";
+                cell.textField.placeholder = _configuration.secondaryNickname;
+            }
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
             cell.textEditAction = @selector(altnickChanged:);
@@ -377,7 +403,12 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"User Name", @"User name to use on IRC");
             cell.textField.text = _configuration.usernameForRegistration;
-            cell.textField.placeholder = @"Guest";
+            
+            // Display default values as placeholder
+            if(!_edit && [_connection.usernameForRegistration isEqualToString:_configuration.usernameForRegistration]) {
+                cell.textField.text = @"";
+                cell.textField.placeholder = _configuration.usernameForRegistration;
+            }
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
             cell.textEditAction = @selector(usernameChanged:);
@@ -386,7 +417,12 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"Real Name", @"Real name to use on IRC");
             cell.textField.text = _configuration.realNameForRegistration;
-            cell.textField.placeholder = @"Guest";
+            
+            // Display default values as placeholder
+            if(!_edit && [_connection.realNameForRegistration isEqualToString:_configuration.realNameForRegistration]) {
+                cell.textField.text = @"";
+                cell.textField.placeholder = _configuration.realNameForRegistration;
+            }
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
             cell.textEditAction = @selector(realnameChanged:);
@@ -457,9 +493,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
     _configuration.connectionName = serverInfo[@"Name"];
     _configuration.serverAddress = serverInfo[@"Address"];
     
-
-    self.navigationItem.rightBarButtonItem.enabled = YES;
-    
     [self.tableView reloadData];
 }
 
@@ -490,7 +523,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         badInput = NO;
     } else if([sender.textField.text isValidServerAddress]) {
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
-        self.navigationItem.rightBarButtonItem.enabled = YES;
         badInput = NO;
     } else {
         sender.accessoryType = UITableViewCellAccessoryNone;

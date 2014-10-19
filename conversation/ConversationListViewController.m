@@ -136,14 +136,16 @@
     [self.tableView reloadData];
 }
 
-- (void)editConnection:(IRCConnectionConfiguration *)configuration
+- (void)editConnection:(IRCConnectionConfiguration *)connection
 {
         
     EditConnectionViewController *editController = [[EditConnectionViewController alloc] init];
     
-    if (configuration)
-        editController.configuration = configuration;
-
+    if (connection) {
+        editController.connection = connection;
+        editController.edit = YES;
+    }
+    
     editController.conversationsController = self;
     
     
