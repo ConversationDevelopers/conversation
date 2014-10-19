@@ -94,7 +94,7 @@
         self.messageEncoding = (unsigned long) [dict[@"messageEncoding"] integerValue];
         
         NSMutableArray *channels = [[NSMutableArray alloc] init];
-        for (NSDictionary *channel in dict[@"channel"]) {
+        for (NSDictionary *channel in dict[@"channels"]) {
             [channels addObject:[[IRCChannelConfiguration alloc] initWithDictionary:channel]];
         }
         self.channels = channels;
