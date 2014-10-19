@@ -316,26 +316,31 @@
 {
     // Get relevant client
     IRCClient *client = [self.connections objectAtIndex:sender.view.tag];
+
+    UIActionSheet *sheet;
     
-    // Connect or disconnect
-    NSString *firstAction;
-    if([client isConnected])
-        firstAction = NSLocalizedString(@"Disconnect", @"Disconnect server");
-    else
-        firstAction = NSLocalizedString(@"Connect", @"Connect server");
-    
-    // Define action sheet
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:client.configuration.connectionName
+    if([client isConnected]) {
+        sheet = [[UIActionSheet alloc] initWithTitle:client.configuration.connectionName
                                                        delegate:self
                                               cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
                                          destructiveButtonTitle:nil
-                                              otherButtonTitles:firstAction,
-                            NSLocalizedString(@"Sort Conversations", "Sort Conversations"),
-                            NSLocalizedString(@"Edit", @"Edit Connection"),
-                            NSLocalizedString(@"Delete", @"Delete connection"), nil];
+                                              otherButtonTitles:NSLocalizedString(@"Disconnect", @"Disconnect server"),
+                 NSLocalizedString(@"Sort Conversations", "Sort Conversations"),
+                 NSLocalizedString(@"Edit", @"Edit Connection"), nil];
+        [sheet setDestructiveButtonIndex:0];
+    } else {
+        sheet = [[UIActionSheet alloc] initWithTitle:client.configuration.connectionName
+                                        delegate:self
+                               cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                          destructiveButtonTitle:nil
+                               otherButtonTitles:NSLocalizedString(@"Connect", @"Connect server"),
+                 NSLocalizedString(@"Sort Conversations", "Sort Conversations"),
+                 NSLocalizedString(@"Edit", @"Edit Connection"),
+                 NSLocalizedString(@"Delete", @"Delete connection"), nil];
+        [sheet setDestructiveButtonIndex:3];
+    }
     
     [sheet setTag:sender.view.tag];
-    [sheet setDestructiveButtonIndex:3];
     [sheet showInView:self.view];
 }
 
@@ -382,13 +387,15 @@
                 break;
             case 3:
                 // Delete
-                alertView = [[UIAlertView alloc] initWithTitle:client.configuration.connectionName
-                                                       message:NSLocalizedString(@"Do you really want to delete this connection?", @"Delete connection confirmation")
-                                                      delegate:self
-                                             cancelButtonTitle:NSLocalizedString(@"No", @"no")
-                                             otherButtonTitles:NSLocalizedString(@"Yes", @"yes"), nil];
-                alertView.tag = actionSheet.tag;
-                [alertView show];
+                if(!client.isConnected) {
+                    alertView = [[UIAlertView alloc] initWithTitle:client.configuration.connectionName
+                                                           message:NSLocalizedString(@"Do you really want to delete this connection?", @"Delete connection confirmation")
+                                                          delegate:self
+                                                 cancelButtonTitle:NSLocalizedString(@"No", @"no")
+                                                 otherButtonTitles:NSLocalizedString(@"Yes", @"yes"), nil];
+                    alertView.tag = actionSheet.tag;
+                    [alertView show];
+                }
                 break;
             default:
                 break;
