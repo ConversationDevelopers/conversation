@@ -480,7 +480,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             return cell;
         }
     }
-    NSLog(@"Ooooops...");
+    NSCAssert(NO, @"Should not reach this point.");
     return nil;
 }
 
@@ -498,7 +498,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 
 - (void) descriptionChanged:(PreferencesTextCell*)sender
 {
-    NSLog(@"Description changed");
     _configuration.connectionName = sender.textField.text;    
     if(sender.textField.text.length == 0) {
         sender.accessoryType = UITableViewCellAccessoryNone;
@@ -514,8 +513,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 
 - (void) serverChanged:(PreferencesTextCell *)sender
 {
-    NSLog(@"Server changed");
-
     // Check if the user input is a valid server address
     _configuration.serverAddress = sender.textField.text;
     if(sender.textField.text.length == 0) {
@@ -532,7 +529,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 
 - (void) portChanged:(PreferencesTextCell *)sender
 {
-    NSLog(@"Port changed");
     _configuration.connectionPort = 6667;
     if(sender.textField.text.length == 0) {
         sender.accessoryType = UITableViewCellAccessoryNone;
@@ -550,20 +546,16 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 
 - (void) passwordChanged:(PreferencesTextCell *)sender
 {
-    NSLog(@"Password changed");
     _configuration.serverPasswordReference = sender.textField.text;
 }
 
 - (void) secureChanged:(PreferencesSwitchCell *)sender
 {
-    NSLog(@"Secure changed");
     _configuration.connectUsingSecureLayer = sender.on;
 }
 
 - (void) nicknameChanged:(PreferencesTextCell *)sender
 {
-    NSLog(@"Nickname changed");
-    
     // Check if user input is a valid nickname
     _configuration.primaryNickname = sender.textField.text;
     if(sender.textField.text.length == 0) {
@@ -579,7 +571,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 
 - (void) usernameChanged:(PreferencesTextCell *)sender
 {
-    NSLog(@"User Name changed");
     _configuration.usernameForRegistration = sender.textField.text;
     sender.accessoryType = UITableViewCellAccessoryNone;
     badInput = YES;
@@ -592,7 +583,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 
 - (void) altnickChanged:(PreferencesTextCell *)sender
 {
-    NSLog(@"Alt Nick changed");
     _configuration.secondaryNickname = sender.textField.text;
     if(sender.textField.text.length == 0) {
         sender.accessoryType = UITableViewCellAccessoryNone;
@@ -608,7 +598,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 
 - (void) realnameChanged:(PreferencesTextCell *)sender
 {
-    NSLog(@"Realname changed");
     _configuration.realNameForRegistration = sender.textField.text;
     if(sender.textField.text.length == 0) {
         sender.accessoryType = UITableViewCellAccessoryNone;
@@ -625,7 +614,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 
 - (void) nickpassChanged:(PreferencesTextCell *)sender
 {
-    NSLog(@"Nickpass changed");
     _configuration.authenticationPasswordReference = sender.textField.text;
     if(sender.textField.text.length == 0) {
         sender.accessoryType = UITableViewCellAccessoryNone;
@@ -641,20 +629,17 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 
 - (void) autoconnectChanged:(PreferencesSwitchCell *)sender
 {
-    NSLog(@"Auto Connect changed");
     _configuration.automaticallyConnect = sender.on;
 }
 
 - (void) showconsoleChanged:(PreferencesSwitchCell *)sender
 {
-    NSLog(@"Show Console changed");
     _configuration.showConsoleOnConnect = sender.on;
 
 }
 
 - (void)autoJoinChannelsChanged:(PreferencesListViewController *)sender
 {
-    NSLog(@"Auto join channels changed");
     _configuration.channels = sender.items;
     [self.tableView reloadData];
 }

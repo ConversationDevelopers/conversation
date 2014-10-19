@@ -398,7 +398,6 @@
 
 - (void)conversationAdded:(AddConversationViewController *)sender
 {
-    NSLog(@"JAU");
 
     NSMutableArray *connections = [sender.connections mutableCopy];
     
