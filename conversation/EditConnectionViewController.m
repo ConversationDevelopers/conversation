@@ -498,50 +498,39 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 
 - (void) descriptionChanged:(PreferencesTextCell*)sender
 {
-    _configuration.connectionName = sender.textField.text;    
-    if(sender.textField.text.length == 0) {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-        badInput = NO;
-    } else if(sender.textField.text.length > 2) {
+    sender.accessoryType = UITableViewCellAccessoryNone;
+    badInput = YES;
+    
+    if (sender.textField.text.length > 2) {
+        _configuration.connectionName = sender.textField.text;
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
         badInput = NO;
-    } else {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-        badInput = YES;
     }
 }
 
 - (void) serverChanged:(PreferencesTextCell *)sender
 {
+    sender.accessoryType = UITableViewCellAccessoryNone;
+    badInput = YES;
+    
     // Check if the user input is a valid server address
-    _configuration.serverAddress = sender.textField.text;
-    if(sender.textField.text.length == 0) {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-        badInput = NO;
-    } else if([sender.textField.text isValidServerAddress]) {
+    if ([sender.textField.text isValidServerAddress]) {
+        _configuration.serverAddress = sender.textField.text;
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
         badInput = NO;
-    } else {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-        badInput = YES;
     }
 }
 
 - (void) portChanged:(PreferencesTextCell *)sender
 {
-    _configuration.connectionPort = 6667;
-    if(sender.textField.text.length == 0) {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-        badInput = NO;
-    } else if(sender.textField.text.length > 1) {
+    sender.accessoryType = UITableViewCellAccessoryNone;
+    badInput = YES;
+    
+    if (sender.textField.text.length > 1) {
         _configuration.connectionPort = [sender.textField.text integerValue];
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
         badInput = NO;
-    } else {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-        badInput = YES;
     }
-    
 }
 
 - (void) passwordChanged:(PreferencesTextCell *)sender
@@ -556,26 +545,24 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 
 - (void) nicknameChanged:(PreferencesTextCell *)sender
 {
-    // Check if user input is a valid nickname
-    _configuration.primaryNickname = sender.textField.text;
-    if(sender.textField.text.length == 0) {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-    } else if([sender.textField.text isValidNickname:nil]) {
+    
+    sender.accessoryType = UITableViewCellAccessoryNone;
+    badInput = YES;
+    
+    if ([sender.textField.text isValidNickname:nil]) {
+        _configuration.primaryNickname = sender.textField.text;
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
         badInput = NO;
-    } else {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-        badInput = YES;
     }
 }
 
 - (void) usernameChanged:(PreferencesTextCell *)sender
 {
-    _configuration.usernameForRegistration = sender.textField.text;
     sender.accessoryType = UITableViewCellAccessoryNone;
     badInput = YES;
     
-    if([sender.textField.text isValidUsername]) {
+    if ([sender.textField.text isValidUsername]) {
+        _configuration.usernameForRegistration = sender.textField.text;
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
         badInput = NO;
     }
@@ -583,47 +570,37 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 
 - (void) altnickChanged:(PreferencesTextCell *)sender
 {
-    _configuration.secondaryNickname = sender.textField.text;
-    if(sender.textField.text.length == 0) {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-        badInput = NO;
-    } else if([sender.textField.text isValidNickname:nil]) {
+    sender.accessoryType = UITableViewCellAccessoryNone;
+    badInput = YES;
+    
+    if ([sender.textField.text isValidNickname:nil]) {
+        _configuration.secondaryNickname = sender.textField.text;
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
         badInput = NO;
-    } else {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-        badInput = YES;
     }
 }
 
 - (void) realnameChanged:(PreferencesTextCell *)sender
 {
-    _configuration.realNameForRegistration = sender.textField.text;
-    if(sender.textField.text.length == 0) {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-        badInput = NO;
-    } else if(sender.textField.text.length > 1) {
+    sender.accessoryType = UITableViewCellAccessoryNone;
+    badInput = YES;
+    
+    if (sender.textField.text.length > 1) {
+        _configuration.realNameForRegistration = sender.textField.text;
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
         badInput = NO;
-    } else {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-        badInput = YES;
     }
-
 }
 
 - (void) nickpassChanged:(PreferencesTextCell *)sender
 {
-    _configuration.authenticationPasswordReference = sender.textField.text;
-    if(sender.textField.text.length == 0) {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-        badInput = NO;
-    } else if(sender.textField.text.length > 1) {
+    sender.accessoryType = UITableViewCellAccessoryNone;
+    badInput = YES;
+    
+    if (sender.textField.text.length > 1) {
+        _configuration.authenticationPasswordReference = sender.textField.text;
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
         badInput = NO;
-    } else {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-        badInput = YES;
     }
 }
 

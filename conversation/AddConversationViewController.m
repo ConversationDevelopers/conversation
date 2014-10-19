@@ -236,19 +236,15 @@ static unsigned short ConversationTableSection = 1;
 
 - (void) nameChanged:(PreferencesTextCell *)sender
 {
-    _configuration.name = sender.textField.text;
     sender.accessoryType = UITableViewCellAccessoryNone;
     _badInput = YES;
     
-    if (_addChannel && [sender.textField.text isValidChannelName:_client]) {
+    if ([sender.textField.text isValidChannelName:_client]) {
+        _configuration.name = sender.textField.text;
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
         _badInput = NO;
     }
     
-    if (!_addChannel && [sender.textField.text isValidNickname:_client]) {
-        sender.accessoryType = UITableViewCellAccessoryCheckmark;
-        _badInput = NO;
-    }
     if(_client && _configuration.name) {
         self.navigationItem.rightBarButtonItem.enabled = YES;        
     }
@@ -257,19 +253,13 @@ static unsigned short ConversationTableSection = 1;
 
 - (void) passwordChanged:(PreferencesTextCell *)sender
 {
-    //_conversation.password = sender.textField.text;
-    if(sender.textField.text.length == 0) {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-        _badInput = NO;
-        if(_client != nil) {
-            self.navigationItem.rightBarButtonItem.enabled = YES;
-        }
-    } else if(sender.textField.text.length > 1) {
+    sender.accessoryType = UITableViewCellAccessoryNone;
+    _badInput = YES;
+    
+    if(sender.textField.text.length > 1) {
+        _configuration.passwordReference = sender.textField.text;
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
         _badInput = NO;
-    } else {
-        sender.accessoryType = UITableViewCellAccessoryNone;
-        _badInput = YES;
     }
 }
 @end
