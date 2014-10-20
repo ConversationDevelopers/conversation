@@ -121,8 +121,6 @@
         NSInteger indexOfChannel = [client.getChannels indexOfObject:channel];
         [controller enableItemAtIndex:indexOfChannel forClient:client];
         
-        /* Send WHO command to get userlist data */
-        [client.connection send:[NSString stringWithFormat:@"WHO %@", channelName]];
     }
 }
 
