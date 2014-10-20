@@ -121,10 +121,17 @@
     
     
     if (self.accessoryType != UITableViewCellAccessoryNone) {
-        
-        for (UIView *subview in self.subviews) {
+        NSArray *subviews;
+        NSArray *vComp = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
+        if ([[vComp objectAtIndex:0] intValue] >= 8) {
+            // iOS 8 and newer
+            subviews = self.subviews;
+        } else {
+            // iOS 7
+            subviews = [self.subviews[0] subviews];
+        }
+        for (UIView *subview in subviews) {
             if([NSStringFromClass(subview.class) isEqualToString:@"UIButton"]) {
-                
                 // This subview should be the accessory view, change its frame
                 CGRect frame = subview.frame;
                 frame.origin.y -= 15;
