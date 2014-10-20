@@ -42,7 +42,6 @@
 {
     // Customize Statusbar and navigation bar application wide
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    [[UINavigationBar appearance] setTranslucent:NO];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0]];
     [[UINavigationBar appearance] setTintColor:[UIColor lightGrayColor]];
