@@ -320,6 +320,10 @@
             self.isAttemptingRegistration = NO;
             [self validateQueryStatusOnAllItems];
             [self.connection enableFloodControl];
+            
+            if (self.configuration.useServerAuthenticationService == NO) {
+                [self autojoin];
+            }
             break;
             
         case RPL_ISUPPORT:
@@ -357,12 +361,6 @@
                 }
             }
             break;
-            
-        case RPL_ENDOFMOTD:
-            if (self.configuration.useServerAuthenticationService == NO) {
-                [self autojoin];
-                [self.connection send:@"JOIN #conversation"];
-            }
             
         default:
             break;
