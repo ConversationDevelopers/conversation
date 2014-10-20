@@ -40,7 +40,6 @@
 @property (nonatomic) NSString *hostname;
 @property (nonatomic) NSString *realname;
 
-@property (nonatomic, assign) BOOL isIRCOperator;
 @property (nonatomic, assign) BOOL isAway;
 
 @property (nonatomic) int channelPrivileges;
@@ -53,7 +52,8 @@ typedef enum ChannelPrivileges : NSUInteger {
     HALFOP,
     OPERATOR,
     ADMIN,
-    FOUNDER
+    FOUNDER,
+    IRCOP
 } ChannelPrivileges;
 
 @end
