@@ -39,7 +39,6 @@
         self.username = [NSString stringWithCString:senderDict[2] usingEncodingPreference:[client configuration]];
         self.hostname = [NSString stringWithCString:senderDict[3] usingEncodingPreference:[client configuration]];
         
-        self.isIRCOperator = NO;
         self.isAway = NO;
         
         self.channelPrivileges = 0;
