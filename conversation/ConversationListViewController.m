@@ -76,18 +76,6 @@
     for (NSDictionary *dict in configurations) {
         IRCConnectionConfiguration *configuration = [[IRCConnectionConfiguration alloc] initWithDictionary:dict];
         IRCClient *client = [[IRCClient alloc] initWithConfiguration:configuration];
-        
-        // Initialize saved channels and queries
-        IRCChannelConfiguration *config;
-        for (NSDictionary *dict in configuration.channels) {
-            config = [[IRCChannelConfiguration alloc] initWithDictionary:dict];
-            [client addChannel:[[IRCChannel alloc] initWithConfiguration:config withClient:client]];
-        }
-        for (NSDictionary *dict in configuration.queries) {
-            config = [[IRCChannelConfiguration alloc] initWithDictionary:dict];
-            [client addQuery:[[IRCConversation alloc] initWithConfiguration:config withClient:client]];
-        }
-        
         [self.connections addObject:client];
         if(client.configuration.automaticallyConnect) {
             [client connect];
