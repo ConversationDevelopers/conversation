@@ -101,7 +101,7 @@
     
 }
 
-+ (void)userReceivedJOIN:(const char *[4])senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client
++ (void)userReceivedJOIN:(const char *[4])senderDict onChannel:(const char *)rchannel onClient:(IRCClient *)client
 {
     /* Get the user that performed the JOIN */
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
@@ -120,6 +120,7 @@
         
         NSInteger indexOfChannel = [client.getChannels indexOfObject:channel];
         [controller enableItemAtIndex:indexOfChannel forClient:client];
+        
     }
 }
 

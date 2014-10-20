@@ -45,7 +45,7 @@
 
 + (void)userReceivedACTIONMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client;
 
-+ (void)userReceivedJOIN:(const char **)senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client;
++ (void)userReceivedJOIN:(const char **)senderDict onChannel:(const char *)rchannel onClient:(IRCClient *)client;
 
 + (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(const char *[4])senderDict onClient:(IRCClient *)client;
 
