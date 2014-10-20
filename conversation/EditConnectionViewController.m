@@ -499,7 +499,8 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 - (void) descriptionChanged:(PreferencesTextCell*)sender
 {
     sender.accessoryType = UITableViewCellAccessoryNone;
-    badInput = YES;
+    if(sender.textField.text.length != 0)
+        badInput = YES;
     
     if (sender.textField.text.length > 2) {
         _configuration.connectionName = sender.textField.text;
@@ -511,7 +512,8 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 - (void) serverChanged:(PreferencesTextCell *)sender
 {
     sender.accessoryType = UITableViewCellAccessoryNone;
-    badInput = YES;
+    if(sender.textField.text.length != 0)
+        badInput = YES;
     
     // Check if the user input is a valid server address
     if ([sender.textField.text isValidServerAddress]) {
@@ -524,7 +526,8 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 - (void) portChanged:(PreferencesTextCell *)sender
 {
     sender.accessoryType = UITableViewCellAccessoryNone;
-    badInput = YES;
+    if(sender.textField.text.length != 0)
+        badInput = YES;
     
     if (sender.textField.text.length > 1) {
         _configuration.connectionPort = [sender.textField.text integerValue];
@@ -547,7 +550,8 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 {
     
     sender.accessoryType = UITableViewCellAccessoryNone;
-    badInput = YES;
+    if(sender.textField.text.length != 0)
+        badInput = YES;
     
     if ([sender.textField.text isValidNickname:nil]) {
         _configuration.primaryNickname = sender.textField.text;
@@ -559,7 +563,8 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 - (void) usernameChanged:(PreferencesTextCell *)sender
 {
     sender.accessoryType = UITableViewCellAccessoryNone;
-    badInput = YES;
+    if(sender.textField.text.length != 0)
+        badInput = YES;
     
     if ([sender.textField.text isValidUsername]) {
         _configuration.usernameForRegistration = sender.textField.text;
@@ -571,7 +576,8 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 - (void) altnickChanged:(PreferencesTextCell *)sender
 {
     sender.accessoryType = UITableViewCellAccessoryNone;
-    badInput = YES;
+    if(sender.textField.text.length != 0)
+        badInput = YES;
     
     if ([sender.textField.text isValidNickname:nil]) {
         _configuration.secondaryNickname = sender.textField.text;
@@ -583,7 +589,8 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 - (void) realnameChanged:(PreferencesTextCell *)sender
 {
     sender.accessoryType = UITableViewCellAccessoryNone;
-    badInput = YES;
+    if(sender.textField.text.length != 0)
+        badInput = YES;
     
     if (sender.textField.text.length > 1) {
         _configuration.realNameForRegistration = sender.textField.text;
@@ -595,7 +602,8 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 - (void) nickpassChanged:(PreferencesTextCell *)sender
 {
     sender.accessoryType = UITableViewCellAccessoryNone;
-    badInput = YES;
+    if(sender.textField.text.length != 0)
+        badInput = YES;
     
     if (sender.textField.text.length > 1) {
         _configuration.authenticationPasswordReference = sender.textField.text;

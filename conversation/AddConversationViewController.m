@@ -237,7 +237,8 @@ static unsigned short ConversationTableSection = 1;
 - (void) nameChanged:(PreferencesTextCell *)sender
 {
     sender.accessoryType = UITableViewCellAccessoryNone;
-    _badInput = YES;
+    if(sender.textField.text.length != 0)
+        _badInput = YES;
     
     if ([sender.textField.text isValidChannelName:_client]) {
         _configuration.name = sender.textField.text;
@@ -254,7 +255,8 @@ static unsigned short ConversationTableSection = 1;
 - (void) passwordChanged:(PreferencesTextCell *)sender
 {
     sender.accessoryType = UITableViewCellAccessoryNone;
-    _badInput = YES;
+    if(sender.textField.text.length != 0)
+        _badInput = YES;
     
     if(sender.textField.text.length > 1) {
         _configuration.passwordReference = sender.textField.text;
