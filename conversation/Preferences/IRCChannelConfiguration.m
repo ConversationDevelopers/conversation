@@ -36,7 +36,7 @@
 - (id)initWithDictionary:(NSDictionary *)dict
 {
     if ((self = [super init])) {
-        self.autoJoin = dict[@"autoJoin"];
+        self.autoJoin = [dict[@"autoJoin"] boolValue];
         self.name = dict[@"name"];
         self.passwordReference = dict[@"passwordReference"];
     }
