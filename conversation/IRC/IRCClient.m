@@ -244,6 +244,9 @@
     char* recipient;
     
     /* Pass over the string to the next space or end of the line to get the range of the recipient. */
+    const char *lineBeforeRecipient;
+    lineBeforeRecipient = line;
+    
     int recipientLength = 0;
     while (line != messageBounds && *line != ' ') {
         recipientLength++;
@@ -264,6 +267,13 @@
     if (*line == ':') {
         line++;
         lineBeforeIteration++;
+    }
+    
+    /* If we have reached the end of the message we will move the pointer back to before the "recipient"
+     so that it will still be useful to commands without a recipient */
+    if (*line == '\r' || *line == '\n' || *line == '\0') {
+        line = lineBeforeRecipient;
+        lineBeforeIteration = lineBeforeRecipient;
     }
     
     NSString *commandString = [NSString stringWithCString:command usingEncodingPreference:[self configuration]];
