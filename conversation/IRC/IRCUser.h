@@ -38,7 +38,6 @@
 @property (nonatomic) NSString *nick;
 @property (nonatomic) NSString *username;
 @property (nonatomic) NSString *hostname;
-@property (nonatomic) NSString *realname;
 
 @property (nonatomic, assign) BOOL isAway;
 
