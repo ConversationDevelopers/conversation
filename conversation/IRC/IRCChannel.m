@@ -31,12 +31,6 @@
 #import "IRCChannel.h"
 #import "IRCClient.h"
 
-@interface IRCChannel ()
-
-@property (nonatomic, assign) BOOL isJoinedByUser;
-
-@end
-
 @implementation IRCChannel
 
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client
