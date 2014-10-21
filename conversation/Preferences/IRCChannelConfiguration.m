@@ -33,6 +33,19 @@
 
 @implementation IRCChannelConfiguration
 
+- (id)init
+{
+    if ((self = [super init])) {
+        
+        /* Initialise default values for the configuration */
+        self.name = @"#lobby";
+        self.passwordReference = @"";
+        
+        return self;
+    }
+    return nil;
+}
+
 - (id)initWithDictionary:(NSDictionary *)dict
 {
     if ((self = [super init])) {
