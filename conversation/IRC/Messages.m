@@ -117,7 +117,7 @@
             [controller joinChannelWithName:channelName onClient:client];
             channel =  [IRCChannel fromString:channelName withClient:client];
         }
-        
+        channel.isJoinedByUser = YES;
         NSInteger indexOfChannel = [client.getChannels indexOfObject:channel];
         [controller enableItemAtIndex:indexOfChannel forClient:client];
         
