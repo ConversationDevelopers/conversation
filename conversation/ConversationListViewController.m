@@ -70,7 +70,7 @@
     [addButton setTintColor:[UIColor lightGrayColor]];
     self.navigationItem.rightBarButtonItem = addButton;
     
-//    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     
