@@ -49,4 +49,6 @@
 
 + (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(const char *[4])senderDict onClient:(IRCClient *)client;
 
++ (void)clientReceivedISONResponse:(const char *)message onClient:(IRCClient *)client;
+
 @end

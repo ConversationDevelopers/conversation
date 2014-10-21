@@ -331,6 +331,7 @@
             break;
             
         case RPL_ISON: {
+            [Messages clientReceivedISONResponse:line onClient:self];
             break;
         }
             
