@@ -451,7 +451,7 @@
 {
     if (self.isConnected) {
         self.isProcessingTermination = YES;
-        [self.connection send:[NSString stringWithFormat:@"QUIT %@", self.configuration.disconnectMessage]];
+        [self.connection send:[NSString stringWithFormat:@"QUIT :%@", self.configuration.disconnectMessage]];
         [self.connection close];
     }
 }
