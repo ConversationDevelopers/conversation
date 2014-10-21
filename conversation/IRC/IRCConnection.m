@@ -114,8 +114,7 @@
     // Please see the documentation for the startTLS method in AsyncSocket.h for a full discussion.
     [self.client clientDidConnect];
     
-    NSData *term = [@"\r\n" dataUsingEncoding:self.client.configuration];
-    [asyncSocket readDataToData:term withTimeout:-1 tag:1];
+    [asyncSocket readDataToData:[AsyncSocket CRLFData] withTimeout:-1 tag:1];
 }
 
 - (void)onSocket:(AsyncSocket *)sock didWriteDataWithTag:(long)tag
@@ -134,8 +133,7 @@
     } else {
         NSLog(@"Read msg error: %s",message);
     }
-    NSData *term = [@"\r\n" dataUsingEncoding:self.client.configuration];
-    [asyncSocket readDataToData:term withTimeout:-1 tag:1];
+    [asyncSocket readDataToData:[AsyncSocket CRLFData] withTimeout:-1 tag:1];
 }
 
 - (void)onSocketDidSecure:(AsyncSocket *)sock
