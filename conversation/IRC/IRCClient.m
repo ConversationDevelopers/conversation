@@ -594,6 +594,9 @@
 {
     IRCChannel *channelExists = [IRCChannel fromString:channel.name withClient:self];
     if (channelExists != nil) {
+        if ([channel isJoinedByUser]) {
+            [self.connection send:[NSString stringWithFormat:@"PART %@ :%@", [channel name], [channel.client.configuration channelDepartMessage]]];
+        }
         [self.channels removeObject:channelExists];
         return YES;
     }
