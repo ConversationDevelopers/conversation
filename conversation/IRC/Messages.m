@@ -135,6 +135,7 @@
         NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
         IRCChannel *channel =  [IRCChannel fromString:channelName withClient:client];
         if (channel != nil) {
+            channel.isJoinedByUser = NO;
             NSInteger indexOfChannel = [client.getChannels indexOfObject:channel];
             [controller disableItemAtIndex:indexOfChannel forClient:client];
         }
