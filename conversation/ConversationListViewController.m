@@ -78,8 +78,17 @@
     for (NSDictionary *dict in configurations) {
         IRCConnectionConfiguration *configuration = [[IRCConnectionConfiguration alloc] initWithDictionary:dict];
         IRCClient *client = [[IRCClient alloc] initWithConfiguration:configuration];
+        
+        // Load channels
+        for (IRCChannelConfiguration *config in configuration.channels)
+            [client addChannel:[[IRCChannel alloc] initWithConfiguration:config withClient:client]];
+        
+        // Load queries
+        for (IRCChannelConfiguration *config in configuration.queries)
+            [client addQuery:[[IRCConversation alloc] initWithConfiguration:config withClient:client]];
+             
         [self.connections addObject:client];
-        if(client.configuration.automaticallyConnect) {
+        if (client.configuration.automaticallyConnect) {
             [client connect];
         }
     }
