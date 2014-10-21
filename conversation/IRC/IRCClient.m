@@ -289,7 +289,7 @@
             break;
             
         case JOIN:
-            [Messages userReceivedJOIN:senderDict onChannel:line onClient:self];
+            [Messages userReceivedJOIN:senderDict onChannel:recipient onClient:self];
             break;
             
         case PART:
