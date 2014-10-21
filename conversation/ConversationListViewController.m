@@ -346,6 +346,7 @@
         // Remove from prefs
         [[AppPreferences sharedPrefs] deleteChannelWithName:channel.name forConnectionConfiguration:client.configuration];
     }
+    [[AppPreferences sharedPrefs] save];
     [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
 }
 
