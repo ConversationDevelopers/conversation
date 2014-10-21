@@ -70,7 +70,7 @@
     [addButton setTintColor:[UIColor lightGrayColor]];
     self.navigationItem.rightBarButtonItem = addButton;
     
-    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+//    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     
@@ -87,12 +87,48 @@
 
 - (void)enableItemAtIndex:(NSInteger)index forClient:(IRCClient *)client
 {
-    NSLog(@"ENABLE ITEM");
+    NSLog(@"ENABLE ITEM: %i", (int)index);
+    int i=0;
+    for (IRCClient *cl in self.connections) {
+        if([cl.configuration.uniqueIdentifier isEqualToString:client.configuration.uniqueIdentifier]) {
+            if(index < client.getChannels.count) {
+                IRCChannel *channel = [client.getChannels objectAtIndex:index];
+                channel.joined = YES;
+                [client.getChannels setObject:channel atIndexedSubscript:index];
+                [self.connections setObject:client atIndexedSubscript:i];
+            } else {
+                IRCConversation *query = [client.getQueries objectAtIndex:index-client.getChannels.count];
+                query.conversationPartnerIsOnline = YES;
+                [client.getChannels setObject:query atIndexedSubscript:index-client.getChannels.count];
+                [self.connections setObject:client atIndexedSubscript:i];
+            }
+            break;
+        }
+        i++;
+    }
 }
 
 - (void)disableItemAtIndex:(NSInteger)index forClient:(IRCClient *)client
 {
-    NSLog(@"DISABLE ITEM");
+    NSLog(@"DISABLE ITEM: %i", (int)index);
+    int i=0;
+    for (IRCClient *cl in self.connections) {
+        if([cl.configuration.uniqueIdentifier isEqualToString:client.configuration.uniqueIdentifier]) {
+            if(index < client.getChannels.count) {
+                IRCChannel *channel = [client.getChannels objectAtIndex:index];
+                channel.joined = NO;
+                [client.getChannels setObject:channel atIndexedSubscript:index];
+                [self.connections setObject:client atIndexedSubscript:i];
+            } else {
+                IRCConversation *query = [client.getQueries objectAtIndex:index-client.getChannels.count];
+                query.conversationPartnerIsOnline = NO;
+                [client.getChannels setObject:query atIndexedSubscript:index-client.getChannels.count];
+                [self.connections setObject:client atIndexedSubscript:i];
+            }
+            break;
+        }
+        i++;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -257,6 +293,7 @@
         index = indexPath.row - client.getChannels.count;
         IRCConversation *query = [client.getQueries objectAtIndex:index];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.enabled = query.conversationPartnerIsOnline;
         cell.name = query.name;
         cell.isChannel = NO;
         cell.unreadCount = 350;
@@ -265,6 +302,7 @@
     } else {
         IRCChannel *channel = [client.getChannels objectAtIndex:indexPath.row];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.enabled = channel.joined;
         cell.name = channel.name;
         cell.isChannel = YES;
         cell.unreadCount = 350;

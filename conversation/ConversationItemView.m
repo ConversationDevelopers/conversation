@@ -63,7 +63,7 @@
     [self.contentView addSubview:_unreadCountLabel];
     
     _isChannel = YES;
-    _enabled = YES;
+    _enabled = NO;
     
     self.imageView.image = [UIImage imageNamed:@"ChannelIcon"];
 
