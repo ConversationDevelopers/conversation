@@ -118,9 +118,6 @@
     NSLog(@"<< %s", line);
     BOOL isServerMessage = NO;
     
-    long messageLength = strlen(line);
-    const char* messageBounds = line + messageLength - 2;
-    
     const char* lineBeforeIteration;
     char* sender;
     char* nickname;
@@ -142,7 +139,7 @@
         
         
         /* Pass over the string until we either reach a space, end of message, or an exclamation mark (Part of a user's hostmask) */
-        while (line != messageBounds && *line != ' ' && *line != '!') {
+        while (*line != '\0' && *line != ' ' && *line != '!') {
             nicknameLength++;
             line++;
             senderLength++;
@@ -150,13 +147,13 @@
         /* If there was not an ! in this message and we have reached a space already, the sender was the server, which does not have a hostmask. */
         if (*line != ' ') {
             /* Pass over the string until we reach a space, end of message, or an @ sign (Part of the user's hostmask) */
-            while (line != messageBounds && *line != ' ' && *line != '@') {
+            while (*line != '\0' && *line != ' ' && *line != '@') {
                 usernameLength++;
                 line++;
                 senderLength++;
             }
             /* Pass over the rest of the string leading to a space, to get the position of the host address. */
-            while (line != messageBounds && *line != ' ') {
+            while (*line != '\0' && *line != ' ') {
                 senderLength++;
                 line++;
             }
@@ -220,7 +217,7 @@
     
         /* Pass over the string to the next space or end of the line to get the range of the IRC command */
     int commandLength = 0;
-    while (line != messageBounds && *line != ' ') {
+    while (*line != '\0' && *line != ' ') {
         commandLength++;
         line++;
     }
@@ -248,7 +245,7 @@
     lineBeforeRecipient = line;
     
     int recipientLength = 0;
-    while (line != messageBounds && *line != ' ') {
+    while (*line != '\0' && *line != ' ') {
         recipientLength++;
         line++;
     }

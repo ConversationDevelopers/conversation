@@ -127,7 +127,18 @@
 
 - (void)onSocket:(AsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
-    const char *message = [data bytes] + '\0';
+    const char *bytes = [data bytes] + '\0';
+    int positionOfLineBreak = 0;
+    const char* positionBeforeIteration = bytes;
+    while (*bytes != '\0' && *bytes != '\n' && *bytes != '\r') {
+        bytes++;
+        positionOfLineBreak++;
+    }
+    bytes = positionBeforeIteration;
+    char* message = malloc(positionOfLineBreak +1);
+    strncpy(message, bytes, positionOfLineBreak);
+    message[positionOfLineBreak] = '\0';
+    
     if (message) {
         [self.client clientDidReceiveData:message];
     } else {
