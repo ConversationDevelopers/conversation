@@ -71,16 +71,18 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:messageItems];
         
     } else {
-        IRCConversation *conversation = [IRCConversation fromString:recipientString withClient:client];
+        IRCConversation *conversation = [IRCConversation fromString:sender.nick withClient:client];
         if (conversation == nil) {
             /* TODO: Open new query */
         }
+        
+        NSLog(@"time: %@, conversation: %@, sender: %@", now, conversation.name, sender.nick);
         NSArray *messageItems = @[
-                                  now,
-                                  conversation,
-                                  sender,
-                                  [NSString stringWithCString:message usingEncodingPreference:client.configuration]
-                                  ];
+            now,
+            conversation,
+            sender,
+            [NSString stringWithCString:message usingEncodingPreference:client.configuration]
+        ];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:messageItems];
     }
