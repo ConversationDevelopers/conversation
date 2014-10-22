@@ -41,7 +41,9 @@
 @property (nonatomic) BOOL enabled;
 @property (nonatomic) UIImage *image;
 @property (nonatomic) NSString *name;
-@property (nonatomic) NSString *detail;
+@property (nonatomic) NSMutableArray *previewMessages;
 @property (nonatomic) NSInteger unreadCount;
+
+- (void) addPreviewMessage:(NSAttributedString *)message;
 
 @end

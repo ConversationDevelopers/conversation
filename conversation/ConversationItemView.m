@@ -66,7 +66,8 @@
     _enabled = NO;
     
     self.imageView.image = [UIImage imageNamed:@"ChannelIcon"];
-
+    _previewMessages = [[NSMutableArray alloc] init];
+    _unreadCount = 0;
     
     return self;
 }
@@ -100,23 +101,28 @@
     _nameLabel.text = self.name;
     _nameLabel.frame = frame;
     
+    NSAttributedString *firstdetail;
+    NSAttributedString *seconddetail;
     
-    NSArray *detail = [self.detail componentsSeparatedByString:@"\n"];
-    NSString *firstdetail = detail[0];
-    NSString *seconddetail = detail[1];
+    if(_previewMessages.count > 0)
+        firstdetail = _previewMessages[0];
+
+    if(_previewMessages.count > 1)
+        seconddetail = _previewMessages[1];
     
     frame.origin.y = round(self.imageView.frame.size.height / 2) + self.imageView.frame.origin.y - 5;
-    size = [firstdetail sizeWithAttributes:@{NSFontAttributeName: _firstDetailLabel.font}];
-    frame.origin.y -= 5;
-    frame.size = size;
+    
+    frame.size = firstdetail.size;
     frame.size.width = self.contentView.frame.size.width - self.imageView.frame.size.width;
     
-    _firstDetailLabel.text = firstdetail;
+    _firstDetailLabel.attributedText = firstdetail;
     _firstDetailLabel.frame = frame;
     
     frame.origin.y += 15;
+    frame.size = seconddetail.size;
+    frame.size.width = self.contentView.frame.size.width - self.imageView.frame.size.width;
     
-    _secondDetailLabel.text = seconddetail;
+    _secondDetailLabel.attributedText = seconddetail;
     _secondDetailLabel.frame = frame;
     
     
@@ -143,7 +149,11 @@
                     NSString *value = [NSString stringWithFormat:@"%li", (long)_unreadCount];
                     _unreadCountLabel.textColor = [UIColor lightGrayColor];
                     _unreadCountLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
-                    _unreadCountLabel.text = value;
+
+                    if(_unreadCount > 0)
+                        _unreadCountLabel.text = value;
+                    else
+                        _unreadCountLabel.text = @"";
                     
                     // Calculate frame size
                     CGSize size = [value sizeWithAttributes:@{NSFontAttributeName: _unreadCountLabel.font }];
@@ -156,6 +166,16 @@
         }
     }
     
+}
+
+- (void) addPreviewMessage:(NSAttributedString *)message
+{
+    if (_previewMessages.count > 1) {
+        id string = _previewMessages[1];
+        [_previewMessages removeObjectAtIndex:0];
+        [_previewMessages setObject:string atIndexedSubscript:0];
+    }
+    [_previewMessages addObject:message];
 }
 
 @end

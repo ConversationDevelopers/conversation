@@ -92,6 +92,8 @@
             [client connect];
         }
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedMessage:) name:@"messageReceived" object:nil];
 }
 
 - (void)reloadClient:(IRCClient *)client
@@ -272,8 +274,6 @@
         cell.enabled = query.conversationPartnerIsOnline;
         cell.name = query.name;
         cell.isChannel = NO;
-        cell.unreadCount = 350;
-        cell.detail = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. ";
         
     } else {
         IRCChannel *channel = [client.getChannels objectAtIndex:indexPath.row];
@@ -281,9 +281,6 @@
         cell.enabled = channel.isJoinedByUser;
         cell.name = channel.name;
         cell.isChannel = YES;
-        cell.unreadCount = 350;
-        cell.detail = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus.\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. ";
-        
     }
 
     return cell;
@@ -484,6 +481,40 @@
     [self.tableView reloadData];
     [[AppPreferences sharedPrefs] addChannelConfiguration:configuration forConnectionConfiguration:client.configuration];
     [[AppPreferences sharedPrefs] save];
+}
+
+- (void) receivedMessage:(NSNotification *) notification
+{
+    // ITEMS: timestamp, channel, sender, message
+    NSArray *items = [NSArray arrayWithArray:notification.object];
+    IRCChannel *channel = items[1];
+    IRCUser *sender = items[2];
+    NSString *message = items[3];
+    
+    int i=0;
+    int j=0;
+    ConversationItemView *item;
+    for (IRCClient *cl in _connections) {
+        if([cl.configuration.uniqueIdentifier isEqualToString:channel.client.configuration.uniqueIdentifier]) {
+            j=0;
+            for (IRCChannel *ch in cl.getChannels) {
+                if([ch.name isEqualToString:channel.name]) {
+                    item = (ConversationItemView*)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:j inSection:i]];
+                
+                    // Make sender's nick bold
+                    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@", sender.nick, message]];
+                    UIFont *font = [UIFont fontWithName:@"Helvetica-Bold" size:14];
+                    [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, sender.nick.length+1)];
+                    
+                    [item addPreviewMessage:string];
+                    item.unreadCount = item.unreadCount+1;
+                    [self.tableView reloadData];
+                }
+                j++;
+            }
+        }
+        i++;
+    }
 }
 
 @end
