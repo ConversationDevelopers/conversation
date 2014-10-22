@@ -202,9 +202,9 @@ static unsigned short ConversationTableSection = 1;
             } else {
                 cell.textLabel.text = NSLocalizedString(@"Nick Name", @"Nick Name");
             }
-            cell.textField.text = _configuration.name;
-            if(_configuration.name)
+            if([_configuration.name isEqualToString:@"#lobby"] == NO) {
                 cell.textField.text = _configuration.name;
+            }
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textEditAction = @selector(nameChanged:);
