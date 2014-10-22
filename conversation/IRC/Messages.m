@@ -60,15 +60,13 @@
             [controller joinChannelWithName:recipientString onClient:client];
             channel =  [IRCChannel fromString:recipientString withClient:client];
         }
+        NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
+        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
+                                                   inConversation:channel
+                                                         bySender:sender
+                                                           atTime:now];
         
-        NSArray *messageItems = @[
-            now,
-            channel,
-            sender,
-            [NSString stringWithCString:message usingEncodingPreference:client.configuration]
-        ];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:messageItems];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
         
     } else {
         IRCConversation *conversation = [IRCConversation fromString:sender.nick withClient:client];

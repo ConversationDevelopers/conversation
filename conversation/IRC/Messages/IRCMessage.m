@@ -32,4 +32,16 @@
 
 @implementation IRCMessage
 
+- (instancetype) initWithMessage:(NSString *)message inConversation:(IRCConversation *)conversation bySender:(IRCUser *)sender atTime:(NSDate *)timestamp
+{
+    if ((self = [super init])) {
+        self.message = message;
+        self.conversation = conversation;
+        self.sender = sender;
+        self.timestamp = timestamp;
+        return self;
+    }
+    return nil;
+}
+
 @end

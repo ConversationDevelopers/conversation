@@ -31,6 +31,7 @@
 #import <Foundation/Foundation.h>
 #import "AppDelegate.h"
 #import "IRCChannel.h"
+#import "IRCMessage.h"
 #import "IRCUser.h"
 #import "NSString+Methods.h"
 

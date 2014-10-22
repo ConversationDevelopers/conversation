@@ -29,7 +29,17 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "IRCUser.h"
+#import "IRCConversation.h"
+#import "IRCChannel.h"
 
 @interface IRCMessage : NSObject
+
+@property (nonatomic) IRCUser *sender;
+@property (nonatomic) NSString *message;
+@property (nonatomic) NSDate *timestamp;
+@property (nonatomic) IRCConversation* conversation;
+
+- (instancetype) initWithMessage:(NSString *)message inConversation:(IRCConversation *)conversation bySender:(IRCUser *)sender atTime:(NSDate *)timestamp;
 
 @end
