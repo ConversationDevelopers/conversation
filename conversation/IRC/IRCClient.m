@@ -32,6 +32,7 @@
 #import "IRCConnection.h"
 #import "IRCChannel.h"
 #import "IRCConversation.h"
+#import "ConversationListViewController.h"
 
 #define CONNECTION_RETRY_INTERVAL       30
 #define CONNECTION_RETRY_ATTEMPTS       10
@@ -513,6 +514,11 @@
 - (void)validateQueryStatusOnAllItems
 {
     if ([self.queries count] == 0) return;
+    
+    if (self.isConnected == NO) {
+        ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+        [controller reloadClient:self];
+    }
     
     NSString *requestString = @"";
     for (IRCConversation *query in self.queries) {

@@ -41,7 +41,7 @@
 - (void)reloadData;
 - (void)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client;
 
-- (void)toggleItemAtIndex:(NSInteger)index forClient:(IRCClient *)client;
+- (void)reloadClient:(IRCClient *)client;
 
 
 @end

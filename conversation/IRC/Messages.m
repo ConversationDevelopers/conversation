@@ -118,8 +118,7 @@
             channel =  [IRCChannel fromString:channelName withClient:client];
         }
         channel.isJoinedByUser = YES;
-        NSInteger indexOfChannel = [client.getChannels indexOfObject:channel];
-        [controller toggleItemAtIndex:indexOfChannel forClient:client];
+        [controller reloadClient:client];
         
     }
 }
@@ -136,8 +135,7 @@
         IRCChannel *channel =  [IRCChannel fromString:channelName withClient:client];
         if (channel != nil) {
             channel.isJoinedByUser = NO;
-            NSInteger indexOfChannel = [client.getChannels indexOfObject:channel];
-            [controller toggleItemAtIndex:indexOfChannel forClient:client];
+            [controller reloadClient:client];
         }
     }
 }
@@ -165,19 +163,17 @@
     
     int indexOfItem = 0;
     for (IRCConversation *conversation in client.getQueries) {
-        /* Get the index of the query in the conversation list. */
-        NSInteger indexOfQueryItemInList = [client.getChannels count] + indexOfItem - 1;
         
         if ([users containsObject:conversation.name]) {
             conversation.conversationPartnerIsOnline = YES;
             
             /* Set the conversation item in "enabled" mode. */
-            [controller toggleItemAtIndex:indexOfQueryItemInList forClient:client];
+            [controller reloadClient:client];
         } else {
             conversation.conversationPartnerIsOnline = NO;
             
             /* Set the conversation item in "disabled" mode */
-            [controller toggleItemAtIndex:indexOfQueryItemInList forClient:client];
+            [controller reloadClient:client];
         }
         indexOfItem++;
     }

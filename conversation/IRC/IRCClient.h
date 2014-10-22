@@ -37,6 +37,7 @@
 @class IRCConnection;
 @class IRCChannel;
 @class IRCConversation;
+@class ConversationListViewController;
 
 @interface IRCClient : NSObject
 

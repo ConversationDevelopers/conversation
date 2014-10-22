@@ -94,9 +94,8 @@
     }
 }
 
-- (void)toggleItemAtIndex:(NSInteger)index forClient:(IRCClient *)client
+- (void)reloadClient:(IRCClient *)client
 {
-    NSLog(@"TOGGLE ITEM: %i", (int)index);
     int i=0;
     for (IRCClient *cl in self.connections) {
         if([cl.configuration.uniqueIdentifier isEqualToString:client.configuration.uniqueIdentifier]) {
