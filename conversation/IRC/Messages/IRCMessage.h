@@ -40,7 +40,18 @@
 @property (nonatomic) NSString *message;
 @property (nonatomic) NSDate *timestamp;
 @property (nonatomic) IRCConversation* conversation;
+@property (nonatomic) NSUInteger messageType;
 
-- (instancetype) initWithMessage:(NSString *)message inConversation:(IRCConversation *)conversation bySender:(IRCUser *)sender atTime:(NSDate *)timestamp;
+- (instancetype) initWithMessage:(NSString *)message OfType:(NSUInteger)type inConversation:(IRCConversation *)conversation bySender:(IRCUser *)sender atTime:(NSDate *)timestamp;
+
+typedef NS_ENUM(NSUInteger, EventType) {
+    ET_ACTION,
+    ET_PRIVMSG,
+    ET_CHANMSG,
+    ET_CTCP,
+    ET_CTCPREPLY,
+    ET_NOTICE,
+    ET_CNOTICE
+};
 
 @end

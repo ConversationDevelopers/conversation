@@ -63,6 +63,7 @@
         }
         NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
         IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
+                                                           OfType:ET_CHANMSG
                                                    inConversation:channel
                                                          bySender:sender
                                                            atTime:now];
@@ -77,6 +78,7 @@
         
         NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
         IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
+                                                           OfType:ET_PRIVMSG
                                                    inConversation:conversation
                                                          bySender:sender
                                                            atTime:now];
