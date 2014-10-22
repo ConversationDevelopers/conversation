@@ -523,6 +523,9 @@
     if ([self.queries count] == 0) return;
     
     if (self.isConnected == NO) {
+        for (IRCConversation *query in self.queries) {
+            query.conversationPartnerIsOnline = NO;
+        }
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         [controller reloadClient:self];
     }
