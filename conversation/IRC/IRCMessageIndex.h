@@ -32,7 +32,7 @@
 
 @interface IRCMessageIndex : NSObject
 
-typedef enum IRCMessage : NSUInteger {
+typedef enum MessageType : NSUInteger {
     PING,
     ERROR,
     CAP,
@@ -180,7 +180,7 @@ typedef enum IRCMessage : NSUInteger {
     ERR_NOOPERHOST,         /* 491 */
     ERR_UMODEUNKNOWNFLAG,   /* 501 */
     ERR_USERSDONTMATCH      /* 502 */
-} IRCMessage;
+} MessageType;
 
 + (NSUInteger)indexValueFromString:(NSString *)key;
 + (void)initialiseMessageIndex;

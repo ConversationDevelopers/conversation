@@ -277,7 +277,7 @@
     }
     
     NSString *commandString = [NSString stringWithCString:command usingEncodingPreference:[self configuration]];
-    IRCMessage commandIndexValue = [IRCMessageIndex indexValueFromString:commandString];
+    MessageType commandIndexValue = [IRCMessageIndex indexValueFromString:commandString];
     
     switch (commandIndexValue) {
         case PING:
