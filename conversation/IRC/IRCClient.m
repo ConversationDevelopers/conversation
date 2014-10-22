@@ -501,6 +501,10 @@
     self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
     [self.connection disableFloodControl];
     
+    for (IRCChannel *channel in self.channels) {
+        channel.isJoinedByUser = NO;
+    }
+    
     ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     [controller reloadClient:self];
     
