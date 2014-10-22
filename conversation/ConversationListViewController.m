@@ -497,18 +497,15 @@
 - (void) receivedMessage:(NSNotification *) notification
 {
     // ITEMS: timestamp, channel, sender, message
-    NSArray *items = [NSArray arrayWithArray:notification.object];
-    IRCConversation *channel = items[1];
-    IRCUser *sender = items[2];
-    NSString *message = items[3];
+    IRCMessage *message = notification.object;
     
     // Make sender's nick bold
-    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@", sender.nick, message]];
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@", message.sender.nick, message.message]];
     UIFont *font = [UIFont fontWithName:@"Helvetica-Bold" size:14];
-    [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, sender.nick.length+1)];
+    [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, message.sender.nick.length+1)];
     
-    [channel addPreviewMessage:string];
-    channel.unreadCount++;
+    [message.conversation addPreviewMessage:string];
+    message.conversation.unreadCount++;
     [self.tableView reloadData];
 }
 
