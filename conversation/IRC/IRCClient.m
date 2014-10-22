@@ -501,6 +501,9 @@
     self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
     [self.connection disableFloodControl];
     
+    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    [controller reloadClient:self];
+    
     [self validateQueryStatusOnAllItems];
 }
 
