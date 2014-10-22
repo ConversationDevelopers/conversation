@@ -39,6 +39,7 @@
         
         /* Initialise default values for the configuration */
         self.name = @"#lobby";
+        self.uniqueIdentifier = [[NSUUID UUID] UUIDString];
         self.passwordReference = @"";
         
         return self;
