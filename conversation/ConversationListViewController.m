@@ -280,6 +280,8 @@
         cell.enabled = query.conversationPartnerIsOnline;
         cell.name = query.name;
         cell.isChannel = NO;
+        cell.previewMessages = query.previewMessages;
+        cell.unreadCount = query.unreadCount;
         
     } else {
         IRCChannel *channel = [client.getChannels objectAtIndex:indexPath.row];
@@ -287,6 +289,8 @@
         cell.enabled = channel.isJoinedByUser;
         cell.name = channel.name;
         cell.isChannel = YES;
+        cell.unreadCount = channel.unreadCount;
+        cell.previewMessages = channel.previewMessages;
     }
 
     return cell;
@@ -499,28 +503,26 @@
     
     int i=0;
     int j=0;
-    ConversationItemView *item;
     for (IRCClient *cl in _connections) {
         if([cl.configuration.uniqueIdentifier isEqualToString:channel.client.configuration.uniqueIdentifier]) {
             j=0;
             for (IRCChannel *ch in cl.getChannels) {
                 if([ch.name isEqualToString:channel.name]) {
-                    item = (ConversationItemView*)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:j inSection:i]];
                 
                     // Make sender's nick bold
                     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@", sender.nick, message]];
                     UIFont *font = [UIFont fontWithName:@"Helvetica-Bold" size:14];
                     [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, sender.nick.length+1)];
                     
-                    [item addPreviewMessage:string];
-                    item.unreadCount = item.unreadCount+1;
-                    [self.tableView reloadData];
+                    [channel addPreviewMessage:string];
+                    channel.unreadCount++;
                 }
                 j++;
             }
         }
         i++;
     }
+    [self.tableView reloadData];
 }
 
 @end

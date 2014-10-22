@@ -40,6 +40,7 @@
         self.client = client;
         self.conversationPartnerIsOnline = NO;
         self.configuration = config;
+        self.unreadCount = 0;        
         return self;
     }
     return nil;
@@ -59,12 +60,26 @@
             }
         }
     }
+    
     return nil;
 }
 
 - (BOOL)isActive
 {
     return [self.client isConnected] && self.conversationPartnerIsOnline;
+}
+
+- (void)addPreviewMessage:(NSAttributedString *)message
+{
+    if(!_previewMessages)
+        _previewMessages = [[NSMutableArray alloc] init];
+    
+    if (_previewMessages.count > 1) {
+        id string = _previewMessages[1];
+        [_previewMessages removeObjectAtIndex:0];
+        [_previewMessages setObject:string atIndexedSubscript:0];
+    }
+    [_previewMessages addObject:message];
 }
 
 @end

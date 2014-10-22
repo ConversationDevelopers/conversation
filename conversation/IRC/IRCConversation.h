@@ -39,9 +39,12 @@
 @property (nonatomic, assign) IRCClient *client;
 @property (nonatomic, assign) BOOL conversationPartnerIsOnline;
 @property (nonatomic, strong) IRCChannelConfiguration *configuration;
+@property (nonatomic) NSMutableArray *previewMessages;
+@property (nonatomic) BOOL unreadCount;
 
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;
 
 + (id) fromString:(NSString *)name withClient:(IRCClient *)client;
+- (void)addPreviewMessage:(NSAttributedString *)message;
 
 @end

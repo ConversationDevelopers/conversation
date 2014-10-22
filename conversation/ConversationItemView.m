@@ -168,14 +168,4 @@
     
 }
 
-- (void) addPreviewMessage:(NSAttributedString *)message
-{
-    if (_previewMessages.count > 1) {
-        id string = _previewMessages[1];
-        [_previewMessages removeObjectAtIndex:0];
-        [_previewMessages setObject:string atIndexedSubscript:0];
-    }
-    [_previewMessages addObject:message];
-}
-
 @end

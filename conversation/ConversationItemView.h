@@ -44,6 +44,4 @@
 @property (nonatomic) NSMutableArray *previewMessages;
 @property (nonatomic) NSInteger unreadCount;
 
-- (void) addPreviewMessage:(NSAttributedString *)message;
-
 @end
