@@ -74,15 +74,13 @@
             /* TODO: Open new query */
         }
         
-        NSLog(@"time: %@, conversation: %@, sender: %@", now, conversation.name, sender.nick);
-        NSArray *messageItems = @[
-            now,
-            conversation,
-            sender,
-            [NSString stringWithCString:message usingEncodingPreference:client.configuration]
-        ];
+        NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
+        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
+                                                   inConversation:conversation
+                                                         bySender:sender
+                                                           atTime:now];
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:messageItems];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
     }
 }
 
