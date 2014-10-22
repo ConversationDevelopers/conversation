@@ -80,7 +80,6 @@
         [_previewMessages setObject:string atIndexedSubscript:0];
     }
     [_previewMessages addObject:message];
-    NSLog(@"MESSAGES: %@", _previewMessages.description);
 }
 
 @end
