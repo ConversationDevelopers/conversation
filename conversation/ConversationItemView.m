@@ -42,7 +42,7 @@
     self.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
     
     _nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _nameLabel.font = [UIFont boldSystemFontOfSize:16];
+    _nameLabel.font = [UIFont boldSystemFontOfSize:18];
     _nameLabel.textColor = [UIColor darkGrayColor];
     
     _firstDetailLabel = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -94,7 +94,7 @@
     CGSize size = [_name sizeWithAttributes:@{NSFontAttributeName: _nameLabel.font}];
     
     CGRect frame = self.imageView.frame;
-    frame.origin.y -= 6;
+    frame.origin.y -= 4;
     frame.origin.x = frame.origin.x*2+frame.size.width;
     frame.size = size;
     
