@@ -240,7 +240,11 @@ static unsigned short ConversationTableSection = 1;
     
     _badInput = YES;
     
-    if ([sender.textField.text isValidChannelName:_client]) {
+    if (_addChannel && [sender.textField.text isValidChannelName:_client]) {
+        _configuration.name = sender.textField.text;
+        sender.accessoryType = UITableViewCellAccessoryCheckmark;
+        _badInput = NO;
+    } else if ([sender.textField.text isValidNickname:_client]) {
         _configuration.name = sender.textField.text;
         sender.accessoryType = UITableViewCellAccessoryCheckmark;
         _badInput = NO;
