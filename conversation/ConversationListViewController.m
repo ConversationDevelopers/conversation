@@ -497,31 +497,17 @@
 {
     // ITEMS: timestamp, channel, sender, message
     NSArray *items = [NSArray arrayWithArray:notification.object];
-    IRCChannel *channel = items[1];
+    IRCConversation *channel = items[1];
     IRCUser *sender = items[2];
     NSString *message = items[3];
     
-    int i=0;
-    int j=0;
-    for (IRCClient *cl in _connections) {
-        if([cl.configuration.uniqueIdentifier isEqualToString:channel.client.configuration.uniqueIdentifier]) {
-            j=0;
-            for (IRCChannel *ch in cl.getChannels) {
-                if([ch.name isEqualToString:channel.name]) {
-                
-                    // Make sender's nick bold
-                    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@", sender.nick, message]];
-                    UIFont *font = [UIFont fontWithName:@"Helvetica-Bold" size:14];
-                    [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, sender.nick.length+1)];
-                    
-                    [channel addPreviewMessage:string];
-                    channel.unreadCount++;
-                }
-                j++;
-            }
-        }
-        i++;
-    }
+    // Make sender's nick bold
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@", sender.nick, message]];
+    UIFont *font = [UIFont fontWithName:@"Helvetica-Bold" size:14];
+    [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, sender.nick.length+1)];
+    
+    [channel addPreviewMessage:string];
+    channel.unreadCount++;
     [self.tableView reloadData];
 }
 
