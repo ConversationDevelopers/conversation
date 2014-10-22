@@ -37,7 +37,6 @@
 
 @interface IRCChannel : IRCConversation
 
-@property (nonatomic) BOOL joined;
 @property (nonatomic) NSString *topic;
 @property (nonatomic) NSMutableArray *users;
 @property (nonatomic) NSMutableArray *channelModes;

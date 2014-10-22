@@ -36,7 +36,6 @@
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client
 {
     if ((self = [super init])) {
-        self.joined = NO;
         self.name = config.name;
         self.client = client;
         self.topic = @"(No Topic)";

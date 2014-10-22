@@ -100,17 +100,8 @@
     int i=0;
     for (IRCClient *cl in self.connections) {
         if([cl.configuration.uniqueIdentifier isEqualToString:client.configuration.uniqueIdentifier]) {
-            if(index < client.getChannels.count) {
-                IRCChannel *channel = [client.getChannels objectAtIndex:index];
-                channel.joined = YES;
-                [client.getChannels setObject:channel atIndexedSubscript:index];
-                [self.connections setObject:client atIndexedSubscript:i];
-            } else {
-                IRCConversation *query = [client.getQueries objectAtIndex:index-client.getChannels.count];
-                query.conversationPartnerIsOnline = YES;
-                [client.getChannels setObject:query atIndexedSubscript:index-client.getChannels.count];
-                [self.connections setObject:client atIndexedSubscript:i];
-            }
+            [_connections setObject:client atIndexedSubscript:i];
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:i] withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
         }
         i++;
@@ -123,17 +114,8 @@
     int i=0;
     for (IRCClient *cl in self.connections) {
         if([cl.configuration.uniqueIdentifier isEqualToString:client.configuration.uniqueIdentifier]) {
-            if(index < client.getChannels.count) {
-                IRCChannel *channel = [client.getChannels objectAtIndex:index];
-                channel.joined = NO;
-                [client.getChannels setObject:channel atIndexedSubscript:index];
-                [self.connections setObject:client atIndexedSubscript:i];
-            } else {
-                IRCConversation *query = [client.getQueries objectAtIndex:index-client.getChannels.count];
-                query.conversationPartnerIsOnline = NO;
-                [client.getChannels setObject:query atIndexedSubscript:index-client.getChannels.count];
-                [self.connections setObject:client atIndexedSubscript:i];
-            }
+            [_connections setObject:client atIndexedSubscript:i];
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:i] withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
         }
         i++;
@@ -311,7 +293,7 @@
     } else {
         IRCChannel *channel = [client.getChannels objectAtIndex:indexPath.row];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        cell.enabled = channel.joined;
+        cell.enabled = channel.isJoinedByUser;
         cell.name = channel.name;
         cell.isChannel = YES;
         cell.unreadCount = 350;
