@@ -96,6 +96,12 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedMessage:) name:@"messageReceived" object:nil];
 }
 
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)reloadClient:(IRCClient *)client
 {
     int i=0;
