@@ -108,7 +108,7 @@
     for (IRCClient *cl in self.connections) {
         if([cl.configuration.uniqueIdentifier isEqualToString:client.configuration.uniqueIdentifier]) {
             [_connections setObject:client atIndexedSubscript:i];
-            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:i] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self.tableView reloadData];
             break;
         }
         i++;

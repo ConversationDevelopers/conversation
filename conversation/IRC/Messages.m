@@ -195,7 +195,7 @@
     
     int indexOfItem = 0;
     for (IRCConversation *conversation in client.getQueries) {
-        
+    
         if ([users containsObject:conversation.name]) {
             conversation.conversationPartnerIsOnline = YES;
             
