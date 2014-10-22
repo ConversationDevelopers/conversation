@@ -52,6 +52,7 @@
     if ((self = [super init])) {
         self.autoJoin = [dict[@"autoJoin"] boolValue];
         self.name = dict[@"name"];
+        self.uniqueIdentifier = dict[@"uniqueIdentifier"];        
         self.passwordReference = dict[@"passwordReference"];
     }
     return self;
