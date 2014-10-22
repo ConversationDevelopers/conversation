@@ -97,8 +97,15 @@
         for (NSDictionary *channel in dict[@"channels"]) {
             [channels addObject:[[IRCChannelConfiguration alloc] initWithDictionary:channel]];
         }
+        
         self.channels = channels;
-        self.queries = dict[@"queries"];
+
+        NSMutableArray *queries = [[NSMutableArray alloc] init];
+        for (NSDictionary *channel in dict[@"queries"]) {
+            [queries addObject:[[IRCChannelConfiguration alloc] initWithDictionary:channel]];
+        }
+        
+        self.queries = queries;
     }
     return self;
 }
