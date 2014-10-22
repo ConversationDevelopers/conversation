@@ -119,7 +119,7 @@
         }
         channel.isJoinedByUser = YES;
         NSInteger indexOfChannel = [client.getChannels indexOfObject:channel];
-        [controller enableItemAtIndex:indexOfChannel forClient:client];
+        [controller toggleItemAtIndex:indexOfChannel forClient:client];
         
     }
 }
@@ -137,7 +137,7 @@
         if (channel != nil) {
             channel.isJoinedByUser = NO;
             NSInteger indexOfChannel = [client.getChannels indexOfObject:channel];
-            [controller disableItemAtIndex:indexOfChannel forClient:client];
+            [controller toggleItemAtIndex:indexOfChannel forClient:client];
         }
     }
 }
@@ -172,12 +172,12 @@
             conversation.conversationPartnerIsOnline = YES;
             
             /* Set the conversation item in "enabled" mode. */
-            [controller enableItemAtIndex:indexOfQueryItemInList forClient:client];
+            [controller toggleItemAtIndex:indexOfQueryItemInList forClient:client];
         } else {
             conversation.conversationPartnerIsOnline = NO;
             
             /* Set the conversation item in "disabled" mode */
-            [controller disableItemAtIndex:indexOfQueryItemInList forClient:client];
+            [controller toggleItemAtIndex:indexOfQueryItemInList forClient:client];
         }
         indexOfItem++;
     }

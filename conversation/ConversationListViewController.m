@@ -94,23 +94,9 @@
     }
 }
 
-- (void)enableItemAtIndex:(NSInteger)index forClient:(IRCClient *)client
+- (void)toggleItemAtIndex:(NSInteger)index forClient:(IRCClient *)client
 {
-    NSLog(@"ENABLE ITEM: %i", (int)index);
-    int i=0;
-    for (IRCClient *cl in self.connections) {
-        if([cl.configuration.uniqueIdentifier isEqualToString:client.configuration.uniqueIdentifier]) {
-            [_connections setObject:client atIndexedSubscript:i];
-            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:i] withRowAnimation:UITableViewRowAnimationAutomatic];
-            break;
-        }
-        i++;
-    }
-}
-
-- (void)disableItemAtIndex:(NSInteger)index forClient:(IRCClient *)client
-{
-    NSLog(@"DISABLE ITEM: %i", (int)index);
+    NSLog(@"TOGGLE ITEM: %i", (int)index);
     int i=0;
     for (IRCClient *cl in self.connections) {
         if([cl.configuration.uniqueIdentifier isEqualToString:client.configuration.uniqueIdentifier]) {
