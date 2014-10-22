@@ -29,9 +29,10 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "IRCUser.h"
 #import "IRCConversation.h"
 #import "IRCChannel.h"
+
+@class IRCUser;
 
 @interface IRCMessage : NSObject
 

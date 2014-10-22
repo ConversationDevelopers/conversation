@@ -29,6 +29,7 @@
  */
 
 #import "Messages.h"
+#import "IRCUser.h"
 #import "IRCClient.h"
 #import "IRCConnection.h"
 #import "ConversationListViewController.h"

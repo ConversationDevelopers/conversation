@@ -32,10 +32,10 @@
 #import "AppDelegate.h"
 #import "IRCChannel.h"
 #import "IRCMessage.h"
-#import "IRCUser.h"
 #import "NSString+Methods.h"
 
 @class IRCClient;
+@class IRCUser;
 @class ConversationListViewController;
 
 @interface Messages : NSObject
