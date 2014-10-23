@@ -496,8 +496,10 @@
 
 - (void) receivedMessage:(NSNotification *) notification
 {
-    // ITEMS: timestamp, channel, sender, message
     IRCMessage *message = notification.object;
+    
+    if (message.messageType != ET_PRIVMSG && message.messageType != ET_CHANMSG)
+        return;
     
     // Make sender's nick bold
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@", message.sender.nick, message.message]];
