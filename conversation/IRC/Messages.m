@@ -47,7 +47,6 @@
     NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:[client configuration]];
     IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
     
-    
     NSDate* now = [NSDate date];
     /* TODO: handle timestamps */
     
@@ -63,7 +62,7 @@
         }
         NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
         IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                           OfType:ET_CHANMSG
+                                                           OfType:ET_PRIVMSG
                                                    inConversation:channel
                                                          bySender:sender
                                                            atTime:now];
@@ -129,7 +128,46 @@
 
 + (void)userReceivedACTIONMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client
 {
+    NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:[client configuration]];
+    IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
     
+    NSDate* now = [NSDate date];
+    /* TODO: handle timestamps */
+    
+    /* Check if this message is a channel message or a private message */
+    if ([recipientString isValidChannelName:client]) {
+        /* Get the channel object associated with this channel */
+        IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:recipientString withClient:client];
+        if (channel == nil) {
+            /* We don't have this channel, let's make a request to the UI to create the channel. */
+            ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+            [controller joinChannelWithName:recipientString onClient:client];
+            channel =  [IRCChannel fromString:recipientString withClient:client];
+        }
+        NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
+        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
+                                                           OfType:ET_ACTION
+                                                   inConversation:channel
+                                                         bySender:sender
+                                                           atTime:now];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+        
+    } else {
+        IRCConversation *conversation = [IRCConversation fromString:sender.nick withClient:client];
+        if (conversation == nil) {
+            /* TODO: Open new query */
+        }
+        
+        NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
+        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
+                                                           OfType:ET_ACTION
+                                                   inConversation:conversation
+                                                         bySender:sender
+                                                           atTime:now];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+    }
 }
 
 + (void)userReceivedJOIN:(const char *[4])senderDict onChannel:(const char *)rchannel onClient:(IRCClient *)client
