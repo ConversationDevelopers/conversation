@@ -39,10 +39,9 @@
 @property (nonatomic, retain) NSMutableArray *connections;
 
 - (void)reloadData;
-- (void)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client;
-
 - (void)reloadClient:(IRCClient *)client;
-
+- (void)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client;
+- (void)createConversationWithName:(NSString *)name onClient:(IRCClient *)client;
 
 @end
 

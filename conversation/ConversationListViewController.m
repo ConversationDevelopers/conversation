@@ -474,13 +474,8 @@
     }
 }
 
-- (void)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client
+- (NSInteger)getIndexOfClient:(IRCClient *)client
 {
-    IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
-    configuration.name = name;
-    IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:configuration withClient:client];
-    [client addChannel:channel];
-    
     int i=0;
     for (IRCClient *cl in _connections) {
         if([cl.configuration.uniqueIdentifier isEqualToString:client.configuration.uniqueIdentifier]) {
@@ -488,9 +483,32 @@
         }
         i++;
     }
-    [_connections setObject:client atIndexedSubscript:i];
+    return i;
+}
+
+- (void)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client
+{
+    IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
+    configuration.name = name;
+    IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:configuration withClient:client];
+    [client addChannel:channel];
+    
+    [_connections setObject:client atIndexedSubscript:[self getIndexOfClient:client]];
     [self.tableView reloadData];
     [[AppPreferences sharedPrefs] addChannelConfiguration:configuration forConnectionConfiguration:client.configuration];
+    [[AppPreferences sharedPrefs] save];
+}
+
+- (void) createConversationWithName:(NSString *)name onClient:(IRCClient *)client
+{
+    IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
+    configuration.name = name;
+    IRCConversation *query = [[IRCConversation alloc] initWithConfiguration:configuration withClient:client];
+    [client addQuery:query];
+    
+    [_connections setObject:client atIndexedSubscript:[self getIndexOfClient:client]];
+    [self.tableView reloadData];
+    [[AppPreferences sharedPrefs] addQueryConfiguration:configuration forConnectionConfiguration:client.configuration];
     [[AppPreferences sharedPrefs] save];
 }
 
