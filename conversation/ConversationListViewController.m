@@ -516,13 +516,19 @@
 {
     IRCMessage *message = notification.object;
     
-    if (message.messageType != ET_PRIVMSG && message.messageType != ET_CHANMSG)
+    if (message.messageType != ET_PRIVMSG && message.messageType != ET_CHANMSG && message.messageType != ET_ACTION)
         return;
     
     // Make sender's nick bold
-    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@", message.sender.nick, message.message]];
+    NSMutableAttributedString *string;
     UIFont *font = [UIFont fontWithName:@"Helvetica-Bold" size:14];
-    [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, message.sender.nick.length+1)];
+    if (message.messageType == ET_ACTION) {
+        string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"*%@ %@", message.sender.nick, message.message]];
+        [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, message.sender.nick.length+message.message.length+2)];
+    } else {
+        string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@", message.sender.nick, message.message]];
+        [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, message.sender.nick.length+1)];
+    }
     
     [message.conversation addPreviewMessage:string];
     message.conversation.unreadCount++;
