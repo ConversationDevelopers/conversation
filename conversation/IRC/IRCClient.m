@@ -107,6 +107,15 @@
     self.currentNicknameOnConnection = self.configuration.primaryNickname;
     
     /* Send initial registration */
+    if (self.configuration.serverPasswordReference) {
+        NSString *password = [SSKeychain passwordForService:@"conversation" account:self.configuration.serverPasswordReference];
+        if (password != nil && [password length] > 0) {
+            [self.connection send:[NSString stringWithFormat:@"PASS %@", password]];
+        } else {
+            NSLog(@"A server password reference was found but no password: %@", self.configuration.serverPasswordReference);
+        }
+    }
+    
     [self.connection send:[NSString stringWithFormat:@"NICK %@",
                     self.configuration.primaryNickname]];
     [self.connection send:[NSString stringWithFormat:@"USER %@ 0 * :%@",

@@ -33,6 +33,7 @@
 #import "IRCMessageIndex.h"
 #import "Messages.h"
 #import "NSString+Methods.h"
+#import "SSKeychain.h"
 
 @class IRCConnection;
 @class IRCChannel;

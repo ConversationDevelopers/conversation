@@ -52,4 +52,6 @@
 
 + (void)clientReceivedISONResponse:(const char *)message onClient:(IRCClient *)client;
 
++ (void)clientReceivedServerPasswordMismatchError:(IRCClient *)client;
+
 @end

@@ -252,4 +252,9 @@
     }
 }
 
++ (void)clientReceivedServerPasswordMismatchError:(IRCClient *)client
+{
+    // TODO: Display password entry dialog.
+}
+
 @end
