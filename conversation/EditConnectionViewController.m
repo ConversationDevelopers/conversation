@@ -551,7 +551,21 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 
 - (void) passwordChanged:(PreferencesTextCell *)sender
 {
-    _configuration.serverPasswordReference = sender.textField.text;
+    sender.accessoryType = UITableViewCellAccessoryNone;
+    badInput = YES;
+    
+    if(sender.textField.text.length == 0) {
+        _configuration.serverPasswordReference = @"";
+        badInput = NO;
+    }
+    
+    if (sender.textField.text.length > 1) {
+        _configuration.serverPasswordReference = sender.textField.text;
+        sender.accessoryType = UITableViewCellAccessoryCheckmark;
+        badInput = NO;
+    }
+    
+    
 }
 
 - (void) secureChanged:(PreferencesSwitchCell *)sender
