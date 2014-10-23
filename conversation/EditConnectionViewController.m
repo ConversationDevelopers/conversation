@@ -367,6 +367,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         } else if (indexPath.row == 4) {
             PreferencesSwitchCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesSwitchCell class])];
             cell.switchAction = @selector(secureChanged:);
+            cell.switchControl.on = _configuration.connectUsingSecureLayer;
             cell.textLabel.text = NSLocalizedString(@"Use SSL", @"Use ssl encrypted connection");
             return cell;
         }
