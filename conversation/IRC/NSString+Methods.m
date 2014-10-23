@@ -182,6 +182,6 @@
     } else {
         encoding = NSUTF8StringEncoding;
     }
-    return [self dataUsingEncoding:encoding allowLossyConversion:YES];
+    return [self dataUsingEncoding:encoding allowLossyConversion:NO];
 }
 @end
