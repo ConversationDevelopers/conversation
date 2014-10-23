@@ -212,7 +212,7 @@
     }
 }
 
-+ (void)userReceivedNickchange:(const char *[4])senderDict toNick:(char *)newNick onClient:(IRCClient *)client
++ (void)userReceivedNickchange:(const char *[4])senderDict toNick:(const char *)newNick onClient:(IRCClient *)client
 {
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
     if ([[user nick] isEqualToString:client.currentNicknameOnConnection]) {

@@ -335,7 +335,7 @@
             break;
             
         case NICK:
-            [Messages userReceivedNickchange]
+            [Messages userReceivedNickchange:senderDict toNick:line onClient:self];
             break;
             
         case RPL_WELCOME:
