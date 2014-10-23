@@ -335,7 +335,7 @@
             break;
             
         case NICK:
-            
+            [Messages userReceivedNickchange]
             break;
             
         case RPL_WELCOME:

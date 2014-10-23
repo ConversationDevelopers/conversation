@@ -66,7 +66,6 @@
                                                    inConversation:channel
                                                          bySender:sender
                                                            atTime:now];
-        
         [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
         
     } else {
@@ -210,6 +209,14 @@
             channel.isJoinedByUser = NO;
             [controller reloadClient:client];
         }
+    }
+}
+
++ (void)userReceivedNickchange:(const char *[4])senderDict toNick:(char *)newNick onClient:(IRCClient *)client
+{
+    IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
+    if ([[user nick] isEqualToString:client.currentNicknameOnConnection]) {
+        client.currentNicknameOnConnection = [NSString stringWithCString:newNick usingEncodingPreference:client.configuration];
     }
 }
 
