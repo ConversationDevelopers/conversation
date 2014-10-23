@@ -516,7 +516,7 @@
 {
     IRCMessage *message = notification.object;
     
-    if (message.messageType != ET_PRIVMSG && message.messageType != ET_CHANMSG && message.messageType != ET_ACTION)
+    if (message.messageType != ET_PRIVMSG && message.messageType != ET_ACTION)
         return;
     
     // Make sender's nick bold
