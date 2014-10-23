@@ -42,7 +42,8 @@
 @property (nonatomic, strong) NSTimer *floodControlTimer;
 @property (nonatomic, strong) NSMutableArray *messageQueue;
 @property (nonatomic, assign) int messagesSentSinceLastTick;
-
+@property (nonatomic, strong) NSString *connectionHost;
+@property (nonatomic, assign) UInt16 connectionPort;
 @end
 
 @implementation IRCConnection
@@ -66,15 +67,40 @@
 {
     self.sslEnabled = sslEnabled;
     NSError *err = nil;
-    asyncSocket = [[AsyncSocket alloc] initWithDelegate:self];
-    if (![asyncSocket connectToHost:host onPort:port error:&err]) {
+    socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+    self.connectionHost = host;
+    self.connectionPort = port;
+    if (![socket connectToHost:host onPort:port error:&err]) {
         NSLog(@"Error: %@", err);
     } else {
         NSLog(@"Connecting..");
+        [socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:1];
     }
 }
 
-- (void)onSocket:(AsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
+- (void)socket:(GCDAsyncSocket *)sender didAcceptNewSocket:(GCDAsyncSocket *)newSocket
+{
+    NSLog(@"new socket");
+    socket = newSocket;
+    // Configure SSL/TLS settings
+    NSMutableDictionary *settings = [NSMutableDictionary dictionaryWithCapacity:3];
+    
+    [settings setObject:self.connectionHost forKey:(NSString *)kCFStreamSSLPeerName];
+    
+    // Skip certificate validation. FOR TESTING PURPOSES ONLY DO NEVER LET THIS GET INTO PRODUCTION EVER.
+    [settings setObject:[NSNumber numberWithBool:NO] forKey:(NSString *)kCFStreamSSLValidatesCertificateChain];
+    
+    if (self.client.configuration.connectUsingSecureLayer) {
+        [socket startTLS:settings];
+    }
+    
+    [self.client clientDidConnect];
+    
+    [socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:1];
+}
+
+
+- (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
 {
     NSLog(@"onSocket:%p didConnectToHost:%@ port:%hu", sock, host, port);
     
@@ -92,18 +118,18 @@
     
     [self.client clientDidConnect];
     
-    [asyncSocket readDataToData:[AsyncSocket CRLFData] withTimeout:-1 tag:1];
+    [socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:1];
 }
 
-- (void)onSocket:(AsyncSocket *)sock didWriteDataWithTag:(long)tag
+- (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag
 {
     if (tag == 0) {
-        [sock readDataToData:[AsyncSocket CRLFData] withTimeout:-1 tag:0];
+        [sock readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:0];
     }
     [self.client clientDidSendData];
 }
 
-- (void)onSocket:(AsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
+- (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
     const char *bytes = [data bytes] + '\0';
     int positionOfLineBreak = 0;
@@ -122,20 +148,20 @@
     } else {
         NSLog(@"Read msg error: %s",message);
     }
-    [asyncSocket readDataToData:[AsyncSocket CRLFData] withTimeout:-1 tag:1];
+    [socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:1];
 }
 
-- (void)onSocketDidSecure:(AsyncSocket *)sock
+- (void)socketDidSecure:(GCDAsyncSocket *)sock
 {
     NSLog(@"onSocketDidSecure:%p", sock);
 }
 
-- (void)onSocket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err
+- (void)socket:(GCDAsyncSocket *)sock willDisconnectWithError:(NSError *)err
 {
     [self.client clientDidDisconnectWithError:[err localizedFailureReason]];
 }
 
-- (void)onSocketDidDisconnect:(AsyncSocket *)sock
+- (void)socketDidDisconnect:(GCDAsyncSocket *)sock
 {
     [self.messageQueue removeAllObjects];
     [self.client clientDidDisconnect];
@@ -143,12 +169,12 @@
 
 - (void)writeDataToSocket:(NSData *)data
 {
-    [asyncSocket writeData:data withTimeout:-1 tag:1];
+    [socket writeData:data withTimeout:-1 tag:1];
 }
 
 - (void)close
 {
-    [asyncSocket disconnectAfterWriting];
+    [socket disconnectAfterWriting];
 }
 
 - (void)sendData:(NSString *)line

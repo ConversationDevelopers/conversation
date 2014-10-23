@@ -29,7 +29,6 @@
 		FA00A39219E5DD3D00E7B4D7 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A38F19E5DD3D00E7B4D7 /* SSKeychain.m */; };
 		FA00A39319E5DD3D00E7B4D7 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A39119E5DD3D00E7B4D7 /* SSKeychainQuery.m */; };
 		FA00A39C19E6AD1200E7B4D7 /* NSString+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A39B19E6AD1200E7B4D7 /* NSString+Methods.m */; };
-		FA109B2A19E3E6D60068DC29 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B2719E3E6D60068DC29 /* AsyncSocket.m */; };
 		FA109B2B19E3E6D60068DC29 /* IRCConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B2919E3E6D60068DC29 /* IRCConnection.m */; };
 		FA109B3419E410D80068DC29 /* IRCClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B3319E410D80068DC29 /* IRCClient.m */; };
 		FA109B3719E419040068DC29 /* IRCConnectionConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B3619E419040068DC29 /* IRCConnectionConfiguration.m */; };
@@ -37,6 +36,7 @@
 		FA109B3E19E420320068DC29 /* IRCChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B3D19E420320068DC29 /* IRCChannel.m */; };
 		FA6E45ED19ED65590083A326 /* IRCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6E45EC19ED65590083A326 /* IRCUser.m */; };
 		FAC1679119F84268009856F0 /* IRCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC1679019F84268009856F0 /* IRCMessage.m */; };
+		FADD2E6819F9BC86004B86AE /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = FADD2E6619F9BC86004B86AE /* GCDAsyncSocket.m */; };
 		FAEE1E6019EBEA040041439F /* Messages.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEE1E5F19EBEA040041439F /* Messages.m */; };
 		FAEE1E6319EBFBA20041439F /* IRCConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEE1E6219EBFBA20041439F /* IRCConversation.m */; };
 /* End PBXBuildFile section */
@@ -93,8 +93,6 @@
 		FA00A39119E5DD3D00E7B4D7 /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSKeychainQuery.m; path = Preferences/SSKeychainQuery.m; sourceTree = "<group>"; };
 		FA00A39A19E6AD1200E7B4D7 /* NSString+Methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Methods.h"; path = "conversation/IRC/NSString+Methods.h"; sourceTree = "<group>"; };
 		FA00A39B19E6AD1200E7B4D7 /* NSString+Methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Methods.m"; path = "conversation/IRC/NSString+Methods.m"; sourceTree = "<group>"; };
-		FA109B2619E3E6D60068DC29 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
-		FA109B2719E3E6D60068DC29 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
 		FA109B2819E3E6D60068DC29 /* IRCConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCConnection.h; sourceTree = "<group>"; };
 		FA109B2919E3E6D60068DC29 /* IRCConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCConnection.m; sourceTree = "<group>"; };
 		FA109B3219E410D80068DC29 /* IRCClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCClient.h; sourceTree = "<group>"; };
@@ -109,6 +107,8 @@
 		FA6E45EC19ED65590083A326 /* IRCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCUser.m; sourceTree = "<group>"; };
 		FAC1678F19F84268009856F0 /* IRCMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IRCMessage.h; path = Messages/IRCMessage.h; sourceTree = "<group>"; };
 		FAC1679019F84268009856F0 /* IRCMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IRCMessage.m; path = Messages/IRCMessage.m; sourceTree = "<group>"; };
+		FADD2E6619F9BC86004B86AE /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
+		FADD2E6719F9BC86004B86AE /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
 		FAEE1E5E19EBEA040041439F /* Messages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Messages.h; sourceTree = "<group>"; };
 		FAEE1E5F19EBEA040041439F /* Messages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Messages.m; sourceTree = "<group>"; };
 		FAEE1E6119EBFBA20041439F /* IRCConversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCConversation.h; sourceTree = "<group>"; };
@@ -245,9 +245,9 @@
 		FA109B2519E3E6D60068DC29 /* IRC */ = {
 			isa = PBXGroup;
 			children = (
+				FADD2E6619F9BC86004B86AE /* GCDAsyncSocket.m */,
+				FADD2E6719F9BC86004B86AE /* GCDAsyncSocket.h */,
 				FAC1678E19F84228009856F0 /* Messages */,
-				FA109B2619E3E6D60068DC29 /* AsyncSocket.h */,
-				FA109B2719E3E6D60068DC29 /* AsyncSocket.m */,
 				FA109B2819E3E6D60068DC29 /* IRCConnection.h */,
 				FA109B2919E3E6D60068DC29 /* IRCConnection.m */,
 				FA109B3219E410D80068DC29 /* IRCClient.h */,
@@ -405,7 +405,6 @@
 		};
 /* End PBXShellScriptBuildPhase section */
 
-
 /* Begin PBXSourcesBuildPhase section */
 		DA1A4AB319E1770700565763 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -414,9 +413,9 @@
 				FA109B2B19E3E6D60068DC29 /* IRCConnection.m in Sources */,
 				DA1A4AC019E1770700565763 /* AppDelegate.m in Sources */,
 				FA00A39C19E6AD1200E7B4D7 /* NSString+Methods.m in Sources */,
-				FA109B2A19E3E6D60068DC29 /* AsyncSocket.m in Sources */,
 				FA00A39319E5DD3D00E7B4D7 /* SSKeychainQuery.m in Sources */,
 				DA79EA2619E909CD0027A370 /* AddConversationViewController.m in Sources */,
+				FADD2E6819F9BC86004B86AE /* GCDAsyncSocket.m in Sources */,
 				DA79EA3319EA6C810027A370 /* ConversationItemView.m in Sources */,
 				DA1A4AC319E1770700565763 /* ConversationListViewController.m in Sources */,
 				DA1A4ABD19E1770700565763 /* main.m in Sources */,

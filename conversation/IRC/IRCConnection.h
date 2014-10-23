@@ -29,13 +29,13 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AsyncSocket.h"
+#import "GCDAsyncSocket.h"
 #import "NSString+Methods.h"
 
 @class IRCClient;
 
 @interface IRCConnection : NSObject {
-    AsyncSocket *asyncSocket;
+    GCDAsyncSocket *socket;
 }
 
 - (id)initWithClient:(IRCClient *)client;
