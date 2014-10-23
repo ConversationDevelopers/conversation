@@ -157,7 +157,7 @@
         line = [line stringByAppendingString:@"\r\n"];
     }
     NSLog(@">> %@", line);
-    NSData *data = [line dataUsingEncoding:self.client.configuration];
+    NSData *data = [line dataUsingEncodingFromConfiguration:self.client.configuration];
     [self writeDataToSocket:data];
 }
 

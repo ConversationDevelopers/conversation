@@ -174,7 +174,7 @@
     return encodedString;
 }
 
-- (NSData *)dataUsingEncoding:(IRCConnectionConfiguration *)configuration
+- (NSData *)dataUsingEncodingFromConfiguration:(IRCConnectionConfiguration *)configuration
 {
     NSStringEncoding encoding;
     if (configuration && configuration.socketEncodingType) {
@@ -184,4 +184,5 @@
     }
     return [self dataUsingEncoding:encoding allowLossyConversion:NO];
 }
+
 @end

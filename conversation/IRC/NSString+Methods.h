@@ -39,7 +39,7 @@
 - (BOOL) isValidServerAddress;
 - (BOOL) isValidNickname:(IRCClient *)client;
 - (BOOL) isValidUsername;
-- (NSData *)dataUsingEncoding:(IRCConnectionConfiguration *)configuration;
+- (NSData *)dataUsingEncodingFromConfiguration:(IRCConnectionConfiguration *)configuration;
 
 + (NSString *) stringWithCString:(const char *)string usingEncodingPreference:(IRCConnectionConfiguration *)configuration;
 
