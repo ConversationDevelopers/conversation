@@ -148,7 +148,7 @@
 
 - (void)close
 {
-    [asyncSocket disconnectAfterReadingAndWriting];
+    [asyncSocket disconnectAfterWriting];
 }
 
 - (void)sendData:(NSString *)line
