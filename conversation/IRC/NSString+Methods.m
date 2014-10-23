@@ -36,140 +36,126 @@
 
 - (BOOL) isValidChannelName:(IRCClient *)client
 {
-    /* Validate that parameters are valid before continuing */
-    if ([self isKindOfClass:[NSString class]]) {
-        
-        /* Get the channel prefix characters allowed by the server */
-        NSString *acceptedChannelPrefixesByServer = [IRCClient getChannelPrefixCharacters:client];
-        
-        /* Turn both strings into character arrays for parsing */
-        char* prefixes = malloc([acceptedChannelPrefixesByServer length]);
-        strcpy(prefixes, [acceptedChannelPrefixesByServer UTF8String]);
-        char* prefixesBeforeIteration = prefixes;
-        
-        char*  channel = malloc([self length]+1);
-        strcpy(channel, [self UTF8String]);
-        char* channelBeforeIteration = channel;
-        
-        /* Some IRC bouncers prefix special channels with a '~' we will skip this */
-        if (*channel == '~') {
+    /* Get the channel prefix characters allowed by the server */
+    NSString *acceptedChannelPrefixesByServer = [IRCClient getChannelPrefixCharacters:client];
+    
+    /* Turn both strings into character arrays for parsing */
+    char* prefixes = malloc([acceptedChannelPrefixesByServer length]);
+    strcpy(prefixes, [acceptedChannelPrefixesByServer UTF8String]);
+    char* prefixesBeforeIteration = prefixes;
+    
+    char*  channel = malloc([self length]+1);
+    strcpy(channel, [self UTF8String]);
+    char* channelBeforeIteration = channel;
+    
+    /* Some IRC bouncers prefix special channels with a '~' we will skip this */
+    if (*channel == '~') {
+        channel++;
+    }
+    
+    BOOL channelHasPrefix = NO;
+    
+    /* Iterate over prefixes accepted by the server and set YES if we find a match. */
+    while (*prefixes != '\0') {
+        if (*prefixes == *channel) {
+            channelHasPrefix = YES;
+            break;
+        }
+        prefixes++;
+    }
+    if (channelHasPrefix) {
+        /* Continue iterating on the channel name and halt if we find an invalid character */
+        while (*channel != '\0') {
+            if (*channel == ' ' || *channel == '\007' || *channel == ',') {
+                channel = channelBeforeIteration;
+                free(channel);
+                prefixes = prefixesBeforeIteration;
+                free(prefixes);
+                return NO;
+            }
             channel++;
         }
-        
-        BOOL channelHasPrefix = NO;
-        
-        /* Iterate over prefixes accepted by the server and set YES if we find a match. */
-        while (*prefixes != '\0') {
-            if (*prefixes == *channel) {
-                channelHasPrefix = YES;
-                break;
-            }
-            prefixes++;
-        }
-        if (channelHasPrefix) {
-            /* Continue iterating on the channel name and halt if we find an invalid character */
-            while (*channel != '\0') {
-                if (*channel == ' ' || *channel == '\007' || *channel == ',') {
-                    channel = channelBeforeIteration;
-                    free(channel);
-                    prefixes = prefixesBeforeIteration;
-                    free(prefixes);
-                    return NO;
-                }
-                channel++;
-            }
-            channel = channelBeforeIteration;
-            free(channel);
-            prefixes = prefixesBeforeIteration;
-            free(prefixes);
-            return YES;
-        } else {
-            channel = channelBeforeIteration;
-            free(channel);
-            prefixes = prefixesBeforeIteration;
-            free(prefixes);
-            return NO;
-        }
+        channel = channelBeforeIteration;
+        free(channel);
+        prefixes = prefixesBeforeIteration;
+        free(prefixes);
+        return YES;
+    } else {
+        channel = channelBeforeIteration;
+        free(channel);
+        prefixes = prefixesBeforeIteration;
+        free(prefixes);
+        return NO;
     }
     return NO;
 }
 
 - (BOOL) isValidServerAddress
 {
-    if ([self isKindOfClass:[NSString class]]) {
-        /* Convert address to character array */
-        const char* addressAsCharArray = [self UTF8String];
-        
-        /* Check if the address is a valid IPv4 address */
-        struct in_addr dst;
-        int isIPv4Address = inet_pton(AF_INET, addressAsCharArray, &(dst.s_addr));
-        if (isIPv4Address == 1) {
-            return YES;
-        }
-        
-        /* Check if the address is a valid IPv6 address */
-        struct in6_addr dst6;
-        int isIPv6Address = inet_pton(AF_INET6, addressAsCharArray, &dst6);
-        if (isIPv6Address == 1) {
-            return YES;
-        }
-        
-        NSString *regex = @"^(([a-zA-Z]{1})|([a-zA-Z]{1}[a-zA-Z]{1})|([a-zA-Z]{1}[0-9]{1})|([0-9]{1}[a-zA-Z]{1})|([a-zA-Z0-9][a-zA-Z0-9-_]{1,61}[a-zA-Z0-9]))\\.([a-zA-Z]{2,6}|[a-zA-Z0-9-]{2,30}\\.[a-zA-Z]{2,3})$";
-        NSPredicate *hostValidation = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
-        return [hostValidation evaluateWithObject: self];
+    /* Convert address to character array */
+    const char* addressAsCharArray = [self UTF8String];
+    
+    /* Check if the address is a valid IPv4 address */
+    struct in_addr dst;
+    int isIPv4Address = inet_pton(AF_INET, addressAsCharArray, &(dst.s_addr));
+    if (isIPv4Address == 1) {
+        return YES;
     }
-    return NO;
+    
+    /* Check if the address is a valid IPv6 address */
+    struct in6_addr dst6;
+    int isIPv6Address = inet_pton(AF_INET6, addressAsCharArray, &dst6);
+    if (isIPv6Address == 1) {
+        return YES;
+    }
+    
+    NSString *regex = @"^(([a-zA-Z]{1})|([a-zA-Z]{1}[a-zA-Z]{1})|([a-zA-Z]{1}[0-9]{1})|([0-9]{1}[a-zA-Z]{1})|([a-zA-Z0-9][a-zA-Z0-9-_]{1,61}[a-zA-Z0-9]))\\.([a-zA-Z]{2,6}|[a-zA-Z0-9-]{2,30}\\.[a-zA-Z]{2,3})$";
+    NSPredicate *hostValidation = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
+    return [hostValidation evaluateWithObject: self];
 }
 
 - (BOOL) isValidNickname:(IRCClient *)client
 {
-    if ([self isKindOfClass:[NSString class]]) {
-        
-        int maxNickLength = 0;
-        if (client) {
-            maxNickLength = [[[client featuresSupportedByServer] objectForKey:@"NICKLEN"] intValue];
-        }
-        if (maxNickLength == 0) {
-            maxNickLength = 16;
-        }
-        
-        // Check length
-        if (self.length < 2 || self.length > 16)
-            return NO;
-
-        // Check for invalid characters
-        NSCharacterSet *chars = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_-\[]|{}^`"] invertedSet];
-        if([self rangeOfCharacterFromSet:chars].location != NSNotFound)
-            return NO;
-        
-        // Check if first character is a digit
-        NSCharacterSet *number = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
-        if([self rangeOfCharacterFromSet:number].location == 0)
-            return NO;
-        return YES;
+    int maxNickLength = 0;
+    if (client) {
+        maxNickLength = [[[client featuresSupportedByServer] objectForKey:@"NICKLEN"] intValue];
     }
-    return NO;
+    if (maxNickLength == 0) {
+        maxNickLength = 16;
+    }
+    
+    // Check length
+    if (self.length < 2 || self.length > 16)
+        return NO;
+    
+    // Check for invalid characters
+    NSCharacterSet *chars = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_-\[]|{}^`"] invertedSet];
+    if([self rangeOfCharacterFromSet:chars].location != NSNotFound)
+        return NO;
+    
+    // Check if first character is a digit
+    NSCharacterSet *number = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+    if([self rangeOfCharacterFromSet:number].location == 0)
+        return NO;
+    return YES;
 }
 
 - (BOOL)isValidUsername
 {
-    if ([self isKindOfClass:[NSString class]]) {
-        /* Validate that length is 1 or larger */
-        if (self.length < 1) {
+    /* Validate that length is 1 or larger */
+    if (self.length < 1) {
+        return NO;
+    }
+    
+    /* Parse username and ensure it does not contain carriage return, line feed, @, or !. */
+    const char* username = [self UTF8String];
+    while (*username != '\0') {
+        if (*username == '\010' || *username == '\014' || *username == '@' || *username == '!') {
             return NO;
         }
-        
-        /* Parse username and ensure it does not contain carriage return, line feed, @, or !. */
-        const char* username = [self UTF8String];
-        while (*username != '\0') {
-            if (*username == '\010' || *username == '\014' || *username == '@' || *username == '!') {
-                return NO;
-            }
-            username++;
-        }
-        return YES;
+        username++;
     }
-    return NO;
+    return YES;
 }
 
 + (NSString *) stringWithCString:(const char *)string usingEncodingPreference:(IRCConnectionConfiguration *)configuration
