@@ -263,7 +263,7 @@
     /* Copy the characters from the recipient range we calculated earlier */
     recipient = malloc(recipientLength + 1);
     strncpy(recipient, lineBeforeIteration, recipientLength);
-    command[commandLength] = '\0';
+    recipient[recipientLength] = '\0';
     lineBeforeIteration = lineBeforeIteration + recipientLength;
     
     if (*line != '\0') {
