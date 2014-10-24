@@ -74,47 +74,19 @@
         NSLog(@"Error: %@", err);
     } else {
         NSLog(@"Connecting..");
+        
+        if (self.client.configuration.connectUsingSecureLayer) {
+            // Skip certificate validation. FOR TESTING PURPOSES ONLY DO NEVER LET THIS GET INTO PRODUCTION EVER.
+            [socket startTLS:nil];
+        }
+        
         [socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:1];
     }
 }
 
-- (void)socket:(GCDAsyncSocket *)sender didAcceptNewSocket:(GCDAsyncSocket *)newSocket
-{
-    NSLog(@"new socket");
-    socket = newSocket;
-    // Configure SSL/TLS settings
-    NSMutableDictionary *settings = [NSMutableDictionary dictionaryWithCapacity:3];
-    
-    [settings setObject:self.connectionHost forKey:(NSString *)kCFStreamSSLPeerName];
-    
-    // Skip certificate validation. FOR TESTING PURPOSES ONLY DO NEVER LET THIS GET INTO PRODUCTION EVER.
-    [settings setObject:[NSNumber numberWithBool:NO] forKey:(NSString *)kCFStreamSSLValidatesCertificateChain];
-    
-    if (self.client.configuration.connectUsingSecureLayer) {
-        [socket startTLS:settings];
-    }
-    
-    [self.client clientDidConnect];
-    
-    [socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:1];
-}
-
-
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
 {
     NSLog(@"onSocket:%p didConnectToHost:%@ port:%hu", sock, host, port);
-    
-    // Configure SSL/TLS settings
-    NSMutableDictionary *settings = [NSMutableDictionary dictionaryWithCapacity:3];
-    
-    [settings setObject:host forKey:(NSString *)kCFStreamSSLPeerName];
-    
-    // Skip certificate validation. FOR TESTING PURPOSES ONLY DO NEVER LET THIS GET INTO PRODUCTION EVER.
-    [settings setObject:[NSNumber numberWithBool:NO] forKey:(NSString *)kCFStreamSSLValidatesCertificateChain];
-    
-    if (self.client.configuration.connectUsingSecureLayer) {
-        [sock startTLS:settings];
-    }
     
     [self.client clientDidConnect];
     
@@ -174,7 +146,12 @@
 
 - (void)close
 {
-    [socket disconnectAfterWriting];
+    if (socket) {
+        [socket disconnect];
+        [socket setDelegate:nil delegateQueue:NULL];
+        [self.messageQueue removeAllObjects];
+        [self.client clientDidDisconnect];
+    }
 }
 
 - (void)sendData:(NSString *)line
