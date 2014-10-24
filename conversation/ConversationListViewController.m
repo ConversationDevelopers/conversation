@@ -29,7 +29,7 @@
  */
 
 #import "ConversationListViewController.h"
-#import "DetailViewController.h"
+#import "ChatViewController.h"
 #import "EditConnectionViewController.h"
 #import "AddConversationViewController.h"
 #import "IRCConversation.h"
@@ -73,7 +73,8 @@
     
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     
-    self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+//    self.chatViewController = (ChatViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+    _chatViewController = [[ChatViewController alloc] init];    
     
     NSArray *configurations = [[AppPreferences sharedPrefs] getConnectionConfigurations];
     for (NSDictionary *dict in configurations) {
@@ -208,9 +209,9 @@
     IRCClient *client = [self.connections objectAtIndex:indexPath.section];
     IRCChannel *channel = [client.getChannels objectAtIndex:indexPath.row];
     
-    DetailViewController *controller = [[DetailViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    controller.title = channel.name;
-    [self.navigationController pushViewController:controller animated:YES];
+    _chatViewController.channel = channel;
+    
+    [self.navigationController pushViewController:_chatViewController animated:YES];
 
 }
 

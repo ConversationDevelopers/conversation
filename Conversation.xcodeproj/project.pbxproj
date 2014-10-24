@@ -10,9 +10,10 @@
 		DA1A4ABD19E1770700565763 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4ABC19E1770700565763 /* main.m */; };
 		DA1A4AC019E1770700565763 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4ABF19E1770700565763 /* AppDelegate.m */; };
 		DA1A4AC319E1770700565763 /* ConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AC219E1770700565763 /* ConversationListViewController.m */; };
-		DA1A4AC619E1770700565763 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AC519E1770700565763 /* DetailViewController.m */; };
+		DA1A4AC619E1770700565763 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AC519E1770700565763 /* ChatViewController.m */; };
 		DA1A4ADA19E1770700565763 /* conversationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AD919E1770700565763 /* conversationTests.m */; };
 		DA1A4AF019E181C400565763 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1A4AEF19E181C400565763 /* CFNetwork.framework */; };
+		DA41794B19FAF9FF007784F0 /* ChatMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA41794A19FAF9FF007784F0 /* ChatMessageView.m */; };
 		DA79EA1E19E6F8C50027A370 /* AppPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA1D19E6F8C50027A370 /* AppPreferences.m */; };
 		DA79EA2619E909CD0027A370 /* AddConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA2519E909CD0027A370 /* AddConversationViewController.m */; };
 		DA79EA2C19E9237A0027A370 /* UITableView+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA2B19E9237A0027A370 /* UITableView+Methods.m */; };
@@ -59,12 +60,14 @@
 		DA1A4ABF19E1770700565763 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		DA1A4AC119E1770700565763 /* ConversationListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConversationListViewController.h; sourceTree = "<group>"; };
 		DA1A4AC219E1770700565763 /* ConversationListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConversationListViewController.m; sourceTree = "<group>"; };
-		DA1A4AC419E1770700565763 /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
-		DA1A4AC519E1770700565763 /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+		DA1A4AC419E1770700565763 /* ChatViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
+		DA1A4AC519E1770700565763 /* ChatViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
 		DA1A4AD319E1770700565763 /* conversationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = conversationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA1A4AD819E1770700565763 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DA1A4AD919E1770700565763 /* conversationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = conversationTests.m; sourceTree = "<group>"; };
 		DA1A4AEF19E181C400565763 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		DA41794919FAF9FF007784F0 /* ChatMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatMessageView.h; sourceTree = "<group>"; };
+		DA41794A19FAF9FF007784F0 /* ChatMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatMessageView.m; sourceTree = "<group>"; };
 		DA79EA1C19E6F8C50027A370 /* AppPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppPreferences.h; sourceTree = "<group>"; };
 		DA79EA1D19E6F8C50027A370 /* AppPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppPreferences.m; sourceTree = "<group>"; };
 		DA79EA2419E909CD0027A370 /* AddConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddConversationViewController.h; sourceTree = "<group>"; };
@@ -174,8 +177,10 @@
 				DA79EA3219EA6C810027A370 /* ConversationItemView.m */,
 				DA79EA2419E909CD0027A370 /* AddConversationViewController.h */,
 				DA79EA2519E909CD0027A370 /* AddConversationViewController.m */,
-				DA1A4AC419E1770700565763 /* DetailViewController.h */,
-				DA1A4AC519E1770700565763 /* DetailViewController.m */,
+				DA41794919FAF9FF007784F0 /* ChatMessageView.h */,
+				DA41794A19FAF9FF007784F0 /* ChatMessageView.m */,
+				DA1A4AC419E1770700565763 /* ChatViewController.h */,
+				DA1A4AC519E1770700565763 /* ChatViewController.m */,
 				DAC65A3519EAA24300E00A73 /* Resources */,
 				DA1A4ABA19E1770700565763 /* Supporting Files */,
 				FA109B3819E4190C0068DC29 /* Preferences */,
@@ -422,6 +427,7 @@
 				FA109B3719E419040068DC29 /* IRCConnectionConfiguration.m in Sources */,
 				DA79EA2C19E9237A0027A370 /* UITableView+Methods.m in Sources */,
 				DA79EA3019E92AF20027A370 /* PreferencesListViewController.m in Sources */,
+				DA41794B19FAF9FF007784F0 /* ChatMessageView.m in Sources */,
 				FA109B3E19E420320068DC29 /* IRCChannel.m in Sources */,
 				DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */,
 				DA79EA1E19E6F8C50027A370 /* AppPreferences.m in Sources */,
@@ -430,7 +436,7 @@
 				FA109B3419E410D80068DC29 /* IRCClient.m in Sources */,
 				FA6E45ED19ED65590083A326 /* IRCUser.m in Sources */,
 				FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */,
-				DA1A4AC619E1770700565763 /* DetailViewController.m in Sources */,
+				DA1A4AC619E1770700565763 /* ChatViewController.m in Sources */,
 				DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */,
 				FAEE1E6019EBEA040041439F /* Messages.m in Sources */,
 				FAEE1E6319EBFBA20041439F /* IRCConversation.m in Sources */,

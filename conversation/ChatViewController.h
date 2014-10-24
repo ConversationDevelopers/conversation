@@ -29,11 +29,12 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "IRCChannel.h"
 
-@interface DetailViewController : UITableViewController
+@interface ChatViewController : UITableViewController
 
-@property (strong, nonatomic) id detailItem;
-@property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
+@property (nonatomic, retain) NSMutableArray *messages;
+@property (nonatomic) IRCChannel *channel;
 
 @end
 

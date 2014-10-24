@@ -45,6 +45,7 @@ static unsigned short AutomaticTableSection = 2;
 static unsigned short EncodingTableSection = 3;
 
 @implementation EditConnectionViewController
+
 - (id) init {
     if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
         return nil;

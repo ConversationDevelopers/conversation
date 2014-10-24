@@ -30,12 +30,12 @@
 
 #import <UIKit/UIKit.h>
 
-@class DetailViewController;
+@class ChatViewController;
 @class IRCClient;
 
 @interface ConversationListViewController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
-@property (strong, nonatomic) DetailViewController *detailViewController;
+@property (strong, nonatomic) ChatViewController *chatViewController;
 @property (nonatomic, retain) NSMutableArray *connections;
 
 - (void)reloadData;
