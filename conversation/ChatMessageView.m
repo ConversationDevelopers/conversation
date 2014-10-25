@@ -55,6 +55,7 @@
 {
     
     [super layoutSubviews];
+
     
     NSString *time = @"";
     if (_timestamp) {
@@ -89,6 +90,7 @@
     textLayer.backgroundColor = [UIColor clearColor].CGColor;
     [textLayer setForegroundColor:[[UIColor clearColor] CGColor]];
     [textLayer setContentsScale:[[UIScreen mainScreen] scale]];
+    [textLayer setRasterizationScale:[[UIScreen mainScreen] scale]];
     
     CGRect rect = [self calculateRect];
     
@@ -103,6 +105,8 @@
     textLayer.backgroundColor = [UIColor clearColor].CGColor;
     [textLayer setForegroundColor:[[UIColor clearColor] CGColor]];
     [textLayer setContentsScale:[[UIScreen mainScreen] scale]];
+    [textLayer setRasterizationScale:[[UIScreen mainScreen] scale]];
+    
     textLayer.wrapped = YES;
     
     textLayer.frame = CGRectMake(self.bounds.size.width-timestamp.size.width-5, 0, timestamp.size.width, timestamp.size.height);
