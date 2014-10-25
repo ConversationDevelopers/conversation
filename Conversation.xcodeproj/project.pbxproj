@@ -40,6 +40,7 @@
 		FA109B3B19E41D540068DC29 /* IRCChannelConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B3A19E41D540068DC29 /* IRCChannelConfiguration.m */; };
 		FA109B3E19E420320068DC29 /* IRCChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B3D19E420320068DC29 /* IRCChannel.m */; };
 		FA6E45ED19ED65590083A326 /* IRCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6E45EC19ED65590083A326 /* IRCUser.m */; };
+		FA93176419FB4DD200A94912 /* IRCCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = FA93176319FB4DD200A94912 /* IRCCommands.m */; };
 		FAC1679119F84268009856F0 /* IRCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC1679019F84268009856F0 /* IRCMessage.m */; };
 		FADD2E6819F9BC86004B86AE /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = FADD2E6619F9BC86004B86AE /* GCDAsyncSocket.m */; };
 		FAEE1E6019EBEA040041439F /* Messages.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEE1E5F19EBEA040041439F /* Messages.m */; };
@@ -120,6 +121,8 @@
 		FA109B3D19E420320068DC29 /* IRCChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCChannel.m; sourceTree = "<group>"; };
 		FA6E45EB19ED65590083A326 /* IRCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCUser.h; sourceTree = "<group>"; };
 		FA6E45EC19ED65590083A326 /* IRCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCUser.m; sourceTree = "<group>"; };
+		FA93176219FB4DD200A94912 /* IRCCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCCommands.h; sourceTree = "<group>"; };
+		FA93176319FB4DD200A94912 /* IRCCommands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCCommands.m; sourceTree = "<group>"; };
 		FAC1678F19F84268009856F0 /* IRCMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IRCMessage.h; path = Messages/IRCMessage.h; sourceTree = "<group>"; };
 		FAC1679019F84268009856F0 /* IRCMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IRCMessage.m; path = Messages/IRCMessage.m; sourceTree = "<group>"; };
 		FADD2E6619F9BC86004B86AE /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
@@ -287,6 +290,8 @@
 				FAEE1E6219EBFBA20041439F /* IRCConversation.m */,
 				FA6E45EB19ED65590083A326 /* IRCUser.h */,
 				FA6E45EC19ED65590083A326 /* IRCUser.m */,
+				FA93176219FB4DD200A94912 /* IRCCommands.h */,
+				FA93176319FB4DD200A94912 /* IRCCommands.m */,
 			);
 			path = IRC;
 			sourceTree = "<group>";
@@ -455,6 +460,7 @@
 				FA109B3E19E420320068DC29 /* IRCChannel.m in Sources */,
 				DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */,
 				DA79EA1E19E6F8C50027A370 /* AppPreferences.m in Sources */,
+				FA93176419FB4DD200A94912 /* IRCCommands.m in Sources */,
 				FA109B3B19E41D540068DC29 /* IRCChannelConfiguration.m in Sources */,
 				DA379D5319FB3E620031E30B /* PHFComposeBarView.m in Sources */,
 				FAC1679119F84268009856F0 /* IRCMessage.m in Sources */,
