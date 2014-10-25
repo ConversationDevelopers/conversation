@@ -29,7 +29,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "InputBarView.h"
 #import "PHFComposeBarView.h"
 
 @class IRCChannel;
