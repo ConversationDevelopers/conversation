@@ -35,7 +35,11 @@
 
 + (void)sendMessage:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client
 {
-    [client.connection send:[NSString stringWithFormat:@"PRIVMSG %@ :%@", recipient, message]];
+    NSArray *lines = [message componentsSeparatedByString:@"\r\n"];
+    for (NSString *line in lines) {
+        // TODO: Seperate lines by message limit.
+        [client.connection send:[NSString stringWithFormat:@"PRIVMSG %@ :%@", recipient, line]];
+    }
 }
 
 + (void)sendCTCPMessage:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client
