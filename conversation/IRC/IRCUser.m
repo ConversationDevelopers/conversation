@@ -47,6 +47,21 @@
     return nil;
 }
 
+- (instancetype) initWithNickname:(NSString *)nickname andUsername:(NSString *)username andHostname:(NSString *)hostname onClient:(IRCClient *)client
+{
+    if ((self = [super init])) {
+        self.nick = nickname;
+        self.username = username;
+        self.hostname = hostname;
+        
+        self.isAway = NO;
+        
+        self.channelPrivileges = 0;
+        return self;
+    }
+    return nil;
+}
+
 + (IRCUser *)fromSender:(const char **)senderDict onChannel:(IRCChannel *)channel createIfMissing:(BOOL)createIfMissing
 {
     NSString *nickString = [NSString stringWithCString:senderDict[1] usingEncodingPreference:[[channel client] configuration]];

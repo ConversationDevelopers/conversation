@@ -30,6 +30,7 @@
 
 #import "IRCClient.h"
 #import "IRCConnection.h"
+#import "IRCUser.h"
 #import "IRCChannel.h"
 #import "IRCConversation.h"
 #import "ConversationListViewController.h"
@@ -104,7 +105,10 @@
     self.isAttemptingConnection = NO;
     self.isAttemptingRegistration = YES;
     
-    self.currentNicknameOnConnection = self.configuration.primaryNickname;
+    self.currentUserOnConnection = [[IRCUser alloc] initWithNickname:self.configuration.primaryNickname
+                                                         andUsername:self.configuration.usernameForRegistration
+                                                         andHostname:@""
+                                                            onClient:self];
     
     /* Send initial registration */
     if (self.configuration.serverPasswordReference) {
@@ -362,17 +366,17 @@
             /* The server did not accept our nick request, let's see if this happened during initial registration. */
             if ([self isAttemptingRegistration]) {
                 /* The nick error did happen during initial registration, we will check if we have already tried the secondary nickname */
-                if ([self.currentNicknameOnConnection isEqualToString:self.configuration.primaryNickname]) {
+                if ([self.currentUserOnConnection.nick isEqualToString:self.configuration.primaryNickname]) {
                     /* This is the first occurance of this error, so we will try registration again with the secondary nickname. */
                     [self.connection send:[NSString stringWithFormat:@"NICK %@", self.configuration.secondaryNickname]];
-                    self.currentNicknameOnConnection = self.configuration.secondaryNickname;
+                    self.currentUserOnConnection.nick = self.configuration.secondaryNickname;
                 } else {
                     /* The secondary nickname has already been attempted, so we will append an underscore to the nick until
                      we find one that the server accepts. If we cannot find a nick within 25 characters, we will abort. */
-                    if ([self.currentNicknameOnConnection length] < 25) {
-                        NSString *newNickName = [NSString stringWithFormat:@"%@_", self.currentNicknameOnConnection];
+                    if ([self.currentUserOnConnection.nick length] < 25) {
+                        NSString *newNickName = [NSString stringWithFormat:@"%@_", self.currentUserOnConnection.nick];
                         [self.connection send:[@"NICK " stringByAppendingString:newNickName]];
-                        self.currentNicknameOnConnection = newNickName;
+                        self.currentUserOnConnection.nick = newNickName;
                     } else {
                         NSLog(@"Registration failed. Disconnecting..");
                         [self disconnect];
