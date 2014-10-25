@@ -66,6 +66,7 @@
 - (void)clientDidReceiveData:(const char *)decodedData;
 - (void)clientDidSendData;
 + (NSString *)getChannelPrefixCharacters:(IRCClient *)client;
+- (void)validateQueryStatusOnAllItems;
 - (void)disconnect;
 - (void)autojoin;
 

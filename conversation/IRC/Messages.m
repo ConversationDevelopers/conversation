@@ -382,6 +382,15 @@
         }
         indexOfItem++;
     }
+    
+    if ([client.getQueries count] > 0) {
+        [NSTimer scheduledTimerWithTimeInterval:30.0
+                                         target:client
+                                       selector:@selector(validateQueryStatusOnAllItems)
+                                       userInfo:nil
+                                        repeats:NO];
+    }
+    
 }
 
 + (void)clientReceivedServerPasswordMismatchError:(IRCClient *)client
