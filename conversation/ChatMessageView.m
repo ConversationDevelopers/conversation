@@ -75,7 +75,7 @@
     _nameLabel.text = _nickname;
     _nameLabel.frame = frame;
     
-    frame.origin.y += 30;
+    frame.origin.y += 25;
     frame.size = _message.size;
     frame.size.width = self.frame.size.width - 10.0;
 

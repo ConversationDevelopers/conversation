@@ -32,6 +32,7 @@
 #import "ChatMessageView.h"
 #import "IRCMessage.h"
 #import "IRCUser.h"
+#import "IRCCommands.h"
 
 @interface ChatViewController ()
 @property (readonly, nonatomic) UITableView *tableView;
@@ -150,10 +151,17 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView
 {
-    NSString *text = [NSString stringWithFormat:@"Main button pressed. Text:\n%@", [composeBarView text]];
-    NSLog(@"TEXT: %@", text);
+    NSString *msg = [composeBarView text];
+    [IRCCommands sendMessage:msg toRecipient:_channel.name onClient:_channel.client];
+    IRCMessage *message = [[IRCMessage alloc] initWithMessage:msg
+                                                       OfType:ET_PRIVMSG
+                                               inConversation:_channel
+                                                     bySender:_channel.client.currentUserOnConnection
+                                                       atTime:[NSDate date]];
+    [_messages addObject:message];
     [composeBarView setText:@"" animated:YES];
     [composeBarView resignFirstResponder];
+    [_tableView reloadData];
 }
 
 - (void)composeBarViewDidPressUtilityButton:(PHFComposeBarView *)composeBarView
