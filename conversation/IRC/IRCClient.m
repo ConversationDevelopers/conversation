@@ -429,6 +429,10 @@
             [Messages clientReceivedAuthenticationAccepted:line onClient:self];
             break;
             
+        case ERR_SASLABORTED:
+            [Messages clientreceivedAuthenticationAborted:line onClient:self];
+            break;
+            
         case ERR_NICKLOCKED:
         case ERR_SASLFAIL:
         case ERR_SASLTOOLONG:

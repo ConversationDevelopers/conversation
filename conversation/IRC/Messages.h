@@ -44,6 +44,8 @@
 
 + (void)clientReceivedAuthenticationAccepted:(const char*)message onClient:(IRCClient *)client;
 
++ (void)clientreceivedAuthenticationAborted:(const char *)message onClient:(IRCClient *)client;
+
 + (void)clientReceivedAuthenticationError:(const char*)message onClient:(IRCClient *)client;
 
 + (void)clientReceivedCAPMessage:(const char *)message onClient:(IRCClient *)client;

@@ -60,13 +60,16 @@
 
 + (void)clientReceivedAuthenticationAccepted:(const char*)message onClient:(IRCClient *)client
 {
-    client.isAwaitingAuthenticationResponse = NO;
     [client.connection send:@"CAP END"];
+}
+
++ (void)clientreceivedAuthenticationAborted:(const char *)message onClient:(IRCClient *)client
+{
+    client.isAwaitingAuthenticationResponse = NO;
 }
 
 + (void)clientReceivedAuthenticationError:(const char*)message onClient:(IRCClient *)client
 {
-    client.isAwaitingAuthenticationResponse = NO;
     [client.connection send:@"CAP END"];
 }
 
