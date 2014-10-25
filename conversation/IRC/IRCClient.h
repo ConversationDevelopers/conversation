@@ -67,6 +67,7 @@
 - (void)clientDidSendData;
 + (NSString *)getChannelPrefixCharacters:(IRCClient *)client;
 - (void)disconnect;
+- (void)autojoin;
 
 - (BOOL)addChannel:(IRCChannel *)channel;
 - (BOOL)removeChannel:(IRCChannel *)channel;
