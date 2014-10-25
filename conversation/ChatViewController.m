@@ -97,6 +97,12 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (void)loadView
 {
     self.title = _channel.configuration.name;
+    UIBarButtonItem *userlistButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Userlist"]
+                                                                       style:UIBarButtonItemStylePlain
+                                                                      target:self
+                                                                      action:@selector(userList:)];
+    self.navigationItem.rightBarButtonItem = userlistButton;
+    
     
     UIView *view = [[UIView alloc] initWithFrame:kInitialViewFrame];
     [view setBackgroundColor:[UIColor whiteColor]];
@@ -144,9 +150,19 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                      completion:NULL];
 }
 
+- (void)userList:(id)sender
+{
+    NSLog(@"Userlist");
+}
+
 - (void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView
 {
     NSLog(@"Info button clicked");
+}
+
+- (void)composeBarViewDidPressUtilityButton:(PHFComposeBarView *)composeBarView
+{
+    NSLog(@"Utility button pressed");
 }
 
 - (void)sendMessage:(NSString *)message
@@ -160,11 +176,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     [_messages addObject:ircmsg];
     [_composeBarView setText:@"" animated:YES];
     [_tableView reloadData];
-}
-
-- (void)composeBarViewDidPressUtilityButton:(PHFComposeBarView *)composeBarView
-{
-    NSLog(@"Utility button pressed");
 }
 
 #pragma mark - Table View
