@@ -29,7 +29,6 @@
  */
 
 #import "ChatMessageView.h"
-#import <CoreText/CoreText.h>
 
 @implementation ChatMessageView
 
@@ -85,22 +84,17 @@
                    value:[UIColor lightGrayColor]
                    range:NSMakeRange(0, timestamp.length)];
     
-//    CATextLayer *contentLayer = [[CATextLayer alloc] init];
-//    contentLayer.frame = self.bounds;
-    
     CATextLayer *textLayer = [[CATextLayer alloc] init];
     textLayer.string = string;
     textLayer.backgroundColor = [UIColor clearColor].CGColor;
     [textLayer setForegroundColor:[[UIColor clearColor] CGColor]];
     [textLayer setContentsScale:[[UIScreen mainScreen] scale]];
-
     
     CGRect rect = [self calculateRect];
     
     textLayer.frame = CGRectMake(10, 0, self.bounds.size.width-20, rect.size.height);
     textLayer.wrapped = YES;
     
-//    [contentLayer addSublayer:textLayer];
     [self.contentView.layer addSublayer:textLayer];
     textLayer = nil;
     
@@ -113,7 +107,6 @@
     
     textLayer.frame = CGRectMake(self.bounds.size.width-timestamp.size.width-5, 0, timestamp.size.width, timestamp.size.height);
     
-//    [contentLayer addSublayer:textLayer];
     self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, rect.size.height);
     [self.contentView.layer addSublayer:textLayer];
     

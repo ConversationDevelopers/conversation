@@ -17,7 +17,6 @@
 		DA379D5219FB3E620031E30B /* PHFComposeBarView_TextView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA379D4E19FB3E620031E30B /* PHFComposeBarView_TextView.m */; };
 		DA379D5319FB3E620031E30B /* PHFComposeBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA379D5019FB3E620031E30B /* PHFComposeBarView.m */; };
 		DA379D5619FB3FA90031E30B /* PHFDelegateChain.m in Sources */ = {isa = PBXBuildFile; fileRef = DA379D5519FB3FA90031E30B /* PHFDelegateChain.m */; };
-		DA37A3C919FBDDC50031E30B /* message.html in Resources */ = {isa = PBXBuildFile; fileRef = DA37A3C819FBDDC50031E30B /* message.html */; };
 		DA41794B19FAF9FF007784F0 /* ChatMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA41794A19FAF9FF007784F0 /* ChatMessageView.m */; };
 		DA79EA1E19E6F8C50027A370 /* AppPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA1D19E6F8C50027A370 /* AppPreferences.m */; };
 		DA79EA2619E909CD0027A370 /* AddConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA2519E909CD0027A370 /* AddConversationViewController.m */; };
@@ -80,7 +79,6 @@
 		DA379D5019FB3E620031E30B /* PHFComposeBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHFComposeBarView.m; sourceTree = "<group>"; };
 		DA379D5419FB3FA90031E30B /* PHFDelegateChain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHFDelegateChain.h; sourceTree = "<group>"; };
 		DA379D5519FB3FA90031E30B /* PHFDelegateChain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHFDelegateChain.m; sourceTree = "<group>"; };
-		DA37A3C819FBDDC50031E30B /* message.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = message.html; sourceTree = "<group>"; };
 		DA41794919FAF9FF007784F0 /* ChatMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatMessageView.h; sourceTree = "<group>"; };
 		DA41794A19FAF9FF007784F0 /* ChatMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatMessageView.m; sourceTree = "<group>"; };
 		DA79EA1C19E6F8C50027A370 /* AppPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppPreferences.h; sourceTree = "<group>"; };
@@ -255,7 +253,6 @@
 		DAC65A3519EAA24300E00A73 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				DA37A3C819FBDDC50031E30B /* message.html */,
 				DAC65A3A19EAA2ED00E00A73 /* Base.lproj */,
 				DAC65A4219EAA2ED00E00A73 /* Images.xcassets */,
 			);
@@ -409,7 +406,6 @@
 				DAC65A4419EAA2ED00E00A73 /* LaunchScreen.xib in Resources */,
 				DA96223F19EDE217008D42EB /* networks.plist in Resources */,
 				DAC65A4819EAA2ED00E00A73 /* Images.xcassets in Resources */,
-				DA37A3C919FBDDC50031E30B /* message.html in Resources */,
 				DAC65A4519EAA2ED00E00A73 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
