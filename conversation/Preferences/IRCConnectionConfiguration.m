@@ -49,7 +49,7 @@
         self.serverPasswordReference = @"";
         self.socketEncodingType = NSUTF8StringEncoding;
         
-        self.disconnectMessage = @"Conversation IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)";
+        self.disconnectMessage = @"Conversation: IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)";
         self.channelDepartMessage = [self.disconnectMessage copy];
         
         self.automaticallyConnect =             NO;
