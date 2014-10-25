@@ -113,11 +113,11 @@
     [client.connection send:@"CAP END"];
 }
 
-+ (void)userReceivedMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client
++ (void)userReceivedMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
 {
     /* Check if the message begins and ends with a 0x01 character, denoting this is a CTCP request. */
     if (*message == '\001' && message[strlen(message) -1] == '\001') {
-        [self userReceivedCTCPMessage:message onRecepient:recepient byUser:senderDict onClient:client];
+        [self userReceivedCTCPMessage:message onRecepient:recepient byUser:senderDict onClient:client withTags:tags];
         return;
     }
     
@@ -165,7 +165,7 @@
     }
 }
 
-+ (void)userReceivedCTCPMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client
++ (void)userReceivedCTCPMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
 {
     
     /* Consume the begining CTCP character (0x01) */
@@ -193,7 +193,7 @@
         
         if (strcmp(ctcpCommand, "ACTION") == 0) {
             /* This is a CTCP ACTION, also known as an action message or a /me. We will send this to it's own handler.  */
-            [self userReceivedACTIONMessage:message onRecepient:recepient byUser:senderDict onClient:client];
+            [self userReceivedACTIONMessage:message onRecepient:recepient byUser:senderDict onClient:client withTags:tags];
             free(ctcpCommand);
             free(messageCopy);
             return;
@@ -205,7 +205,7 @@
     free(messageCopy);
 }
 
-+ (void)userReceivedACTIONMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client
++ (void)userReceivedACTIONMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
 {
     NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:[client configuration]];
     IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
@@ -252,7 +252,7 @@
     }
 }
 
-+ (void)userReceivedJOIN:(const char *[4])senderDict onChannel:(const char *)rchannel onClient:(IRCClient *)client
++ (void)userReceivedJOIN:(const char *[4])senderDict onChannel:(const char *)rchannel onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
 {
     /* Get the user that performed the JOIN */
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
@@ -272,7 +272,7 @@
     }
 }
 
-+ (void)userReceivedPART:(const char *[4])senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client withMessage:(char *)message
++ (void)userReceivedPART:(const char *[4])senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client withMessage:(char *)message withTags:(NSMutableDictionary *)tags
 {
     /* Get the user that performed the PART */
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
@@ -289,7 +289,7 @@
     }
 }
 
-+ (void)userReceivedNickchange:(const char *[4])senderDict toNick:(const char *)newNick onClient:(IRCClient *)client
++ (void)userReceivedNickchange:(const char *[4])senderDict toNick:(const char *)newNick onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
 {
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
     if ([[user nick] isEqualToString:client.currentUserOnConnection.nick]) {
@@ -299,7 +299,7 @@
     }
 }
 
-+ (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(const char *[4])senderDict onClient:(IRCClient *)client
++ (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(const char *[4])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
 {
     NSString *topicString = [NSString stringWithCString:topic usingEncodingPreference:[client configuration]];
     NSString *channelString = [NSString stringWithCString:rchannel usingEncodingPreference:[client configuration]];

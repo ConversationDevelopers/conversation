@@ -146,6 +146,38 @@
     /* Make a copy of the full message string */
     lineBeforeIteration = line;
     
+    /* This message starts with a message tag ( http://ircv3.atheme.org/specification/message-tags-3.2 ) */
+    NSMutableDictionary *tagsList = [[NSMutableDictionary alloc] init];
+    if (*line == '@') {
+        line++;
+        lineBeforeIteration++;
+        
+        int tagsLength;
+        while (*line != ' ' && *line != '\0') {
+            line++;
+            tagsLength++;
+        }
+        
+        char* tags = malloc(tagsLength + 1);
+        strncpy(tags, lineBeforeIteration, tagsLength);
+        tags[tagsLength] = '\0';
+        
+        NSString *tagsString = [NSString stringWithCString:tags usingEncodingPreference:self.configuration];
+        NSArray *seperatedTags = [tagsString componentsSeparatedByString:@";"];
+        
+        for (NSString *tag in seperatedTags) {
+            if ([tag containsString:@"="]) {
+                NSArray *components = [tag componentsSeparatedByString:@"="];
+                [tagsList setObject:components[1] forKey:components[0]];
+            } else {
+                [tagsList setObject:@"1" forKey:tag];
+            }
+        }
+        
+        line++;
+        lineBeforeIteration = line;
+    }
+    
     if (*line == ':') {
         /* Consume the : at the start of the message. */
         line++;
@@ -306,7 +338,7 @@
             
         case PRIVMSG:
             if (nickname) {
-                [Messages userReceivedMessage:line onRecepient:recipient byUser:senderDict onClient:self];
+                [Messages userReceivedMessage:line onRecepient:recipient byUser:senderDict onClient:self withTags:tagsList];
             }
             break;
             
@@ -315,7 +347,7 @@
             break;
             
         case JOIN:
-            [Messages userReceivedJOIN:senderDict onChannel:recipient onClient:self];
+            [Messages userReceivedJOIN:senderDict onChannel:recipient onClient:self withTags:tagsList];
             break;
             
         case PART:
@@ -327,7 +359,7 @@
             break;
             
         case TOPIC:
-            [Messages userReceivedTOPIC:line onChannel:recipient byUser:senderDict onClient:self];
+            [Messages userReceivedTOPIC:line onChannel:recipient byUser:senderDict onClient:self withTags:tagsList];
             break;
             
         case KICK:
@@ -339,7 +371,7 @@
             break;
             
         case NICK:
-            [Messages userReceivedNickchange:senderDict toNick:line onClient:self];
+            [Messages userReceivedNickchange:senderDict toNick:line onClient:self withTags:tagsList];
             break;
             
         case RPL_WELCOME:
@@ -362,7 +394,7 @@
         }
             
         case RPL_TOPIC:
-            [Messages userReceivedTOPIC:line onChannel:recipient byUser:nil onClient:self];
+            [Messages userReceivedTOPIC:line onChannel:recipient byUser:nil onClient:self withTags:tagsList];
             break;
         
         case ERR_ERRONEUSNICKNAME:
