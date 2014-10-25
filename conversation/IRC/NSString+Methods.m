@@ -125,7 +125,7 @@
     }
     
     // Check length
-    if (self.length < 2 || self.length > 16)
+    if (self.length < 2 || self.length > maxNickLength)
         return NO;
     
     // Check for invalid characters
