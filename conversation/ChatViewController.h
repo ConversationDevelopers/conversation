@@ -29,12 +29,14 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "IRCChannel.h"
+#import "InputBarView.h"
+#import "PHFComposeBarView.h"
 
-@interface ChatViewController : UITableViewController
+@class IRCChannel;
 
-@property (nonatomic, retain) NSMutableArray *messages;
+@interface ChatViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, PHFComposeBarViewDelegate>
+
 @property (nonatomic) IRCChannel *channel;
+@property (nonatomic) NSMutableArray *messages;
 
 @end
-

@@ -10,9 +10,13 @@
 		DA1A4ABD19E1770700565763 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4ABC19E1770700565763 /* main.m */; };
 		DA1A4AC019E1770700565763 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4ABF19E1770700565763 /* AppDelegate.m */; };
 		DA1A4AC319E1770700565763 /* ConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AC219E1770700565763 /* ConversationListViewController.m */; };
-		DA1A4AC619E1770700565763 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AC519E1770700565763 /* ChatViewController.m */; };
 		DA1A4ADA19E1770700565763 /* conversationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AD919E1770700565763 /* conversationTests.m */; };
 		DA1A4AF019E181C400565763 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1A4AEF19E181C400565763 /* CFNetwork.framework */; };
+		DA379D4719FB35E80031E30B /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA379D4619FB35E80031E30B /* ChatViewController.m */; };
+		DA379D5119FB3E620031E30B /* PHFComposeBarView_Button.m in Sources */ = {isa = PBXBuildFile; fileRef = DA379D4C19FB3E610031E30B /* PHFComposeBarView_Button.m */; };
+		DA379D5219FB3E620031E30B /* PHFComposeBarView_TextView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA379D4E19FB3E620031E30B /* PHFComposeBarView_TextView.m */; };
+		DA379D5319FB3E620031E30B /* PHFComposeBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA379D5019FB3E620031E30B /* PHFComposeBarView.m */; };
+		DA379D5619FB3FA90031E30B /* PHFDelegateChain.m in Sources */ = {isa = PBXBuildFile; fileRef = DA379D5519FB3FA90031E30B /* PHFDelegateChain.m */; };
 		DA41794B19FAF9FF007784F0 /* ChatMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA41794A19FAF9FF007784F0 /* ChatMessageView.m */; };
 		DA79EA1E19E6F8C50027A370 /* AppPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA1D19E6F8C50027A370 /* AppPreferences.m */; };
 		DA79EA2619E909CD0027A370 /* AddConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA2519E909CD0027A370 /* AddConversationViewController.m */; };
@@ -60,12 +64,20 @@
 		DA1A4ABF19E1770700565763 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		DA1A4AC119E1770700565763 /* ConversationListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConversationListViewController.h; sourceTree = "<group>"; };
 		DA1A4AC219E1770700565763 /* ConversationListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConversationListViewController.m; sourceTree = "<group>"; };
-		DA1A4AC419E1770700565763 /* ChatViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
-		DA1A4AC519E1770700565763 /* ChatViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
 		DA1A4AD319E1770700565763 /* conversationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = conversationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA1A4AD819E1770700565763 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DA1A4AD919E1770700565763 /* conversationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = conversationTests.m; sourceTree = "<group>"; };
 		DA1A4AEF19E181C400565763 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		DA379D4519FB35E80031E30B /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
+		DA379D4619FB35E80031E30B /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
+		DA379D4B19FB3E610031E30B /* PHFComposeBarView_Button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHFComposeBarView_Button.h; sourceTree = "<group>"; };
+		DA379D4C19FB3E610031E30B /* PHFComposeBarView_Button.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHFComposeBarView_Button.m; sourceTree = "<group>"; };
+		DA379D4D19FB3E610031E30B /* PHFComposeBarView_TextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHFComposeBarView_TextView.h; sourceTree = "<group>"; };
+		DA379D4E19FB3E620031E30B /* PHFComposeBarView_TextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHFComposeBarView_TextView.m; sourceTree = "<group>"; };
+		DA379D4F19FB3E620031E30B /* PHFComposeBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHFComposeBarView.h; sourceTree = "<group>"; };
+		DA379D5019FB3E620031E30B /* PHFComposeBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHFComposeBarView.m; sourceTree = "<group>"; };
+		DA379D5419FB3FA90031E30B /* PHFDelegateChain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHFDelegateChain.h; sourceTree = "<group>"; };
+		DA379D5519FB3FA90031E30B /* PHFDelegateChain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHFDelegateChain.m; sourceTree = "<group>"; };
 		DA41794919FAF9FF007784F0 /* ChatMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatMessageView.h; sourceTree = "<group>"; };
 		DA41794A19FAF9FF007784F0 /* ChatMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatMessageView.m; sourceTree = "<group>"; };
 		DA79EA1C19E6F8C50027A370 /* AppPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppPreferences.h; sourceTree = "<group>"; };
@@ -161,6 +173,14 @@
 			children = (
 				FA109B2519E3E6D60068DC29 /* IRC */,
 				DA79EA2D19E923870027A370 /* Helpers */,
+				DA379D5419FB3FA90031E30B /* PHFDelegateChain.h */,
+				DA379D5519FB3FA90031E30B /* PHFDelegateChain.m */,
+				DA379D4B19FB3E610031E30B /* PHFComposeBarView_Button.h */,
+				DA379D4C19FB3E610031E30B /* PHFComposeBarView_Button.m */,
+				DA379D4D19FB3E610031E30B /* PHFComposeBarView_TextView.h */,
+				DA379D4E19FB3E620031E30B /* PHFComposeBarView_TextView.m */,
+				DA379D4F19FB3E620031E30B /* PHFComposeBarView.h */,
+				DA379D5019FB3E620031E30B /* PHFComposeBarView.m */,
 				DA79EA2E19E92AF20027A370 /* PreferencesListViewController.h */,
 				DA79EA2F19E92AF20027A370 /* PreferencesListViewController.m */,
 				DAA322A819E5DE490068E2B6 /* PreferencesSwitchCell.h */,
@@ -179,8 +199,8 @@
 				DA79EA2519E909CD0027A370 /* AddConversationViewController.m */,
 				DA41794919FAF9FF007784F0 /* ChatMessageView.h */,
 				DA41794A19FAF9FF007784F0 /* ChatMessageView.m */,
-				DA1A4AC419E1770700565763 /* ChatViewController.h */,
-				DA1A4AC519E1770700565763 /* ChatViewController.m */,
+				DA379D4519FB35E80031E30B /* ChatViewController.h */,
+				DA379D4619FB35E80031E30B /* ChatViewController.m */,
 				DAC65A3519EAA24300E00A73 /* Resources */,
 				DA1A4ABA19E1770700565763 /* Supporting Files */,
 				FA109B3819E4190C0068DC29 /* Preferences */,
@@ -415,28 +435,32 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA379D5119FB3E620031E30B /* PHFComposeBarView_Button.m in Sources */,
 				FA109B2B19E3E6D60068DC29 /* IRCConnection.m in Sources */,
 				DA1A4AC019E1770700565763 /* AppDelegate.m in Sources */,
 				FA00A39C19E6AD1200E7B4D7 /* NSString+Methods.m in Sources */,
+				DA379D5219FB3E620031E30B /* PHFComposeBarView_TextView.m in Sources */,
 				FA00A39319E5DD3D00E7B4D7 /* SSKeychainQuery.m in Sources */,
 				DA79EA2619E909CD0027A370 /* AddConversationViewController.m in Sources */,
 				FADD2E6819F9BC86004B86AE /* GCDAsyncSocket.m in Sources */,
 				DA79EA3319EA6C810027A370 /* ConversationItemView.m in Sources */,
+				DA379D5619FB3FA90031E30B /* PHFDelegateChain.m in Sources */,
 				DA1A4AC319E1770700565763 /* ConversationListViewController.m in Sources */,
 				DA1A4ABD19E1770700565763 /* main.m in Sources */,
 				FA109B3719E419040068DC29 /* IRCConnectionConfiguration.m in Sources */,
 				DA79EA2C19E9237A0027A370 /* UITableView+Methods.m in Sources */,
 				DA79EA3019E92AF20027A370 /* PreferencesListViewController.m in Sources */,
+				DA379D4719FB35E80031E30B /* ChatViewController.m in Sources */,
 				DA41794B19FAF9FF007784F0 /* ChatMessageView.m in Sources */,
 				FA109B3E19E420320068DC29 /* IRCChannel.m in Sources */,
 				DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */,
 				DA79EA1E19E6F8C50027A370 /* AppPreferences.m in Sources */,
 				FA109B3B19E41D540068DC29 /* IRCChannelConfiguration.m in Sources */,
+				DA379D5319FB3E620031E30B /* PHFComposeBarView.m in Sources */,
 				FAC1679119F84268009856F0 /* IRCMessage.m in Sources */,
 				FA109B3419E410D80068DC29 /* IRCClient.m in Sources */,
 				FA6E45ED19ED65590083A326 /* IRCUser.m in Sources */,
 				FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */,
-				DA1A4AC619E1770700565763 /* ChatViewController.m in Sources */,
 				DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */,
 				FAEE1E6019EBEA040041439F /* Messages.m in Sources */,
 				FAEE1E6319EBFBA20041439F /* IRCConversation.m in Sources */,

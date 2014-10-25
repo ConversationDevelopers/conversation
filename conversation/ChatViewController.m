@@ -33,10 +33,15 @@
 #import "IRCMessage.h"
 #import "IRCUser.h"
 
+@interface ChatViewController ()
+@property (readonly, nonatomic) UITableView *tableView;
+@property (readonly, nonatomic) UIView *container;
+@property (readonly, nonatomic) PHFComposeBarView *composeBarView;
+@end
+
+CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
+
 @implementation ChatViewController
-
-#pragma mark -
-
 
 - (id)init
 {
@@ -45,19 +50,115 @@
     
     _messages = [[NSMutableArray alloc] init];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedMessage:) name:@"messageReceived" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillToggle:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillToggle:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(messageReceived:)
+                                                 name:@"messageReceived"
+                                               object:nil];
     
     return self;
 }
 
-
-- (void)viewDidLoad
+- (void)dealloc
 {
-    [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillShowNotification
+                                                  object:nil];
     
-    self.title = _channel.name;
-    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, self.tableView.frame.size.height - 88, 0);
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillHideNotification
+                                                  object:nil];
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"receivedMessage"
+                                                  object:nil];
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskAll;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    return YES;
+}
+
+- (void)loadView
+{
+    
+    UIView *view = [[UIView alloc] initWithFrame:kInitialViewFrame];
+    [view setBackgroundColor:[UIColor whiteColor]];
+
+    
+    UIView *container = [self container];
+
+//    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - PHFComposeBarViewInitialHeight)];
+    
+    [container addSubview:[self tableView]];
+
+    [container addSubview:[self composeBarView]];
+    
+    
+    [view addSubview:container];
+    [self setEdgesForExtendedLayout:UIRectEdgeNone];
+    
+    [self setView:view];
+}
+
+- (void)keyboardWillToggle:(NSNotification *)notification
+{
+    NSDictionary* userInfo = [notification userInfo];
+    NSTimeInterval duration;
+    UIViewAnimationCurve animationCurve;
+    CGRect startFrame;
+    CGRect endFrame;
+    [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&duration];
+    [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey]    getValue:&animationCurve];
+    [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey]        getValue:&startFrame];
+    [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey]          getValue:&endFrame];
+    
+    NSInteger signCorrection = 1;
+    if (startFrame.origin.y < 0 || startFrame.origin.x < 0 || endFrame.origin.y < 0 || endFrame.origin.x < 0)
+        signCorrection = -1;
+    
+    CGFloat widthChange  = (endFrame.origin.x - startFrame.origin.x) * signCorrection;
+    CGFloat heightChange = (endFrame.origin.y - startFrame.origin.y) * signCorrection;
+    
+    CGFloat sizeChange = UIInterfaceOrientationIsLandscape([self interfaceOrientation]) ? widthChange : heightChange;
+    
+    CGRect newContainerFrame = [[self container] frame];
+    newContainerFrame.size.height += sizeChange;
+    
+    [UIView animateWithDuration:duration
+                          delay:0
+                        options:(animationCurve << 16)|UIViewAnimationOptionBeginFromCurrentState
+                     animations:^{
+                         [[self container] setFrame:newContainerFrame];
+                     }
+                     completion:NULL];
+}
+
+- (void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView
+{
+    NSString *text = [NSString stringWithFormat:@"Main button pressed. Text:\n%@", [composeBarView text]];
+    NSLog(@"TEXT: %@", text);
+    [composeBarView setText:@"" animated:YES];
+    [composeBarView resignFirstResponder];
+}
+
+- (void)composeBarViewDidPressUtilityButton:(PHFComposeBarView *)composeBarView
+{
+    NSLog(@"Utility button pressed");
 }
 
 #pragma mark - Table View
@@ -76,7 +177,7 @@
 {
     
     static NSString *CellIdentifier = @"cell";
-
+    
     ChatMessageView *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[ChatMessageView alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
@@ -92,8 +193,9 @@
 }
 
 
-- (void)receivedMessage:(NSNotification *)notification
+- (void)messageReceived:(NSNotification *)notification
 {
+    
     IRCMessage *message = notification.object;
     
     // Handle actions and normal messages for now
@@ -105,12 +207,52 @@
         return;
     
     [_messages addObject:message];
-    [self.tableView reloadData];
+    [_tableView reloadData];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
+@synthesize container = _container;
+- (UIView *)container {
+    if (!_container) {
+        _container = [[UIView alloc] initWithFrame:kInitialViewFrame];
+        [_container setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
+    }
+    
+    return _container;
+}
+
+@synthesize tableView = _tableView;
+- (UITableView *)tableView {
+    
+    if(!_tableView) {
+        CGRect frame = CGRectMake(0.0f,
+                                  20.0f,
+                                  kInitialViewFrame.size.width,
+                                  kInitialViewFrame.size.height - 20.0f);
+        
+        _tableView = [[UITableView alloc] initWithFrame:frame];
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.dataSource = self;
+    }
+    return _tableView;
+}
+
+@synthesize composeBarView = _composeBarView;
+- (PHFComposeBarView *)composeBarView {
+    
+    if (!_composeBarView) {
+        CGRect frame = CGRectMake(0.0f,
+                                  kInitialViewFrame.size.height - PHFComposeBarViewInitialHeight,
+                                  kInitialViewFrame.size.width,
+                                  PHFComposeBarViewInitialHeight);
+        
+        _composeBarView = [[PHFComposeBarView alloc] initWithFrame:frame];
+        [_composeBarView setMaxCharCount:160];
+        [_composeBarView setMaxLinesCount:5];
+        [_composeBarView setPlaceholder:@"Type something..."];
+        [_composeBarView setUtilityButtonImage:[UIImage imageNamed:@"Camera"]];
+        [_composeBarView setDelegate:self];
+    }
+    return _composeBarView;
 }
 
 @end
