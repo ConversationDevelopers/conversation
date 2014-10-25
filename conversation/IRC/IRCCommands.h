@@ -38,5 +38,6 @@
 + (void)sendACTIONMessage:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client;
 + (void)sendNotice:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client;
 + (void)sendCTCPReply:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client;
++ (void)changeNicknameToNick:(NSString *)nickname onClient:(IRCClient *)client;
 
 @end

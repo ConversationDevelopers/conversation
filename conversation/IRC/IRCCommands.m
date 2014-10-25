@@ -58,4 +58,9 @@
     [client.connection send:[NSString stringWithFormat:@"NOTICE %@ :\001%@\001", recipient, message]];
 }
 
++ (void)changeNicknameToNick:(NSString *)nickname onClient:(IRCClient *)client
+{
+    [client.connection send:[NSString stringWithFormat:@"NICK %@", nickname]];
+}
+
 @end
