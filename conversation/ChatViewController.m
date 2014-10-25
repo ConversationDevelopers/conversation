@@ -144,6 +144,11 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                      completion:NULL];
 }
 
+- (void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView
+{
+    NSLog(@"Info button clicked");
+}
+
 - (void)sendMessage:(NSString *)message
 {
     [IRCCommands sendMessage:message toRecipient:_channel.name onClient:_channel.client];
@@ -154,7 +159,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                                        atTime:[NSDate date]];
     [_messages addObject:ircmsg];
     [_composeBarView setText:@"" animated:YES];
-//    [_composeBarView resignFirstResponder];
     [_tableView reloadData];
 }
 
@@ -276,10 +280,12 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         _composeBarView = [[PHFComposeBarView alloc] initWithFrame:frame];
         [_composeBarView setButtonTitle:nil];
 //        [_composeBarView setMaxCharCount:160];
+        [_composeBarView setButtonTintColor:[UIColor blackColor]];
         [_composeBarView setMaxLinesCount:5];
         [_composeBarView setPlaceholder:@"Type something..."];
         [_composeBarView setUtilityButtonImage:[UIImage imageNamed:@"Camera"]];
         [_composeBarView setDelegate:self];
+        [_composeBarView setEnabled:YES];
         [[_composeBarView textView] setReturnKeyType:UIReturnKeySend];
     }
     return _composeBarView;
