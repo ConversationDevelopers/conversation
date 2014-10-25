@@ -40,6 +40,12 @@
 
 @interface Messages : NSObject
 
++ (void)clientReceivedAuthenticationMessage:(const char*)message onClient:(IRCClient *)client;
+
++ (void)clientReceivedAuthenticationAccepted:(const char*)message onClient:(IRCClient *)client;
+
++ (void)clientReceivedAuthenticationError:(const char*)message onClient:(IRCClient *)client;
+
 + (void)clientReceivedCAPMessage:(const char *)message onClient:(IRCClient *)client;
 
 + (void)userReceivedMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags;

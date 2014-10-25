@@ -68,6 +68,7 @@ static NSArray *IRCCAPIndexReference = nil;
     IRCMessageIndexReference = @[
         @"PING",
         @"ERROR",
+        @"AUTHENTICATE",
         @"CAP",
         @"PRIVMSG",
         @"NOTICE",
@@ -212,7 +213,16 @@ static NSArray *IRCCAPIndexReference = nil;
         @"485",
         @"491",
         @"501",
-        @"502"
+        @"502",
+        @"900",
+        @"901",
+        @"902",
+        @"903",
+        @"904",
+        @"905",
+        @"906",
+        @"907",
+        @"908"
     ];
 }
 

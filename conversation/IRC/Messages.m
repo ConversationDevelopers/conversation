@@ -36,6 +36,35 @@
 
 @implementation Messages
 
++ (void)clientReceivedAuthenticationMessage:(const char*)message onClient:(IRCClient *)client
+{
+    if (client.isAwaitingAuthenticationResponse) {
+        if (client.configuration.authenticationPasswordReference) {
+            NSString *password = [SSKeychain passwordForService:@"conversation" account:client.configuration.authenticationPasswordReference];
+            if (password != nil && [password length] > 0) {
+                NSData *passwordAsBinaryData = [password dataUsingEncoding:NSUTF8StringEncoding];
+                [client.connection send:[NSString stringWithFormat:@"AUTHENTICATE %@", [passwordAsBinaryData base64EncodedStringWithOptions:0]]];
+                return;
+            } else {
+                NSLog(@"An authentication password reference was found but no password: %@", client.configuration.authenticationPasswordReference);
+            }
+        }
+    }
+    [client.connection send:@"CAP END"];
+}
+
++ (void)clientReceivedAuthenticationAccepted:(const char*)message onClient:(IRCClient *)client
+{
+    client.isAwaitingAuthenticationResponse = NO;
+    [client.connection send:@"CAP END"];
+}
+
++ (void)clientReceivedAuthenticationError:(const char*)message onClient:(IRCClient *)client
+{
+    client.isAwaitingAuthenticationResponse = NO;
+    [client.connection send:@"CAP END"];
+}
+
 + (void)clientReceivedCAPMessage:(const char *)message onClient:(IRCClient *)client
 {
     const char* messageBeforeIteration = message;
@@ -110,6 +139,14 @@
     NSString *capabilitiesString = [NSString stringWithCString:capabilities usingEncodingPreference:client.configuration];
     NSArray *capabilitiesList = [capabilitiesString componentsSeparatedByString:@" "];
     client.ircv3CapabilitiesSupportedByServer = [capabilitiesList mutableCopy];
+    if ([client.ircv3CapabilitiesSupportedByServer indexOfObject:@"sasl"] != NSNotFound) {
+        NSString *password = [SSKeychain passwordForService:@"conversation" account:client.configuration.authenticationPasswordReference];
+        if (password != nil && [password length] > 0) {
+            client.isAwaitingAuthenticationResponse = YES;
+            [client.connection send:@"AUTHENTICATE PLAIN"];
+            return;
+        }
+    }
     [client.connection send:@"CAP END"];
 }
 

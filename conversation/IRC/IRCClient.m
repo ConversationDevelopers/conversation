@@ -332,6 +332,10 @@
             
             break;
             
+        case AUTHENTICATE:
+            [Messages clientReceivedAuthenticationMessage:line onClient:self];
+            break;
+            
         case CAP :
             [Messages clientReceivedCAPMessage:line onClient:self];
             break;
@@ -419,6 +423,16 @@
                     }
                 }
             }
+            break;
+            
+        case RPL_SASLSUCCESS:
+            [Messages clientReceivedAuthenticationAccepted:line onClient:self];
+            break;
+            
+        case ERR_NICKLOCKED:
+        case ERR_SASLFAIL:
+        case ERR_SASLTOOLONG:
+            [Messages clientReceivedAuthenticationError:line onClient:self];
             break;
             
         default:

@@ -42,6 +42,7 @@ typedef NS_ENUM(NSUInteger, CapMessageType) {
 typedef NS_ENUM(NSUInteger, MessageType) {
     PING,
     ERROR,
+    AUTHENTICATE,
     CAP,
     PRIVMSG,
     NOTICE,
@@ -186,7 +187,16 @@ typedef NS_ENUM(NSUInteger, MessageType) {
     ERR_UNIQOPPRIVSNEEDED,  /* 485 */
     ERR_NOOPERHOST,         /* 491 */
     ERR_UMODEUNKNOWNFLAG,   /* 501 */
-    ERR_USERSDONTMATCH      /* 502 */
+    ERR_USERSDONTMATCH,     /* 502 */
+    RPL_LOGGEDIN,           /* 900 */
+    RPL_LOGGEDOUT,          /* 901 */
+    ERR_NICKLOCKED,         /* 902 */
+    RPL_SASLSUCCESS,        /* 903 */
+    ERR_SASLFAIL,           /* 904 */
+    ERR_SASLTOOLONG,        /* 905 */
+    ERR_SASLABORTED,        /* 906 */
+    ERR_SASLALREADY,        /* 907 */
+    RPL_SASLMECHS           /* 908 */
 };
 
 + (NSUInteger)indexValueFromString:(NSString *)key;

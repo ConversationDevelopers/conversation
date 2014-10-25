@@ -68,7 +68,8 @@
     
     self.IRCv3CapabilitiesSupportedByApplication = @[
         @"server-time",
-        @"znc.in/server-time-iso"
+        @"znc.in/server-time-iso",
+        @"sasl"
     ];
 
     return YES;
