@@ -594,6 +594,7 @@
         }
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         [controller reloadClient:self];
+        return;
     }
     
     NSString *requestString = @"";
