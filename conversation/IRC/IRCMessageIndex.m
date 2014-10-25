@@ -33,6 +33,7 @@
 @implementation IRCMessageIndex
 
 static NSArray *IRCMessageIndexReference = nil;
+static NSArray *IRCCAPIndexReference = nil;
 
 + (NSUInteger)indexValueFromString:(NSString *)key
 {
@@ -41,6 +42,28 @@ static NSArray *IRCMessageIndexReference = nil;
         return indexFromArray;
     }
     return 0;
+}
+
++ (NSUInteger)capIndexValueFromString:(NSString *)key
+{
+    NSUInteger indexFromArray = [IRCCAPIndexReference indexOfObject:key];
+    if (indexFromArray) {
+        return indexFromArray;
+    }
+    return 0;
+}
+
++ (void)initialiseCapIndex
+{
+    IRCCAPIndexReference = @[
+        @"LS",
+        @"LIST",
+        @"REQ",
+        @"ACK",
+        @"NAK",
+        @"CLEAR",
+        @"END"
+    ];
 }
 
 + (void)initialiseMessageIndex

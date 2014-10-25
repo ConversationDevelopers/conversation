@@ -64,6 +64,7 @@
     splitViewController.delegate = self;
 */
     [IRCMessageIndex initialiseMessageIndex];
+    [IRCMessageIndex initialiseCapIndex];
 
     return YES;
 }

@@ -32,6 +32,16 @@
 
 @interface IRCMessageIndex : NSObject
 
+typedef NS_ENUM(NSUInteger, CapMessageType) {
+    CAP_LS,
+    CAP_LIST,
+    CAP_REQ,
+    CAP_ACK,
+    CAP_NAK,
+    CAP_CLEAR,
+    CAP_END
+};
+
 typedef NS_ENUM(NSUInteger, MessageType) {
     PING,
     ERROR,
@@ -183,6 +193,9 @@ typedef NS_ENUM(NSUInteger, MessageType) {
 };
 
 + (NSUInteger)indexValueFromString:(NSString *)key;
++ (NSUInteger)capIndexValueFromString:(NSString *)key;
+
 + (void)initialiseMessageIndex;
++ (void)initialiseCapIndex;
 
 @end
