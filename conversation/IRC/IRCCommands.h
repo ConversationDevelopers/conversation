@@ -34,5 +34,7 @@
 @interface IRCCommands : NSObject
 
 + (void)sendMessage:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client;
++ (void)sendCTCPMessage:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client;
++ (void)sendACTIONMessage:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client;
 
 @end

@@ -38,4 +38,14 @@
     [client.connection send:[NSString stringWithFormat:@"PRIVMSG %@ :%@", recipient, message]];
 }
 
++ (void)sendCTCPMessage:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client
+{
+    [client.connection send:[NSString stringWithFormat:@"PRIVMSG %@ :\001%@\001", recipient, message]];
+}
+
++ (void)sendACTIONMessage:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client
+{
+    [self sendCTCPMessage:[@"ACTION " stringByAppendingString:message] toRecipient:recipient onClient:client];
+}
+
 @end
