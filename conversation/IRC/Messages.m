@@ -216,7 +216,9 @@
 {
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
     if ([[user nick] isEqualToString:client.currentUserOnConnection.nick]) {
-        client.currentUserOnConnection.nick = [NSString stringWithCString:newNick usingEncodingPreference:client.configuration];
+        client.currentUserOnConnection.nick     =   [NSString stringWithCString:newNick usingEncodingPreference:client.configuration];
+        client.currentUserOnConnection.username =   [NSString stringWithCString:senderDict[2] usingEncodingPreference:client.configuration];
+        client.currentUserOnConnection.hostname =   [NSString stringWithCString:senderDict[3] usingEncodingPreference:client.configuration];
     }
 }
 
