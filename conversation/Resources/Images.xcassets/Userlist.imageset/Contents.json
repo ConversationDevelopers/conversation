@@ -3,17 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "channel_toolbar.png"
+      "filename" : "userlist.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "channel_toolbar@2x.png"
+      "filename" : "userlist@2x.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "channel_toolbar@3x.png"
+      "filename" : "userlist@3x.png"
     }
   ],
   "info" : {
