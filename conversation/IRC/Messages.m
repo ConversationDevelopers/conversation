@@ -64,7 +64,7 @@
     CapMessageType capIndexValue = [IRCMessageIndex capIndexValueFromString:capCommandString];
     switch (capIndexValue) {
         case CAP_LS:
-            
+            [client.connection send:[NSString stringWithFormat:@"CAP END"]];
             break;
             
         case CAP_LIST:
