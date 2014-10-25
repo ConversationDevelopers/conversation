@@ -36,6 +36,61 @@
 
 @implementation Messages
 
++ (void)clientReceivedCAPMessage:(const char *)message onClient:(IRCClient *)client
+{
+    const char* messageBeforeIteration = message;
+    int lengthOfCommand = 0;
+    while (*message != ' ' && *message != '\0') {
+        lengthOfCommand++;
+        message++;
+    }
+    char* capCommand = malloc(lengthOfCommand + 1);
+    strncpy(capCommand, messageBeforeIteration, lengthOfCommand);
+    capCommand[lengthOfCommand + 1] = '\0';
+    
+    messageBeforeIteration = message;
+    
+    if (*message != '\0') {
+        message++;
+        messageBeforeIteration++;
+        
+        if (*message == ':') {
+            message++;
+            messageBeforeIteration++;
+        }
+    }
+    
+    NSString *capCommandString = [NSString stringWithCString:capCommand usingEncodingPreference:client.configuration];
+    CapMessageType capIndexValue = [IRCMessageIndex capIndexValueFromString:capCommandString];
+    switch (capIndexValue) {
+        case CAP_LS:
+            
+            break;
+            
+        case CAP_LIST:
+            break;
+            
+        case CAP_REQ:
+            break;
+            
+        case CAP_ACK:
+            break;
+            
+        case CAP_NAK:
+            break;
+            
+        case CAP_CLEAR:
+            break;
+            
+        case CAP_END:
+            break;
+            
+        default:
+            break;
+    }
+    free(capCommand);
+}
+
 + (void)userReceivedMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client
 {
     /* Check if the message begins and ends with a 0x01 character, denoting this is a CTCP request. */

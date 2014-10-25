@@ -40,6 +40,8 @@
 
 @interface Messages : NSObject
 
++ (void)clientReceivedCAPMessage:(const char *)message onClient:(IRCClient *)client;
+
 + (void)userReceivedMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client;
 
 + (void)userReceivedCTCPMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client;

@@ -120,6 +120,8 @@
         }
     }
     
+    [self.connection send:@"CAP LS"];
+    
     [self.connection send:[NSString stringWithFormat:@"NICK %@",
                     self.configuration.primaryNickname]];
     [self.connection send:[NSString stringWithFormat:@"USER %@ 0 * :%@",
@@ -296,8 +298,8 @@
             
             break;
             
-        case CAP:
-            
+        case CAP :
+            [Messages clientReceivedCAPMessage:line onClient:self];
             break;
             
         case PRIVMSG:
