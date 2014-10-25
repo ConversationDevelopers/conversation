@@ -101,8 +101,9 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                                                        style:UIBarButtonItemStylePlain
                                                                       target:self
                                                                       action:@selector(userList:)];
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ChannelIcon_Light"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
     self.navigationItem.rightBarButtonItem = userlistButton;
-    
+    self.navigationItem.leftBarButtonItem = backButton;
     
     UIView *view = [[UIView alloc] initWithFrame:kInitialViewFrame];
     [view setBackgroundColor:[UIColor whiteColor]];
@@ -148,6 +149,11 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                          [[self container] setFrame:newContainerFrame];
                      }
                      completion:NULL];
+}
+
+- (void)goBack:(id)sender
+{
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void)userList:(id)sender
