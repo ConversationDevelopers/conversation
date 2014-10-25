@@ -56,6 +56,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    self.navigationController.navigationBar.tintColor = [UIColor lightGrayColor];
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
+    self.navigationController.navigationBar.translucent = NO;
     
     self.title = NSLocalizedString(@"Conversations", @"Conversations");
     

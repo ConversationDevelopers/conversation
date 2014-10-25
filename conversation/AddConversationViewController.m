@@ -56,6 +56,10 @@ static unsigned short ConversationTableSection = 1;
 - (void) viewDidLoad {
     [super viewDidLoad];
 
+    self.navigationController.navigationBar.tintColor = [UIColor lightGrayColor];
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
+    self.navigationController.navigationBar.translucent = NO;
+    
     if (!self.title) {
         if(self.addChannel)
             self.title = NSLocalizedString(@"Join a Channel", @"Join a Channel");

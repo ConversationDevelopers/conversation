@@ -96,19 +96,14 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)loadView
 {
+    self.title = _channel.configuration.name;
     
     UIView *view = [[UIView alloc] initWithFrame:kInitialViewFrame];
     [view setBackgroundColor:[UIColor whiteColor]];
 
-    
     UIView *container = [self container];
-
-//    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - PHFComposeBarViewInitialHeight)];
-    
     [container addSubview:[self tableView]];
-
     [container addSubview:[self composeBarView]];
-    
     
     [view addSubview:container];
     [self setEdgesForExtendedLayout:UIRectEdgeNone];

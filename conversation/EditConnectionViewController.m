@@ -55,6 +55,10 @@ static unsigned short EncodingTableSection = 3;
 - (void) viewDidLoad {
     [super viewDidLoad];
     
+    self.navigationController.navigationBar.tintColor = [UIColor lightGrayColor];
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
+    self.navigationController.navigationBar.translucent = NO;
+    
     self.title = NSLocalizedString(@"New Connection", @"Title of edit connection view");
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = cancelButton;
