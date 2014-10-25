@@ -48,4 +48,14 @@
     [self sendCTCPMessage:[@"ACTION " stringByAppendingString:message] toRecipient:recipient onClient:client];
 }
 
++ (void)sendNotice:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client
+{
+    [client.connection send:[NSString stringWithFormat:@"NOTICE %@ :%@", recipient, message]];
+}
+
++ (void)sendCTCPReply:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client
+{
+    [client.connection send:[NSString stringWithFormat:@"NOTICE %@ :\001%@\001", recipient, message]];
+}
+
 @end
