@@ -80,5 +80,6 @@
 - (NSMutableArray *)sortChannelItems;
 - (NSMutableArray *)sortQueryItems;
 
++ (NSDate *)getTimestampFromMessageTags:(NSMutableDictionary *)tags;
 
 @end

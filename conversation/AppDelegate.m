@@ -67,6 +67,8 @@
     [IRCMessageIndex initialiseCapIndex];
     
     self.IRCv3CapabilitiesSupportedByApplication = @[
+        @"server-time",
+        @"znc.in/server-time-iso"
     ];
 
     return YES;

@@ -124,7 +124,7 @@
     NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:[client configuration]];
     IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
     
-    NSDate* now = [NSDate date];
+    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
     /* TODO: handle timestamps */
     
     /* Check if this message is a channel message or a private message */
@@ -210,7 +210,7 @@
     NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:[client configuration]];
     IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
     
-    NSDate* now = [NSDate date];
+    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
     /* TODO: handle timestamps */
     
     /* Check if this message is a channel message or a private message */
