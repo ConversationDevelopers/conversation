@@ -179,7 +179,7 @@
 {
     /* Get the user that performed the JOIN */
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-    if ([[user nick] isEqualToString:client.currentNicknameOnConnection]) {
+    if ([[user nick] isEqualToString:client.currentUserOnConnection.nick]) {
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         /* The user that joined is ourselves, we need to check if this channel is already in our list. */
         NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
@@ -199,7 +199,7 @@
 {
     /* Get the user that performed the PART */
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-    if ([[user nick] isEqualToString:client.currentNicknameOnConnection]) {
+    if ([[user nick] isEqualToString:client.currentUserOnConnection.nick]) {
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         
         /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
@@ -215,8 +215,8 @@
 + (void)userReceivedNickchange:(const char *[4])senderDict toNick:(const char *)newNick onClient:(IRCClient *)client
 {
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-    if ([[user nick] isEqualToString:client.currentNicknameOnConnection]) {
-        client.currentNicknameOnConnection = [NSString stringWithCString:newNick usingEncodingPreference:client.configuration];
+    if ([[user nick] isEqualToString:client.currentUserOnConnection.nick]) {
+        client.currentUserOnConnection.nick = [NSString stringWithCString:newNick usingEncodingPreference:client.configuration];
     }
 }
 

@@ -37,6 +37,7 @@
 
 @class IRCConnection;
 @class IRCChannel;
+@class IRCUser;
 @class IRCConversation;
 @class ConversationListViewController;
 
