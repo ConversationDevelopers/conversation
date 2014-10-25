@@ -126,6 +126,7 @@
         NSLog(@"Read msg error: %s",message);
     }
     [socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:1];
+    free(message);
 }
 
 - (void)socketDidSecure:(GCDAsyncSocket *)sock
