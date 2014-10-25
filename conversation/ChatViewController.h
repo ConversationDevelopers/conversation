@@ -33,7 +33,7 @@
 
 @class IRCChannel;
 
-@interface ChatViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, PHFComposeBarViewDelegate>
+@interface ChatViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, PHFComposeBarViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic) IRCChannel *channel;
 @property (nonatomic) NSMutableArray *messages;

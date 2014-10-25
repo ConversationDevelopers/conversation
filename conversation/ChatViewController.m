@@ -145,18 +145,17 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                      completion:NULL];
 }
 
-- (void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView
+- (void)sendMessage:(NSString *)message
 {
-    NSString *msg = [composeBarView text];
-    [IRCCommands sendMessage:msg toRecipient:_channel.name onClient:_channel.client];
-    IRCMessage *message = [[IRCMessage alloc] initWithMessage:msg
+    [IRCCommands sendMessage:message toRecipient:_channel.name onClient:_channel.client];
+    IRCMessage *ircmsg = [[IRCMessage alloc] initWithMessage:message
                                                        OfType:ET_PRIVMSG
                                                inConversation:_channel
                                                      bySender:_channel.client.currentUserOnConnection
                                                        atTime:[NSDate date]];
-    [_messages addObject:message];
-    [composeBarView setText:@"" animated:YES];
-    [composeBarView resignFirstResponder];
+    [_messages addObject:ircmsg];
+    [_composeBarView setText:@"" animated:YES];
+//    [_composeBarView resignFirstResponder];
     [_tableView reloadData];
 }
 
@@ -210,6 +209,19 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     return cell;
 }
 
+- (BOOL) textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    if([text isEqualToString:@"\n"]){
+        [self sendMessage:textView.text];
+        return NO;
+    }else{
+        return YES;
+    }
+}
+
+- (void)dismissKeyboard:(UIGestureRecognizer*)sender
+{
+    [_composeBarView resignFirstResponder];
+}
 
 - (void)messageReceived:(NSNotification *)notification
 {
@@ -252,6 +264,13 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.dataSource = self;
         _tableView.delegate = self;
+        
+        UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard:)];
+        [singleTapRecogniser setDelegate:self];
+        singleTapRecogniser.numberOfTouchesRequired = 1;
+        singleTapRecogniser.numberOfTapsRequired = 1;
+        [_tableView addGestureRecognizer:singleTapRecogniser];
+        
     }
     return _tableView;
 }
@@ -266,11 +285,13 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                   PHFComposeBarViewInitialHeight);
         
         _composeBarView = [[PHFComposeBarView alloc] initWithFrame:frame];
-        [_composeBarView setMaxCharCount:160];
+        [_composeBarView setButtonTitle:nil];
+//        [_composeBarView setMaxCharCount:160];
         [_composeBarView setMaxLinesCount:5];
         [_composeBarView setPlaceholder:@"Type something..."];
         [_composeBarView setUtilityButtonImage:[UIImage imageNamed:@"Camera"]];
         [_composeBarView setDelegate:self];
+        [[_composeBarView textView] setReturnKeyType:UIReturnKeySend];
     }
     return _composeBarView;
 }
