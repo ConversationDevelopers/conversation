@@ -42,8 +42,8 @@
         if (client.configuration.authenticationPasswordReference) {
             NSString *password = [SSKeychain passwordForService:@"conversation" account:client.configuration.authenticationPasswordReference];
             if (password != nil && [password length] > 0) {
-                NSData *passwordAsBinaryData = [password dataUsingEncoding:NSUTF8StringEncoding];
-                [client.connection send:[NSString stringWithFormat:@"AUTHENTICATE %@", [passwordAsBinaryData base64EncodedStringWithOptions:0]]];
+                NSData *authenticationStringAsBinaryData = [[NSString stringWithFormat:@"%@\0%@", password, client.configuration.usernameForRegistration] dataUsingEncoding:NSUTF8StringEncoding];
+                [client.connection send:[NSString stringWithFormat:@"AUTHENTICATE %@", [authenticationStringAsBinaryData base64EncodedStringWithOptions:0]]];
                 return;
             } else {
                 NSLog(@"An authentication password reference was found but no password: %@", client.configuration.authenticationPasswordReference);
