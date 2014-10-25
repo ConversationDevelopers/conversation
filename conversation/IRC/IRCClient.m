@@ -264,24 +264,20 @@
     recipient = malloc(recipientLength + 1);
     strncpy(recipient, lineBeforeIteration, recipientLength);
     recipient[recipientLength] = '\0';
-    lineBeforeIteration = lineBeforeIteration + recipientLength;
     
     if (*line != '\0') {
         /* Consume the following space leading to the message */
         line++;
-        lineBeforeIteration++;
         
         /* The message may start with a colon. We will trim this before continuing */
         if (*line == ':') {
             line++;
-            lineBeforeIteration++;
         }
     } else {
         /* If we have reached the end of the message we will move the pointer back to before the "recipient"
          so that it will still be useful to commands without a recipient */
         if (*line == '\0') {
             line = lineBeforeRecipient;
-            lineBeforeIteration = lineBeforeRecipient;
         }
     }
     
