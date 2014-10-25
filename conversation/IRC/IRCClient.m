@@ -723,13 +723,19 @@
 
 + (NSDate *)getTimestampFromMessageTags:(NSMutableDictionary *)tags
 {
-    NSString *timeTag = [tags objectForKey:@"time"];
-    if (timeTag) {
+    NSString *timeObjectISO = [tags objectForKey:@"time"];
+    if (timeObjectISO) {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSZ"];
         NSLocale *posix = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
         [formatter setLocale:posix];
-        return [formatter dateFromString:timeTag];
+        return [formatter dateFromString:timeObjectISO];
+    }
+    
+    NSString *timeObjectEpochTime = [tags objectForKey:@"t"];
+    if (timeObjectEpochTime) {
+        NSTimeInterval epochTimeAsDouble = [timeObjectEpochTime doubleValue];
+        return [NSDate dateWithTimeIntervalSince1970:epochTimeAsDouble];
     }
     return [NSDate date];
 }
