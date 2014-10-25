@@ -30,12 +30,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ChatMessageView : UITableViewCell {
-    UILabel *_nameLabel;
-    UILabel *_messageLabel;
-}
+@interface ChatMessageView : UITableViewCell
+
+- (CGRect)calculateRect;
 
 @property (nonatomic) NSString *nickname;
-@property (nonatomic) NSAttributedString *message;
+@property (nonatomic) NSString *message;
+@property (nonatomic) NSDate *timestamp;
 
 @end

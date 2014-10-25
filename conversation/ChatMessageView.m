@@ -29,6 +29,7 @@
  */
 
 #import "ChatMessageView.h"
+#import <CoreText/CoreText.h>
 
 @implementation ChatMessageView
 
@@ -39,17 +40,8 @@
         return nil;
     
     [self.textLabel removeFromSuperview];
-
-    _nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _nameLabel.font = [UIFont boldSystemFontOfSize:18];
-    _nameLabel.textColor = [UIColor darkGrayColor];
     
-    _messageLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _messageLabel.font = [UIFont systemFontOfSize:14.0];
-    _messageLabel.textColor = [UIColor darkGrayColor];
-    
-    [self.contentView addSubview:_nameLabel];
-    [self.contentView addSubview:_messageLabel];
+    self.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
     
     return self;
 }
@@ -65,23 +57,82 @@
     
     [super layoutSubviews];
     
-    CGSize size = [_nickname sizeWithAttributes:@{NSFontAttributeName: _nameLabel.font}];
+    NSString *time = @"";
+    if (_timestamp) {
+        NSDate *date = self.timestamp;
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSDateComponents *components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:date];
+        time = [NSString stringWithFormat:@":%ld", [components minute]];
+    }
     
-    CGRect frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
-    frame.origin.y += 4;
-    frame.origin.x = 10.0;
-    frame.size = size;
-    
-    _nameLabel.text = _nickname;
-    _nameLabel.frame = frame;
-    
-    frame.origin.y += 25;
-    frame.size = _message.size;
-    frame.size.width = self.frame.size.width - 10.0;
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", self.nickname, self.message]];
 
-    _messageLabel.attributedText = _message;
-    _messageLabel.frame = frame;
+    [string addAttribute:NSFontAttributeName
+                  value:[UIFont boldSystemFontOfSize:16.0]
+                  range:NSMakeRange(0, self.nickname.length)];
     
+    [string addAttribute:NSFontAttributeName
+                   value:[UIFont systemFontOfSize:12.0]
+                   range:NSMakeRange(self.nickname.length+1, self.message.length)];
+    
+    NSMutableAttributedString *timestamp = [[NSMutableAttributedString alloc] initWithString:time];
+
+    [timestamp addAttribute:NSFontAttributeName
+                   value:[UIFont systemFontOfSize:12.0]
+                   range:NSMakeRange(0, timestamp.length)];
+
+    [timestamp addAttribute:NSForegroundColorAttributeName
+                   value:[UIColor lightGrayColor]
+                   range:NSMakeRange(0, timestamp.length)];
+    
+//    CATextLayer *contentLayer = [[CATextLayer alloc] init];
+//    contentLayer.frame = self.bounds;
+    
+    CATextLayer *textLayer = [[CATextLayer alloc] init];
+    textLayer.string = string;
+    textLayer.backgroundColor = [UIColor clearColor].CGColor;
+    [textLayer setForegroundColor:[[UIColor clearColor] CGColor]];
+    [textLayer setContentsScale:[[UIScreen mainScreen] scale]];
+
+    
+    CGRect rect = [self calculateRect];
+    
+    textLayer.frame = CGRectMake(10, 0, self.bounds.size.width-20, rect.size.height);
+    textLayer.wrapped = YES;
+    
+//    [contentLayer addSublayer:textLayer];
+    [self.contentView.layer addSublayer:textLayer];
+    textLayer = nil;
+    
+    textLayer = [[CATextLayer alloc] init];
+    textLayer.string = timestamp;
+    textLayer.backgroundColor = [UIColor clearColor].CGColor;
+    [textLayer setForegroundColor:[[UIColor clearColor] CGColor]];
+    [textLayer setContentsScale:[[UIScreen mainScreen] scale]];
+    textLayer.wrapped = YES;
+    
+    textLayer.frame = CGRectMake(self.bounds.size.width-timestamp.size.width-5, 0, timestamp.size.width, timestamp.size.height);
+    
+//    [contentLayer addSublayer:textLayer];
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, rect.size.height);
+    [self.contentView.layer addSublayer:textLayer];
+    
+}
+
+- (CGRect)calculateRect
+{
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", self.nickname, self.message]];
+    
+    [string addAttribute:NSFontAttributeName
+                   value:[UIFont boldSystemFontOfSize:16.0]
+                   range:NSMakeRange(0, self.nickname.length)];
+    
+    [string addAttribute:NSFontAttributeName
+                   value:[UIFont systemFontOfSize:12.0]
+                   range:NSMakeRange(self.nickname.length+1, self.message.length)];
+    
+    CGSize maxsize = CGSizeMake(300, CGFLOAT_MAX);
+    return [string boundingRectWithSize:maxsize options:NSStringDrawingUsesLineFragmentOrigin context:nil];
 }
 
 

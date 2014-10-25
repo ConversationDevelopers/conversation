@@ -35,6 +35,7 @@
 #import "IRCCommands.h"
 
 @interface ChatViewController ()
+@property (readonly, nonatomic) ChatMessageView *dummyCell;
 @property (readonly, nonatomic) UITableView *tableView;
 @property (readonly, nonatomic) UIView *container;
 @property (readonly, nonatomic) PHFComposeBarView *composeBarView;
@@ -168,7 +169,20 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 60;
+    if ( !_dummyCell ) _dummyCell = [[ChatMessageView alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+    
+    IRCMessage *message = _messages[indexPath.row];
+    IRCUser *user = message.sender;
+    
+    _dummyCell.timestamp = message.timestamp;
+    _dummyCell.nickname = user.nick;
+    _dummyCell.message = message.message;
+    
+    CGFloat height;
+    CGRect rect = [_dummyCell calculateRect];
+    height = rect.size.height;
+    if ( height == 0 ) height = 50;
+    return height+10.0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -183,14 +197,15 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     
     ChatMessageView *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[ChatMessageView alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+        cell = [[ChatMessageView alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
     IRCMessage *message = _messages[indexPath.row];
     IRCUser *user = message.sender;
     
+    cell.timestamp = message.timestamp;
     cell.nickname = user.nick;
-    cell.message = [[NSAttributedString alloc] initWithString:message.message attributes:@{}];
+    cell.message = message.message;
     
     return cell;
 }
@@ -217,7 +232,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (UIView *)container {
     if (!_container) {
         _container = [[UIView alloc] initWithFrame:kInitialViewFrame];
-        [_container setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
+        _container.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     }
     
     return _container;
@@ -227,14 +242,16 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (UITableView *)tableView {
     
     if(!_tableView) {
-        CGRect frame = CGRectMake(0.0f,
-                                  20.0f,
+        CGRect frame = CGRectMake(0.0,
+                                  0.0,
                                   kInitialViewFrame.size.width,
-                                  kInitialViewFrame.size.height - 20.0f);
+                                  kInitialViewFrame.size.height - 20.0);
         
         _tableView = [[UITableView alloc] initWithFrame:frame];
+        _tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.dataSource = self;
+        _tableView.delegate = self;
     }
     return _tableView;
 }
