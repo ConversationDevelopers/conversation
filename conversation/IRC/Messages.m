@@ -95,7 +95,7 @@
     message++;
     
     /* Make a copy of the string */
-    char* messageCopy = malloc(strlen(message));
+    char* messageCopy = malloc(strlen(message)+1);
     strcpy(messageCopy, message);
     
     /* Iterate to the first space or the end of the message to get the "CTCP command" received. */
