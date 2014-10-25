@@ -65,6 +65,9 @@
 */
     [IRCMessageIndex initialiseMessageIndex];
     [IRCMessageIndex initialiseCapIndex];
+    
+    self.IRCv3CapabilitiesSupportedByApplication = @[
+    ];
 
     return YES;
 }

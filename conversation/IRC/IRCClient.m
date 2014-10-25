@@ -79,6 +79,7 @@
         self.channels = [[NSMutableArray alloc] init];
         self.queries = [[NSMutableArray alloc] init];
         self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
+        self.ircv3CapabilitiesSupportedByServer = [[NSMutableArray alloc] init];
         
         return self;
     }
@@ -513,6 +514,7 @@
     self.isProcessingTermination =          NO;
     self.alternativeNickNameAttempts = 0;
     self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
+    self.ircv3CapabilitiesSupportedByServer = [[NSMutableArray alloc] init];
     [self.connection disableFloodControl];
     
     for (IRCChannel *channel in self.channels) {

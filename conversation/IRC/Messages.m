@@ -64,31 +64,53 @@
     CapMessageType capIndexValue = [IRCMessageIndex capIndexValueFromString:capCommandString];
     switch (capIndexValue) {
         case CAP_LS:
-            [client.connection send:[NSString stringWithFormat:@"CAP END"]];
-            break;
-            
-        case CAP_LIST:
-            break;
-            
-        case CAP_REQ:
+            [Messages clientReceivedListOfServerIRCv3Capabilities:message onClient:client];
             break;
             
         case CAP_ACK:
+            [Messages clientReceivedAcknowledgedCapabilities:message onClient:client];
             break;
             
         case CAP_NAK:
+            [client.connection send:@"CAP END"];
             break;
             
         case CAP_CLEAR:
-            break;
-            
-        case CAP_END:
             break;
             
         default:
             break;
     }
     free(capCommand);
+}
+
++ (void)clientReceivedListOfServerIRCv3Capabilities:(const char *)capabilities onClient:(IRCClient *)client
+{
+    NSString *capabilitiesString = [NSString stringWithCString:capabilities usingEncodingPreference:client.configuration];
+    NSArray *capabilitiesList = [capabilitiesString componentsSeparatedByString:@" "];
+    
+    NSArray *applicationCapabilities = ((AppDelegate *)[UIApplication sharedApplication].delegate).IRCv3CapabilitiesSupportedByApplication;
+    
+    NSMutableArray *capabilitiesToNegotiate = [[NSMutableArray alloc] init];
+    for (NSString *capability in capabilitiesList) {
+        if ([applicationCapabilities indexOfObject:capability] != NSNotFound) {
+            [capabilitiesToNegotiate addObject:capability];
+        }
+    }
+    if ([capabilitiesToNegotiate count] > 0) {
+        NSString *negotiateCapabilitiesString = [capabilitiesToNegotiate componentsJoinedByString:@" "];
+        [client.connection send:[NSString stringWithFormat:@"CAP REQ :%@", negotiateCapabilitiesString]];
+    } else {
+        [client.connection send:@"CAP END"];
+    }
+}
+
++ (void)clientReceivedAcknowledgedCapabilities:(const char*)capabilities onClient:(IRCClient *)client
+{
+    NSString *capabilitiesString = [NSString stringWithCString:capabilities usingEncodingPreference:client.configuration];
+    NSArray *capabilitiesList = [capabilitiesString componentsSeparatedByString:@" "];
+    client.ircv3CapabilitiesSupportedByServer = [capabilitiesList mutableCopy];
+    [client.connection send:@"CAP END"];
 }
 
 + (void)userReceivedMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client

@@ -56,6 +56,7 @@
 
 
 @property (nonatomic, strong) NSMutableDictionary *featuresSupportedByServer;
+@property (nonatomic, strong) NSMutableArray *ircv3CapabilitiesSupportedByServer;
 
 - (instancetype)initWithConfiguration:(IRCConnectionConfiguration *)config;
 - (void)connect;

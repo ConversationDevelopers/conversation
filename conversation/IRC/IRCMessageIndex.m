@@ -57,12 +57,9 @@ static NSArray *IRCCAPIndexReference = nil;
 {
     IRCCAPIndexReference = @[
         @"LS",
-        @"LIST",
-        @"REQ",
         @"ACK",
         @"NAK",
-        @"CLEAR",
-        @"END"
+        @"CLEAR"
     ];
 }
 

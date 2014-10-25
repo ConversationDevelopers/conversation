@@ -34,12 +34,9 @@
 
 typedef NS_ENUM(NSUInteger, CapMessageType) {
     CAP_LS,
-    CAP_LIST,
-    CAP_REQ,
     CAP_ACK,
     CAP_NAK,
-    CAP_CLEAR,
-    CAP_END
+    CAP_CLEAR
 };
 
 typedef NS_ENUM(NSUInteger, MessageType) {

@@ -37,7 +37,7 @@
 
 @property (nonatomic) ConversationListViewController *conversationsController;
 @property (strong, nonatomic) UIWindow *window;
-
+@property (nonatomic) NSArray *IRCv3CapabilitiesSupportedByApplication;
 
 @end
 
