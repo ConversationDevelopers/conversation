@@ -33,6 +33,7 @@
 #import "IRCUser.h"
 #import "IRCChannel.h"
 #import "IRCConversation.h"
+#import "IRCCommands.h"
 #import "ConversationListViewController.h"
 
 #define CONNECTION_RETRY_INTERVAL       30
@@ -122,8 +123,8 @@
     
     [self.connection send:@"CAP LS"];
     
-    [self.connection send:[NSString stringWithFormat:@"NICK %@",
-                    self.configuration.primaryNickname]];
+    
+    [IRCCommands changeNicknameToNick:self.configuration.primaryNickname onClient:self];
     [self.connection send:[NSString stringWithFormat:@"USER %@ 0 * :%@",
                     self.configuration.usernameForRegistration,
                     self.configuration.realNameForRegistration]];
@@ -370,14 +371,14 @@
                 /* The nick error did happen during initial registration, we will check if we have already tried the secondary nickname */
                 if ([self.currentUserOnConnection.nick isEqualToString:self.configuration.primaryNickname]) {
                     /* This is the first occurance of this error, so we will try registration again with the secondary nickname. */
-                    [self.connection send:[NSString stringWithFormat:@"NICK %@", self.configuration.secondaryNickname]];
+                    [IRCCommands changeNicknameToNick:self.configuration.secondaryNickname onClient:self];
                     self.currentUserOnConnection.nick = self.configuration.secondaryNickname;
                 } else {
                     /* The secondary nickname has already been attempted, so we will append an underscore to the nick until
                      we find one that the server accepts. If we cannot find a nick within 25 characters, we will abort. */
                     if ([self.currentUserOnConnection.nick length] < 25) {
                         NSString *newNickName = [NSString stringWithFormat:@"%@_", self.currentUserOnConnection.nick];
-                        [self.connection send:[@"NICK " stringByAppendingString:newNickName]];
+                        [IRCCommands changeNicknameToNick:newNickName onClient:self];
                         self.currentUserOnConnection.nick = newNickName;
                     } else {
                         NSLog(@"Registration failed. Disconnecting..");
