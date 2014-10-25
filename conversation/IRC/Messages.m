@@ -351,8 +351,8 @@
     NSString *channelString = [NSString stringWithCString:rchannel usingEncodingPreference:[client configuration]];
     
     IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:channelString withClient:client];
-    if (channel == nil) {
-        return;
+    if (channel != nil) {
+        channel.topic = topicString;
     }
     
     [channel setTopic:topicString];
