@@ -110,6 +110,7 @@
             break;
             
         case CAP_CLEAR:
+            client.ircv3CapabilitiesSupportedByServer = [[NSMutableArray alloc] init];
             break;
             
         default:
