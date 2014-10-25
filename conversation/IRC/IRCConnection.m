@@ -74,13 +74,6 @@
         NSLog(@"Error: %@", err);
     } else {
         NSLog(@"Connecting..");
-        
-        if (self.client.configuration.connectUsingSecureLayer) {
-            // Skip certificate validation. FOR TESTING PURPOSES ONLY DO NEVER LET THIS GET INTO PRODUCTION EVER.
-            [socket startTLS:nil];
-        }
-        
-        [socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:1];
     }
 }
 
@@ -88,9 +81,21 @@
 {
     NSLog(@"onSocket:%p didConnectToHost:%@ port:%hu", sock, host, port);
     
+    if (self.client.configuration.connectUsingSecureLayer) {
+        NSMutableDictionary *settings = [NSMutableDictionary dictionaryWithCapacity:1];
+        [settings setObject:@YES forKey:GCDAsyncSocketManuallyEvaluateTrust];
+        [socket startTLS:settings];
+    }
+    
     [self.client clientDidConnect];
     
     [socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:1];
+}
+
+- (void)socket:(GCDAsyncSocket *)sock didReceiveTrust:(SecTrustRef)trust completionHandler:(void (^)(BOOL shouldTrustPeer))completionHandler {
+    
+    // Skip certificate validation. FOR TESTING PURPOSES ONLY DO NEVER LET THIS GET INTO PRODUCTION EVER.
+    if (completionHandler) completionHandler(YES);
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag
