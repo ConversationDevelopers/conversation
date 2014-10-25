@@ -245,7 +245,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         CGRect frame = CGRectMake(0.0,
                                   0.0,
                                   kInitialViewFrame.size.width,
-                                  kInitialViewFrame.size.height - 20.0);
+                                  kInitialViewFrame.size.height - PHFComposeBarViewInitialHeight);
         
         _tableView = [[UITableView alloc] initWithFrame:frame];
         _tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
