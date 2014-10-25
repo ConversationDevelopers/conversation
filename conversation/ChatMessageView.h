@@ -29,13 +29,12 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "IRCMessage.h"
 
 @interface ChatMessageView : UITableViewCell
 
 - (CGRect)calculateRect;
 
-@property (nonatomic) NSString *nickname;
-@property (nonatomic) NSString *message;
-@property (nonatomic) NSDate *timestamp;
+@property (nonatomic) IRCMessage *message;
 
 @end

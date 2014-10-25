@@ -31,7 +31,6 @@
 #import "ChatViewController.h"
 #import "ChatMessageView.h"
 #import "IRCMessage.h"
-#import "IRCUser.h"
 #import "IRCCommands.h"
 
 @interface ChatViewController ()
@@ -170,12 +169,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 {
     if ( !_dummyCell ) _dummyCell = [[ChatMessageView alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
     
-    IRCMessage *message = _messages[indexPath.row];
-    IRCUser *user = message.sender;
-    
-    _dummyCell.timestamp = message.timestamp;
-    _dummyCell.nickname = user.nick;
-    _dummyCell.message = message.message;
+    _dummyCell.message = _messages[indexPath.row];
     
     CGFloat height;
     CGRect rect = [_dummyCell calculateRect];
@@ -199,12 +193,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         cell = [[ChatMessageView alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    IRCMessage *message = _messages[indexPath.row];
-    IRCUser *user = message.sender;
-    
-    cell.timestamp = message.timestamp;
-    cell.nickname = user.nick;
-    cell.message = message.message;
+    cell.message = _messages[indexPath.row];
     
     return cell;
 }

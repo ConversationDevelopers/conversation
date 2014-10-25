@@ -29,6 +29,7 @@
  */
 
 #import "ChatMessageView.h"
+#import "IRCUser.h"
 
 @implementation ChatMessageView
 
@@ -58,22 +59,25 @@
 
     
     NSString *time = @"";
-    if (_timestamp) {
-        NSDate *date = self.timestamp;
+    if (_message.timestamp) {
+        NSDate *date = _message.timestamp;
         NSCalendar *calendar = [NSCalendar currentCalendar];
         NSDateComponents *components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:date];
         time = [NSString stringWithFormat:@":%ld", [components minute]];
     }
     
-    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", self.nickname, self.message]];
+    NSString *nick = _message.sender.nick;
+    NSString *message = _message.message;
+    
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", nick, message]];
 
     [string addAttribute:NSFontAttributeName
                   value:[UIFont boldSystemFontOfSize:16.0]
-                  range:NSMakeRange(0, self.nickname.length)];
+                  range:NSMakeRange(0, nick.length)];
     
     [string addAttribute:NSFontAttributeName
                    value:[UIFont systemFontOfSize:12.0]
-                   range:NSMakeRange(self.nickname.length+1, self.message.length)];
+                   range:NSMakeRange(nick.length+1, message.length)];
     
     NSMutableAttributedString *timestamp = [[NSMutableAttributedString alloc] initWithString:time];
 
@@ -118,15 +122,18 @@
 
 - (CGRect)calculateRect
 {
-    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", self.nickname, self.message]];
+    NSString *nick = _message.sender.nick;
+    NSString *message = _message.message;
+    
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", nick, message]];
     
     [string addAttribute:NSFontAttributeName
                    value:[UIFont boldSystemFontOfSize:16.0]
-                   range:NSMakeRange(0, self.nickname.length)];
+                   range:NSMakeRange(0, nick.length)];
     
     [string addAttribute:NSFontAttributeName
                    value:[UIFont systemFontOfSize:12.0]
-                   range:NSMakeRange(self.nickname.length+1, self.message.length)];
+                   range:NSMakeRange(nick.length+1, message.length)];
     
     CGSize maxsize = CGSizeMake(300, CGFLOAT_MAX);
     return [string boundingRectWithSize:maxsize options:NSStringDrawingUsesLineFragmentOrigin context:nil];
