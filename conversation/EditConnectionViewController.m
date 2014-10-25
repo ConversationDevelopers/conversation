@@ -108,12 +108,13 @@ static unsigned short EncodingTableSection = 3;
     }
     
     // Store passwords in keychain
-    NSString *identifier = [[NSUUID UUID] UUIDString];
     if(_configuration.serverPasswordReference) {
+        NSString *identifier = [[NSUUID UUID] UUIDString];
         [SSKeychain setPassword:_configuration.serverPasswordReference forService:@"conversation" account:identifier];
         _configuration.serverPasswordReference = identifier;
     }
     if(_configuration.authenticationPasswordReference) {
+        NSString *identifier = [[NSUUID UUID] UUIDString];
         [SSKeychain setPassword:_configuration.authenticationPasswordReference forService:@"conversation" account:identifier];
         _configuration.authenticationPasswordReference = identifier;
     }
