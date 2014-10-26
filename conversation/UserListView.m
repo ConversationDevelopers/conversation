@@ -40,12 +40,13 @@
     [self addSubview:translucentView]; //that's it :)
     
     //optional:
-    translucentView.translucentAlpha = 1;
+    translucentView.translucentAlpha = 0.8;
     translucentView.translucentStyle = UIBarStyleDefault;
     translucentView.translucentTintColor = [UIColor whiteColor];
     translucentView.backgroundColor = [UIColor clearColor];
     
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
+    tableView.backgroundColor = [UIColor clearColor];
     tableView.delegate = self;
     tableView.dataSource = self;
     [translucentView addSubview:tableView];
