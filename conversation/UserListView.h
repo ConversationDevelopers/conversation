@@ -32,4 +32,6 @@
 
 @interface UserListView : UIView
 
+@property (nonatomic, strong) UIColor *blurTintColor;
+
 @end

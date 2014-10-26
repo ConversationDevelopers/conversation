@@ -32,12 +32,15 @@
 #import "ChatMessageView.h"
 #import "IRCMessage.h"
 #import "IRCCommands.h"
+#import "UserListView.h"
 
 @interface ChatViewController ()
+@property (nonatomic) BOOL userlistIsVisible;
 @property (readonly, nonatomic) ChatMessageView *dummyCell;
 @property (readonly, nonatomic) UITableView *tableView;
 @property (readonly, nonatomic) UIView *container;
 @property (readonly, nonatomic) PHFComposeBarView *composeBarView;
+@property (readonly, nonatomic) UserListView *userListView;
 @end
 
 CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
@@ -100,7 +103,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     UIBarButtonItem *userlistButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Userlist"]
                                                                        style:UIBarButtonItemStylePlain
                                                                       target:self
-                                                                      action:@selector(userList:)];
+                                                                      action:@selector(showUserList:)];
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ChannelIcon_Light"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
     self.navigationItem.rightBarButtonItem = userlistButton;
     self.navigationItem.leftBarButtonItem = backButton;
@@ -113,6 +116,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     [container addSubview:[self composeBarView]];
     
     [view addSubview:container];
+    
     [self setEdgesForExtendedLayout:UIRectEdgeNone];
     
     [self setView:view];
@@ -120,6 +124,9 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)keyboardWillToggle:(NSNotification *)notification
 {
+    if (_userlistIsVisible)
+        [_userListView removeFromSuperview];
+
     NSDictionary* userInfo = [notification userInfo];
     NSTimeInterval duration;
     UIViewAnimationCurve animationCurve;
@@ -156,9 +163,13 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
-- (void)userList:(id)sender
+- (void)showUserList:(id)sender
 {
-    NSLog(@"Userlist");
+    NSLog(@"show User list");
+    _userlistIsVisible = YES;
+    [_composeBarView resignFirstResponder];    
+    UIView *userlist = [self userListView];
+    [self.navigationController.view addSubview:userlist];
 }
 
 - (void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView
@@ -228,8 +239,13 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     }
 }
 
-- (void)dismissKeyboard:(UIGestureRecognizer*)sender
+- (void)hideAccessories:(UIGestureRecognizer*)sender
 {
+    if (_userlistIsVisible) {
+        [_userListView removeFromSuperview];
+        _userlistIsVisible = NO;
+        return;
+    }
     [_composeBarView resignFirstResponder];
 }
 
@@ -275,7 +291,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         _tableView.dataSource = self;
         _tableView.delegate = self;
         
-        UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard:)];
+        UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideAccessories:)];
         [singleTapRecogniser setDelegate:self];
         singleTapRecogniser.numberOfTouchesRequired = 1;
         singleTapRecogniser.numberOfTapsRequired = 1;
@@ -306,6 +322,21 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         [[_composeBarView textView] setReturnKeyType:UIReturnKeySend];
     }
     return _composeBarView;
+}
+
+@synthesize userListView = _userListView;
+- (UserListView *)userListView {
+    
+    if (!_userListView) {
+        CGFloat width = 200.0f;
+        CGRect frame = CGRectMake(_tableView.frame.size.width - width - 5.0f,
+                                  30.0f,
+                                  width,
+                                  _tableView.frame.size.height+30.0f);
+        
+        _userListView = [[UserListView alloc] initWithFrame:frame];
+    }
+    return _userListView;
 }
 
 @end

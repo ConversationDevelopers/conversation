@@ -29,15 +29,20 @@
  */
 
 #import "UserListView.h"
+#import "ILTranslucentView.h"
 
 @implementation UserListView
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect {
-    // Drawing code
+    ILTranslucentView *translucentView = [[ILTranslucentView alloc] initWithFrame:self.bounds];
+    [self addSubview:translucentView]; //that's it :)
+    
+    //optional:
+    translucentView.translucentAlpha = 1;
+    translucentView.translucentStyle = UIBarStyleDefault;
+    translucentView.translucentTintColor = [UIColor whiteColor];
+    translucentView.backgroundColor = [UIColor clearColor];
 }
-*/
+
 
 @end
