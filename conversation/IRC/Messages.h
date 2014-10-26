@@ -32,6 +32,7 @@
 #import "AppDelegate.h"
 #import "IRCChannel.h"
 #import "IRCMessage.h"
+#import "IRCQuitMessage.h"
 #import "NSString+Methods.h"
 
 @class IRCClient;

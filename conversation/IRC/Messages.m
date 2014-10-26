@@ -468,12 +468,31 @@
 
 + (void)userReceivedQUIT:(const char*[3])senderDict onClient:(IRCClient *)client withMessage:(const char *)message withTags:(NSMutableDictionary *)tags
 {
+    NSMutableArray *conversationsWithUser = [[NSMutableArray alloc] init];
     for (IRCChannel *channel in [client getChannels]) {
         IRCUser *userOnChannel = [IRCUser fromNickname:senderDict[0] onChannel:channel];
         if (userOnChannel) {
             [channel removeUserByName:[userOnChannel nick]];
+            [conversationsWithUser addObject:channel];
         }
     }
+    NSString *nickString = [NSString stringWithCString:senderDict[0] usingEncodingPreference:client.configuration];
+    NSString *userString = [NSString stringWithCString:senderDict[1] usingEncodingPreference:client.configuration];
+    NSString *hostString = [NSString stringWithCString:senderDict[2] usingEncodingPreference:client.configuration];
+    
+    for (IRCConversation *conversation in [client getQueries]) {
+        if (conversation.name == nickString) {
+            [conversationsWithUser addObject:conversation];
+        }
+    }
+    
+    NSString *quitMessage = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
+    IRCUser *user = [[IRCUser alloc] initWithNickname:nickString andUsername:userString andHostname:hostString onClient:client];
+    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    
+    IRCQuitMessage *messageObject = [[IRCQuitMessage alloc] initWithMessage:quitMessage inConversations:conversationsWithUser bySender:user atTime:now];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:messageObject];
 }
 
 + (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(const char *[3])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
