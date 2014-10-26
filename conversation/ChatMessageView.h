@@ -33,7 +33,7 @@
 
 @interface ChatMessageView : UITableViewCell
 
-- (CGRect)calculateRect;
+- (CGFloat)cellHeight;
 
 @property (nonatomic) IRCMessage *message;
 

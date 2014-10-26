@@ -30,6 +30,7 @@
 
 #import "ChatMessageView.h"
 #import "IRCUser.h"
+#import <CoreText/CoreText.h>
 
 @implementation ChatMessageView
 
@@ -100,9 +101,9 @@
     [textLayer setContentsScale:[[UIScreen mainScreen] scale]];
     [textLayer setRasterizationScale:[[UIScreen mainScreen] scale]];
     
-    CGRect rect = [self calculateRect];
+    CGSize size = [self frameSizeForString:string];
     
-    textLayer.frame = CGRectMake(10, 5, self.bounds.size.width-20, rect.size.height);
+    textLayer.frame = CGRectMake(10, 5, self.bounds.size.width-20, size.height);
     textLayer.wrapped = YES;
     
     [self.contentView.layer addSublayer:textLayer];
@@ -119,12 +120,37 @@
     
     textLayer.frame = CGRectMake(self.bounds.size.width-timestamp.size.width-5, 5, timestamp.size.width, timestamp.size.height);
     
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, rect.size.height+5);
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, size.height+10);
     [self.contentView.layer addSublayer:textLayer];
     
 }
 
-- (CGRect)calculateRect
+- (CGSize)frameSizeForString:(NSAttributedString *)string
+{
+    CTTypesetterRef typesetter = CTTypesetterCreateWithAttributedString((CFAttributedStringRef)string);
+    CGFloat width = self.bounds.size.width;
+    
+    CFIndex offset = 0, length;
+    CGFloat y = 0;
+    do {
+        length = CTTypesetterSuggestLineBreak(typesetter, offset, width);
+        CTLineRef line = CTTypesetterCreateLine(typesetter, CFRangeMake(offset, length));
+        
+        CGFloat ascent, descent, leading;
+        CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+        
+        CFRelease(line);
+        
+        offset += length;
+        y += ascent + descent + leading;
+    } while (offset < [string length]);
+    
+    CFRelease(typesetter);
+    
+    return CGSizeMake(width, ceil(y));
+}
+
+- (CGFloat)cellHeight
 {
     NSString *nick = _message.sender.nick;
     NSString *message = _message.message;
@@ -139,9 +165,8 @@
                    value:[UIFont systemFontOfSize:12.0]
                    range:NSMakeRange(nick.length+1, message.length)];
     
-    CGSize maxsize = CGSizeMake(300, CGFLOAT_MAX);
-    return [string boundingRectWithSize:maxsize options:NSStringDrawingUsesLineFragmentOrigin context:nil];
+    CGSize size = [self frameSizeForString:string];
+    return size.height;
 }
-
 
 @end
