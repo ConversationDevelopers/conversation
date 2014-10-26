@@ -347,6 +347,14 @@
         client.currentUserOnConnection.username =   [NSString stringWithCString:senderDict[1] usingEncodingPreference:client.configuration];
         client.currentUserOnConnection.hostname =   [NSString stringWithCString:senderDict[2] usingEncodingPreference:client.configuration];
     }
+    for (IRCChannel *channel in [client getChannels]) {
+        IRCUser *userOnChannel = [IRCUser fromSender:senderDict onChannel:channel];
+        if (userOnChannel) {
+            userOnChannel.nick = [NSString stringWithCString:newNick usingEncodingPreference:client.configuration];
+            [channel removeUserByName:[userOnChannel nick]];
+             [channel.users addObject:userOnChannel];
+        }
+    }
 }
 
 + (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(const char *[3])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
