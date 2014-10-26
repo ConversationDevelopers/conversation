@@ -108,18 +108,22 @@ static unsigned short EncodingTableSection = 3;
     }
     
     // Store passwords in keychain
-    if(_configuration.serverPasswordReference) {
+    if(_configuration.serverPasswordReference.length) {
         NSString *identifier = [[NSUUID UUID] UUIDString];
         [SSKeychain setPassword:_configuration.serverPasswordReference forService:@"conversation" account:identifier];
         _configuration.serverPasswordReference = identifier;
     }
-    if(_configuration.authenticationPasswordReference) {
+    if(_configuration.authenticationPasswordReference.length) {
         NSString *identifier = [[NSUUID UUID] UUIDString];
         [SSKeychain setPassword:_configuration.authenticationPasswordReference forService:@"conversation" account:identifier];
         _configuration.authenticationPasswordReference = identifier;
     }
     
     IRCClient *client = [[IRCClient alloc] initWithConfiguration:_configuration];
+    
+    for (IRCChannelConfiguration *config in _configuration.channels) {
+        [client addChannel:[[IRCChannel alloc] initWithConfiguration:config withClient:client]];
+    }
 
     // Does the connection already exist?
     if ([[AppPreferences sharedPrefs] hasConnectionWithIdentifier:_configuration.uniqueIdentifier]) {

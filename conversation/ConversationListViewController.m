@@ -114,7 +114,6 @@
     int i=0;
     for (IRCClient *cl in self.connections) {
         if([cl.configuration.uniqueIdentifier isEqualToString:client.configuration.uniqueIdentifier]) {
-            [_connections setObject:client atIndexedSubscript:i];
             [self.tableView reloadData];
             break;
         }
@@ -197,7 +196,6 @@
     if(client != nil) {
         [client sortChannelItems];
         [client sortQueryItems];
-        [_connections setObject:client atIndexedSubscript:index];
         [[AppPreferences sharedPrefs] setChannels:client.getChannels andQueries:client.getQueries forConnectionConfiguration:client.configuration];
         [self.tableView reloadData];        
     }
@@ -456,11 +454,10 @@
             
         }
         
-        [connections setObject:client atIndexedSubscript:i];
     }
+    IRCConnectionConfiguration *config = [[IRCConnectionConfiguration alloc] initWithDictionary:[[[AppPreferences sharedPrefs] getConnectionConfigurations] objectAtIndex:i]];
+    client.configuration = config;
     _connections = connections;
-    
-    
     
     [self.tableView reloadData];
     [[AppPreferences sharedPrefs] save];
@@ -480,18 +477,6 @@
     }
 }
 
-- (NSInteger)getIndexOfClient:(IRCClient *)client
-{
-    int i=0;
-    for (IRCClient *cl in _connections) {
-        if([cl.configuration.uniqueIdentifier isEqualToString:client.configuration.uniqueIdentifier]) {
-            break;
-        }
-        i++;
-    }
-    return i;
-}
-
 - (void)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client
 {
     IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
@@ -499,7 +484,6 @@
     IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:configuration withClient:client];
     [client addChannel:channel];
     
-    [_connections setObject:client atIndexedSubscript:[self getIndexOfClient:client]];
     [self.tableView reloadData];
     [[AppPreferences sharedPrefs] addChannelConfiguration:configuration forConnectionConfiguration:client.configuration];
     [[AppPreferences sharedPrefs] save];
@@ -512,7 +496,6 @@
     IRCConversation *query = [[IRCConversation alloc] initWithConfiguration:configuration withClient:client];
     [client addQuery:query];
     
-    [_connections setObject:client atIndexedSubscript:[self getIndexOfClient:client]];
     [self.tableView reloadData];
     [[AppPreferences sharedPrefs] addQueryConfiguration:configuration forConnectionConfiguration:client.configuration];
     [[AppPreferences sharedPrefs] save];
