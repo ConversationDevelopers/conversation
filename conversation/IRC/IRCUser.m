@@ -29,15 +29,16 @@
  */
 
 #import "IRCUser.h"
+#import "IRCChannel.h"
 
 @implementation IRCUser
 
 - (instancetype) initWithSenderDict:(const char **)senderDict onClient:(IRCClient *)client
 {
     if ((self = [super init])) {
-        self.nick = [NSString stringWithCString:senderDict[1] usingEncodingPreference:[client configuration]];
-        self.username = [NSString stringWithCString:senderDict[2] usingEncodingPreference:[client configuration]];
-        self.hostname = [NSString stringWithCString:senderDict[3] usingEncodingPreference:[client configuration]];
+        self.nick = [NSString stringWithCString:senderDict[0] usingEncodingPreference:[client configuration]];
+        self.username = [NSString stringWithCString:senderDict[1] usingEncodingPreference:[client configuration]];
+        self.hostname = [NSString stringWithCString:senderDict[2] usingEncodingPreference:[client configuration]];
         
         self.isAway = NO;
         
@@ -62,9 +63,9 @@
     return nil;
 }
 
-+ (IRCUser *)fromSender:(const char **)senderDict onChannel:(IRCChannel *)channel createIfMissing:(BOOL)createIfMissing
++ (IRCUser *)fromSender:(const char **)senderDict onChannel:(IRCChannel *)channel
 {
-    NSString *nickString = [NSString stringWithCString:senderDict[1] usingEncodingPreference:[[channel client] configuration]];
+    NSString *nickString = [NSString stringWithCString:senderDict[0] usingEncodingPreference:[[channel client] configuration]];
     
     IRCUser *userFromUserlist = nil;
     for (IRCUser *user in [channel users]) {
@@ -72,9 +73,6 @@
             userFromUserlist = user;
             break;
         }
-    }
-    if (userFromUserlist == nil && createIfMissing) {
-        return [[IRCUser alloc] initWithSenderDict:senderDict onClient:[channel client]];
     }
     return userFromUserlist;
 }

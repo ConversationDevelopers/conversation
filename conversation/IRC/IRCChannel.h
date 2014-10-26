@@ -32,6 +32,7 @@
 #import "IRCClient.h"
 #import "IRCConversation.h"
 #import "IRCChannelConfiguration.h"
+#import "IRCUser.h"
 
 @class IRCClient;
 
@@ -44,5 +45,6 @@
 
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;
 - (void)setTopic:(NSString *)topic;
+- (void)removeUserByName:(NSString *)nickname;
 
 @end

@@ -30,8 +30,9 @@
 
 #import <Foundation/Foundation.h>
 #import "IRCClient.h"
-#import "IRCChannel.h"
 #import "NSString+Methods.h"
+
+@class IRCChannel;
 
 @interface IRCUser : NSObject
 
@@ -45,6 +46,7 @@
 
 - (instancetype) initWithSenderDict:(const char **)senderDict onClient:(IRCClient *)client;
 - (instancetype) initWithNickname:(NSString *)nickname andUsername:(NSString *)username andHostname:(NSString *)hostname onClient:(IRCClient *)client;
++ (IRCUser *)fromSender:(const char **)senderDict onChannel:(IRCChannel *)channel;
 
 typedef enum ChannelPrivileges : NSUInteger {
     NORMAL,
@@ -52,7 +54,7 @@ typedef enum ChannelPrivileges : NSUInteger {
     HALFOP,
     OPERATOR,
     ADMIN,
-    FOUNDER,
+    OWNER,
     IRCOP
 } ChannelPrivileges;
 

@@ -251,7 +251,7 @@
     free(messageCopy);
 }
 
-+ (void)userReceivedACTIONMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
++ (void)userReceivedACTIONMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[3])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
 {
     NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:[client configuration]];
     IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
@@ -298,7 +298,7 @@
     }
 }
 
-+ (void)userReceivedJOIN:(const char *[4])senderDict onChannel:(const char *)rchannel onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
++ (void)userReceivedJOIN:(const char *[3])senderDict onChannel:(const char *)rchannel onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
 {
     /* Get the user that performed the JOIN */
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
@@ -312,13 +312,14 @@
             [controller joinChannelWithName:channelName onClient:client];
             channel =  [IRCChannel fromString:channelName withClient:client];
         }
+        [client.connection send:[NSString stringWithFormat:@"WHO %@", channelName]];
         channel.isJoinedByUser = YES;
         [controller reloadClient:client];
         
     }
 }
 
-+ (void)userReceivedPART:(const char *[4])senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client withMessage:(char *)message withTags:(NSMutableDictionary *)tags
++ (void)userReceivedPART:(const char *[3])senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client withMessage:(char *)message withTags:(NSMutableDictionary *)tags
 {
     /* Get the user that performed the PART */
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
@@ -335,17 +336,17 @@
     }
 }
 
-+ (void)userReceivedNickchange:(const char *[4])senderDict toNick:(const char *)newNick onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
++ (void)userReceivedNickchange:(const char *[3])senderDict toNick:(const char *)newNick onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
 {
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
     if ([[user nick] isEqualToString:client.currentUserOnConnection.nick]) {
         client.currentUserOnConnection.nick     =   [NSString stringWithCString:newNick usingEncodingPreference:client.configuration];
-        client.currentUserOnConnection.username =   [NSString stringWithCString:senderDict[2] usingEncodingPreference:client.configuration];
-        client.currentUserOnConnection.hostname =   [NSString stringWithCString:senderDict[3] usingEncodingPreference:client.configuration];
+        client.currentUserOnConnection.username =   [NSString stringWithCString:senderDict[1] usingEncodingPreference:client.configuration];
+        client.currentUserOnConnection.hostname =   [NSString stringWithCString:senderDict[2] usingEncodingPreference:client.configuration];
     }
 }
 
-+ (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(const char *[4])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
++ (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(const char *[3])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
 {
     NSString *topicString = [NSString stringWithCString:topic usingEncodingPreference:[client configuration]];
     NSString *channelString = [NSString stringWithCString:rchannel usingEncodingPreference:[client configuration]];
@@ -391,6 +392,95 @@
                                         repeats:NO];
     }
     
+}
+
++ (void)clientReceivedWHOReply:(const char *)line onClient:(IRCClient *)client
+{
+    const char* pointerBeforeIteration = line;
+    int lengthOfChannel = 0;
+    while (*line != ' ' && *line != '\0') {
+        lengthOfChannel++;
+        line++;
+    }
+    char* channel = malloc(lengthOfChannel + 1);
+    strncpy(channel, pointerBeforeIteration, lengthOfChannel);
+    
+    line++;
+    pointerBeforeIteration = line;
+    
+    int lengthOfUsername = 0;
+    while (*line != ' ' && *line != '\0') {
+        lengthOfUsername++;
+        line++;
+    }
+    char* username = malloc(lengthOfUsername + 1);
+    strncpy(username, pointerBeforeIteration, lengthOfUsername);
+    
+    line++;
+    pointerBeforeIteration = line;
+    
+    int lengthOfHostname = 0;
+    while (*line != ' ' && *line != '\0') {
+        lengthOfHostname++;
+        line++;
+    }
+    char* hostname = malloc(lengthOfHostname + 1);
+    strncpy(hostname, pointerBeforeIteration, lengthOfHostname);
+    
+    line++;
+    pointerBeforeIteration = line;
+    
+    while (*line != ' ' && *line != '\0') {
+        line++;
+        pointerBeforeIteration++;
+    }
+    
+    line++;
+    pointerBeforeIteration++;
+    
+    int lengthOfNickname = 0;
+    while (*line != ' ' && *line != '\0') {
+        lengthOfNickname++;
+        line++;
+    }
+    char* nickname = malloc(lengthOfNickname + 1);
+    strncpy(nickname, pointerBeforeIteration, lengthOfNickname);
+    
+    line = line + 2;
+    
+    NSString *channelString = [NSString stringWithCString:channel usingEncodingPreference:client.configuration];
+    IRCChannel *ircChannel = [IRCChannel fromString:channelString withClient:client];
+    
+    const char *senderDict[] = {
+        nickname,
+        username,
+        hostname
+    };
+    
+    IRCUser *user = [IRCUser fromSender:senderDict onChannel:ircChannel];
+    NSString *nicknameString = [NSString stringWithCString:nickname usingEncodingPreference:client.configuration];
+    if (user == nil) {
+        NSString *usernameString = [NSString stringWithCString:username usingEncodingPreference:client.configuration];
+        NSString *hostnameString = [NSString stringWithCString:hostname usingEncodingPreference:client.configuration];
+        user = [[IRCUser alloc] initWithNickname:nicknameString andUsername:usernameString andHostname:hostnameString onClient:client];
+    }
+    
+    if (*line == *[client ownerUserModeCharacter]) {
+        user.channelPrivileges = OWNER;
+    } else if (*line == *[client adminUserModeCharacter]) {
+        user.channelPrivileges = ADMIN;
+    } else if (*line == *[client operatorUserModeCharacter]) {
+        user.channelPrivileges = OPERATOR;
+    } else if (*line == *[client halfopUserModeCharacter]) {
+        user.channelPrivileges = HALFOP;
+    } else if (*line == *[client voiceUserModeCharacter]) {
+        user.channelPrivileges = VOICE;
+    } else {
+        user.channelPrivileges = NORMAL;
+    }
+    
+    [ircChannel removeUserByName:nicknameString];
+    [[ircChannel users] addObject:user];
 }
 
 + (void)clientReceivedServerPasswordMismatchError:(IRCClient *)client

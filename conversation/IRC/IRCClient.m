@@ -75,6 +75,12 @@
         self.isBNCConnection =                  NO;
         self.isProcessingTermination =          NO;
         
+        self.ownerUserModeCharacter    = "q";
+        self.adminUserModeCharacter    = "a";
+        self.operatorUserModeCharacter = "o";
+        self.halfopUserModeCharacter   = "h";
+        self.voiceUserModeCharacter    = "v";
+        
         self.alternativeNickNameAttempts = 0;
         self.channels = [[NSMutableArray alloc] init];
         self.queries = [[NSMutableArray alloc] init];
@@ -259,7 +265,6 @@
         lineBeforeIteration = line;
     }
     const char *senderDict[] = {
-        sender,
         nickname,
         username,
         hostname
@@ -400,6 +405,10 @@
         case RPL_TOPIC:
             [Messages userReceivedTOPIC:line onChannel:recipient byUser:nil onClient:self withTags:tagsList];
             break;
+            
+        case RPL_WHOREPLY:
+            [Messages clientReceivedWHOReply:line onClient:self];
+            break;
         
         case ERR_ERRONEUSNICKNAME:
         case ERR_NICKNAMEINUSE:
@@ -506,7 +515,65 @@
         free(key);
         token = strtok(NULL, delimeter);
     }
+    [self setUsermodePrefixes];
+    
     free(mline);
+}
+
+- (void)setUsermodePrefixes
+{
+    NSString *prefixString = [[self featuresSupportedByServer] objectForKey:@"PREFIX"];
+    if (prefixString) {
+        const char* prefixes = [prefixString UTF8String];
+        prefixes++;
+        const char* prefixIdentifier = prefixes;
+        while (*prefixes != ')' && *prefixes != '\0') {
+            prefixes++;
+        }
+        prefixes++;
+        
+        while (*prefixIdentifier != ')' && *prefixIdentifier != '\0') {
+            char* character = malloc(2);
+            strncpy(character, prefixes, 1);
+            character[1] = '\0';
+            
+            NSLog(@"%c => %c", *prefixIdentifier, *character);
+            switch (*prefixIdentifier) {
+                case 'q': {
+                    self.ownerUserModeCharacter = character;
+                    break;
+                }
+                    
+                case 'a': {
+                    self.adminUserModeCharacter = character;
+                    break;
+                }
+                
+                case 'o': {
+                    self.operatorUserModeCharacter = character;
+                    break;
+                }
+                    
+                case 'h': {
+                    self.halfopUserModeCharacter = character;
+                    break;
+                }
+                    
+                case 'v': {
+                    self.voiceUserModeCharacter = character;
+                    break;
+                }
+            }
+            prefixIdentifier++;
+            prefixes++;
+        }
+    } else {
+        self.ownerUserModeCharacter    = "q";
+        self.adminUserModeCharacter    = "a";
+        self.operatorUserModeCharacter = "o";
+        self.halfopUserModeCharacter   = "h";
+        self.voiceUserModeCharacter    = "v";
+    }
 }
 
 - (void)clientDidSendData

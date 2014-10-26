@@ -57,4 +57,14 @@
     
 }
 
+- (void)removeUserByName:(NSString *)nickname
+{
+    for (IRCUser *user in self.users) {
+        if ([[user nick] isEqualToString:nickname]) {
+            [self.users removeObject:user];
+            break;
+        }
+    }
+}
+
 @end

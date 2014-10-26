@@ -58,6 +58,12 @@
 @property (nonatomic, strong) NSMutableDictionary *featuresSupportedByServer;
 @property (nonatomic, strong) NSMutableArray *ircv3CapabilitiesSupportedByServer;
 
+@property (nonatomic) char* ownerUserModeCharacter;
+@property (nonatomic) char* adminUserModeCharacter;
+@property (nonatomic) char* operatorUserModeCharacter;
+@property (nonatomic) char* halfopUserModeCharacter;
+@property (nonatomic) char* voiceUserModeCharacter;
+
 - (instancetype)initWithConfiguration:(IRCConnectionConfiguration *)config;
 - (void)connect;
 - (void)clientDidConnect;
