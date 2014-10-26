@@ -30,6 +30,8 @@
 
 #import "UserListView.h"
 #import "ILTranslucentView.h"
+#import "UITableView+Methods.m"
+#import "IRCUser.h"
 
 @implementation UserListView
 
@@ -42,6 +44,24 @@
     translucentView.translucentStyle = UIBarStyleDefault;
     translucentView.translucentTintColor = [UIColor whiteColor];
     translucentView.backgroundColor = [UIColor clearColor];
+    
+    UITableView *tableView = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
+    tableView.delegate = self;
+    tableView.dataSource = self;
+    [translucentView addSubview:tableView];
 }
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return _users.count;
+}
+
+- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+    IRCUser *user = _users[indexPath.row];
+    cell.textLabel.text = user.nick;
+    return cell;
+    
+}
 @end

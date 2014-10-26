@@ -30,8 +30,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UserListView : UIView
+@interface UserListView : UIView <UITableViewDataSource, UITableViewDelegate>
 
-@property (nonatomic, strong) UIColor *blurTintColor;
+@property (nonatomic) NSArray *users;
 
 @end

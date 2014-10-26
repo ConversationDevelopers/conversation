@@ -165,10 +165,11 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)showUserList:(id)sender
 {
-    NSLog(@"show User list");
     _userlistIsVisible = YES;
     [_composeBarView resignFirstResponder];    
-    UIView *userlist = [self userListView];
+    UserListView *userlist = [self userListView];
+    
+    userlist.users = _channel.users;
 
     [self.navigationController.view addSubview:userlist];
 
