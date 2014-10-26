@@ -67,8 +67,8 @@
     if (_message.timestamp) {
         NSDate *date = _message.timestamp;
         NSCalendar *calendar = [NSCalendar currentCalendar];
-        NSDateComponents *components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:date];
-        time = [NSString stringWithFormat:@":%ld", [components minute]];
+        NSDateComponents *components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit) fromDate:date];
+        time = [NSString stringWithFormat:@"%ld:%ld:%ld", [components hour], [components minute], [components second]];
     }
     
     NSString *nick = _message.sender.nick;
