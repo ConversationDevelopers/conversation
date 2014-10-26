@@ -37,8 +37,9 @@
 {
     NSArray *lines = [message componentsSeparatedByString:@"\n"];
     for (NSString *line in lines) {
-        // TODO: Seperate lines by message limit.
-        [client.connection send:[NSString stringWithFormat:@"PRIVMSG %@ :%@", recipient, line]];
+        if ([line length] > 0) {
+            [client.connection send:[NSString stringWithFormat:@"PRIVMSG %@ :%@", recipient, line]];
+        }
     }
 }
 
