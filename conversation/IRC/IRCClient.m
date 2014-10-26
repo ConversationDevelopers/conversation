@@ -75,11 +75,11 @@
         self.isBNCConnection =                  NO;
         self.isProcessingTermination =          NO;
         
-        self.ownerUserModeCharacter    = "q";
-        self.adminUserModeCharacter    = "a";
-        self.operatorUserModeCharacter = "o";
-        self.halfopUserModeCharacter   = "h";
-        self.voiceUserModeCharacter    = "v";
+        self.ownerUserModeCharacter    = "~";
+        self.adminUserModeCharacter    = "&";
+        self.operatorUserModeCharacter = "@";
+        self.halfopUserModeCharacter   = "%";
+        self.voiceUserModeCharacter    = "+";
         
         self.alternativeNickNameAttempts = 0;
         self.channels = [[NSMutableArray alloc] init];
@@ -568,11 +568,11 @@
             prefixes++;
         }
     } else {
-        self.ownerUserModeCharacter    = "q";
-        self.adminUserModeCharacter    = "a";
-        self.operatorUserModeCharacter = "o";
-        self.halfopUserModeCharacter   = "h";
-        self.voiceUserModeCharacter    = "v";
+        self.ownerUserModeCharacter    = "~";
+        self.adminUserModeCharacter    = "&";
+        self.operatorUserModeCharacter = "@";
+        self.halfopUserModeCharacter   = "%";
+        self.voiceUserModeCharacter    = "+";
     }
 }
 
