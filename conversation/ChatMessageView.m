@@ -49,7 +49,11 @@
 - (void) prepareForReuse
 {
     [super prepareForReuse];
-    
+    self.frame = CGRectZero;
+    NSArray *layers = [self.contentView.layer.sublayers copy];
+    for (CATextLayer *layer in layers) {
+        [layer removeFromSuperlayer];
+    }
 }
 
 -(void)layoutSubviews
