@@ -324,16 +324,18 @@
 {
     /* Get the user that performed the PART */
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
+    NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
+    IRCChannel *channel =  [IRCChannel fromString:channelName withClient:client];
     if ([[user nick] isEqualToString:client.currentUserOnConnection.nick]) {
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         
         /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
-        NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
-        IRCChannel *channel =  [IRCChannel fromString:channelName withClient:client];
         if (channel != nil) {
             channel.isJoinedByUser = NO;
             [controller reloadClient:client];
         }
+    } else {
+        [[channel users] removeObject:channel];
     }
 }
 
