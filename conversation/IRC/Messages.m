@@ -302,11 +302,11 @@
 {
     /* Get the user that performed the JOIN */
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
+    NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
+    IRCChannel *channel =  [IRCChannel fromString:channelName withClient:client];
     if ([[user nick] isEqualToString:client.currentUserOnConnection.nick]) {
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         /* The user that joined is ourselves, we need to check if this channel is already in our list. */
-        NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
-        IRCChannel *channel =  [IRCChannel fromString:channelName withClient:client];
         if (channel == nil) {
             /* We don't have this channel, let's make a request to the UI to create the channel. */
             [controller joinChannelWithName:channelName onClient:client];
@@ -315,8 +315,9 @@
         [client.connection send:[NSString stringWithFormat:@"WHO %@", channelName]];
         channel.isJoinedByUser = YES;
         [controller reloadClient:client];
-        
     }
+    
+    [[channel users] addObject:user];
 }
 
 + (void)userReceivedPART:(const char *[3])senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client withMessage:(char *)message withTags:(NSMutableDictionary *)tags
