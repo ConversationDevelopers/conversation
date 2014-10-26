@@ -168,13 +168,13 @@
     }
     
     NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:[client configuration]];
-    IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
     
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
     /* TODO: handle timestamps */
     
     /* Check if this message is a channel message or a private message */
     if ([recipientString isValidChannelName:client]) {
+        
         /* Get the channel object associated with this channel */
         IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:recipientString withClient:client];
         if (channel == nil) {
@@ -182,6 +182,11 @@
             ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
             [controller joinChannelWithName:recipientString onClient:client];
             channel =  [IRCChannel fromString:recipientString withClient:client];
+        }
+        
+        IRCUser *sender = [IRCUser fromNickname:senderDict[0] onChannel:channel];
+        if (sender == nil) {
+            sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
         }
         NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
         IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
@@ -192,6 +197,7 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
         
     } else {
+        IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
         IRCConversation *conversation = [IRCConversation fromString:sender.nick withClient:client];
         if (conversation == nil) {
             /* We don't have a query for this message, we need to create one */
