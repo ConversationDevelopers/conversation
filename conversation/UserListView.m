@@ -44,5 +44,4 @@
     translucentView.backgroundColor = [UIColor clearColor];
 }
 
-
 @end

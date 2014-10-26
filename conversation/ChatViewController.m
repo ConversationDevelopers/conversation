@@ -169,7 +169,23 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     _userlistIsVisible = YES;
     [_composeBarView resignFirstResponder];    
     UIView *userlist = [self userListView];
+
     [self.navigationController.view addSubview:userlist];
+
+    CGRect frame = userlist.frame;
+    frame.origin.x = _tableView.frame.size.width - 205.0f;
+    
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+         usingSpringWithDamping:0.5
+          initialSpringVelocity:0.3
+                        options:0 animations:^{
+                            userlist.frame = frame;
+                            //Animations
+                        }
+                     completion:nil];
+    
+
 }
 
 - (void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView
@@ -242,6 +258,13 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (void)hideAccessories:(UIGestureRecognizer*)sender
 {
     if (_userlistIsVisible) {
+        
+        CGRect frame = _userListView.frame;
+        frame.origin.x = _tableView.frame.size.width;
+        _userListView.frame = frame;
+        
+        [UIView commitAnimations];
+        
         [_userListView removeFromSuperview];
         _userlistIsVisible = NO;
         return;
@@ -329,7 +352,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     
     if (!_userListView) {
         CGFloat width = 200.0f;
-        CGRect frame = CGRectMake(_tableView.frame.size.width - width - 5.0f,
+        CGRect frame = CGRectMake(_tableView.frame.size.width,
                                   30.0f,
                                   width,
                                   _tableView.frame.size.height+30.0f);
