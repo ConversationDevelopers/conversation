@@ -41,7 +41,7 @@
     
     [self.textLabel removeFromSuperview];
     
-    self.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
+    self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
     
     return self;
 }
@@ -98,7 +98,7 @@
     
     CGRect rect = [self calculateRect];
     
-    textLayer.frame = CGRectMake(10, 0, self.bounds.size.width-20, rect.size.height);
+    textLayer.frame = CGRectMake(10, 5, self.bounds.size.width-20, rect.size.height);
     textLayer.wrapped = YES;
     
     [self.contentView.layer addSublayer:textLayer];
@@ -113,9 +113,9 @@
     
     textLayer.wrapped = YES;
     
-    textLayer.frame = CGRectMake(self.bounds.size.width-timestamp.size.width-5, 0, timestamp.size.width, timestamp.size.height);
+    textLayer.frame = CGRectMake(self.bounds.size.width-timestamp.size.width-5, 5, timestamp.size.width, timestamp.size.height);
     
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, rect.size.height);
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, rect.size.height+5);
     [self.contentView.layer addSublayer:textLayer];
     
 }
