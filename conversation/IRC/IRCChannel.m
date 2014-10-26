@@ -47,6 +47,18 @@
     return nil;
 }
 
++ (IRCChannel *) getChannelOrCreate:(NSString *)channelName onClient:(IRCClient *)client
+{
+    IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:channelName withClient:client];
+    if (channel == nil) {
+        /* We don't have this channel, let's make a request to the UI to create the channel. */
+        ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+        [controller joinChannelWithName:channelName onClient:client];
+        channel =  [IRCChannel fromString:channelName withClient:client];
+    }
+    return channel;
+}
+
 - (BOOL)isActive
 {
     return [self.client isConnected] && self.isJoinedByUser;

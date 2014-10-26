@@ -46,6 +46,18 @@
     return nil;
 }
 
++ (IRCConversation *) getConversationOrCreate:(NSString *)nickname onClient:(IRCClient *)client
+{
+    IRCConversation *conversation = [IRCConversation fromString:nickname withClient:client];
+    if (conversation == nil) {
+        /* We don't have a query for this message, we need to create one */
+        ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+        [controller createConversationWithName:nickname onClient:client];
+        conversation = [IRCConversation fromString:nickname withClient:client];
+    }
+    return conversation;
+}
+
 + (id) fromString:(NSString *)name withClient:(IRCClient *)client
 {
     if ([name isValidChannelName:client]) {
@@ -63,6 +75,7 @@
     
     return nil;
 }
+
 
 - (BOOL)isActive
 {
