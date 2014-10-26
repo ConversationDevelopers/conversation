@@ -341,7 +341,7 @@
             [Messages clientReceivedAuthenticationMessage:line onClient:self];
             break;
             
-        case CAP :
+        case CAP:
             [Messages clientReceivedCAPMessage:line onClient:self];
             break;
             
@@ -372,7 +372,7 @@
             break;
             
         case KICK:
-            
+            [Messages userReceivedKICK:senderDict onChannel:recipient onClient:self withMessage:line withTags:tagsList];
             break;
             
         case MODE:

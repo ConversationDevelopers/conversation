@@ -357,6 +357,44 @@
     }
 }
 
++ (void)userReceivedKICK:(const char *[3])senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client withMessage:(const char *)message withTags:(NSMutableDictionary *)tags
+{
+    const char *pointerBeforeIteration = message;
+    int lengthOfKickedUser = 0;
+    while (*message != ' ' && *message != '\0') {
+        lengthOfKickedUser++;
+        message++;
+    }
+    char* kickedUserChar = malloc(lengthOfKickedUser + 1);
+    strncpy(kickedUserChar, pointerBeforeIteration, lengthOfKickedUser);
+    kickedUserChar[lengthOfKickedUser] = '\0';
+    
+    message++;
+    
+    if (*message == ':') {
+        message++;
+    }
+    
+    /* Get the user that performed the KICK  */
+    NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
+    IRCChannel *channel =  [IRCChannel fromString:channelName withClient:client];
+    IRCUser *user = [IRCUser fromNickname:senderDict[0] onChannel:channel];
+    
+    IRCUser *kickedUser = [IRCUser fromNickname:kickedUserChar onChannel:channel];
+    
+    if ([[kickedUser nick] isEqualToString:client.currentUserOnConnection.nick]) {
+        ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+        
+        /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
+        if (channel != nil) {
+            channel.isJoinedByUser = NO;
+            [controller reloadClient:client];
+        }
+    } else {
+        [[channel users] removeObject:channel];
+    }
+}
+
 + (void)userReceivedQUIT:(const char*[3])senderDict onClient:(IRCClient *)client withMessage:(const char *)message withTags:(NSMutableDictionary *)tags
 {
     for (IRCChannel *channel in [client getChannels]) {
@@ -472,13 +510,7 @@
     NSString *channelString = [NSString stringWithCString:channel usingEncodingPreference:client.configuration];
     IRCChannel *ircChannel = [IRCChannel fromString:channelString withClient:client];
     
-    const char *senderDict[] = {
-        nickname,
-        username,
-        hostname
-    };
-    
-    IRCUser *user = [IRCUser fromNickname:senderDict[0] onChannel:ircChannel];
+    IRCUser *user = [IRCUser fromNickname:nickname onChannel:ircChannel];
     NSString *nicknameString = [NSString stringWithCString:nickname usingEncodingPreference:client.configuration];
     if (user == nil) {
         NSString *usernameString = [NSString stringWithCString:username usingEncodingPreference:client.configuration];
