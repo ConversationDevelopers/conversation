@@ -63,9 +63,9 @@
     return nil;
 }
 
-+ (IRCUser *)fromSender:(const char **)senderDict onChannel:(IRCChannel *)channel
++ (IRCUser *)fromNickname:(const char *)sender onChannel:(IRCChannel *)channel
 {
-    NSString *nickString = [NSString stringWithCString:senderDict[0] usingEncodingPreference:[[channel client] configuration]];
+    NSString *nickString = [NSString stringWithCString:sender usingEncodingPreference:[[channel client] configuration]];
     
     IRCUser *userFromUserlist = nil;
     for (IRCUser *user in [channel users]) {

@@ -348,7 +348,7 @@
         client.currentUserOnConnection.hostname =   [NSString stringWithCString:senderDict[2] usingEncodingPreference:client.configuration];
     }
     for (IRCChannel *channel in [client getChannels]) {
-        IRCUser *userOnChannel = [IRCUser fromSender:senderDict onChannel:channel];
+        IRCUser *userOnChannel = [IRCUser fromNickname:senderDict[0] onChannel:channel];
         if (userOnChannel) {
             userOnChannel.nick = [NSString stringWithCString:newNick usingEncodingPreference:client.configuration];
             [channel removeUserByName:[userOnChannel nick]];
@@ -360,7 +360,7 @@
 + (void)userReceivedQUIT:(const char*[3])senderDict onClient:(IRCClient *)client withMessage:(const char *)message withTags:(NSMutableDictionary *)tags
 {
     for (IRCChannel *channel in [client getChannels]) {
-        IRCUser *userOnChannel = [IRCUser fromSender:senderDict onChannel:channel];
+        IRCUser *userOnChannel = [IRCUser fromNickname:senderDict[0] onChannel:channel];
         if (userOnChannel) {
             [channel removeUserByName:[userOnChannel nick]];
         }
@@ -478,7 +478,7 @@
         hostname
     };
     
-    IRCUser *user = [IRCUser fromSender:senderDict onChannel:ircChannel];
+    IRCUser *user = [IRCUser fromNickname:senderDict[0] onChannel:ircChannel];
     NSString *nicknameString = [NSString stringWithCString:nickname usingEncodingPreference:client.configuration];
     if (user == nil) {
         NSString *usernameString = [NSString stringWithCString:username usingEncodingPreference:client.configuration];
