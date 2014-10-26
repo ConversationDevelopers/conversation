@@ -248,6 +248,50 @@
         }
         free(ctcpCommand);
     }
+    NSString *messageString = [NSString stringWithCString:messageCopy usingEncodingPreference:client.configuration];
+    NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:client.configuration];
+    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    
+    if ([recipientString isValidChannelName:client]) {
+        IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:recipientString withClient:client];
+        if (channel == nil) {
+            /* We don't have this channel, let's make a request to the UI to create the channel. */
+            ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+            [controller joinChannelWithName:recipientString onClient:client];
+            channel =  [IRCChannel fromString:recipientString withClient:client];
+        }
+        
+        IRCUser *sender = [IRCUser fromNickname:senderDict[0] onChannel:channel];
+        if (sender == nil) {
+            sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
+        }
+        
+        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
+                                                           OfType:ET_CTCP
+                                                   inConversation:channel
+                                                         bySender:sender
+                                                           atTime:now];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+    } else {
+        IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
+        IRCConversation *conversation = [IRCConversation fromString:sender.nick withClient:client];
+        if (conversation == nil) {
+            /* We don't have a query for this message, we need to create one */
+            ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+            [controller createConversationWithName:sender.nick onClient:client];
+            conversation = [IRCConversation fromString:sender.nick withClient:client];
+        }
+        
+        NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
+        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
+                                                           OfType:ET_CTCP
+                                                   inConversation:conversation
+                                                         bySender:sender
+                                                           atTime:now];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+    }
     free(messageCopy);
 }
 
