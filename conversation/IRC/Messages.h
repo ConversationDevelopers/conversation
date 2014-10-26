@@ -58,6 +58,8 @@
 
 + (void)userReceivedJOIN:(const char **)senderDict onChannel:(const char *)rchannel onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags;
 
++ (void)userReceivedPART:(const char *[3])senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client withMessage:(char *)message withTags:(NSMutableDictionary *)tags;
+
 + (void)userReceivedNickchange:(const char *[4])senderDict toNick:(const char *)newNick onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags;
 
 + (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(const char *[4])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags;

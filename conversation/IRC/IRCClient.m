@@ -360,7 +360,7 @@
             break;
             
         case PART:
-            
+            [Messages userReceivedPART:senderDict onChannel:recipient onClient:self withMessage:line withTags:tagsList];
             break;
             
         case QUIT:
