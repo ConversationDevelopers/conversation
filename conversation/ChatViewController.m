@@ -156,6 +156,9 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                          [[self container] setFrame:newContainerFrame];
                      }
                      completion:NULL];
+
+    if(_messages.count)
+        [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
 }
 
 - (void)goBack:(id)sender
