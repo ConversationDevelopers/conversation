@@ -396,6 +396,18 @@
     } else {
         [[channel users] removeObject:channel];
     }
+    
+    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    
+    NSString *partMessage = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
+    
+    IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:partMessage
+                                                       OfType:ET_PART
+                                               inConversation:channel
+                                                     bySender:user
+                                                       atTime:now];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:messageObject];
 }
 
 + (void)userReceivedNickchange:(const char *[3])senderDict toNick:(const char *)newNick onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
