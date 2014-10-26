@@ -364,7 +364,7 @@
             break;
             
         case QUIT:
-            
+            [Messages userReceivedQUIT:senderDict onClient:self withMessage:line withTags:tagsList];
             break;
             
         case TOPIC:

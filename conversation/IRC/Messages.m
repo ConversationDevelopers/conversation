@@ -320,7 +320,7 @@
     [[channel users] addObject:user];
 }
 
-+ (void)userReceivedPART:(const char *[3])senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client withMessage:(char *)message withTags:(NSMutableDictionary *)tags
++ (void)userReceivedPART:(const char *[3])senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client withMessage:(const char *)message withTags:(NSMutableDictionary *)tags
 {
     /* Get the user that performed the PART */
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
@@ -353,6 +353,16 @@
             userOnChannel.nick = [NSString stringWithCString:newNick usingEncodingPreference:client.configuration];
             [channel removeUserByName:[userOnChannel nick]];
              [channel.users addObject:userOnChannel];
+        }
+    }
+}
+
++ (void)userReceivedQUIT:(const char*[3])senderDict onClient:(IRCClient *)client withMessage:(const char *)message withTags:(NSMutableDictionary *)tags
+{
+    for (IRCChannel *channel in [client getChannels]) {
+        IRCUser *userOnChannel = [IRCUser fromSender:senderDict onChannel:channel];
+        if (userOnChannel) {
+            [channel removeUserByName:[userOnChannel nick]];
         }
     }
 }
