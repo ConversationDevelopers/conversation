@@ -32,6 +32,8 @@
 #import "IRCUser.h"
 #import "IRCClient.h"
 #import "IRCConnection.h"
+#import "IRCMessage.h"
+#import "IRCQuitMessage.h"
 #import "ConversationListViewController.h"
 
 @implementation Messages

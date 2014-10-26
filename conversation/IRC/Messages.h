@@ -31,12 +31,12 @@
 #import <Foundation/Foundation.h>
 #import "AppDelegate.h"
 #import "IRCChannel.h"
-#import "IRCMessage.h"
-#import "IRCQuitMessage.h"
 #import "NSString+Methods.h"
 
 @class IRCClient;
 @class IRCUser;
+@class IRCMessage;
+@class IRCQuitMessage;
 @class ConversationListViewController;
 
 @interface Messages : NSObject
