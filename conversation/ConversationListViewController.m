@@ -36,6 +36,7 @@
 #import "IRCChannel.h"
 #import "IRCClient.h"
 #import "IRCUser.h"
+#import "IRCMessage.h"
 #import "AppPreferences.h"
 #import "ConversationItemView.h"
 #import "UITableView+Methods.h"
