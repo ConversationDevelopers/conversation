@@ -367,6 +367,15 @@
         [controller reloadClient:client];
     }
     
+    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    
+    IRCMessage *message = [[IRCMessage alloc] initWithMessage:nil
+                                                       OfType:ET_JOIN
+                                               inConversation:channel
+                                                     bySender:user
+                                                       atTime:now];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+    
     [[channel users] addObject:user];
 }
 
