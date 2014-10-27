@@ -79,7 +79,6 @@
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     
 //    self.chatViewController = (ChatViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
-    _chatViewController = [[ChatViewController alloc] init];    
     
     NSArray *configurations = [[AppPreferences sharedPrefs] getConnectionConfigurations];
     for (NSDictionary *dict in configurations) {
@@ -211,11 +210,13 @@
 {
     IRCClient *client = [self.connections objectAtIndex:indexPath.section];
     IRCChannel *channel = [client.getChannels objectAtIndex:indexPath.row];
+
+    ChatViewController *chatViewController = [[ChatViewController alloc] init];
     
-    _chatViewController.channel = channel;
-    _chatViewController.title = channel.name;
+    chatViewController.channel = channel;
+    chatViewController.title = channel.name;
     
-    [self.navigationController pushViewController:_chatViewController animated:YES];
+    [self.navigationController pushViewController:chatViewController animated:YES];
 
 }
 

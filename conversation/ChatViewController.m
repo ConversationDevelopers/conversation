@@ -52,8 +52,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     if (!(self = [super init]))
         return nil;
     
-    _messages = [[NSMutableArray alloc] init];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillToggle:)
                                                  name:UIKeyboardWillShowNotification
@@ -156,8 +154,8 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                      }
                      completion:NULL];
 
-    if(_messages.count)
-        [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    if(_channel.messages.count)
+        [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_channel.messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
 }
 
 - (void)goBack:(id)sender
@@ -209,11 +207,11 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                                inConversation:_channel
                                                      bySender:_channel.client.currentUserOnConnection
                                                        atTime:[NSDate date]];
-    [_messages addObject:ircmsg];
+    [_channel.messages addObject:ircmsg];
     [_composeBarView setText:@"" animated:YES];
     [_tableView reloadData];
     
-    [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_channel.messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 }
 
 #pragma mark - Table View
@@ -222,7 +220,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 {
     if ( !_dummyCell ) _dummyCell = [[ChatMessageView alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
     
-    _dummyCell.message = _messages[indexPath.row];
+    _dummyCell.message = _channel.messages[indexPath.row];
     
     CGFloat height = [_dummyCell cellHeight];
     if ( height == 0 ) height = 50;
@@ -231,7 +229,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _messages.count;
+    return _channel.messages.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -244,7 +242,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         cell = [[ChatMessageView alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    cell.message = _messages[indexPath.row];
+    cell.message = _channel.messages[indexPath.row];
     
     return cell;
 }
@@ -277,21 +275,8 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)messageReceived:(NSNotification *)notification
 {
-    
-    IRCMessage *message = notification.object;
-    
-    // Handle actions and normal messages for now
-    if (message.messageType != ET_PRIVMSG && message.messageType != ET_ACTION)
-        return;
-    
-    // Handle only suitable messages
-    if ([message.conversation.configuration.uniqueIdentifier isEqualToString:_channel.configuration.uniqueIdentifier] == NO)
-        return;
-    
-    [_messages addObject:message];
     [_tableView reloadData];
-
-    [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_channel.messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 }
 
 @synthesize container = _container;
