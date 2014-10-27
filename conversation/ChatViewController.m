@@ -97,12 +97,18 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)loadView
 {
+    UIBarButtonItem *joinButton = [[UIBarButtonItem alloc] initWithTitle:@"Join" style:UIBarButtonItemStylePlain target:self action:@selector(join:)];
+    
     UIBarButtonItem *userlistButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Userlist"]
                                                                        style:UIBarButtonItemStylePlain
                                                                       target:self
                                                                       action:@selector(showUserList:)];
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ChannelIcon_Light"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
-    self.navigationItem.rightBarButtonItem = userlistButton;
+    if (_channel.isJoinedByUser)
+        self.navigationItem.rightBarButtonItem = userlistButton;
+    else
+        self.navigationItem.rightBarButtonItem = joinButton;
+    
     self.navigationItem.leftBarButtonItem = backButton;
     
     UIView *view = [[UIView alloc] initWithFrame:kInitialViewFrame];
@@ -117,6 +123,12 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     [self setEdgesForExtendedLayout:UIRectEdgeNone];
     
     [self setView:view];
+}
+
+- (void)join:(id)sender
+{
+    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    [controller joinChannelWithName:_channel.name onClient:_channel.client];
 }
 
 - (void)keyboardWillToggle:(NSNotification *)notification
@@ -282,7 +294,8 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (void)messageReceived:(NSNotification *)notification
 {
     [_tableView reloadData];
-    [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_channel.messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    if (_channel.messages.count)
+        [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_channel.messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 }
 
 @synthesize container = _container;
