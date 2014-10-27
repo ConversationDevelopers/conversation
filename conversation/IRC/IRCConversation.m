@@ -40,6 +40,7 @@
         self.client = client;
         self.conversationPartnerIsOnline = NO;
         self.configuration = config;
+        self.messages = [[NSMutableArray alloc] init];
         self.unreadCount = 0;        
         return self;
     }
