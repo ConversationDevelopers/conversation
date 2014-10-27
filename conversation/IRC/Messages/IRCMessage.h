@@ -50,6 +50,7 @@ typedef NS_ENUM(NSUInteger, EventType) {
     ET_CTCP,
     ET_CTCPREPLY,
     ET_NOTICE,
+    ET_SERVERNOTICE,
     ET_INVITE,
     ET_JOIN,
     ET_PART,

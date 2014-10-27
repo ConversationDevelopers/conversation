@@ -309,7 +309,7 @@
     }
 }
 
-+ (void)userReceivedNOTICE:(const char *)message onRecepient:(char *)recepient byUser:(const char *[3])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
++ (void)userReceivedNOTICE:(const char *)message onRecepient:(char *)recepient byUser:(const char *[3])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags isServerMessage:(BOOL)isServer;
 {
     /* Check if the message begins and ends with a 0x01 character, denoting this is a CTCP reply. */
     if (*message == '\001' && message[strlen(message) -1] == '\001') {
@@ -320,6 +320,8 @@
     NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:[client configuration]];
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
     
+    int messageType = isServer ? ET_SERVERNOTICE : ET_NOTICE;
+    
     /* Check if this message is a channel message or a private message */
     if ([recipientString isValidChannelName:client]) {
         /* Get the channel object associated with this channel */
@@ -329,9 +331,11 @@
         if (sender == nil) {
             sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
         }
+        
+        
         NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
         IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                           OfType:ET_NOTICE
+                                                           OfType:messageType
                                                    inConversation:channel
                                                          bySender:sender
                                                            atTime:now];
@@ -339,11 +343,13 @@
         
     } else {
         IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-        IRCConversation *conversation = [IRCConversation getConversationOrCreate:sender.nick onClient:client];
-        
+        IRCConversation *conversation = nil;
+        if (messageType != ET_SERVERNOTICE) {
+            conversation = [IRCConversation getConversationOrCreate:sender.nick onClient:client];
+        }
         NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
         IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                           OfType:ET_NOTICE
+                                                           OfType:messageType
                                                    inConversation:conversation
                                                          bySender:sender
                                                            atTime:now];

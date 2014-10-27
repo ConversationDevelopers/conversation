@@ -358,7 +358,7 @@
             break;
             
         case NOTICE:
-            [Messages userReceivedNOTICE:line onRecepient:recipient byUser:senderDict onClient:self withTags:tagsList];
+            [Messages userReceivedNOTICE:line onRecepient:recipient byUser:senderDict onClient:self withTags:tagsList isServerMessage:isServerMessage];
             break;
             
         case JOIN:
