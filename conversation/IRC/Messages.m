@@ -648,6 +648,7 @@
     }
     char* channel = malloc(lengthOfChannel + 1);
     strncpy(channel, pointerBeforeIteration, lengthOfChannel);
+    channel[lengthOfChannel] = '\0';
     
     line++;
     pointerBeforeIteration = line;
@@ -659,6 +660,7 @@
     }
     char* username = malloc(lengthOfUsername + 1);
     strncpy(username, pointerBeforeIteration, lengthOfUsername);
+    username[lengthOfUsername] = '\0';
     
     line++;
     pointerBeforeIteration = line;
@@ -670,6 +672,7 @@
     }
     char* hostname = malloc(lengthOfHostname + 1);
     strncpy(hostname, pointerBeforeIteration, lengthOfHostname);
+    hostname[lengthOfHostname] = '\0';
     
     line++;
     pointerBeforeIteration = line;
@@ -689,6 +692,7 @@
     }
     char* nickname = malloc(lengthOfNickname + 1);
     strncpy(nickname, pointerBeforeIteration, lengthOfNickname);
+    nickname[lengthOfNickname] = '\0';
     
     line = line + 2;
     
