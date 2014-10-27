@@ -223,7 +223,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     _dummyCell.message = _channel.messages[indexPath.row];
     
     CGFloat height = [_dummyCell cellHeight];
-    if ( height == 0 ) height = 50;
+//    if ( height == 0 ) height = 50;
     return height+15.0;
 }
 
