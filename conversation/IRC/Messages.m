@@ -462,22 +462,43 @@
     }
     
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    NSString *newNickString = [NSString stringWithCString:newNick usingEncodingPreference:client.configuration];
     
     for (IRCChannel *channel in [client getChannels]) {
         IRCUser *userOnChannel = [IRCUser fromNickname:senderDict[0] onChannel:channel];
         if (userOnChannel) {
-            userOnChannel.nick = [NSString stringWithCString:newNick usingEncodingPreference:client.configuration];
+            userOnChannel.nick = newNickString;
             [channel removeUserByName:[userOnChannel nick]];
             [channel.users addObject:userOnChannel];
             [channel sortUserlist];
             
-            IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:[userOnChannel nick]
+            IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:newNickString
                                                                      OfType:ET_NICK
                                                              inConversation:channel
                                                                    bySender:user
                                                                      atTime:now];
             
             [channel addMessageToConversation:messageObject];
+        }
+    }
+    
+    for (IRCConversation *conversation in [client getQueries]) {
+        if ([[conversation name] isEqualToString: [user nick]]) {
+            IRCConversation *conversationWithChanges = conversation;
+            conversationWithChanges.name = newNickString;
+            
+            NSLog(@"%@", conversation.name);
+            NSLog(@"%@", conversationWithChanges.name);
+            [[client getQueries] removeObject:conversation];
+            [[client getQueries] addObject:conversationWithChanges];
+            
+            IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:newNickString
+                                                                     OfType:ET_NICK
+                                                             inConversation:conversation
+                                                                   bySender:user
+                                                                     atTime:now];
+            
+            [conversation addMessageToConversation:messageObject];
         }
     }
 }
