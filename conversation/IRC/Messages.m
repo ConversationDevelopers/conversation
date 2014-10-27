@@ -354,7 +354,37 @@
     
 + (void)userReceivedCTCPReply:(const char *)message onRecepient:(char *)recepient byUser:(const char *[3])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
 {
+    NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
+    NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:client.configuration];
+    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
     
+    if ([recipientString isValidChannelName:client]) {
+        IRCChannel *channel = [IRCChannel getChannelOrCreate:recipientString onClient:client];
+        
+        IRCUser *sender = [IRCUser fromNickname:senderDict[0] onChannel:channel];
+        if (sender == nil) {
+            sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
+        }
+        
+        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
+                                                           OfType:ET_CTCPREPLY
+                                                   inConversation:channel
+                                                         bySender:sender
+                                                           atTime:now];
+        [channel addMessageToConversation:message];
+    } else {
+        IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
+        IRCConversation *conversation = [IRCConversation getConversationOrCreate:sender.nick onClient:client];
+        
+        NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
+        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
+                                                           OfType:ET_CTCPREPLY
+                                                   inConversation:conversation
+                                                         bySender:sender
+                                                           atTime:now];
+        
+        [conversation addMessageToConversation:message];
+    }
 }
 
 + (void)userReceivedJOIN:(const char *[3])senderDict onChannel:(const char *)rchannel onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
