@@ -79,4 +79,12 @@
     }
 }
 
+- (void)sortUserlist
+{
+    NSSortDescriptor *nicknameSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"nick" ascending:YES];
+    NSSortDescriptor *privilegiesSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"channelPrivileges" ascending:NO];
+    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:privilegiesSortDescriptor,nicknameSortDescriptor,  nil];
+    self.users = [[self.users sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
+}
+
 @end

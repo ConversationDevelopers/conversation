@@ -382,7 +382,8 @@
         if (userOnChannel) {
             userOnChannel.nick = [NSString stringWithCString:newNick usingEncodingPreference:client.configuration];
             [channel removeUserByName:[userOnChannel nick]];
-             [channel.users addObject:userOnChannel];
+            [channel.users addObject:userOnChannel];
+            [channel sortUserlist];
         }
     }
 }
@@ -596,6 +597,7 @@
     
     [ircChannel removeUserByName:nicknameString];
     [[ircChannel users] addObject:user];
+    [ircChannel sortUserlist];
 }
 
 + (void)clientReceivedServerPasswordMismatchError:(IRCClient *)client
