@@ -539,6 +539,10 @@
             
             NSLog(@"%c => %c", *prefixIdentifier, *character);
             switch (*prefixIdentifier) {
+                case 'y': {
+                    self.ircopUserModeCharacter = character;
+                }
+                    
                 case 'q': {
                     self.ownerUserModeCharacter = character;
                     break;

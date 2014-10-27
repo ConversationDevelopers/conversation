@@ -578,7 +578,9 @@
         user = [[IRCUser alloc] initWithNickname:nicknameString andUsername:usernameString andHostname:hostnameString onClient:client];
     }
     
-    if (*line == *[client ownerUserModeCharacter]) {
+    if (*line == *[client ircopUserModeCharacter]) {
+        user.channelPrivileges = IRCOP;
+    } else if (*line == *[client ownerUserModeCharacter]) {
         user.channelPrivileges = OWNER;
     } else if (*line == *[client adminUserModeCharacter]) {
         user.channelPrivileges = ADMIN;
