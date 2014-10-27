@@ -573,7 +573,6 @@
             }
             prefixIdentifier++;
             prefixes++;
-            free(character);
         }
     }
 }
