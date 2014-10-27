@@ -460,6 +460,9 @@
         client.currentUserOnConnection.username =   [NSString stringWithCString:senderDict[1] usingEncodingPreference:client.configuration];
         client.currentUserOnConnection.hostname =   [NSString stringWithCString:senderDict[2] usingEncodingPreference:client.configuration];
     }
+    
+    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    
     for (IRCChannel *channel in [client getChannels]) {
         IRCUser *userOnChannel = [IRCUser fromNickname:senderDict[0] onChannel:channel];
         if (userOnChannel) {
@@ -467,6 +470,14 @@
             [channel removeUserByName:[userOnChannel nick]];
             [channel.users addObject:userOnChannel];
             [channel sortUserlist];
+            
+            IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:[userOnChannel nick]
+                                                                     OfType:ET_NICK
+                                                             inConversation:channel
+                                                                   bySender:user
+                                                                     atTime:now];
+            
+            [channel addMessageToConversation:messageObject];
         }
     }
 }

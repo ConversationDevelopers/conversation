@@ -48,6 +48,7 @@ typedef NS_ENUM(NSUInteger, EventType) {
     ET_ACTION,
     ET_PRIVMSG,
     ET_CTCP,
+    ET_NICK,
     ET_CTCPREPLY,
     ET_NOTICE,
     ET_SERVERNOTICE,
