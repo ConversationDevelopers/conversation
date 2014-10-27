@@ -120,7 +120,7 @@
                                                             onClient:self];
     
     /* Send initial registration */
-    if (self.configuration.serverPasswordReference) {
+    if ([self.configuration.serverPasswordReference length] > 0) {
         NSString *password = [SSKeychain passwordForService:@"conversation" account:self.configuration.serverPasswordReference];
         if (password != nil && [password length] > 0) {
             [self.connection send:[NSString stringWithFormat:@"PASS %@", password]];
