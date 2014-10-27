@@ -137,12 +137,34 @@ uint32_t FNV32(const char *s)
                                                                         user.nick,
                                                                         user.username,
                                                                         user.hostname,
-                                                                        NSLocalizedString(@"left the channel", @"joined the channel"),
+                                                                        NSLocalizedString(@"left the channel", @"left the channel"),
                                                                         msg]];
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:12.0]
                            range:NSMakeRange(0, user.nick.length)];
+            break;
+        case ET_QUIT:
+            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@@%@) %@ (%@)",
+                                                                        user.nick,
+                                                                        user.username,
+                                                                        user.hostname,
+                                                                        NSLocalizedString(@"left IRC", @"left IRC"),
+                                                                        msg]];
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont boldSystemFontOfSize:12.0]
+                           range:NSMakeRange(0, user.nick.length)];
+            break;
+        case ET_NICK:
+            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@ %@",
+                                                                        user.nick,
+                                                                        NSLocalizedString(@"is now known as", @"is now known as"),
+                                                                        msg]];
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont boldSystemFontOfSize:12.0]
+                           range:NSMakeRange(string.length-msg.length, msg.length)];
             break;
         case ET_ACTION:
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"*%@ %@",
@@ -153,22 +175,7 @@ uint32_t FNV32(const char *s)
                            value:[UIFont boldSystemFontOfSize:12.0]
                            range:NSMakeRange(0, user.nick.length+2+msg.length)];
             break;
-        case ET_NOTICE:
-            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", user.nick, msg]];
-            
-            [string addAttribute:NSFontAttributeName
-                           value:[UIFont boldSystemFontOfSize:16.0]
-                           range:NSMakeRange(0,user.nick.length)];
-            
-            [string addAttribute:NSForegroundColorAttributeName
-                           value:[self colorForNick:user.nick]
-                           range:NSMakeRange(0, user.nick.length)];
-            
-            [string addAttribute:NSFontAttributeName
-                           value:[UIFont systemFontOfSize:12.0]
-                           range:NSMakeRange(user.nick.length+1, msg.length)];
-            break;
-        case ET_PRIVMSG:
+        case ET_NOTICE || ET_PRIVMSG:
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", user.nick, msg]];
             
             [string addAttribute:NSFontAttributeName
