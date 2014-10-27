@@ -104,7 +104,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                                                       target:self
                                                                       action:@selector(showUserList:)];
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ChannelIcon_Light"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
-    if (_channel.isJoinedByUser)
+    if (!_isChannel || [(IRCChannel*)_channel isJoinedByUser])
         self.navigationItem.rightBarButtonItem = userlistButton;
     else
         self.navigationItem.rightBarButtonItem = joinButton;
@@ -182,7 +182,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     [_composeBarView resignFirstResponder];    
     UserListView *userlist = [self userListView];
     
-    userlist.channel = _channel;
+    userlist.channel = (IRCChannel*)_channel;
 
     [self.navigationController.view addSubview:userlist];
 

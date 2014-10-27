@@ -209,9 +209,18 @@
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath
 {
     IRCClient *client = [self.connections objectAtIndex:indexPath.section];
-    IRCChannel *channel = [client.getChannels objectAtIndex:indexPath.row];
 
     ChatViewController *chatViewController = [[ChatViewController alloc] init];
+    
+    IRCConversation *channel;
+    if ((int)indexPath.row > (int)client.getChannels.count-1) {
+        NSInteger index = indexPath.row - client.getChannels.count;
+        channel = client.getQueries[index];
+        chatViewController.isChannel = NO;
+    } else {
+        channel = client.getChannels[indexPath.row];
+        chatViewController.isChannel = YES;
+    }
     
     chatViewController.channel = channel;
     chatViewController.title = channel.name;
@@ -494,13 +503,13 @@
     [[AppPreferences sharedPrefs] save];
 }
 
-- (void) createConversationWithName:(NSString *)name onClient:(IRCClient *)client
+- (void)createConversationWithName:(NSString *)name onClient:(IRCClient *)client
 {
     IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
     configuration.name = name;
     IRCConversation *query = [[IRCConversation alloc] initWithConfiguration:configuration withClient:client];
     [client addQuery:query];
-    
+
     [self.tableView reloadData];
     [[AppPreferences sharedPrefs] addQueryConfiguration:configuration forConnectionConfiguration:client.configuration];
     [[AppPreferences sharedPrefs] save];

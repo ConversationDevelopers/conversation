@@ -31,10 +31,11 @@
 #import <UIKit/UIKit.h>
 #import "PHFComposeBarView.h"
 
-@class IRCChannel;
+@class IRCConversation;
 
 @interface ChatViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, PHFComposeBarViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate>
 
-@property (nonatomic) IRCChannel *channel;
+@property (nonatomic) BOOL isChannel;
+@property (nonatomic) IRCConversation *channel;
 
 @end
