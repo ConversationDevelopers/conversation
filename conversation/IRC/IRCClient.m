@@ -353,7 +353,7 @@
             break;
             
         case NOTICE:
-            
+            [Messages userReceivedNOTICE:line onRecepient:recipient byUser:senderDict onClient:self withTags:tagsList];
             break;
             
         case JOIN:
