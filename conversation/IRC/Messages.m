@@ -354,7 +354,11 @@
                                                          bySender:sender
                                                            atTime:now];
         
-        [conversation addMessageToConversation:message];
+        if (conversation != nil) {
+            [conversation addMessageToConversation:message];
+        } else {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+        }
     }
 }
     
