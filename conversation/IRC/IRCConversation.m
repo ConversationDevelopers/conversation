@@ -31,6 +31,8 @@
 #import "IRCConversation.h"
 #import "IRCClient.h"
 
+#define MAX_BUFFER_COUNT 500
+
 @implementation IRCConversation
 
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client
@@ -94,6 +96,17 @@
         [_previewMessages setObject:string atIndexedSubscript:0];
     }
     [_previewMessages addObject:message];
+}
+
+
+- (void)addMessageToConversation:(id)object
+{
+    [self.messages addObject:object];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:object];
+    while ([self.messages count] > MAX_BUFFER_COUNT) {
+        [self.messages removeObjectAtIndex:0];
+    }
 }
 
 @end

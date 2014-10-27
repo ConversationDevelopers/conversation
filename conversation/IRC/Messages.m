@@ -188,8 +188,7 @@
                                                    inConversation:channel
                                                          bySender:sender
                                                            atTime:now];
-        [[channel messages] addObject:message];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+        [channel addMessageToConversation:message];
         
     } else {
         IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
@@ -202,8 +201,7 @@
                                                          bySender:sender
                                                            atTime:now];
         
-        [[conversation messages] addObject:message];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+        [conversation addMessageToConversation:message];
     }
 }
 
@@ -261,8 +259,7 @@
                                                    inConversation:channel
                                                          bySender:sender
                                                            atTime:now];
-        [[channel messages] addObject:message];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+        [channel addMessageToConversation:message];
     } else {
         IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
         IRCConversation *conversation = [IRCConversation getConversationOrCreate:sender.nick onClient:client];
@@ -274,7 +271,7 @@
                                                          bySender:sender
                                                            atTime:now];
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+        [conversation addMessageToConversation:message];
     }
     free(messageCopy);
 }
@@ -298,8 +295,7 @@
                                                    inConversation:channel
                                                          bySender:sender
                                                            atTime:now];
-        [[channel messages] addObject:message];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+        [channel addMessageToConversation:message];
         
     } else {
         IRCConversation *conversation = [IRCConversation getConversationOrCreate:recipientString onClient:client];
@@ -310,8 +306,7 @@
                                                    inConversation:conversation
                                                          bySender:sender
                                                            atTime:now];
-        [[conversation messages] addObject:message];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+        [conversation addMessageToConversation:message];
     }
 }
 
@@ -335,8 +330,7 @@
                                                inConversation:channel
                                                      bySender:user
                                                        atTime:now];
-    [[channel messages] addObject:message];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+    [channel addMessageToConversation:message];
     
     [[channel users] addObject:user];
 }
@@ -368,8 +362,7 @@
                                                inConversation:channel
                                                      bySender:user
                                                        atTime:now];
-    [[channel messages] addObject:messageObject];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:messageObject];
+    [channel addMessageToConversation:messageObject];
 }
 
 + (void)userReceivedNickchange:(const char *[3])senderDict toNick:(const char *)newNick onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
@@ -437,8 +430,7 @@
                                                                    bySender:user
                                                                      atTime:now];
     
-    [[channel messages] addObject:messageObject];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:messageObject];
+    [channel addMessageToConversation:messageObject];
 }
 
 + (void)userReceivedQUIT:(const char*[3])senderDict onClient:(IRCClient *)client withMessage:(const char *)message withTags:(NSMutableDictionary *)tags
