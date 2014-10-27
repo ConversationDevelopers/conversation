@@ -178,30 +178,8 @@ uint32_t FNV32(const char *s)
 {
     
     [super layoutSubviews];
-
-    if (_message.messageType == ET_PRIVMSG) {
-        self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
-    }
-    
-    NSString *time = @"";
-    if (_message.timestamp) {
-        NSDate *date = _message.timestamp;
-        NSDateFormatter *format = [[NSDateFormatter alloc] init];
-        [format setDateFormat:@"HH:mm:ss"];
-        time = [format stringFromDate:date];
-    }
     
     NSAttributedString *string = [self attributedString];
-    
-    NSMutableAttributedString *timestamp = [[NSMutableAttributedString alloc] initWithString:time];
-
-    [timestamp addAttribute:NSFontAttributeName
-                   value:[UIFont systemFontOfSize:12.0]
-                   range:NSMakeRange(0, timestamp.length)];
-
-    [timestamp addAttribute:NSForegroundColorAttributeName
-                   value:[UIColor lightGrayColor]
-                   range:NSMakeRange(0, timestamp.length)];
     
     CATextLayer *textLayer = [[CATextLayer alloc] init];
     textLayer.string = string;
@@ -218,19 +196,40 @@ uint32_t FNV32(const char *s)
     [self.contentView.layer addSublayer:textLayer];
     textLayer = nil;
     
-    textLayer = [[CATextLayer alloc] init];
-    textLayer.string = timestamp;
-    textLayer.backgroundColor = [UIColor clearColor].CGColor;
-    [textLayer setForegroundColor:[[UIColor clearColor] CGColor]];
-    [textLayer setContentsScale:[[UIScreen mainScreen] scale]];
-    [textLayer setRasterizationScale:[[UIScreen mainScreen] scale]];
     
-    textLayer.wrapped = YES;
-    
-    textLayer.frame = CGRectMake(self.bounds.size.width-timestamp.size.width-5, 5, timestamp.size.width, timestamp.size.height);
+    if (_message.messageType == ET_PRIVMSG) {
+        NSString *time = @"";
+        if (_message.timestamp) {
+            NSDate *date = _message.timestamp;
+            NSDateFormatter *format = [[NSDateFormatter alloc] init];
+            [format setDateFormat:@"HH:mm:ss"];
+            time = [format stringFromDate:date];
+        }
+        
+        NSMutableAttributedString *timestamp = [[NSMutableAttributedString alloc] initWithString:time];
+        
+        [timestamp addAttribute:NSFontAttributeName
+                          value:[UIFont systemFontOfSize:12.0]
+                          range:NSMakeRange(0, timestamp.length)];
+        
+        [timestamp addAttribute:NSForegroundColorAttributeName
+                          value:[UIColor lightGrayColor]
+                          range:NSMakeRange(0, timestamp.length)];
+        
+        textLayer = [[CATextLayer alloc] init];
+        textLayer.string = timestamp;
+        textLayer.backgroundColor = [UIColor clearColor].CGColor;
+        [textLayer setForegroundColor:[[UIColor clearColor] CGColor]];
+        [textLayer setContentsScale:[[UIScreen mainScreen] scale]];
+        [textLayer setRasterizationScale:[[UIScreen mainScreen] scale]];
+        textLayer.wrapped = YES;
+        textLayer.frame = CGRectMake(self.bounds.size.width-timestamp.size.width-5, 5, timestamp.size.width, timestamp.size.height);
+        [self.contentView.layer addSublayer:textLayer];
+        
+        self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
+    }
     
     self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, size.height+10);
-    [self.contentView.layer addSublayer:textLayer];
     
 }
 
