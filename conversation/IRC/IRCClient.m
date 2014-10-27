@@ -567,12 +567,6 @@
             prefixIdentifier++;
             prefixes++;
         }
-    } else {
-        self.ownerUserModeCharacter    = "~";
-        self.adminUserModeCharacter    = "&";
-        self.operatorUserModeCharacter = "@";
-        self.halfopUserModeCharacter   = "%";
-        self.voiceUserModeCharacter    = "+";
     }
 }
 
