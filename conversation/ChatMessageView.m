@@ -31,8 +31,63 @@
 #import "ChatMessageView.h"
 #import "IRCUser.h"
 #import <CoreText/CoreText.h>
+#import <string.h>
+
+#define FNV_PRIME_32 16777619
+#define FNV_OFFSET_32 2166136261U
 
 @implementation ChatMessageView
+
+uint32_t FNV32(const char *s)
+{
+    uint32_t hash = FNV_OFFSET_32, i;
+    for(i = 0; i < strlen(s); i++)
+    {
+        hash = hash ^ (s[i]); // xor next byte into the bottom of the hash
+        hash = hash * FNV_PRIME_32; // Multiply by prime number found to work well
+    }
+    return hash;
+}
+
+- (NSArray *)userColors
+{
+    NSArray *colors = @[[UIColor colorWithRed:0 green:0.592 blue:0.863 alpha:1], /*#0097dc*/
+                        [UIColor colorWithRed:0.929 green:0.004 blue:0.498 alpha:1], /*#ed017f*/
+                        [UIColor colorWithRed:0.984 green:0.678 blue:0.094 alpha:1], /*#fbad18*/
+                        [UIColor colorWithRed:0 green:0.678 blue:0.486 alpha:1], /*#00ad7c*/
+                        [UIColor colorWithRed:0.541 green:0.588 blue:0.094 alpha:1], /*#8a9618*/
+                        [UIColor colorWithRed:0.494 green:0.341 blue:0 alpha:1], /*#7e5700*/
+                        [UIColor colorWithRed:0.153 green:0.349 blue:0.588 alpha:1], /*#275996*/
+                        [UIColor colorWithRed:0.867 green:0.478 blue:0.486 alpha:1], /*#dd7a7c*/
+                        [UIColor colorWithRed:0.463 green:0.282 blue:0.616 alpha:1], /*#76489d*/
+                        [UIColor colorWithRed:0.953 green:0.443 blue:0.129 alpha:1], /*#f37121*/
+                        [UIColor colorWithRed:0.808 green:0.596 blue:0.494 alpha:1], /*#ce987e*/
+                        [UIColor colorWithRed:0.396 green:0.459 blue:0.522 alpha:1], /*#657585*/
+                        [UIColor colorWithRed:0.435 green:0.761 blue:0.51 alpha:1], /*#6fc282*/
+                        [UIColor colorWithRed:0.941 green:0.286 blue:0.243 alpha:1], /*#f0493e*/
+                        [UIColor colorWithRed:0.725 green:0.369 blue:0.643 alpha:1], /*#b95ea4*/
+                        [UIColor colorWithRed:0 green:0.365 blue:0.133 alpha:1], /*#005d22*/
+                        [UIColor colorWithRed:0.749 green:0.286 blue:0.122 alpha:1], /*#bf491f*/
+                        [UIColor colorWithRed:0.518 green:0.027 blue:0.082 alpha:1], /*#840715*/
+                        [UIColor colorWithRed:0.02 green:0.141 blue:0.376 alpha:1], /*#052460*/
+                        [UIColor colorWithRed:0.486 green:0.259 blue:0 alpha:1], /*#7c4200*/
+                        [UIColor colorWithRed:0.761 green:0.529 blue:0.063 alpha:1], /*#c28710*/
+                        [UIColor colorWithRed:0.353 green:0.333 blue:0.325 alpha:1], /*#5a5553*/
+                        [UIColor colorWithRed:0.278 green:0 blue:0.329 alpha:1], /*#470054*/
+                        [UIColor colorWithRed:0.843 green:0.702 blue:0.059 alpha:1], /*#d7b30f*/
+                        [UIColor colorWithRed:0.573 green:0.784 blue:0.243 alpha:1], /*#92c83e*/
+                        [UIColor colorWithRed:0.463 green:0.812 blue:0.906 alpha:1], /*#76cfe7*/
+                        [UIColor colorWithRed:0.667 green:0.522 blue:0.647 alpha:1], /*#aa85a5*/
+                        [UIColor colorWithRed:0.478 green:0.424 blue:0.325 alpha:1], /*#7a6c53*/
+                        [UIColor colorWithRed:0.255 green:0.635 blue:0.682 alpha:1], /*#41a2ae*/
+                        [UIColor colorWithRed:0.698 green:0.663 blue:0.655 alpha:1]]; /*#b2a9a7*/
+    return colors;
+}
+
+- (UIColor *)colorForNick:(NSString *)nick
+{
+    return [self.userColors objectAtIndex:(int)floor(FNV32(nick.UTF8String) / 300000000)];
+}
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -79,6 +134,10 @@
     [string addAttribute:NSFontAttributeName
                   value:[UIFont boldSystemFontOfSize:16.0]
                   range:NSMakeRange(0, nick.length)];
+    
+    [string addAttribute:NSForegroundColorAttributeName
+                   value:[self colorForNick:nick]
+                   range:NSMakeRange(0, nick.length)];
     
     [string addAttribute:NSFontAttributeName
                    value:[UIFont systemFontOfSize:12.0]
