@@ -75,6 +75,7 @@
         self.isBNCConnection =                  NO;
         self.isProcessingTermination =          NO;
         
+        self.ircopUserModeCharacter    = "!";
         self.ownerUserModeCharacter    = "~";
         self.adminUserModeCharacter    = "&";
         self.operatorUserModeCharacter = "@";
