@@ -485,6 +485,9 @@
     configuration.name = name;
     IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:configuration withClient:client];
     [client addChannel:channel];
+
+    if(client.isConnected == NO)
+        [client connect];
     
     [self.tableView reloadData];
     [[AppPreferences sharedPrefs] addChannelConfiguration:configuration forConnectionConfiguration:client.configuration];
