@@ -153,6 +153,21 @@ uint32_t FNV32(const char *s)
                            value:[UIFont boldSystemFontOfSize:12.0]
                            range:NSMakeRange(0, user.nick.length+2+msg.length)];
             break;
+        case ET_NOTICE:
+            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", user.nick, msg]];
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont boldSystemFontOfSize:16.0]
+                           range:NSMakeRange(0,user.nick.length)];
+            
+            [string addAttribute:NSForegroundColorAttributeName
+                           value:[self colorForNick:user.nick]
+                           range:NSMakeRange(0, user.nick.length)];
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont systemFontOfSize:12.0]
+                           range:NSMakeRange(user.nick.length+1, msg.length)];
+            break;
         case ET_PRIVMSG:
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", user.nick, msg]];
             
@@ -167,7 +182,6 @@ uint32_t FNV32(const char *s)
             [string addAttribute:NSFontAttributeName
                            value:[UIFont systemFontOfSize:12.0]
                            range:NSMakeRange(user.nick.length+1, msg.length)];
-            
             break;
             
     }
