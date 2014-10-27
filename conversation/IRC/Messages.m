@@ -639,7 +639,6 @@
 
 + (void)clientReceivedWHOReply:(const char *)line onClient:(IRCClient *)client
 {
-    NSLog(@"userlist event");
     const char* pointerBeforeIteration = line;
     int lengthOfChannel = 0;
     while (*line != ' ' && *line != '\0') {
@@ -698,7 +697,6 @@
     
     NSString *channelString = [NSString stringWithCString:channel usingEncodingPreference:client.configuration];
     IRCChannel *ircChannel = [IRCChannel fromString:channelString withClient:client];
-    NSLog(@"channel: %@", ircChannel.name);
     IRCUser *user = [IRCUser fromNickname:nickname onChannel:ircChannel];
     NSString *nicknameString = [NSString stringWithCString:nickname usingEncodingPreference:client.configuration];
     if (user == nil) {
@@ -706,7 +704,6 @@
         NSString *hostnameString = [NSString stringWithCString:hostname usingEncodingPreference:client.configuration];
         user = [[IRCUser alloc] initWithNickname:nicknameString andUsername:usernameString andHostname:hostnameString onClient:client];
     }
-    NSLog(@"user: %@", user.nick);
     if (*line == *[client ircopUserModeCharacter]) {
         user.channelPrivileges = IRCOP;
     } else if (*line == *[client ownerUserModeCharacter]) {
