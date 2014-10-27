@@ -213,6 +213,7 @@
     IRCChannel *channel = [client.getChannels objectAtIndex:indexPath.row];
     
     _chatViewController.channel = channel;
+    _chatViewController.title = channel.name;
     
     [self.navigationController pushViewController:_chatViewController animated:YES];
 

@@ -99,7 +99,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)loadView
 {
-    self.title = _channel.configuration.name;
     UIBarButtonItem *userlistButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Userlist"]
                                                                        style:UIBarButtonItemStylePlain
                                                                       target:self
