@@ -31,6 +31,8 @@
 #import <UIKit/UIKit.h>
 #import "IRCMessage.h"
 
+@class IRCChannel;
+
 @interface ChatMessageView : UITableViewCell
 
 - (CGFloat)cellHeight;

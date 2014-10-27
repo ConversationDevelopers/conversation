@@ -97,7 +97,7 @@ uint32_t FNV32(const char *s)
     
     [self.textLabel removeFromSuperview];
     
-    self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
+    self.backgroundColor = [UIColor clearColor];
     
     return self;
 }
@@ -112,11 +112,76 @@ uint32_t FNV32(const char *s)
     }
 }
 
--(void)layoutSubviews
+- (NSAttributedString *)attributedString
+{
+
+    IRCUser *user = _message.sender;
+    NSString *msg = _message.message;
+
+    NSMutableAttributedString *string;
+    
+    switch(_message.messageType) {
+        case ET_JOIN:
+            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@@%@) %@",
+                                                                        user.nick,
+                                                                        user.username,
+                                                                        user.hostname,
+                                                                        NSLocalizedString(@"joined the channel", @"joined the channel")]];
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont boldSystemFontOfSize:12.0]
+                           range:NSMakeRange(0, user.nick.length)];
+            break;
+        case ET_PART:
+            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@@%@) %@ (%@)",
+                                                                        user.nick,
+                                                                        user.username,
+                                                                        user.hostname,
+                                                                        NSLocalizedString(@"left the channel", @"joined the channel"),
+                                                                        msg]];
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont boldSystemFontOfSize:12.0]
+                           range:NSMakeRange(0, user.nick.length)];
+            break;
+        case ET_ACTION:
+            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"*%@ %@",
+                                                                        user.nick,
+                                                                        msg]];
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont boldSystemFontOfSize:12.0]
+                           range:NSMakeRange(0, user.nick.length+2+msg.length)];
+            
+        case ET_PRIVMSG:
+            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", user.nick, msg]];
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont boldSystemFontOfSize:16.0]
+                           range:NSMakeRange(0,user.nick.length)];
+            
+            [string addAttribute:NSForegroundColorAttributeName
+                           value:[self colorForNick:user.nick]
+                           range:NSMakeRange(0, user.nick.length)];
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont systemFontOfSize:12.0]
+                           range:NSMakeRange(user.nick.length+1, msg.length)];
+            
+            break;
+            
+    }
+    return string;
+}
+
+- (void)layoutSubviews
 {
     
     [super layoutSubviews];
 
+    if (_message.messageType == ET_PRIVMSG) {
+        self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
+    }
     
     NSString *time = @"";
     if (_message.timestamp) {
@@ -126,22 +191,7 @@ uint32_t FNV32(const char *s)
         time = [format stringFromDate:date];
     }
     
-    NSString *nick = _message.sender.nick;
-    NSString *message = _message.message;
-    
-    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", nick, message]];
-
-    [string addAttribute:NSFontAttributeName
-                  value:[UIFont boldSystemFontOfSize:16.0]
-                  range:NSMakeRange(0, nick.length)];
-    
-    [string addAttribute:NSForegroundColorAttributeName
-                   value:[self colorForNick:nick]
-                   range:NSMakeRange(0, nick.length)];
-    
-    [string addAttribute:NSFontAttributeName
-                   value:[UIFont systemFontOfSize:12.0]
-                   range:NSMakeRange(nick.length+1, message.length)];
+    NSAttributedString *string = [self attributedString];
     
     NSMutableAttributedString *timestamp = [[NSMutableAttributedString alloc] initWithString:time];
 
@@ -211,19 +261,7 @@ uint32_t FNV32(const char *s)
 
 - (CGFloat)cellHeight
 {
-    NSString *nick = _message.sender.nick;
-    NSString *message = _message.message;
-    
-    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", nick, message]];
-    
-    [string addAttribute:NSFontAttributeName
-                   value:[UIFont boldSystemFontOfSize:16.0]
-                   range:NSMakeRange(0, nick.length)];
-    
-    [string addAttribute:NSFontAttributeName
-                   value:[UIFont systemFontOfSize:12.0]
-                   range:NSMakeRange(nick.length+1, message.length)];
-    
+    NSAttributedString *string = [self attributedString];
     CGSize size = [self frameSizeForString:string];
     return size.height;
 }
