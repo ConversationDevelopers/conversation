@@ -60,6 +60,7 @@
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+    cell.backgroundColor = [UIColor clearColor];
     IRCUser *user = _users[indexPath.row];
     cell.textLabel.text = user.nick;
     return cell;
