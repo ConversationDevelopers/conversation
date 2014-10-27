@@ -152,7 +152,7 @@ uint32_t FNV32(const char *s)
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:12.0]
                            range:NSMakeRange(0, user.nick.length+2+msg.length)];
-            
+            break;
         case ET_PRIVMSG:
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", user.nick, msg]];
             
