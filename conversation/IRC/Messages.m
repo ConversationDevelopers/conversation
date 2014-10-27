@@ -34,6 +34,7 @@
 #import "IRCConnection.h"
 #import "IRCMessage.h"
 #import "IRCQuitMessage.h"
+#import "IRCKickMessage.h"
 #import "ConversationListViewController.h"
 
 @implementation Messages
@@ -422,6 +423,17 @@
     } else {
         [[channel users] removeObject:channel];
     }
+    
+    NSString *kickMessage = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
+    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    
+    IRCKickMessage *messageObject = [[IRCKickMessage alloc] initWithMessage:kickMessage
+                                                             inConversation:channel
+                                                                 kickedUser:kickedUser
+                                                                   bySender:user
+                                                                     atTime:now];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:messageObject];
 }
 
 + (void)userReceivedQUIT:(const char*[3])senderDict onClient:(IRCClient *)client withMessage:(const char *)message withTags:(NSMutableDictionary *)tags
