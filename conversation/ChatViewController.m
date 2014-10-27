@@ -160,6 +160,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)goBack:(id)sender
 {
+    [self hideUserList];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
@@ -256,7 +257,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     }
 }
 
-- (void)hideAccessories:(UIGestureRecognizer*)sender
+- (BOOL)hideUserList
 {
     if (_userlistIsVisible) {
         
@@ -264,12 +265,17 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         frame.origin.x = _tableView.frame.size.width;
         _userListView.frame = frame;
         
-        [UIView commitAnimations];
-        
         [_userListView removeFromSuperview];
         _userlistIsVisible = NO;
-        return;
+        return YES;
     }
+    return NO;
+}
+
+- (void)hideAccessories:(UIGestureRecognizer*)sender
+{
+    if ([self hideUserList])
+        return;
     [_composeBarView resignFirstResponder];
 }
 
