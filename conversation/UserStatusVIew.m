@@ -95,10 +95,23 @@
 
 - (void)layoutSubviews
 {
-    UILabel *statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 1, self.bounds.size.width, self.bounds.size.height)];
-    statusLabel.font = [UIFont fontWithName:@"Courier" size:18.0];
+    NSString *symbol = [NSString stringWithFormat:@"%s", [self characterForStatus:_status]];
+
+    UILabel *statusLabel = [[UILabel alloc] init];
+    if ([symbol isEqualToString:@"@"])
+        statusLabel.font = [UIFont fontWithName:@"Arial" size:16.0];
+    else
+        statusLabel.font = [UIFont fontWithName:@"Arial" size:18.0];
     statusLabel.textColor = [UIColor whiteColor];
-    statusLabel.text = [NSString stringWithFormat:@"%s", [self characterForStatus:_status]];
+    statusLabel.text = symbol;
+    [statusLabel sizeToFit];
+
+    CGRect frame = statusLabel.frame;
+    frame.origin.x = self.bounds.size.width / 2 - frame.size.width / 2;
+    frame.origin.y = self.bounds.size.height / 2 - frame.size.height / 2;
+    
+    statusLabel.frame = frame;
+    
     
     [self addSubview:statusLabel];
 }
