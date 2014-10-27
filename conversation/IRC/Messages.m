@@ -508,6 +508,7 @@
                                                                      atTime:now];
     
     [channel addMessageToConversation:messageObject];
+    free(kickedUserChar);
 }
 
 + (void)userReceivedQUIT:(const char*[3])senderDict onClient:(IRCClient *)client withMessage:(const char *)message withTags:(NSMutableDictionary *)tags
@@ -678,6 +679,11 @@
     [ircChannel removeUserByName:nicknameString];
     [[ircChannel users] addObject:user];
     [ircChannel sortUserlist];
+    
+    free(nickname);
+    free(username);
+    free(hostname);
+    free(channel);
 }
 
 + (void)clientReceivedServerPasswordMismatchError:(IRCClient *)client

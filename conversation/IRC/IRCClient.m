@@ -224,23 +224,27 @@
             strncpy(sender, lineBeforeIteration, senderLength);
             sender[senderLength] = '\0';
         } else {
-            sender = NULL;
+            sender = "";
         }
         
         /* Copy the characters of the nickname range we calculated earlier, and consume the same characters from the string as well as the following '!' */
-        nickname = malloc(nicknameLength+1);
-        strncpy(nickname, lineBeforeIteration, nicknameLength);
-        nickname[nicknameLength] = '\0';
-        lineBeforeIteration = lineBeforeIteration + nicknameLength + 1;
+        if (nicknameLength > 0) {
+            nickname = malloc(nicknameLength+1);
+            strncpy(nickname, lineBeforeIteration, nicknameLength);
+            nickname[nicknameLength] = '\0';
+            lineBeforeIteration = lineBeforeIteration + nicknameLength + 1;
+        } else {
+            nickname = "";
+        }
         
         /* Copy the characters from the username range we calculated earlier, and consume the same characters from the string as well as the following '@' */
+        username = malloc(usernameLength + 1);
         if (usernameLength > 0) {
-            username = malloc(usernameLength);
             strncpy(username, lineBeforeIteration, usernameLength -1);
             username[usernameLength] = '\0';
             lineBeforeIteration = lineBeforeIteration + usernameLength;
         } else {
-            username = NULL;
+            username = "";
         }
         
         /* Copy the characters from the hostname range we calculated earlier */
@@ -250,7 +254,7 @@
             strncpy(hostname, lineBeforeIteration, hostnameLength);
             hostname[hostnameLength] = '\0';
         } else {
-            hostname = NULL;
+            hostname = "";
         }
         
         lineBeforeIteration = lineBeforeIteration + hostnameLength;
@@ -258,11 +262,12 @@
         /* Consume the following space leading to the IRC command */
         line++;
         
+        free(sender);
+        
     } else {
-        sender   = NULL;
-        username = NULL;
-        hostname = NULL;
-        nickname = NULL;
+        username = "";
+        hostname = "";
+        nickname = "";
         lineBeforeIteration = line;
     }
     const char *senderDict[] = {
@@ -453,10 +458,7 @@
             break;
     }
     free(command);
-    free(sender);
     free(recipient);
-    free(nickname);
-    free(username);
 }
 
 - (void)updateServerSupportedFeatures:(const char*)data
@@ -571,6 +573,7 @@
             }
             prefixIdentifier++;
             prefixes++;
+            free(character);
         }
     }
 }
