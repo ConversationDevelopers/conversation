@@ -30,10 +30,11 @@
 
 #import <UIKit/UIKit.h>
 
-@class IRCChannel;
+@class IRCClient;
 
-@interface UserListView : UIView <UITableViewDataSource, UITableViewDelegate>
+@interface UserStatusView : UIView
 
-@property (nonatomic) IRCChannel *channel;
+@property (nonatomic) IRCClient *client;
+@property (nonatomic) NSInteger status;
 
 @end

@@ -20,6 +20,7 @@
 		DA41794B19FAF9FF007784F0 /* ChatMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA41794A19FAF9FF007784F0 /* ChatMessageView.m */; };
 		DA6F61D719FD1A6600F22F78 /* ILTranslucentView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA6F61D619FD1A6600F22F78 /* ILTranslucentView.m */; };
 		DA6F61DA19FD1B2800F22F78 /* UserListView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA6F61D919FD1B2800F22F78 /* UserListView.m */; };
+		DA6F61DD19FD776400F22F78 /* UserStatusVIew.m in Sources */ = {isa = PBXBuildFile; fileRef = DA6F61DC19FD776400F22F78 /* UserStatusVIew.m */; };
 		DA79EA1E19E6F8C50027A370 /* AppPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA1D19E6F8C50027A370 /* AppPreferences.m */; };
 		DA79EA2619E909CD0027A370 /* AddConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA2519E909CD0027A370 /* AddConversationViewController.m */; };
 		DA79EA2C19E9237A0027A370 /* UITableView+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA2B19E9237A0027A370 /* UITableView+Methods.m */; };
@@ -88,6 +89,8 @@
 		DA6F61D619FD1A6600F22F78 /* ILTranslucentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILTranslucentView.m; sourceTree = "<group>"; };
 		DA6F61D819FD1B2800F22F78 /* UserListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserListView.h; sourceTree = "<group>"; };
 		DA6F61D919FD1B2800F22F78 /* UserListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserListView.m; sourceTree = "<group>"; };
+		DA6F61DB19FD776400F22F78 /* UserStatusVIew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserStatusVIew.h; sourceTree = "<group>"; };
+		DA6F61DC19FD776400F22F78 /* UserStatusVIew.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserStatusVIew.m; sourceTree = "<group>"; };
 		DA79EA1C19E6F8C50027A370 /* AppPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppPreferences.h; sourceTree = "<group>"; };
 		DA79EA1D19E6F8C50027A370 /* AppPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppPreferences.m; sourceTree = "<group>"; };
 		DA79EA2419E909CD0027A370 /* AddConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddConversationViewController.h; sourceTree = "<group>"; };
@@ -215,6 +218,8 @@
 				DA41794A19FAF9FF007784F0 /* ChatMessageView.m */,
 				DA379D4519FB35E80031E30B /* ChatViewController.h */,
 				DA379D4619FB35E80031E30B /* ChatViewController.m */,
+				DA6F61DB19FD776400F22F78 /* UserStatusVIew.h */,
+				DA6F61DC19FD776400F22F78 /* UserStatusVIew.m */,
 				DA6F61D819FD1B2800F22F78 /* UserListView.h */,
 				DA6F61D919FD1B2800F22F78 /* UserListView.m */,
 				DAC65A3519EAA24300E00A73 /* Resources */,
@@ -478,6 +483,7 @@
 				DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */,
 				DA79EA1E19E6F8C50027A370 /* AppPreferences.m in Sources */,
 				FA93176419FB4DD200A94912 /* IRCCommands.m in Sources */,
+				DA6F61DD19FD776400F22F78 /* UserStatusVIew.m in Sources */,
 				FA109B3B19E41D540068DC29 /* IRCChannelConfiguration.m in Sources */,
 				DA379D5319FB3E620031E30B /* PHFComposeBarView.m in Sources */,
 				FAC1679119F84268009856F0 /* IRCMessage.m in Sources */,

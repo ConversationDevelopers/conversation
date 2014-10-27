@@ -170,7 +170,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     [_composeBarView resignFirstResponder];    
     UserListView *userlist = [self userListView];
     
-    userlist.users = _channel.users;
+    userlist.channel = _channel;
 
     [self.navigationController.view addSubview:userlist];
 
