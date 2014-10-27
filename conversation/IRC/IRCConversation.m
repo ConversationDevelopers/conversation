@@ -31,7 +31,7 @@
 #import "IRCConversation.h"
 #import "IRCClient.h"
 
-#define MAX_BUFFER_COUNT 500
+#define MAX_BUFFER_COUNT 3000
 
 @implementation IRCConversation
 
