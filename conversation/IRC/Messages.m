@@ -62,6 +62,7 @@
 
 + (void)clientReceivedAuthenticationAccepted:(const char*)message onClient:(IRCClient *)client
 {
+    client.isAwaitingAuthenticationResponse = NO;
     [client.connection send:@"CAP END"];
 }
 
