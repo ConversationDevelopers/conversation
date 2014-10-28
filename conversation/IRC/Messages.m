@@ -404,7 +404,7 @@
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
     NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
     IRCChannel *channel =  [IRCChannel fromString:channelName withClient:client];
-    if ([[user nick] isEqualToString:client.currentUserOnConnection.nick]) {
+    if ([[user nick] caseInsensitiveCompare:client.currentUserOnConnection.nick] == NSOrderedSame) {
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         [client.connection send:[NSString stringWithFormat:@"WHO %@", channelName]];
         channel.isJoinedByUser = YES;
@@ -429,7 +429,7 @@
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
     NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
     IRCChannel *channel =  [IRCChannel fromString:channelName withClient:client];
-    if ([[user nick] isEqualToString:client.currentUserOnConnection.nick]) {
+    if ([[user nick] caseInsensitiveCompare:client.currentUserOnConnection.nick] == NSOrderedSame) {
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         
         /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
@@ -456,7 +456,7 @@
 + (void)userReceivedNickchange:(const char *[3])senderDict toNick:(const char *)newNick onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
 {
     IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-    if ([[user nick] isEqualToString:client.currentUserOnConnection.nick]) {
+    if ([[user nick] caseInsensitiveCompare:client.currentUserOnConnection.nick] == NSOrderedSame) {
         client.currentUserOnConnection.nick     =   [NSString stringWithCString:newNick usingEncodingPreference:client.configuration];
         client.currentUserOnConnection.username =   [NSString stringWithCString:senderDict[1] usingEncodingPreference:client.configuration];
         client.currentUserOnConnection.hostname =   [NSString stringWithCString:senderDict[2] usingEncodingPreference:client.configuration];
@@ -484,7 +484,7 @@
     }
     
     for (IRCConversation *conversation in [client getQueries]) {
-        if ([[conversation name] isEqualToString: [user nick]]) {
+        if ([[conversation name] caseInsensitiveCompare:[user nick]] == NSOrderedSame) {
             IRCConversation *conversationWithChanges = conversation;
             conversationWithChanges.name = newNickString;
             
@@ -527,7 +527,7 @@
     
     IRCUser *kickedUser = [IRCUser fromNickname:kickedUserChar onChannel:channel];
     
-    if ([[kickedUser nick] isEqualToString:client.currentUserOnConnection.nick]) {
+    if ([[kickedUser nick] caseInsensitiveCompare:client.currentUserOnConnection.nick] == NSOrderedSame) {
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         
         /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
@@ -576,7 +576,7 @@
     }
     
     for (IRCConversation *conversation in [client getQueries]) {
-        if (conversation.name == nickString) {
+        if ([[conversation name] caseInsensitiveCompare:nickString] == NSOrderedSame) {
             
             IRCConversation *conversationWithChanges = conversation;
             conversationWithChanges.conversationPartnerIsOnline = NO;
@@ -601,10 +601,8 @@
     
     IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:channelString withClient:client];
     if (channel != nil) {
-        channel.topic = topicString;
+        //[channel setTopic:topicString];
     }
-    
-    [channel setTopic:topicString];
 }
 
 + (void)clientReceivedISONResponse:(const char *)message onClient:(IRCClient *)client;

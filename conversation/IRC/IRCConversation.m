@@ -65,12 +65,12 @@
 {
     if ([name isValidChannelName:client]) {
         for (IRCChannel *channel in [client getChannels]) {
-            if ([channel.name caseInsensitiveCompare:name])
+            if ([channel.name caseInsensitiveCompare:name] == NSOrderedSame)
                 return channel;
         }
     } else if ([name isValidNickname:client]) {
         for (IRCConversation *query in [client getQueries]) {
-            if ([query.name caseInsensitiveCompare:name]) {
+            if ([query.name caseInsensitiveCompare:name] == NSOrderedSame) {
                 return query;
             }
         }
