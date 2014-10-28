@@ -331,6 +331,9 @@
             line = lineBeforeRecipient;
         }
     }
+    if (strlen(nickname) == 0) {
+        isServerMessage = YES;
+    }
     
     NSString *commandString = [NSString stringWithCString:command usingEncodingPreference:[self configuration]];
     MessageType commandIndexValue = [IRCMessageIndex indexValueFromString:commandString];
