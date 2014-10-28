@@ -109,6 +109,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     else
         self.navigationItem.rightBarButtonItem = joinButton;
     
+    self.title = _channel.name;
     self.navigationItem.leftBarButtonItem = backButton;
     
     UIView *view = [[UIView alloc] initWithFrame:kInitialViewFrame];

@@ -40,7 +40,8 @@
 - (void)reloadData;
 - (void)reloadClient:(IRCClient *)client;
 - (void)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client;
-- (void)createConversationWithName:(NSString *)name onClient:(IRCClient *)client;
+- (void)selectConversationWithIdentifier:(NSString *)identifier;
+- (NSString *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client;
 
 @end
 

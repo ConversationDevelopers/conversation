@@ -82,4 +82,15 @@
     return cell;
     
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self removeFromSuperview];
+    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    NSString *identifier = [controller createConversationWithName:[_channel.users[indexPath.row] nick] onClient:_channel.client];
+    [controller.tableView reloadData];
+    [controller.navigationController popToRootViewControllerAnimated:YES];
+    [controller selectConversationWithIdentifier:identifier];
+}
+
 @end

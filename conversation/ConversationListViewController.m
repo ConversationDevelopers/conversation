@@ -200,6 +200,26 @@
     }
 }
 
+- (void)selectConversationWithIdentifier:(NSString *)identifier
+{
+    IRCClient *client;
+    IRCConversation *channel;
+    for (client in _connections) {
+        for (channel in client.getQueries) {
+            if ([channel.configuration.uniqueIdentifier isEqualToString:identifier]) {
+                break;
+            }
+        }
+    }
+    
+    ChatViewController *chatViewController = [[ChatViewController alloc] init];
+    
+    chatViewController.isChannel = NO;
+    chatViewController.channel = channel;
+
+    [self.navigationController pushViewController:chatViewController animated:YES];
+}
+
 #pragma mark - Table View
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -223,7 +243,6 @@
     }
     
     chatViewController.channel = channel;
-    chatViewController.title = channel.name;
     
     [self.navigationController pushViewController:chatViewController animated:YES];
 
@@ -503,7 +522,7 @@
     [[AppPreferences sharedPrefs] save];
 }
 
-- (void)createConversationWithName:(NSString *)name onClient:(IRCClient *)client
+- (NSString *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client
 {
     IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
     configuration.name = name;
@@ -513,6 +532,8 @@
     [self.tableView reloadData];
     [[AppPreferences sharedPrefs] addQueryConfiguration:configuration forConnectionConfiguration:client.configuration];
     [[AppPreferences sharedPrefs] save];
+
+    return configuration.uniqueIdentifier;
 }
 
 - (void) receivedMessage:(NSNotification *) notification
