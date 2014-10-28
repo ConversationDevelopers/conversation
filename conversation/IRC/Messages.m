@@ -45,7 +45,7 @@
             NSString *password = [SSKeychain passwordForService:@"conversation" account:client.configuration.authenticationPasswordReference];
             if (password != nil && [password length] > 0) {
                 NSData *authenticationStringAsBinaryData = [[NSString stringWithFormat:@"%@\0%@\0%@",
-                                                             client.configuration.primaryNickname,
+                                                             client.configuration.usernameForRegistration,
                                                              client.configuration.usernameForRegistration,
                                                              password]
                                                             dataUsingEncoding:NSUTF8StringEncoding];
