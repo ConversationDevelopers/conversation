@@ -488,8 +488,6 @@
             IRCConversation *conversationWithChanges = conversation;
             conversationWithChanges.name = newNickString;
             
-            NSLog(@"%@", conversation.name);
-            NSLog(@"%@", conversationWithChanges.name);
             [[client getQueries] removeObject:conversation];
             [[client getQueries] addObject:conversationWithChanges];
             
@@ -579,6 +577,12 @@
     
     for (IRCConversation *conversation in [client getQueries]) {
         if (conversation.name == nickString) {
+            
+            IRCConversation *conversationWithChanges = conversation;
+            conversationWithChanges.conversationPartnerIsOnline = NO;
+            [[client getQueries] removeObject:conversation];
+            [[client getQueries] addObject:conversationWithChanges];
+            
             IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:quitMessage
                                                                          OfType:ET_QUIT
                                                                  inConversation:conversation
