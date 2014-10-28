@@ -148,30 +148,45 @@ uint32_t FNV32(const char *s)
     NSString *status = [NSString stringWithFormat:@"%s", [self characterForStatus:user.channelPrivileges]];
     
     switch(_message.messageType) {
-        case ET_JOIN:
+        case ET_JOIN: {
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@@%@) %@",
                                                                         user.nick,
                                                                         user.username,
                                                                         user.hostname,
                                                                         NSLocalizedString(@"joined the channel", @"joined the channel")]];
             
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            [string addAttribute:NSParagraphStyleAttributeName
+                           value:paragraphStyle
+                           range:NSMakeRange(0, string.length)];
+            
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:12.0]
                            range:NSMakeRange(0, user.nick.length)];
+
             break;
-        case ET_PART:
+        }
+        case ET_PART: {
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@@%@) %@ (%@)",
                                                                         user.nick,
                                                                         user.username,
                                                                         user.hostname,
                                                                         NSLocalizedString(@"left the channel", @"left the channel"),
                                                                         msg]];
+
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            [string addAttribute:NSParagraphStyleAttributeName
+                           value:paragraphStyle
+                           range:NSMakeRange(0, string.length)];
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:12.0]
                            range:NSMakeRange(0, user.nick.length)];
             break;
-        case ET_QUIT:
+        }
+        case ET_QUIT: {
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@@%@) %@ (%@)",
                                                                         user.nick,
                                                                         user.username,
@@ -179,31 +194,58 @@ uint32_t FNV32(const char *s)
                                                                         NSLocalizedString(@"left IRC", @"left IRC"),
                                                                         msg]];
             
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            [string addAttribute:NSParagraphStyleAttributeName
+                           value:paragraphStyle
+                           range:NSMakeRange(0, string.length)];
+            
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:12.0]
                            range:NSMakeRange(0, user.nick.length)];
             break;
-        case ET_NICK:
+        }
+        case ET_NICK: {
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@ %@",
                                                                         user.nick,
                                                                         NSLocalizedString(@"is now known as", @"is now known as"),
                                                                         msg]];
             
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            [string addAttribute:NSParagraphStyleAttributeName
+                           value:paragraphStyle
+                           range:NSMakeRange(0, string.length)];
+            
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:12.0]
                            range:NSMakeRange(string.length-msg.length, msg.length)];
             break;
-        case ET_ACTION:
+        }
+        case ET_ACTION: {
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"*%@ %@",
                                                                         user.nick,
                                                                         msg]];
+
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            [string addAttribute:NSParagraphStyleAttributeName
+                           value:paragraphStyle
+                           range:NSMakeRange(0, string.length)];
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:12.0]
                            range:NSMakeRange(0, user.nick.length+2+msg.length)];
             break;
-        case ET_NOTICE:
+        }
+        case ET_NOTICE: {
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", user.nick, msg]];
+
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            [string addAttribute:NSParagraphStyleAttributeName
+                           value:paragraphStyle
+                           range:NSMakeRange(0, string.length)];
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:16.0]
@@ -217,8 +259,15 @@ uint32_t FNV32(const char *s)
                            value:[UIFont systemFontOfSize:12.0]
                            range:NSMakeRange(user.nick.length+1, msg.length)];
             break;
-        case ET_PRIVMSG:
+        }
+        case ET_PRIVMSG: {
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@%@\n%@", status, user.nick, msg]];
+
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            [string addAttribute:NSParagraphStyleAttributeName
+                           value:paragraphStyle
+                           range:NSMakeRange(0, string.length)];
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:16.0]
@@ -232,6 +281,7 @@ uint32_t FNV32(const char *s)
                            value:[UIFont systemFontOfSize:12.0]
                            range:NSMakeRange(status.length+user.nick.length+1, msg.length)];
             break;
+        }
     }
     return string;
 }
@@ -249,11 +299,11 @@ uint32_t FNV32(const char *s)
     [textLayer setForegroundColor:[[UIColor clearColor] CGColor]];
     [textLayer setContentsScale:[[UIScreen mainScreen] scale]];
     [textLayer setRasterizationScale:[[UIScreen mainScreen] scale]];
-    
-    CGSize size = [self frameSizeForString:string];
-    
-    textLayer.frame = CGRectMake(10, 5, self.bounds.size.width-20, size.height);
     textLayer.wrapped = YES;
+
+    CGSize size = [self frameSizeForString:string];
+    textLayer.frame = CGRectMake(10, 5, self.bounds.size.width-20, size.height);
+
     
     [self.contentView.layer addSublayer:textLayer];
     textLayer = nil;

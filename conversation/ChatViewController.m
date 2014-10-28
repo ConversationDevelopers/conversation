@@ -234,6 +234,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     if ( !_dummyCell ) _dummyCell = [[ChatMessageView alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
     
     _dummyCell.message = _channel.messages[indexPath.row];
+    _dummyCell.channel = _channel;
     
     CGFloat height = [_dummyCell cellHeight];
 
