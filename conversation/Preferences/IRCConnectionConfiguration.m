@@ -81,6 +81,8 @@
         self.serverAddress = dict[@"serverAddress"];
         self.connectionPort = [dict[@"connectionPort"] integerValue];
         self.serverPasswordReference = dict[@"serverPasswordReference"];
+        self.authenticationPasswordReference = dict[@"authenticationPasswordReference"];
+        
         self.socketEncodingType = [dict[@"socketEncodingType"] integerValue];
         
         self.disconnectMessage = dict[@"disconnectMessage"];

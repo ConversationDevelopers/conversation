@@ -230,6 +230,7 @@
 
 - (void)save
 {
+    NSLog(@"PREFS: %@", self.preferences);
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     [userDefault setObject:self.preferences forKey:@"preferences"];
     [userDefault synchronize];
