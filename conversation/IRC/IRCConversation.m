@@ -65,12 +65,12 @@
 {
     if ([name isValidChannelName:client]) {
         for (IRCChannel *channel in [client getChannels]) {
-            if ([channel.name isEqualToString:name])
+            if ([channel.name caseInsensitiveCompare:name])
                 return channel;
         }
     } else if ([name isValidNickname:client]) {
         for (IRCConversation *query in [client getQueries]) {
-            if ([query.name isEqualToString:name]) {
+            if ([query.name caseInsensitiveCompare:name]) {
                 return query;
             }
         }
