@@ -69,6 +69,7 @@ static unsigned short EncodingTableSection = 3;
     if(_edit) {
         _configuration = _connection;
         buttonTitle = NSLocalizedString(@"Save", @"Save");
+        self.title = _configuration.connectionName;
     } else {
         _connection = [[IRCConnectionConfiguration alloc] init];
         _configuration = [[IRCConnectionConfiguration alloc] init];
