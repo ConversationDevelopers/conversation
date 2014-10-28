@@ -136,6 +136,7 @@ uint32_t FNV32(const char *s)
     for (CATextLayer *layer in layers) {
         [layer removeFromSuperlayer];
     }
+    self.backgroundColor = [UIColor clearColor];    
 }
 
 - (NSAttributedString *)attributedString
