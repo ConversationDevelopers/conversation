@@ -601,7 +601,7 @@
     
     IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:channelString withClient:client];
     if (channel != nil) {
-        //[channel setTopic:topicString];
+        [channel setTopic:topicString];
     }
 }
 
