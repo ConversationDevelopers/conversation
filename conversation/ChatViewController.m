@@ -256,6 +256,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     }
     
     cell.message = _channel.messages[indexPath.row];
+    cell.channel = _channel;
     
     return cell;
 }

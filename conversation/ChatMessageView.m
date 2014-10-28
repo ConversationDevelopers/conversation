@@ -30,6 +30,7 @@
 
 #import "ChatMessageView.h"
 #import "IRCUser.h"
+#import "IRCClient.h"
 #import <CoreText/CoreText.h>
 #import <string.h>
 
@@ -84,6 +85,31 @@ uint32_t FNV32(const char *s)
     return colors;
 }
 
+- (char *)characterForStatus:(NSInteger)status
+{
+    switch(status) {
+        case VOICE:
+            return _channel.client.voiceUserModeCharacter;
+            break;
+        case HALFOP:
+            return _channel.client.halfopUserModeCharacter;
+            break;
+        case OPERATOR:
+            return _channel.client.operatorUserModeCharacter;
+            break;
+        case ADMIN:
+            return _channel.client.adminUserModeCharacter;
+            break;
+        case OWNER:
+            return _channel.client.ownerUserModeCharacter;
+            break;
+        case IRCOP:
+            return _channel.client.ircopUserModeCharacter;
+            break;
+    }
+    return "";
+}
+
 - (UIColor *)colorForNick:(NSString *)nick
 {
     return [self.userColors objectAtIndex:(int)floor(FNV32(nick.UTF8String) / 300000000)];
@@ -119,6 +145,7 @@ uint32_t FNV32(const char *s)
     NSString *msg = _message.message;
 
     NSMutableAttributedString *string;
+    NSString *status = [NSString stringWithFormat:@"%s", [self characterForStatus:user.channelPrivileges]];
     
     switch(_message.messageType) {
         case ET_JOIN:
@@ -175,12 +202,12 @@ uint32_t FNV32(const char *s)
                            value:[UIFont boldSystemFontOfSize:12.0]
                            range:NSMakeRange(0, user.nick.length+2+msg.length)];
             break;
-        case ET_NOTICE || ET_PRIVMSG:
+        case ET_NOTICE:
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", user.nick, msg]];
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:16.0]
-                           range:NSMakeRange(0,user.nick.length)];
+                           range:NSMakeRange(0, user.nick.length)];
             
             [string addAttribute:NSForegroundColorAttributeName
                            value:[self colorForNick:user.nick]
@@ -190,7 +217,21 @@ uint32_t FNV32(const char *s)
                            value:[UIFont systemFontOfSize:12.0]
                            range:NSMakeRange(user.nick.length+1, msg.length)];
             break;
+        case ET_PRIVMSG:
+            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@%@\n%@", status, user.nick, msg]];
             
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont boldSystemFontOfSize:16.0]
+                           range:NSMakeRange(0, status.length+user.nick.length)];
+            
+            [string addAttribute:NSForegroundColorAttributeName
+                           value:[self colorForNick:user.nick]
+                           range:NSMakeRange(0, status.length+user.nick.length)];
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont systemFontOfSize:12.0]
+                           range:NSMakeRange(status.length+user.nick.length+1, msg.length)];
+            break;
     }
     return string;
 }

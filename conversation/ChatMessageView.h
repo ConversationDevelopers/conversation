@@ -37,6 +37,7 @@
 
 - (CGFloat)cellHeight;
 
+@property (nonatomic) IRCConversation *channel;
 @property (nonatomic) IRCMessage *message;
 
 @end
