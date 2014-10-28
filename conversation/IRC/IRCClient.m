@@ -420,6 +420,7 @@
             break;
         
         case ERR_ERRONEUSNICKNAME:
+        case ERR_UNAVAILRESOURCE:
         case ERR_NICKNAMEINUSE:
             /* The server did not accept our nick request, let's see if this happened during initial registration. */
             if ([self isAttemptingRegistration]) {
