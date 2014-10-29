@@ -29,6 +29,7 @@
  */
 
 #import "CertificateInfoViewController.h"
+#import "CertificateItemRow.h"
 
 static unsigned short SubjectInformationSection = 0;
 static unsigned short IssuerInformationSection = 1;
@@ -79,22 +80,20 @@ static unsigned short CertificateInformationSection = 2;
     }
     
     if (indexPath.section == SubjectInformationSection) {
-    
-        NSArray *keys = [_subjectInformation allKeys];
-        cell.textLabel.text = keys[indexPath.row];
-        cell.detailTextLabel.text = _subjectInformation[keys[indexPath.row]];
+        CertificateItemRow *item = _subjectInformation[indexPath.row];
+        cell.textLabel.text = item.itemName;
+        cell.detailTextLabel.text = item.itemDescription;
         
     } else if (indexPath.section == IssuerInformationSection) {
 
-        NSArray *keys = [_issuerInformation allKeys];
-        cell.textLabel.text = keys[indexPath.row];
-        cell.detailTextLabel.text = _issuerInformation[keys[indexPath.row]];
+        CertificateItemRow *item = _issuerInformation[indexPath.row];
+        cell.textLabel.text = item.itemName;
+        cell.detailTextLabel.text = item.itemDescription;
         
     } else if (indexPath.section == CertificateInformationSection) {
-
-        NSArray *keys = [_certificateInformation allKeys];
-        cell.textLabel.text = keys[indexPath.row];
-        cell.detailTextLabel.text = _certificateInformation[keys[indexPath.row]];
+        CertificateItemRow *item = _certificateInformation[indexPath.row];
+        cell.textLabel.text = item.itemName;
+        cell.detailTextLabel.text = item.itemDescription;
         
     }
 

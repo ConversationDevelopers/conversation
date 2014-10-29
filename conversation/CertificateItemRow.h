@@ -28,27 +28,13 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "../openssl/x509.h"
-#import "AppDelegate.h"
-#import "IRCMessage.h"
+#import <Foundation/Foundation.h>
 
-@interface IRCCertificateTrust : IRCMessage
+@interface CertificateItemRow : NSObject
 
-@property (nonatomic) SecTrustRef trustReference;
-@property (nonatomic) NSArray *subjectInformation;
-@property (nonatomic) NSArray *issuerInformation;
-@property (nonatomic) NSArray *certificateInformation;
-@property (nonatomic) IRCClient *client;
-@property (nonatomic) NSUInteger trustStatus;
+@property NSString *itemName;
+@property NSString *itemDescription;
 
-- (instancetype)init:(SecTrustRef)trust onClient:(IRCClient *)client;
-- (void)requestTrustFromUser:(void (^)(BOOL shouldTrustPeer))completionHandler;
-- (void)receivedTrustFromUser:(BOOL)trust;
-
-typedef NS_ENUM(NSUInteger, CertificateTrustStatus) {
-    AWAITING_RESPONSE,
-    CERTIFICATE_ACCEPTED,
-    CERTIFICATE_DENIED
-};
+- (instancetype) initWithName:(NSString *)name andDescription:(NSString *)description;
 
 @end

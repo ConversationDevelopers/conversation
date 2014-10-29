@@ -31,11 +31,10 @@
 #import <UIKit/UIKit.h>
 #import "IRCCertificateTrust.h"
 
-
 @interface CertificateInfoViewController : UITableViewController
 
-@property (nonatomic, strong) NSDictionary *subjectInformation;
-@property (nonatomic, strong) NSDictionary *issuerInformation;
-@property (nonatomic, strong) NSDictionary *certificateInformation;
+@property (nonatomic, strong) NSArray *subjectInformation;
+@property (nonatomic, strong) NSArray *issuerInformation;
+@property (nonatomic, strong) NSArray *certificateInformation;
 
 @end

@@ -30,6 +30,7 @@
 
 #import "IRCCertificateTrust.h"
 #import "ConversationItemView.h"
+#import "CertificateItemRow.h"
 
 @implementation IRCCertificateTrust
 
@@ -59,7 +60,7 @@
         self.issuerInformation       = [IRCCertificateTrust getCertificateIssuer:certificateX509];
         self.certificateInformation  = [IRCCertificateTrust getCertificateAlgorithmInformation:certificateX509];
         
-        NSString *certificateSignature = [self.certificateInformation objectForKey:@"signature"];
+        NSString *certificateSignature = [self.certificateInformation objectAtIndex:6];
         for (NSString *signature in [[self.client configuration] trustedSSLSignatures]) {
             if ([signature isEqualToString:certificateSignature]) {
                 completionHandler(YES);
@@ -106,47 +107,47 @@
     }
 }
 
-+ (NSDictionary *) getCertificateSubject:(X509 *)certificateX509
++ (NSArray *) getCertificateSubject:(X509 *)certificateX509
 {
-    NSMutableDictionary *subject = [[NSMutableDictionary alloc] init];
+    NSMutableArray *subject = [[NSMutableArray alloc] init];
     if (certificateX509 != NULL) {
         X509_NAME *subjectX509Name = X509_get_subject_name(certificateX509);
         
         if (subjectX509Name != NULL) {
-            [subject setObject:getKeyString(NID_countryName, subjectX509Name)             forKey:@"country"];
-            [subject setObject:getKeyString(NID_stateOrProvinceName, subjectX509Name)     forKey:@"province"];
-            [subject setObject:getKeyString(NID_localityName, subjectX509Name)            forKey:@"locality"];
-            [subject setObject:getKeyString(NID_organizationName, subjectX509Name)        forKey:@"organisation"];
-            [subject setObject:getKeyString(NID_organizationalUnitName, subjectX509Name)  forKey:@"unit"];
-            [subject setObject:getKeyString(NID_commonName, subjectX509Name)              forKey:@"commonName"];
-            [subject setObject:getKeyString(NID_pkcs9_emailAddress, subjectX509Name)      forKey:@"email"];
+            [subject addObject:[[CertificateItemRow alloc] initWithName:@"Country" andDescription:getKeyString(NID_countryName, subjectX509Name)]];
+            [subject addObject:[[CertificateItemRow alloc] initWithName:@"Province/State" andDescription:getKeyString(NID_stateOrProvinceName, subjectX509Name)]];
+            [subject addObject:[[CertificateItemRow alloc] initWithName:@"Locality" andDescription:getKeyString(NID_localityName, subjectX509Name)]];
+            [subject addObject:[[CertificateItemRow alloc] initWithName:@"Organisation" andDescription:getKeyString(NID_organizationName, subjectX509Name)]];
+            [subject addObject:[[CertificateItemRow alloc] initWithName:@"Organisational Unit" andDescription:getKeyString(NID_organizationalUnitName, subjectX509Name)]];
+            [subject addObject:[[CertificateItemRow alloc] initWithName:@"Common Name" andDescription:getKeyString(NID_commonName, subjectX509Name)]];
+            [subject addObject:[[CertificateItemRow alloc] initWithName:@"Email Address" andDescription:getKeyString(NID_pkcs9_emailAddress, subjectX509Name)]];
         }
     }
     return subject;
 }
 
-+ (NSDictionary *) getCertificateIssuer:(X509 *)certificateX509
++ (NSArray *) getCertificateIssuer:(X509 *)certificateX509
 {
-    NSMutableDictionary *issuer = [[NSMutableDictionary alloc] init];
+    NSMutableArray *issuer = [[NSMutableArray alloc] init];
     if (certificateX509 != NULL) {
         X509_NAME *issuerX509Name = X509_get_issuer_name(certificateX509);
         
         if (issuerX509Name != NULL) {
-            [issuer setObject:getKeyString(NID_countryName, issuerX509Name)             forKey:@"country"];
-            [issuer setObject:getKeyString(NID_stateOrProvinceName, issuerX509Name)     forKey:@"province"];
-            [issuer setObject:getKeyString(NID_localityName, issuerX509Name)            forKey:@"locality"];
-            [issuer setObject:getKeyString(NID_organizationName, issuerX509Name)        forKey:@"organisation"];
-            [issuer setObject:getKeyString(NID_organizationalUnitName, issuerX509Name)  forKey:@"unit"];
-            [issuer setObject:getKeyString(NID_pkcs9_emailAddress, issuerX509Name)      forKey:@"commonName"];
-            [issuer setObject:getKeyString(NID_email_protect, issuerX509Name)           forKey:@"email"];
+            [issuer addObject:[[CertificateItemRow alloc] initWithName:@"Country" andDescription:getKeyString(NID_countryName, issuerX509Name)]];
+            [issuer addObject:[[CertificateItemRow alloc] initWithName:@"Province/State" andDescription:getKeyString(NID_stateOrProvinceName, issuerX509Name)]];
+            [issuer addObject:[[CertificateItemRow alloc] initWithName:@"Locality" andDescription:getKeyString(NID_localityName, issuerX509Name)]];
+            [issuer addObject:[[CertificateItemRow alloc] initWithName:@"Organisation" andDescription:getKeyString(NID_organizationName, issuerX509Name)]];
+            [issuer addObject:[[CertificateItemRow alloc] initWithName:@"Organisational Unit" andDescription:getKeyString(NID_organizationalUnitName, issuerX509Name)]];
+            [issuer addObject:[[CertificateItemRow alloc] initWithName:@"Common Name" andDescription:getKeyString(NID_commonName, issuerX509Name)]];
+            [issuer addObject:[[CertificateItemRow alloc] initWithName:@"Email Address" andDescription:getKeyString(NID_pkcs9_emailAddress, issuerX509Name)]];
         }
     }
     return issuer;
 }
 
-+ (NSDictionary *) getCertificateAlgorithmInformation:(X509 *)certificateX509
++ (NSArray *) getCertificateAlgorithmInformation:(X509 *)certificateX509
 {
-    NSMutableDictionary *algorithm = [[NSMutableDictionary alloc] init];
+    NSMutableArray *algorithm = [[NSMutableArray alloc] init];
     if (certificateX509 != NULL) {
         char alg[128];
         OBJ_obj2txt(alg, sizeof(alg), certificateX509->sig_alg->algorithm, 0);
@@ -156,40 +157,40 @@
         } else {
             signatureAlgorithm = @"";
         }
-        [algorithm setObject:signatureAlgorithm forKey:@"algorithm"];
+        [algorithm addObject:[[CertificateItemRow alloc] initWithName:@"Algorithm" andDescription:signatureAlgorithm]];
         
         NSString *version = [NSString stringWithFormat:@"%ld", X509_get_version(certificateX509)];
-        [algorithm setObject:version forKey:@"version"];
+        [algorithm addObject:[[CertificateItemRow alloc] initWithName:@"Version" andDescription:version]];
         
         long serial = ASN1_INTEGER_get(X509_get_serialNumber(certificateX509));
-        NSString *serialNumber = [NSString stringWithFormat:@"%ld", serial];
-        [algorithm setObject:serialNumber forKey:@"serial"];
-        
+        [algorithm addObject:[[CertificateItemRow alloc] initWithName:@"Serial" andDescription:[NSString stringWithFormat:@"%ld", serial]]];
         
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"dd/mm/yyyy HH:mm:ss"];
         
         NSDate *certStartTime = CertificateGetStartDate(certificateX509);
         NSString *startTimeString = [formatter stringFromDate:certStartTime];
-        [algorithm setObject:startTimeString forKey:@"notValidBefore"];
+        [algorithm addObject:[[CertificateItemRow alloc] initWithName:@"Not Valid Before" andDescription:startTimeString]];
         
         NSDate *certExpireTime = CertificateGetExpiryDate(certificateX509);
         NSString *expireTimeString = [formatter stringFromDate:certExpireTime];
-        [algorithm setObject:expireTimeString forKey:@"notValidAfter"];
+        [algorithm addObject:[[CertificateItemRow alloc] initWithName:@"Not Valid After" andDescription:expireTimeString]];
         
         ASN1_BIT_STRING *pubKey = X509_get0_pubkey_bitstr(certificateX509);
         NSString *publicKey = @"";
         for (int i = 0; i < pubKey->length; i++) {
             publicKey = [publicKey stringByAppendingString:[NSString stringWithFormat:@"%02X ", pubKey->data[i]]];
         }
-        [algorithm setObject:publicKey forKey:@"publicKey"];
+        
+        [algorithm addObject:[[CertificateItemRow alloc] initWithName:@"Public Key" andDescription:publicKey]];
         
         ASN1_BIT_STRING *signature = certificateX509->signature;
         NSString *signatureKey = @"";
         for (int i = 0; i < signature->length; i++) {
             signatureKey = [signatureKey stringByAppendingString:[NSString stringWithFormat:@"%02X ", signature->data[i]]];
         }
-        [algorithm setObject:signatureKey forKey:@"signature"];
+        
+        [algorithm addObject:[[CertificateItemRow alloc] initWithName:@"Signature" andDescription:signatureKey]];
     }
     return algorithm;
 }

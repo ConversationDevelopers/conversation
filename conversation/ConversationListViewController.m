@@ -46,6 +46,7 @@
 #import "UIAlertView+Methods.h"
 #import "UIBarButtonItem+Methods.h"
 #import "CertificateInfoViewController.h"
+#import "CertificateItemRow.h"
 
 @implementation ConversationListViewController
 
@@ -565,8 +566,8 @@
 
 - (void)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest
 {
-
-    NSString *message = [NSString stringWithFormat:@"%@ %@ %@", NSLocalizedString(@"Conversation cannot verify the identity of", @"Conversation cannot verify the identity of"), trustRequest.issuerInformation[@"commonName"], NSLocalizedString(@"Would you like to continue anyway?", @"Would you like to continue anyway?")];
+    CertificateItemRow *commonName =  [trustRequest.issuerInformation objectAtIndex:5];
+    NSString *message = [NSString stringWithFormat:@"%@ %@ %@", NSLocalizedString(@"Conversation cannot verify the identity of", @"Conversation cannot verify the identity of"), [commonName itemDescription], NSLocalizedString(@"Would you like to continue anyway?", @"Would you like to continue anyway?")];
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Cannot verify Server Identity", @"Cannot verify Server Identity")
                                                             message:message
                                                            delegate:self
