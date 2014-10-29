@@ -29,6 +29,7 @@
 		DA7B68771A00A43500D82B4C /* LinkTapView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7B68761A00A43500D82B4C /* LinkTapView.m */; };
 		DA7B687A1A00A66D00D82B4C /* UIAlertView+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7B68791A00A66D00D82B4C /* UIAlertView+Methods.m */; };
 		DA7B687D1A00C55500D82B4C /* UIBarButtonItem+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7B687C1A00C55500D82B4C /* UIBarButtonItem+Methods.m */; };
+		DA7B68801A01504100D82B4C /* CertificateInfoTableViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7B687F1A01504100D82B4C /* CertificateInfoTableViewDataSource.m */; };
 		DA96223F19EDE217008D42EB /* networks.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA96223E19EDE217008D42EB /* networks.plist */; };
 		DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */; };
 		DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */; };
@@ -113,6 +114,8 @@
 		DA7B68791A00A66D00D82B4C /* UIAlertView+Methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIAlertView+Methods.m"; path = "conversation/UIAlertView+Methods.m"; sourceTree = "<group>"; };
 		DA7B687B1A00C55500D82B4C /* UIBarButtonItem+Methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIBarButtonItem+Methods.h"; path = "conversation/UIBarButtonItem+Methods.h"; sourceTree = "<group>"; };
 		DA7B687C1A00C55500D82B4C /* UIBarButtonItem+Methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIBarButtonItem+Methods.m"; path = "conversation/UIBarButtonItem+Methods.m"; sourceTree = "<group>"; };
+		DA7B687E1A01504100D82B4C /* CertificateInfoTableViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CertificateInfoTableViewDataSource.h; sourceTree = "<group>"; };
+		DA7B687F1A01504100D82B4C /* CertificateInfoTableViewDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CertificateInfoTableViewDataSource.m; sourceTree = "<group>"; };
 		DA96223E19EDE217008D42EB /* networks.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = networks.plist; path = Resources/networks.plist; sourceTree = "<group>"; };
 		DAA3229C19E56CBF0068E2B6 /* EditConnectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditConnectionViewController.h; sourceTree = "<group>"; };
 		DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditConnectionViewController.m; sourceTree = "<group>"; };
@@ -319,6 +322,8 @@
 				DA6F61D919FD1B2800F22F78 /* UserListView.m */,
 				DA7B68751A00A43500D82B4C /* LinkTapView.h */,
 				DA7B68761A00A43500D82B4C /* LinkTapView.m */,
+				DA7B687E1A01504100D82B4C /* CertificateInfoTableViewDataSource.h */,
+				DA7B687F1A01504100D82B4C /* CertificateInfoTableViewDataSource.m */,
 				DAC65A3519EAA24300E00A73 /* Resources */,
 				DA1A4ABA19E1770700565763 /* Supporting Files */,
 				FA109B3819E4190C0068DC29 /* Preferences */,
@@ -662,6 +667,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA7B68801A01504100D82B4C /* CertificateInfoTableViewDataSource.m in Sources */,
 				DA379D5119FB3E620031E30B /* PHFComposeBarView_Button.m in Sources */,
 				FA109B2B19E3E6D60068DC29 /* IRCConnection.m in Sources */,
 				DA1A4AC019E1770700565763 /* AppDelegate.m in Sources */,

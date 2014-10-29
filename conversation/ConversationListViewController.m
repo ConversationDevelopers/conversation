@@ -45,6 +45,7 @@
 #import "IRCCertificateTrust.h"
 #import "UIAlertView+Methods.h"
 #import "UIBarButtonItem+Methods.h"
+#import "CertificateInfoTableViewDataSource.h"
 
 @implementation ConversationListViewController
 
@@ -575,6 +576,9 @@
                                                                     NSLocalizedString(@"Details", @"Details"), nil];
     [alertView setCancelButtonIndex:1];
     
+    __block UITableView *tableView = [[UITableView alloc] initWithFrame:self.tableView.frame style:UITableViewStyleGrouped];
+    __block CertificateInfoTableViewDataSource *dataSource = [[CertificateInfoTableViewDataSource alloc] init];
+
     [alertView showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
         if (buttonIndex == 0) {
             [trustRequest receivedTrustFromUser:NO];
@@ -598,11 +602,16 @@
                                                                                 [trustRequest receivedTrustFromUser:YES];
                                                                                 [blockself dismissViewControllerAnimated:YES completion:nil];
                                                                             }];
+            
+            dataSource.subjectInformation = trustRequest.subjectInformation;
+            dataSource.issuerInformation = trustRequest.issuerInformation;
+            dataSource.certificateInformation = trustRequest.certificateInformation;
+            
+            tableView.dataSource = dataSource;            
 
             certificateInfoController.navigationItem.rightBarButtonItem = trustButton;
             certificateInfoController.navigationItem.leftBarButtonItem = cancelButton;
             
-            UITableView *tableView = [[UITableView alloc] init];
             certificateInfoController.tableView = tableView;
             UINavigationController *navigationController = [[UINavigationController alloc]
                                                             initWithRootViewController:certificateInfoController];
