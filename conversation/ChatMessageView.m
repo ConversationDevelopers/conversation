@@ -411,10 +411,15 @@ uint32_t FNV32(const char *s)
                 [self.contentView addSubview:linkTapView];
             }
         }
-    }    
+    }
     
     self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, size.height+10);
-    
+
+    UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [singleTapRecogniser setDelegate:self];
+    singleTapRecogniser.numberOfTouchesRequired = 1;
+    singleTapRecogniser.numberOfTapsRequired = 1;
+    [self addGestureRecognizer:singleTapRecogniser];
 }
 
 - (CGSize)frameSizeForString:(NSAttributedString *)string
@@ -449,5 +454,24 @@ uint32_t FNV32(const char *s)
     return size.height;
 }
 
+- (void)handleTap:(UITapGestureRecognizer *)recognizer
+{
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Message", @"Message")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                                         destructiveButtonTitle:nil
+                                              otherButtonTitles:NSLocalizedString(@"Copy", @"Copy"), nil];
+    [sheet setTag:-1];
+    [sheet showInView:self];
+}
 
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0 && self.message.messageType == ET_PRIVMSG) {
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        NSString *status = [NSString stringWithFormat:@"%s", [self characterForStatus:self.message.sender.channelPrivileges]];
+        NSString *pasteString = [NSString stringWithFormat:@"<%@%@> %@", status, self.message.sender.nick, self.message.message];
+        [pasteboard setValue:pasteString forPasteboardType:@"public.plain-text"];
+    }
+}
 @end

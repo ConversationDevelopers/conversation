@@ -33,7 +33,7 @@
 
 @class IRCChannel;
 
-@interface ChatMessageView : UITableViewCell {
+@interface ChatMessageView : UITableViewCell <UIActionSheetDelegate> {
     NSAttributedString *_attributedString;
 }
 
