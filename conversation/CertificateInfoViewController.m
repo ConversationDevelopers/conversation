@@ -115,4 +115,9 @@ static unsigned short CertificateInformationSection = 2;
     return 44.0;
 }
 
+- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath
+{
+    return nil;
+}
+
 @end
