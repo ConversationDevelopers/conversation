@@ -71,8 +71,9 @@
         [controller requestUserTrustForCertificate:self];
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSLog(@"async");
             while (self.trustStatus == AWAITING_RESPONSE) {
-                sleep(100);
+                // Block thread
             }
             
             dispatch_sync(dispatch_get_main_queue(), ^{
