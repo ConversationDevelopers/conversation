@@ -128,7 +128,6 @@ static unsigned short EncodingTableSection = 3;
 
     // Does the connection already exist?
     if ([[AppPreferences sharedPrefs] hasConnectionWithIdentifier:_configuration.uniqueIdentifier]) {
-        
         int x=0;
         NSArray *connections = self.conversationsController.connections;
         for (IRCClient *cl in connections) {

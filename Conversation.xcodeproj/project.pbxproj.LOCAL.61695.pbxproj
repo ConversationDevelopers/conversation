@@ -104,8 +104,6 @@
 		DA79EA2F19E92AF20027A370 /* PreferencesListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesListViewController.m; sourceTree = "<group>"; };
 		DA79EA3119EA6C810027A370 /* ConversationItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationItemView.h; sourceTree = "<group>"; };
 		DA79EA3219EA6C810027A370 /* ConversationItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationItemView.m; sourceTree = "<group>"; };
-		DA7B68721A00821D00D82B4C /* LinkTapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkTapView.h; sourceTree = "<group>"; };
-		DA7B68731A00821D00D82B4C /* LinkTapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkTapView.m; sourceTree = "<group>"; };
 		DA96223E19EDE217008D42EB /* networks.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = networks.plist; path = Resources/networks.plist; sourceTree = "<group>"; };
 		DAA3229C19E56CBF0068E2B6 /* EditConnectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditConnectionViewController.h; sourceTree = "<group>"; };
 		DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditConnectionViewController.m; sourceTree = "<group>"; };
@@ -310,8 +308,6 @@
 				DA6F61DC19FD776400F22F78 /* UserStatusVIew.m */,
 				DA6F61D819FD1B2800F22F78 /* UserListView.h */,
 				DA6F61D919FD1B2800F22F78 /* UserListView.m */,
-				DA7B68721A00821D00D82B4C /* LinkTapView.h */,
-				DA7B68731A00821D00D82B4C /* LinkTapView.m */,
 				DAC65A3519EAA24300E00A73 /* Resources */,
 				DA1A4ABA19E1770700565763 /* Supporting Files */,
 				FA109B3819E4190C0068DC29 /* Preferences */,
@@ -687,7 +683,6 @@
 				FAEE1E6319EBFBA20041439F /* IRCConversation.m in Sources */,
 				DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */,
 				FA00A39219E5DD3D00E7B4D7 /* SSKeychain.m in Sources */,
-				DA7B68741A00821D00D82B4C /* LinkTapView.m in Sources */,
 				DA6F61DA19FD1B2800F22F78 /* UserListView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

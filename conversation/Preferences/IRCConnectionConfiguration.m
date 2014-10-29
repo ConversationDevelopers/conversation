@@ -136,6 +136,12 @@
                 [channels addObject:[channel getDictionary]];
             }
             dict[propertyName] = channels;
+        } else if([propertyName isEqualToString:@"queries"]) {
+            NSMutableArray *queries = [[NSMutableArray alloc] init];
+            for (IRCChannelConfiguration *query in self.queries) {
+                [queries addObject:[query getDictionary]];
+            }
+            dict[propertyName] = queries;
         } else {
             id valueForProperty = [self valueForKey:propertyName];
             if(valueForProperty != nil) {

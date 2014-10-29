@@ -31,6 +31,7 @@
 #import "ChatMessageView.h"
 #import "IRCUser.h"
 #import "IRCClient.h"
+#import "LinkTapView.h"
 #import <CoreText/CoreText.h>
 #import <string.h>
 
@@ -137,6 +138,24 @@ uint32_t FNV32(const char *s)
         [layer removeFromSuperlayer];
     }
     self.backgroundColor = [UIColor clearColor];    
+}
+
+- (NSAttributedString *)setLinks:(NSString *)string
+{
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+    NSDataDetector* detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
+    NSArray* matches = [detector matchesInString:string options:0 range:NSMakeRange(0, [string length])];
+    for (NSTextCheckingResult *match in matches) {
+        NSRange matchRange = [match range];
+        if ([match resultType] == NSTextCheckingTypeLink) {
+            NSURL *url = [match URL];
+            [attributedString addAttribute:NSLinkAttributeName value:url range:matchRange];
+            [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:matchRange];
+        }
+    }
+    
+    return attributedString;
+    
 }
 
 - (NSAttributedString *)attributedString
@@ -264,6 +283,8 @@ uint32_t FNV32(const char *s)
         case ET_PRIVMSG: {
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@%@\n%@", status, user.nick, msg]];
 
+            string = [[self setLinks:string.string] mutableCopy];
+            
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
             [string addAttribute:NSParagraphStyleAttributeName
@@ -291,18 +312,18 @@ uint32_t FNV32(const char *s)
 {
     
     [super layoutSubviews];
-    
-    NSAttributedString *string = [self attributedString];
+
+    _attributedString = [self attributedString];
     
     CATextLayer *textLayer = [[CATextLayer alloc] init];
-    textLayer.string = string;
+    textLayer.string = _attributedString;
     textLayer.backgroundColor = [UIColor clearColor].CGColor;
     [textLayer setForegroundColor:[[UIColor clearColor] CGColor]];
     [textLayer setContentsScale:[[UIScreen mainScreen] scale]];
     [textLayer setRasterizationScale:[[UIScreen mainScreen] scale]];
     textLayer.wrapped = YES;
 
-    CGSize size = [self frameSizeForString:string];
+    CGSize size = [self frameSizeForString:_attributedString];
     textLayer.frame = CGRectMake(10, 5, self.bounds.size.width-20, size.height);
 
     
@@ -342,8 +363,63 @@ uint32_t FNV32(const char *s)
         self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
     }
     
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, size.height+10);
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)_attributedString);
     
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddRect(path, NULL,
+                  CGRectMake(0, 0,
+                             self.bounds.size.width,
+                             self.bounds.size.height));
+    
+    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    
+    NSArray* lines = (NSArray*)CTFrameGetLines(frame);
+    CFIndex lineCount = [lines count];
+    
+    // Get the origin point of each of the lines
+    CGPoint origins[lineCount];
+    CTFrameGetLineOrigins(frame, CFRangeMake(0, 0), origins);
+    
+    for(CFIndex idx = 0; idx < lineCount; idx++)
+    {
+        // For each line, get the bounds for the line
+        CTLineRef line = CFArrayGetValueAtIndex((CFArrayRef)lines, idx);
+        
+        // Go through the glyph runs in the line
+        CFArrayRef glyphRuns = CTLineGetGlyphRuns(line);
+        CFIndex glyphCount = CFArrayGetCount(glyphRuns);
+        for (int i = 0; i < glyphCount; ++i)    {
+            CTRunRef run = CFArrayGetValueAtIndex(glyphRuns, i);
+            
+            NSDictionary *attributes = (NSDictionary*)CTRunGetAttributes(run);
+            
+            if ([attributes objectForKey:@"NSLink"]){
+                CGRect runBounds;
+                
+                CGFloat ascent;//height above the baseline
+                CGFloat descent;//height below the baseline
+                runBounds.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, NULL);
+                runBounds.size.height = ascent + descent;
+                
+                // The bounds returned by the Core Text function are in the coordinate system used by Core Text.  Convert the values here into the coordinate system which our gesture recognizers will use.
+                runBounds.origin.x = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL) + 10.0;
+                runBounds.origin.y = self.frame.size.height - origins[idx].y - runBounds.size.height + 10.0;
+                
+                // Create a view which will open up the URL when the user taps on it
+                LinkTapView *linkTapView = [[LinkTapView alloc] initWithFrame:runBounds url:[attributes objectForKey:@"NSLink"]];
+                linkTapView.backgroundColor = [UIColor clearColor];
+                [self.contentView addSubview:linkTapView];
+            }
+        }
+    }
+    
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, size.height+10);
+
+    UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [singleTapRecogniser setDelegate:self];
+    singleTapRecogniser.numberOfTouchesRequired = 1;
+    singleTapRecogniser.numberOfTapsRequired = 1;
+    [self addGestureRecognizer:singleTapRecogniser];
 }
 
 - (CGSize)frameSizeForString:(NSAttributedString *)string
@@ -378,4 +454,24 @@ uint32_t FNV32(const char *s)
     return size.height;
 }
 
+- (void)handleTap:(UITapGestureRecognizer *)recognizer
+{
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Message", @"Message")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                                         destructiveButtonTitle:nil
+                                              otherButtonTitles:NSLocalizedString(@"Copy", @"Copy"), nil];
+    [sheet setTag:-1];
+    [sheet showInView:self];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0 && self.message.messageType == ET_PRIVMSG) {
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        NSString *status = [NSString stringWithFormat:@"%s", [self characterForStatus:self.message.sender.channelPrivileges]];
+        NSString *pasteString = [NSString stringWithFormat:@"<%@%@> %@", status, self.message.sender.nick, self.message.message];
+        [pasteboard setValue:pasteString forPasteboardType:@"public.plain-text"];
+    }
+}
 @end
