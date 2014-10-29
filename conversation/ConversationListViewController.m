@@ -584,7 +584,7 @@
         } else if (buttonIndex == 2) {
             
             CertificateInfoViewController *certificateInfoController = [[CertificateInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];
-            certificateInfoController.title = NSLocalizedString(@"Certificate Info", @"Certificate Info");
+            certificateInfoController.title = NSLocalizedString(@"Certificate Details", @"Certificate Details");
             
             __block id blockself = self;
             UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
