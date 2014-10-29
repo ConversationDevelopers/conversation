@@ -42,6 +42,7 @@
 #import "UITableView+Methods.h"
 #import "AppPreferences.h"
 #import "SSKeychain.h"
+#import "IRCCertificateTrust.h"
 
 @implementation ConversationListViewController
 
@@ -557,6 +558,11 @@
     [message.conversation addPreviewMessage:string];
     message.conversation.unreadCount++;
     [self.tableView reloadData];
+}
+
+- (BOOL)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest
+{
+    return NO;
 }
 
 @end

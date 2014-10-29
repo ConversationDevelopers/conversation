@@ -32,6 +32,7 @@
 
 @class ChatViewController;
 @class IRCClient;
+@class IRCCertificateTrust;
 
 @interface ConversationListViewController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
@@ -42,6 +43,7 @@
 - (void)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client;
 - (void)selectConversationWithIdentifier:(NSString *)identifier;
 - (NSString *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client;
+- (BOOL)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest;
 
 @end
 

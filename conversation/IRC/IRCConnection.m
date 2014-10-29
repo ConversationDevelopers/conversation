@@ -94,8 +94,28 @@
 
 - (void)socket:(GCDAsyncSocket *)sock didReceiveTrust:(SecTrustRef)trust completionHandler:(void (^)(BOOL shouldTrustPeer))completionHandler {
     
-    // Skip certificate validation. FOR TESTING PURPOSES ONLY DO NEVER LET THIS GET INTO PRODUCTION EVER.
-    if (completionHandler) completionHandler(YES);
+    SecTrustResultType trustResult;
+    SecTrustEvaluate(trust, &trustResult);
+    
+    switch (trustResult) {
+        case kSecTrustResultProceed:
+        case kSecTrustResultUnspecified:
+            completionHandler(YES);
+            break;
+            
+        case kSecTrustResultInvalid:
+        case kSecTrustResultRecoverableTrustFailure: {
+            IRCCertificateTrust *trustDialog = [[IRCCertificateTrust alloc] init:trust];
+            completionHandler([trustDialog requestTrustFromUser:completionHandler]);
+            break;
+        }
+        
+        case kSecTrustResultDeny:
+        case kSecTrustResultFatalTrustFailure:
+        case kSecTrustResultOtherError:
+            completionHandler(NO);
+            break;
+    }
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag

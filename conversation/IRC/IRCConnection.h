@@ -31,6 +31,7 @@
 #import <Foundation/Foundation.h>
 #import "GCDAsyncSocket.h"
 #import "NSString+Methods.h"
+#import "IRCCertificateTrust.h"
 
 @class IRCClient;
 
