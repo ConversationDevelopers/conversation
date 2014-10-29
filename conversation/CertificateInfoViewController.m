@@ -37,12 +37,12 @@ static unsigned short CertificateInformationSection = 2;
 
 @implementation CertificateInfoViewController
 
-- (id)init
+- (void)viewDidLoad
 {
-    if (!(self = [super init])) {
-        return nil;
-    }
-    return self;
+    [super viewDidLoad];
+    self.navigationController.navigationBar.tintColor = [UIColor lightGrayColor];
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
+    self.navigationController.navigationBar.translucent = NO;
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
