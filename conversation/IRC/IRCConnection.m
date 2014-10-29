@@ -32,7 +32,7 @@
 #import "IRCClient.h"
 
 #define floodControlInterval 2
-#define floodControlMessageLimit 5
+#define floodControlMessageLimit 4
 
 @interface IRCConnection ()
 
