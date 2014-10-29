@@ -73,10 +73,11 @@ static unsigned short CertificateInformationSection = 2;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    static NSString *normalIdentifier = @"normalTextCell";
+    static NSString *multiLineIdentifier = @"multiLineTextCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:normalIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:normalIdentifier];
     }
     
     if (indexPath.section == SubjectInformationSection) {
@@ -93,7 +94,7 @@ static unsigned short CertificateInformationSection = 2;
     } else if (indexPath.section == CertificateInformationSection) {
         CertificateItemRow *item = _certificateInformation[indexPath.row];
         if ([item.itemName isEqualToString:@"Signature"] || [item.itemName isEqualToString:@"Public Key"]) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle  reuseIdentifier:CellIdentifier];
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle  reuseIdentifier:multiLineIdentifier];
             cell.detailTextLabel.numberOfLines = 0;
             cell.detailTextLabel.textColor = [UIColor colorWithRed:0.50 green:0.50 blue:0.50 alpha:1.0];
         }
