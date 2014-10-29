@@ -582,8 +582,8 @@
             [trustRequest receivedTrustFromUser:YES];
         } else if (buttonIndex == 2) {
             
-            _certificateInfoController = [[UITableViewController alloc] initWithStyle:UITableViewStyleGrouped];
-            _certificateInfoController.title = NSLocalizedString(@"Certificate Info", @"Certificate Info");
+            UITableViewController *certificateInfoController = [[UITableViewController alloc] initWithStyle:UITableViewStyleGrouped];
+            certificateInfoController.title = NSLocalizedString(@"Certificate Info", @"Certificate Info");
             
             __block id blockself = self;
             UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
@@ -599,13 +599,13 @@
                                                                                 [blockself dismissViewControllerAnimated:YES completion:nil];
                                                                             }];
 
-            _certificateInfoController.navigationItem.rightBarButtonItem = trustButton;
-            _certificateInfoController.navigationItem.leftBarButtonItem = cancelButton;
+            certificateInfoController.navigationItem.rightBarButtonItem = trustButton;
+            certificateInfoController.navigationItem.leftBarButtonItem = cancelButton;
             
             UITableView *tableView = [[UITableView alloc] init];
-            _certificateInfoController.tableView = tableView;
+            certificateInfoController.tableView = tableView;
             UINavigationController *navigationController = [[UINavigationController alloc]
-                                                            initWithRootViewController:_certificateInfoController];
+                                                            initWithRootViewController:certificateInfoController];
             
             [self presentViewController:navigationController animated:YES completion:nil];
 

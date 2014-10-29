@@ -34,9 +34,7 @@
 @class IRCClient;
 @class IRCCertificateTrust;
 
-@interface ConversationListViewController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate> {
-    UITableViewController *_certificateInfoController;
-}
+@interface ConversationListViewController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, retain) NSMutableArray *connections;
 
