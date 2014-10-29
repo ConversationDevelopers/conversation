@@ -54,7 +54,6 @@
         
         self.automaticallyConnect =             NO;
         self.connectUsingSecureLayer =          NO;
-        self.ignoreSSLVerificationErrors =      NO;
         self.useServerAuthenticationService =   NO;
         self.showConsoleOnConnect =             NO;
         self.automaticallyReconnect =           YES;
@@ -63,6 +62,7 @@
 
         self.channels = [[NSArray alloc] init];
         self.queries = [[NSArray alloc] init];
+        self.trustedSSLSignatures = [[NSMutableArray alloc] init];
         
         return self;
     }
@@ -91,7 +91,6 @@
         self.automaticallyConnect = [dict[@"automaticallyConnect"] boolValue];
         self.automaticallyReconnect = [dict[@"automaticallyReconnect"] boolValue];
         self.connectUsingSecureLayer = [dict[@"connectUsingSecureLayer"] boolValue];
-        self.ignoreSSLVerificationErrors = [dict[@"ignoreSSLVerificationErrors"] boolValue];
         self.useServerAuthenticationService = [dict[@"useServerAuthenticationService"] boolValue];
         self.showConsoleOnConnect = [dict[@"showConsoleOnConnect"] boolValue];
         
@@ -110,6 +109,13 @@
         }
         
         self.queries = queries;
+        
+        NSMutableArray *trustedSSLSignatures = [[NSMutableArray alloc] init];
+        for (NSString *signature in dict[@"trustedSSLSignatures"]) {
+            [trustedSSLSignatures addObject:signature];
+        }
+        
+        self.trustedSSLSignatures = trustedSSLSignatures;
     }
     return self;
 }
@@ -142,6 +148,12 @@
                 [queries addObject:[query getDictionary]];
             }
             dict[propertyName] = queries;
+        } else if ([propertyName isEqualToString:@"trustedSSLSignatures"]) {
+            NSMutableArray *trustedSSLSignatures = [[NSMutableArray alloc] init];
+            for (NSString *signature in self.trustedSSLSignatures) {
+                [trustedSSLSignatures addObject:signature];
+            }
+            dict[propertyName] = trustedSSLSignatures;
         } else {
             id valueForProperty = [self valueForKey:propertyName];
             if(valueForProperty != nil) {

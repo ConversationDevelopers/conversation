@@ -55,12 +55,12 @@
 @property (nonatomic, assign) BOOL automaticallyReconnect;
 @property (nonatomic, assign) BOOL automaticallyConnect;
 @property (nonatomic, assign) BOOL connectUsingSecureLayer;
-@property (nonatomic, assign) BOOL ignoreSSLVerificationErrors;
 @property (nonatomic, assign) BOOL useServerAuthenticationService;
 @property (nonatomic, assign) BOOL showConsoleOnConnect;
 
 @property (nonatomic, copy) NSArray *autoJoinChannels;
 @property (nonatomic, copy) NSArray *channels;
 @property (nonatomic, copy) NSArray *queries;
+@property (nonatomic, copy) NSMutableArray *trustedSSLSignatures;
 
 @end

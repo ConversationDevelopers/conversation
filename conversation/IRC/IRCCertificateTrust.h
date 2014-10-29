@@ -38,8 +38,9 @@
 @property (nonatomic) NSDictionary *subjectInformation;
 @property (nonatomic) NSDictionary *issuerInformation;
 @property (nonatomic) NSDictionary *certificateInformation;
+@property (nonatomic) IRCClient *client;
 
-- (instancetype)init:(SecTrustRef)trust;
+- (instancetype)init:(SecTrustRef)trust onClient:(IRCClient *)client;
 - (BOOL)requestTrustFromUser:(void (^)(BOOL shouldTrustPeer))completionHandler;
 
 @end

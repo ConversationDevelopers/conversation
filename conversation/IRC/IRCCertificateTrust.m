@@ -33,12 +33,13 @@
 
 @implementation IRCCertificateTrust
 
-- (instancetype)init:(SecTrustRef)trust {
+- (instancetype)init:(SecTrustRef)trust onClient:(IRCClient *)client {
     if ((self = [super init])) {
         self.trustReference = trust;
         self.subjectInformation = nil;
         self.issuerInformation = nil;
         self.certificateInformation = nil;
+        self.client = client;
         return self;
     }
     return nil;
@@ -56,7 +57,19 @@
         self.subjectInformation      = [IRCCertificateTrust getCertificateSubject:certificateX509];
         self.issuerInformation       = [IRCCertificateTrust getCertificateIssuer:certificateX509];
         self.certificateInformation  = [IRCCertificateTrust getCertificateAlgorithmInformation:certificateX509];
+        
+        NSString *certificateSignature = [self.certificateInformation objectForKey:@"signature"];
+        for (NSString *signature in [[self.client configuration] trustedSSLSignatures]) {
+            if ([signature isEqualToString:certificateSignature]) {
+                return YES;
+            }
+        }
+        
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+        BOOL didReceiveTrustFromUser = [controller requestUserTrustForCertificate:self];
+        if (didReceiveTrustFromUser == YES) {
+            [[[self.client configuration] trustedSSLSignatures] addObject:certificateSignature];
+        }
         return [controller requestUserTrustForCertificate:self];
     }
     return NO;
