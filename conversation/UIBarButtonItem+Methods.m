@@ -28,24 +28,29 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <UIKit/UIKit.h>
+#import "UIBarButtonItem+Methods.h"
+#import <objc/runtime.h>
 
-@class ChatViewController;
-@class IRCClient;
-@class IRCCertificateTrust;
-
-@interface ConversationListViewController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate> {
-    UITableViewController *_certificateInfoController;
+@implementation UIBarButtonItem (DRButtonBlockCallback)
+- (id)initWithBarButtonSystemItem:(UIBarButtonSystemItem)item block:(void (^)(id))b
+{
+    if ((self = [self initWithBarButtonSystemItem:item target:nil action:@selector(DRcallbackBlockWithSender:)]))
+    {
+        objc_setAssociatedObject(self, "DRactionBlock", b, OBJC_ASSOCIATION_COPY_NONATOMIC);
+        self.target = objc_getAssociatedObject(self, "DRactionBlock");
+    }
+    return self;
 }
 
-@property (nonatomic, retain) NSMutableArray *connections;
+- (id)initWithTitle:(NSString *)title style:(UIBarButtonItemStyle)style block:(void (^)(id))b
+{
+    if ((self = [self initWithTitle:title style:style target:nil action:@selector(DRcallbackBlockWithSender:)]))
+    {
+        objc_setAssociatedObject(self, "DRactionBlock", b, OBJC_ASSOCIATION_COPY_NONATOMIC);
+        self.target = objc_getAssociatedObject(self, "DRactionBlock");
+    }
+    return self;
+}
 
-- (void)reloadData;
-- (void)reloadClient:(IRCClient *)client;
-- (void)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client;
-- (void)selectConversationWithIdentifier:(NSString *)identifier;
-- (NSString *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client;
-- (void)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest;
 
 @end
-

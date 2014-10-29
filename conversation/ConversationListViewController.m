@@ -43,6 +43,8 @@
 #import "AppPreferences.h"
 #import "SSKeychain.h"
 #import "IRCCertificateTrust.h"
+#import "UIAlertView+Methods.h"
+#import "UIBarButtonItem+Methods.h"
 
 @implementation ConversationListViewController
 
@@ -560,9 +562,57 @@
     [self.tableView reloadData];
 }
 
-- (BOOL)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest
+- (void)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest
 {
-    return NO;
+
+    NSString *message = [NSString stringWithFormat:@"%@ %@ %@", NSLocalizedString(@"Conversation cannot verify the identity of", @"Conversation cannot verify the identity of"), trustRequest.issuerInformation[@"commonName"], NSLocalizedString(@"Would you like to continue anyway?", @"Would you like to continue anyway?")];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Cannot verify Server Identity", @"Cannot verify Server Identity")
+                                                            message:message
+                                                           delegate:self
+                                                  cancelButtonTitle:nil
+                                                  otherButtonTitles:NSLocalizedString(@"Cancel", @"Cancel"),
+                                                                    NSLocalizedString(@"Continue", @"Continue"),
+                                                                    NSLocalizedString(@"Details", @"Details"), nil];
+    [alertView setCancelButtonIndex:1];
+    
+    [alertView showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
+        if (buttonIndex == 0) {
+            [trustRequest receivedTrustFromUser:NO];
+        } else if (buttonIndex == 1) {
+            [trustRequest receivedTrustFromUser:YES];
+        } else if (buttonIndex == 2) {
+            
+            _certificateInfoController = [[UITableViewController alloc] initWithStyle:UITableViewStyleGrouped];
+            _certificateInfoController.title = NSLocalizedString(@"Certificate Info", @"Certificate Info");
+            
+            __block id blockself = self;
+            UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                                                                           block:^(__strong id object){
+                                                                                               [trustRequest receivedTrustFromUser:NO];
+                                                                                               [blockself dismissViewControllerAnimated:YES completion:nil];
+                                                                                           }];
+            
+            UIBarButtonItem *trustButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Trust", @"Trust")
+                                                                            style:UIBarButtonItemStylePlain
+                                                                            block:^(__strong id object){
+                                                                                [trustRequest receivedTrustFromUser:YES];
+                                                                                [blockself dismissViewControllerAnimated:YES completion:nil];
+                                                                            }];
+
+            _certificateInfoController.navigationItem.rightBarButtonItem = trustButton;
+            _certificateInfoController.navigationItem.leftBarButtonItem = cancelButton;
+            
+            UITableView *tableView = [[UITableView alloc] init];
+            _certificateInfoController.tableView = tableView;
+            UINavigationController *navigationController = [[UINavigationController alloc]
+                                                            initWithRootViewController:_certificateInfoController];
+            
+            [self presentViewController:navigationController animated:YES completion:nil];
+
+        }
+        
+    }];
+
 }
 
 @end

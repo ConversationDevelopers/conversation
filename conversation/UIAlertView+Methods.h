@@ -30,22 +30,8 @@
 
 #import <UIKit/UIKit.h>
 
-@class ChatViewController;
-@class IRCClient;
-@class IRCCertificateTrust;
+@interface UIAlertView (Helpers)
 
-@interface ConversationListViewController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate> {
-    UITableViewController *_certificateInfoController;
-}
-
-@property (nonatomic, retain) NSMutableArray *connections;
-
-- (void)reloadData;
-- (void)reloadClient:(IRCClient *)client;
-- (void)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client;
-- (void)selectConversationWithIdentifier:(NSString *)identifier;
-- (NSString *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client;
-- (void)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest;
+- (void)showWithCompletion:(void(^)(UIAlertView *alertView, NSInteger buttonIndex))completion;
 
 @end
-

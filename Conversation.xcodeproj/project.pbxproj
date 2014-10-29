@@ -27,6 +27,8 @@
 		DA79EA3019E92AF20027A370 /* PreferencesListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA2F19E92AF20027A370 /* PreferencesListViewController.m */; };
 		DA79EA3319EA6C810027A370 /* ConversationItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA79EA3219EA6C810027A370 /* ConversationItemView.m */; };
 		DA7B68771A00A43500D82B4C /* LinkTapView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7B68761A00A43500D82B4C /* LinkTapView.m */; };
+		DA7B687A1A00A66D00D82B4C /* UIAlertView+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7B68791A00A66D00D82B4C /* UIAlertView+Methods.m */; };
+		DA7B687D1A00C55500D82B4C /* UIBarButtonItem+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7B687C1A00C55500D82B4C /* UIBarButtonItem+Methods.m */; };
 		DA96223F19EDE217008D42EB /* networks.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA96223E19EDE217008D42EB /* networks.plist */; };
 		DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */; };
 		DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */; };
@@ -107,6 +109,10 @@
 		DA79EA3219EA6C810027A370 /* ConversationItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationItemView.m; sourceTree = "<group>"; };
 		DA7B68751A00A43500D82B4C /* LinkTapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkTapView.h; sourceTree = "<group>"; };
 		DA7B68761A00A43500D82B4C /* LinkTapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkTapView.m; sourceTree = "<group>"; };
+		DA7B68781A00A66D00D82B4C /* UIAlertView+Methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIAlertView+Methods.h"; path = "conversation/UIAlertView+Methods.h"; sourceTree = "<group>"; };
+		DA7B68791A00A66D00D82B4C /* UIAlertView+Methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIAlertView+Methods.m"; path = "conversation/UIAlertView+Methods.m"; sourceTree = "<group>"; };
+		DA7B687B1A00C55500D82B4C /* UIBarButtonItem+Methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIBarButtonItem+Methods.h"; path = "conversation/UIBarButtonItem+Methods.h"; sourceTree = "<group>"; };
+		DA7B687C1A00C55500D82B4C /* UIBarButtonItem+Methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIBarButtonItem+Methods.m"; path = "conversation/UIBarButtonItem+Methods.m"; sourceTree = "<group>"; };
 		DA96223E19EDE217008D42EB /* networks.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = networks.plist; path = Resources/networks.plist; sourceTree = "<group>"; };
 		DAA3229C19E56CBF0068E2B6 /* EditConnectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditConnectionViewController.h; sourceTree = "<group>"; };
 		DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditConnectionViewController.m; sourceTree = "<group>"; };
@@ -354,6 +360,10 @@
 				FA00A39B19E6AD1200E7B4D7 /* NSString+Methods.m */,
 				DA79EA2A19E9237A0027A370 /* UITableView+Methods.h */,
 				DA79EA2B19E9237A0027A370 /* UITableView+Methods.m */,
+				DA7B68781A00A66D00D82B4C /* UIAlertView+Methods.h */,
+				DA7B68791A00A66D00D82B4C /* UIAlertView+Methods.m */,
+				DA7B687B1A00C55500D82B4C /* UIBarButtonItem+Methods.h */,
+				DA7B687C1A00C55500D82B4C /* UIBarButtonItem+Methods.m */,
 			);
 			name = Helpers;
 			path = ..;
@@ -661,8 +671,10 @@
 				DA79EA2619E909CD0027A370 /* AddConversationViewController.m in Sources */,
 				FADD2E6819F9BC86004B86AE /* GCDAsyncSocket.m in Sources */,
 				DA79EA3319EA6C810027A370 /* ConversationItemView.m in Sources */,
+				DA7B687D1A00C55500D82B4C /* UIBarButtonItem+Methods.m in Sources */,
 				DA379D5619FB3FA90031E30B /* PHFDelegateChain.m in Sources */,
 				DA1A4AC319E1770700565763 /* ConversationListViewController.m in Sources */,
+				DA7B687A1A00A66D00D82B4C /* UIAlertView+Methods.m in Sources */,
 				DA6F61D719FD1A6600F22F78 /* ILTranslucentView.m in Sources */,
 				FAFF19A619FDC35300F8C071 /* IRCKickMessage.m in Sources */,
 				DA1A4ABD19E1770700565763 /* main.m in Sources */,

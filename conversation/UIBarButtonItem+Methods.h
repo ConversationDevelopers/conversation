@@ -30,22 +30,17 @@
 
 #import <UIKit/UIKit.h>
 
-@class ChatViewController;
-@class IRCClient;
-@class IRCCertificateTrust;
-
-@interface ConversationListViewController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate> {
-    UITableViewController *_certificateInfoController;
-}
-
-@property (nonatomic, retain) NSMutableArray *connections;
-
-- (void)reloadData;
-- (void)reloadClient:(IRCClient *)client;
-- (void)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client;
-- (void)selectConversationWithIdentifier:(NSString *)identifier;
-- (NSString *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client;
-- (void)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest;
-
+@interface NSObject (Helpers)
+- (void)DRcallbackBlock;
+- (void)DRcallbackBlockWithSender:(id)sender;
 @end
 
+@implementation NSObject (Helpers)
+- (void)DRcallbackBlock { ((void (^)())self)(); }
+- (void)DRcallbackBlockWithSender:(id)sender { ((void (^)(id))self)(sender); }
+@end
+
+@interface UIBarButtonItem (DRButtonBlockCallback)
+- (id)initWithBarButtonSystemItem:(UIBarButtonSystemItem)item block:(void (^)(id))b;
+- (id)initWithTitle:(NSString *)title style:(UIBarButtonItemStyle)style block:(void (^)(id))b;
+@end
