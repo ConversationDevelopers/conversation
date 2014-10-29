@@ -165,11 +165,17 @@
         NSString *serialNumber = [NSString stringWithFormat:@"%ld", serial];
         [algorithm setObject:serialNumber forKey:@"serial"];
         
+        
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"dd/mm/yyyy HH:mm:ss"];
+        
         NSDate *certStartTime = CertificateGetStartDate(certificateX509);
-        [algorithm setObject:certStartTime forKey:@"notValidBefore"];
+        NSString *startTimeString = [formatter stringFromDate:certStartTime];
+        [algorithm setObject:startTimeString forKey:@"notValidBefore"];
         
         NSDate *certExpireTime = CertificateGetExpiryDate(certificateX509);
-        [algorithm setObject:certExpireTime forKey:@"notValidAfter"];
+        NSString *expireTimeString = [formatter stringFromDate:certExpireTime];
+        [algorithm setObject:expireTimeString forKey:@"notValidAfter"];
         
         ASN1_BIT_STRING *pubKey = X509_get0_pubkey_bitstr(certificateX509);
         NSString *publicKey = @"";
