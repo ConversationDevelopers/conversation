@@ -71,14 +71,13 @@
         [controller requestUserTrustForCertificate:self];
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSLog(@"async");
             while (self.trustStatus == AWAITING_RESPONSE) {
                 // Block thread
             }
             
             dispatch_sync(dispatch_get_main_queue(), ^{
                 if (self.trustStatus == CERTIFICATE_ACCEPTED) {
-                    [[[self.client configuration] trustedSSLSignatures] addObject:certificateSignature];
+                    [self addSignature:certificateSignature];
                     completionHandler(YES);
                     return;
                 } else if (self.trustStatus == CERTIFICATE_DENIED) {
@@ -88,6 +87,13 @@
             });
         });
     }
+}
+
+- (void)addSignature:(NSString *)signature
+{
+    NSMutableArray *signatures = [[[self.client configuration] trustedSSLSignatures] mutableCopy];
+    [signatures addObject:signature];
+    self.client.configuration.trustedSSLSignatures = signatures;
 }
 
 - (void)receivedTrustFromUser:(BOOL)trust

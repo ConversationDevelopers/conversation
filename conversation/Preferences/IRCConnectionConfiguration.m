@@ -62,7 +62,7 @@
 
         self.channels = [[NSArray alloc] init];
         self.queries = [[NSArray alloc] init];
-        self.trustedSSLSignatures = [[NSMutableArray alloc] init];
+        self.trustedSSLSignatures = [[NSArray alloc] init];
         
         return self;
     }
