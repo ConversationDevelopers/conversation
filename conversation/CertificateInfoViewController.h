@@ -32,7 +32,7 @@
 #import "IRCCertificateTrust.h"
 
 
-@interface CertificateInfoTableViewDataSource : NSObject  <UITableViewDataSource, UITableViewDelegate>
+@interface CertificateInfoViewController : UITableViewController
 
 @property (nonatomic, strong) NSDictionary *subjectInformation;
 @property (nonatomic, strong) NSDictionary *issuerInformation;

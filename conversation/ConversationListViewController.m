@@ -45,7 +45,7 @@
 #import "IRCCertificateTrust.h"
 #import "UIAlertView+Methods.h"
 #import "UIBarButtonItem+Methods.h"
-#import "CertificateInfoTableViewDataSource.h"
+#import "CertificateInfoViewController.h"
 
 @implementation ConversationListViewController
 
@@ -575,9 +575,6 @@
                                                                     NSLocalizedString(@"Continue", @"Continue"),
                                                                     NSLocalizedString(@"Details", @"Details"), nil];
     [alertView setCancelButtonIndex:1];
-    
-    __block UITableView *tableView = [[UITableView alloc] initWithFrame:self.tableView.frame style:UITableViewStyleGrouped];
-    __block CertificateInfoTableViewDataSource *dataSource = [[CertificateInfoTableViewDataSource alloc] init];
 
     [alertView showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
         if (buttonIndex == 0) {
@@ -586,7 +583,7 @@
             [trustRequest receivedTrustFromUser:YES];
         } else if (buttonIndex == 2) {
             
-            UITableViewController *certificateInfoController = [[UITableViewController alloc] initWithStyle:UITableViewStyleGrouped];
+            CertificateInfoViewController *certificateInfoController = [[CertificateInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];
             certificateInfoController.title = NSLocalizedString(@"Certificate Info", @"Certificate Info");
             
             __block id blockself = self;
@@ -603,16 +600,13 @@
                                                                                 [blockself dismissViewControllerAnimated:YES completion:nil];
                                                                             }];
             
-            dataSource.subjectInformation = trustRequest.subjectInformation;
-            dataSource.issuerInformation = trustRequest.issuerInformation;
-            dataSource.certificateInformation = trustRequest.certificateInformation;
-            
-            tableView.dataSource = dataSource;            
+            certificateInfoController.subjectInformation = trustRequest.subjectInformation;
+            certificateInfoController.issuerInformation = trustRequest.issuerInformation;
+            certificateInfoController.certificateInformation = trustRequest.certificateInformation;
 
             certificateInfoController.navigationItem.rightBarButtonItem = trustButton;
             certificateInfoController.navigationItem.leftBarButtonItem = cancelButton;
             
-            certificateInfoController.tableView = tableView;
             UINavigationController *navigationController = [[UINavigationController alloc]
                                                             initWithRootViewController:certificateInfoController];
             

@@ -28,13 +28,13 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "CertificateInfoTableViewDataSource.h"
+#import "CertificateInfoViewController.h"
 
 static unsigned short SubjectInformationSection = 0;
 static unsigned short IssuerInformationSection = 1;
 static unsigned short CertificateInformationSection = 2;
 
-@implementation CertificateInfoTableViewDataSource
+@implementation CertificateInfoViewController
 
 - (id)init
 {
@@ -79,21 +79,18 @@ static unsigned short CertificateInformationSection = 2;
     }
     
     if (indexPath.section == SubjectInformationSection) {
-        
-        NSLog(@"SUBJECT: %@", _subjectInformation.description);
+    
         NSArray *keys = [_subjectInformation allKeys];
         cell.textLabel.text = keys[indexPath.row];
         cell.detailTextLabel.text = _subjectInformation[keys[indexPath.row]];
         
     } else if (indexPath.section == IssuerInformationSection) {
 
-        NSLog(@"ISSUER: %@", _issuerInformation.description);
         NSArray *keys = [_issuerInformation allKeys];
         cell.textLabel.text = keys[indexPath.row];
         cell.detailTextLabel.text = _issuerInformation[keys[indexPath.row]];
         
     } else if (indexPath.section == CertificateInformationSection) {
-        NSLog(@"CERTIFICATE: %@", _certificateInformation.description);
 /*
         NSLog(@"DATA: %@", _certificateInformation.certificateInformation);
         NSArray *keys = [_certificateInformation.certificateInformation allKeys];
