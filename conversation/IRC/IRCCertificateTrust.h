@@ -39,8 +39,16 @@
 @property (nonatomic) NSDictionary *issuerInformation;
 @property (nonatomic) NSDictionary *certificateInformation;
 @property (nonatomic) IRCClient *client;
+@property (nonatomic) NSUInteger trustStatus;
 
 - (instancetype)init:(SecTrustRef)trust onClient:(IRCClient *)client;
-- (BOOL)requestTrustFromUser:(void (^)(BOOL shouldTrustPeer))completionHandler;
+- (void)requestTrustFromUser:(void (^)(BOOL shouldTrustPeer))completionHandler;
+- (void)receivedTrustFromUser:(BOOL)trust;
+
+typedef NS_ENUM(NSUInteger, CertificateTrustStatus) {
+    AWAITING_RESPONSE,
+    CERTIFICATE_ACCEPTED,
+    CERTIFICATE_DENIED
+};
 
 @end

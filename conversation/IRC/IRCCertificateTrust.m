@@ -37,6 +37,7 @@
     if ((self = [super init])) {
         self.trustReference = trust;
         self.subjectInformation = nil;
+        self.trustStatus = AWAITING_RESPONSE;
         self.issuerInformation = nil;
         self.certificateInformation = nil;
         self.client = client;
@@ -45,7 +46,7 @@
     return nil;
 }
 
-- (BOOL)requestTrustFromUser:(void (^)(BOOL shouldTrustPeer))completionHandler
+- (void)requestTrustFromUser:(void (^)(BOOL shouldTrustPeer))completionHandler
 {
     CFIndex count = SecTrustGetCertificateCount(self.trustReference);
     if (count > 0) {
@@ -61,18 +62,40 @@
         NSString *certificateSignature = [self.certificateInformation objectForKey:@"signature"];
         for (NSString *signature in [[self.client configuration] trustedSSLSignatures]) {
             if ([signature isEqualToString:certificateSignature]) {
-                return YES;
+                completionHandler(YES);
+                return;
             }
         }
         
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
-        BOOL didReceiveTrustFromUser = [controller requestUserTrustForCertificate:self];
-        if (didReceiveTrustFromUser == YES) {
-            [[[self.client configuration] trustedSSLSignatures] addObject:certificateSignature];
-        }
-        return [controller requestUserTrustForCertificate:self];
+        [controller requestUserTrustForCertificate:self];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            while (self.trustStatus == AWAITING_RESPONSE) {
+                sleep(100);
+            }
+            
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                if (self.trustStatus == CERTIFICATE_ACCEPTED) {
+                    [[[self.client configuration] trustedSSLSignatures] addObject:certificateSignature];
+                    completionHandler(YES);
+                    return;
+                } else if (self.trustStatus == CERTIFICATE_DENIED) {
+                    completionHandler(NO);
+                    return;
+                }
+            });
+        });
     }
-    return NO;
+}
+
+- (void)receivedTrustFromUser:(BOOL)trust
+{
+    if (trust == YES) {
+        self.trustStatus = CERTIFICATE_ACCEPTED;
+    } else {
+        self.trustStatus = CERTIFICATE_DENIED;
+    }
 }
 
 + (NSDictionary *) getCertificateSubject:(X509 *)certificateX509

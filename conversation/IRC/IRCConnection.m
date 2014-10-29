@@ -106,7 +106,7 @@
         case kSecTrustResultInvalid:
         case kSecTrustResultRecoverableTrustFailure: {
             IRCCertificateTrust *trustDialog = [[IRCCertificateTrust alloc] init:trust onClient:self.client];
-            completionHandler([trustDialog requestTrustFromUser:completionHandler]);
+            [trustDialog requestTrustFromUser:completionHandler];
             break;
         }
         
