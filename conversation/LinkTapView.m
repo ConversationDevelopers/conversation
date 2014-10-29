@@ -28,18 +28,32 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <UIKit/UIKit.h>
-#import "IRCMessage.h"
+#import "LinkTapView.h"
 
-@class IRCChannel;
+@implementation LinkTapView
 
-@interface ChatMessageView : UITableViewCell {
-    NSAttributedString *_attributedString;
+
+- (id)initWithFrame:(CGRect)frame url:(NSURL *)url
+{
+    if (!(self = [super initWithFrame:frame]))
+        return nil;
+    self.url = url;
+    
+    UITapGestureRecognizer *tapGesture =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [self addGestureRecognizer:tapGesture];
+    
+    return self;
 }
 
-- (CGFloat)cellHeight;
+- (void)handleTap: (UITapGestureRecognizer*)sender  {
+    UIApplication *application = [UIApplication sharedApplication];
 
-@property (nonatomic) IRCConversation *channel;
-@property (nonatomic) IRCMessage *message;
+    if ([application canOpenURL:_url])   {
+        [[UIApplication sharedApplication] openURL:_url];
+    } else {
+        NSLog(@"Unable to open URL: %@", [_url absoluteString]);
+    }
+}
+
 
 @end

@@ -29,17 +29,10 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "IRCMessage.h"
 
-@class IRCChannel;
+@interface LinkTapView : UIView
 
-@interface ChatMessageView : UITableViewCell {
-    NSAttributedString *_attributedString;
-}
-
-- (CGFloat)cellHeight;
-
-@property (nonatomic) IRCConversation *channel;
-@property (nonatomic) IRCMessage *message;
+- (id)initWithFrame:(CGRect)frame url:(NSURL *)url;
+@property (nonatomic) NSURL *url;
 
 @end
