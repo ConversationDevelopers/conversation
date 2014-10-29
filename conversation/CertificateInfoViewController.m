@@ -92,12 +92,26 @@ static unsigned short CertificateInformationSection = 2;
         
     } else if (indexPath.section == CertificateInformationSection) {
         CertificateItemRow *item = _certificateInformation[indexPath.row];
+        if ([item.itemName isEqualToString:@"Signature"] || [item.itemName isEqualToString:@"Public Key"]) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle  reuseIdentifier:CellIdentifier];
+            cell.detailTextLabel.numberOfLines = 0;
+            cell.detailTextLabel.textColor = [UIColor colorWithRed:0.50 green:0.50 blue:0.50 alpha:1.0];
+        }
         cell.textLabel.text = item.itemName;
         cell.detailTextLabel.text = item.itemDescription;
-        
     }
 
     return cell;
+}
+
+- (CGFloat) tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == CertificateInformationSection) {
+        CertificateItemRow *item = _certificateInformation[indexPath.row];
+        if ([item.itemName isEqualToString:@"Signature"] || [item.itemName isEqualToString:@"Public Key"]) {
+            return  (44.0 + (14 - 1) * 19.0);
+        }
+    }
+    return 44.0;
 }
 
 @end
