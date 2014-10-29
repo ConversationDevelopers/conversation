@@ -166,7 +166,7 @@
         [algorithm addObject:[[CertificateItemRow alloc] initWithName:@"Serial" andDescription:[NSString stringWithFormat:@"%ld", serial]]];
         
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"dd/mm/yyyy HH:mm:ss"];
+        [formatter setDateFormat:@"dd/MM/yyyy HH:mm:ss"];
         
         NSDate *certStartTime = CertificateGetStartDate(certificateX509);
         NSString *startTimeString = [formatter stringFromDate:certStartTime];
