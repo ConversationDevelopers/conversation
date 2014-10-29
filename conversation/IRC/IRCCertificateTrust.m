@@ -62,9 +62,9 @@
         self.issuerInformation       = [IRCCertificateTrust getCertificateIssuer:certificateX509];
         self.certificateInformation  = [IRCCertificateTrust getCertificateAlgorithmInformation:certificateX509];
         
-        NSString *certificateSignature = [self.certificateInformation objectAtIndex:6];
+        CertificateItemRow *certificateSignature = [self.certificateInformation objectAtIndex:6];
         for (NSString *signature in [[self.client configuration] trustedSSLSignatures]) {
-            if ([signature isEqualToString:certificateSignature]) {
+            if ([signature isEqualToString:[certificateSignature itemDescription]]) {
                 completionHandler(YES);
                 return;
             }
