@@ -119,7 +119,7 @@
             [subject setObject:getKeyString(NID_organizationName, subjectX509Name)        forKey:@"organisation"];
             [subject setObject:getKeyString(NID_organizationalUnitName, subjectX509Name)  forKey:@"unit"];
             [subject setObject:getKeyString(NID_commonName, subjectX509Name)              forKey:@"commonName"];
-            [subject setObject:getKeyString(NID_pkcs9_emailAddress, subjectX509Name)           forKey:@"email"];
+            [subject setObject:getKeyString(NID_pkcs9_emailAddress, subjectX509Name)      forKey:@"email"];
         }
     }
     return subject;
@@ -137,7 +137,7 @@
             [issuer setObject:getKeyString(NID_localityName, issuerX509Name)            forKey:@"locality"];
             [issuer setObject:getKeyString(NID_organizationName, issuerX509Name)        forKey:@"organisation"];
             [issuer setObject:getKeyString(NID_organizationalUnitName, issuerX509Name)  forKey:@"unit"];
-            [issuer setObject:getKeyString(NID_pkcs9_emailAddress, issuerX509Name)              forKey:@"commonName"];
+            [issuer setObject:getKeyString(NID_pkcs9_emailAddress, issuerX509Name)      forKey:@"commonName"];
             [issuer setObject:getKeyString(NID_email_protect, issuerX509Name)           forKey:@"email"];
         }
     }
