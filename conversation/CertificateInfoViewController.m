@@ -91,12 +91,11 @@ static unsigned short CertificateInformationSection = 2;
         cell.detailTextLabel.text = _issuerInformation[keys[indexPath.row]];
         
     } else if (indexPath.section == CertificateInformationSection) {
-/*
-        NSLog(@"DATA: %@", _certificateInformation.certificateInformation);
-        NSArray *keys = [_certificateInformation.certificateInformation allKeys];
+
+        NSArray *keys = [_certificateInformation allKeys];
         cell.textLabel.text = keys[indexPath.row];
-        cell.detailTextLabel.text = _certificateInformation.certificateInformation[keys[indexPath.row]];
-*/
+        cell.detailTextLabel.text = _certificateInformation[keys[indexPath.row]];
+        
     }
 
     return cell;
