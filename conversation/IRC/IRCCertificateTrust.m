@@ -82,6 +82,7 @@
                     return;
                 } else if (self.trustStatus == CERTIFICATE_DENIED) {
                     completionHandler(NO);
+                    [self.client disconnect];
                     return;
                 }
             });
