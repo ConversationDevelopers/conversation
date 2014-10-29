@@ -66,7 +66,7 @@ static unsigned short CertificateInformationSection = 2;
     if (section == IssuerInformationSection)
         return 7;
     if (section == CertificateInformationSection)
-        return 3;
+        return 7;
     return 0;
 }
 
