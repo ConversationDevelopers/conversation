@@ -40,6 +40,7 @@
 @property (nonatomic) NSArray *certificateInformation;
 @property (nonatomic) IRCClient *client;
 @property (nonatomic) NSUInteger trustStatus;
+@property (nonatomic) NSString *signature;
 
 - (instancetype)init:(SecTrustRef)trust onClient:(IRCClient *)client;
 - (void)requestTrustFromUser:(void (^)(BOOL shouldTrustPeer))completionHandler;

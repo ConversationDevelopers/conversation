@@ -69,27 +69,40 @@
                 return;
             }
         }
+        self.signature = certificateSignature.itemDescription;
         
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         [controller requestUserTrustForCertificate:self];
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            while (self.trustStatus == AWAITING_RESPONSE) {
-                // Block thread
-            }
+        [self checkTrustActionCompleted:completionHandler];
+    }
+}
+
+- (void)checkTrustActionCompleted:(void (^)(BOOL shouldTrustPeer))completionHandler
+{
+    switch (self.trustStatus) {
+        case CERTIFICATE_ACCEPTED: {
+            [self addSignature:self.signature];
+            completionHandler(YES);
+            break;
+        }
+        
+        case CERTIFICATE_DENIED: {
+            completionHandler(NO);
+            [self.client disconnect];
+            break;
+        }
             
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                if (self.trustStatus == CERTIFICATE_ACCEPTED) {
-                    [self addSignature:certificateSignature.itemDescription];
-                    completionHandler(YES);
-                    return;
-                } else if (self.trustStatus == CERTIFICATE_DENIED) {
-                    completionHandler(NO);
-                    [self.client disconnect];
-                    return;
-                }
-            });
-        });
+        case AWAITING_RESPONSE: {
+            SEL selector = @selector(checkTrustActionCompleted:);
+            NSMethodSignature *signature = [self methodSignatureForSelector:selector];
+            NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+            [invocation setTarget:self];
+            [invocation setSelector:selector];
+            [invocation setArgument:&completionHandler atIndex:2];
+            [NSTimer scheduledTimerWithTimeInterval:0.1 invocation:invocation repeats:NO];
+            break;
+        }
     }
 }
 
