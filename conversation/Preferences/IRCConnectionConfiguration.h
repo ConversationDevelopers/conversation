@@ -49,7 +49,7 @@
 
 @property (nonatomic, assign) NSInteger socketEncodingType;
 @property (nonatomic, assign) NSInteger connectionPort;
-@property (nonatomic, assign) long lastDisconnectTime;
+@property (nonatomic, assign) long lastMessageTime;
 
 @property (nonatomic) unsigned long messageEncoding;
 
