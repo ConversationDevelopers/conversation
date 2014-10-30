@@ -33,12 +33,49 @@
 #import "IRCClient.h"
 #import "LinkTapView.h"
 #import <CoreText/CoreText.h>
+#import <DLImageLoader/DLIL.h>
 #import <string.h>
 
 #define FNV_PRIME_32 16777619
 #define FNV_OFFSET_32 2166136261U
 
 @implementation ChatMessageView
+
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)identifier
+{
+    self = [super initWithStyle:style reuseIdentifier:identifier];
+    if(!self)
+        return nil;
+    
+    [self.textLabel removeFromSuperview];
+    self.backgroundColor = [UIColor clearColor];
+    
+    _messageLayer = [CATextLayer layer];
+    _messageLayer.backgroundColor = [UIColor clearColor].CGColor;
+    _messageLayer.foregroundColor = [[UIColor clearColor] CGColor];
+    _messageLayer.contentsScale = [[UIScreen mainScreen] scale];
+    _messageLayer.rasterizationScale = [[UIScreen mainScreen] scale];
+    _messageLayer.wrapped = YES;
+    
+    [self.contentView.layer addSublayer:_messageLayer];
+    
+    _timeLayer = [CATextLayer layer];
+    _timeLayer.backgroundColor = [UIColor clearColor].CGColor;
+    _timeLayer.foregroundColor = [[UIColor clearColor] CGColor];
+    _timeLayer.contentsScale = [[UIScreen mainScreen] scale];
+    _timeLayer.rasterizationScale = [[UIScreen mainScreen] scale];
+    _timeLayer.wrapped = YES;
+    
+    [self.contentView.layer addSublayer:_timeLayer];
+    
+    UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [singleTapRecogniser setDelegate:self];
+    singleTapRecogniser.numberOfTouchesRequired = 1;
+    singleTapRecogniser.numberOfTapsRequired = 1;
+    [self addGestureRecognizer:singleTapRecogniser];
+    
+    return self;
+}
 
 uint32_t FNV32(const char *s)
 {
@@ -116,30 +153,15 @@ uint32_t FNV32(const char *s)
     return [self.userColors objectAtIndex:(int)floor(FNV32(nick.UTF8String) / 300000000)];
 }
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if(!self)
-        return nil;
-    
-    [self.textLabel removeFromSuperview];
-    
-    self.backgroundColor = [UIColor clearColor];
-    
-    return self;
-}
-
 - (void) prepareForReuse
 {
     [super prepareForReuse];
     self.frame = CGRectZero;
-    NSArray *layers = [self.contentView.layer.sublayers copy];
-    for (CATextLayer *layer in layers) {
-        [layer removeFromSuperlayer];
-    }
-    self.backgroundColor = [UIColor clearColor];    
+    _attributedString = nil;
+    _messageLayer.string = @"";
+    _timeLayer.string = @"";
 }
-
+    
 - (NSAttributedString *)setLinks:(NSString *)string
 {
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
@@ -312,25 +334,14 @@ uint32_t FNV32(const char *s)
 {
     
     [super layoutSubviews];
-
+    
     _attributedString = [self attributedString];
+    _messageLayer.string = _attributedString;
     
-    CATextLayer *textLayer = [[CATextLayer alloc] init];
-    textLayer.string = _attributedString;
-    textLayer.backgroundColor = [UIColor clearColor].CGColor;
-    [textLayer setForegroundColor:[[UIColor clearColor] CGColor]];
-    [textLayer setContentsScale:[[UIScreen mainScreen] scale]];
-    [textLayer setRasterizationScale:[[UIScreen mainScreen] scale]];
-    textLayer.wrapped = YES;
-
     CGSize size = [self frameSizeForString:_attributedString];
-    textLayer.frame = CGRectMake(10, 5, self.bounds.size.width-20, size.height);
+    _messageLayer.frame = CGRectMake(10, 5, self.bounds.size.width-20, size.height);
 
-    
-    [self.layer addSublayer:textLayer];
-    textLayer = nil;
-    
-    
+
     if (_message.messageType == ET_PRIVMSG) {
         NSString *time = @"";
         if (_message.timestamp) {
@@ -343,26 +354,20 @@ uint32_t FNV32(const char *s)
         NSMutableAttributedString *timestamp = [[NSMutableAttributedString alloc] initWithString:time];
         
         [timestamp addAttribute:NSFontAttributeName
-                          value:[UIFont systemFontOfSize:12.0]
-                          range:NSMakeRange(0, timestamp.length)];
+                           value:[UIFont systemFontOfSize:12.0]
+                           range:NSMakeRange(0, timestamp.length)];
         
         [timestamp addAttribute:NSForegroundColorAttributeName
-                          value:[UIColor lightGrayColor]
-                          range:NSMakeRange(0, timestamp.length)];
-        
-        textLayer = [[CATextLayer alloc] init];
-        textLayer.string = timestamp;
-        textLayer.backgroundColor = [UIColor clearColor].CGColor;
-        [textLayer setForegroundColor:[[UIColor clearColor] CGColor]];
-        [textLayer setContentsScale:[[UIScreen mainScreen] scale]];
-        [textLayer setRasterizationScale:[[UIScreen mainScreen] scale]];
-        textLayer.wrapped = YES;
-        textLayer.frame = CGRectMake(self.bounds.size.width-timestamp.size.width-5, 5, timestamp.size.width, timestamp.size.height);
-        [self.layer addSublayer:textLayer];
-        
-        self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
+                           value:[UIColor lightGrayColor]
+                           range:NSMakeRange(0, timestamp.length)];
+
+        _timeLayer.string = timestamp;
+        _timeLayer.frame = CGRectMake(self.bounds.size.width-timestamp.size.width-5, 5, timestamp.size.width, timestamp.size.height);
+        self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];        
     }
     
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, size.height+10);
+
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)_attributedString);
     
     CGMutablePathRef path = CGPathCreateMutable();
@@ -412,14 +417,6 @@ uint32_t FNV32(const char *s)
             }
         }
     }
-    
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, size.height+10);
-
-    UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    [singleTapRecogniser setDelegate:self];
-    singleTapRecogniser.numberOfTouchesRequired = 1;
-    singleTapRecogniser.numberOfTapsRequired = 1;
-    [self addGestureRecognizer:singleTapRecogniser];
 }
 
 - (CGSize)frameSizeForString:(NSAttributedString *)string

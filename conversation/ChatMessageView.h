@@ -35,6 +35,8 @@
 
 @interface ChatMessageView : UITableViewCell <UIActionSheetDelegate> {
     NSAttributedString *_attributedString;
+    CATextLayer *_messageLayer;
+    CATextLayer *_timeLayer;
 }
 
 - (CGFloat)cellHeight;
