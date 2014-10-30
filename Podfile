@@ -4,6 +4,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 target 'conversation' do
 	pod 'PHFComposeBarView', '~> 2.0.1'
+	pod 'CDRTranslucentSideBar'
 	pod 'DLImageLoader', '~> 2.0.0'
 end
 

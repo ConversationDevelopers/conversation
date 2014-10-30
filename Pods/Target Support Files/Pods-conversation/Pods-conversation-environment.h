@@ -6,6 +6,12 @@
 // project.
 
 
+// CDRTranslucentSideBar
+#define COCOAPODS_POD_AVAILABLE_CDRTranslucentSideBar
+#define COCOAPODS_VERSION_MAJOR_CDRTranslucentSideBar 1
+#define COCOAPODS_VERSION_MINOR_CDRTranslucentSideBar 0
+#define COCOAPODS_VERSION_PATCH_CDRTranslucentSideBar 2
+
 // DLImageLoader
 #define COCOAPODS_POD_AVAILABLE_DLImageLoader
 #define COCOAPODS_VERSION_MAJOR_DLImageLoader 2
