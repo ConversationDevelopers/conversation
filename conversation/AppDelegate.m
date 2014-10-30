@@ -70,7 +70,8 @@
         @"server-time",
         @"znc.in/server-time",
         @"znc.in/server-time-iso",
-        @"sasl"
+        @"sasl",
+        @"znc.in/playback"
     ];
 
     return YES;

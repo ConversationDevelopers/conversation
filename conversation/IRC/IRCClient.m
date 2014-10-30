@@ -397,6 +397,10 @@
             [self validateQueryStatusOnAllItems];
             [self.connection enableFloodControl];
             
+            if ([self.ircv3CapabilitiesSupportedByServer indexOfObject:@"znc.in/playback"] != NSNotFound) {
+                [IRCCommands sendMessage:[NSString stringWithFormat:@"PLAY * %ld", self.configuration.lastDisconnectTime] toRecipient:@"*playback" onClient:self];
+            }
+            
             if (self.configuration.useServerAuthenticationService == NO) {
                 [self autojoin];
             }
@@ -638,6 +642,9 @@
     self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
     self.ircv3CapabilitiesSupportedByServer = [[NSMutableArray alloc] init];
     [self.connection disableFloodControl];
+    
+    NSDate *date = [NSDate date];
+    self.configuration.lastDisconnectTime = (long) [date timeIntervalSince1970];
     
     for (IRCChannel *channel in self.channels) {
         channel.isJoinedByUser = NO;

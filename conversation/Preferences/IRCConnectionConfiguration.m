@@ -58,6 +58,8 @@
         self.showConsoleOnConnect =             NO;
         self.automaticallyReconnect =           YES;
         
+        self.lastDisconnectTime = 0;
+        
         self.messageEncoding = (unsigned long) NSUTF8StringEncoding;
 
         self.channels = [[NSArray alloc] init];
@@ -95,6 +97,8 @@
         self.showConsoleOnConnect = [dict[@"showConsoleOnConnect"] boolValue];
         
         self.messageEncoding = (unsigned long) [dict[@"messageEncoding"] integerValue];
+        
+        self.lastDisconnectTime = [dict[@"lastDisconnectTime"] longLongValue];
         
         NSMutableArray *channels = [[NSMutableArray alloc] init];
         for (NSDictionary *channel in dict[@"channels"]) {
