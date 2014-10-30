@@ -80,7 +80,7 @@
             
             dispatch_sync(dispatch_get_main_queue(), ^{
                 if (self.trustStatus == CERTIFICATE_ACCEPTED) {
-                    [self addSignature:certificateSignature];
+                    [self addSignature:certificateSignature.itemDescription];
                     completionHandler(YES);
                     return;
                 } else if (self.trustStatus == CERTIFICATE_DENIED) {
