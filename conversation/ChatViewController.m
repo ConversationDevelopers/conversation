@@ -297,6 +297,20 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)messageReceived:(NSNotification *)notification
 {
+    IRCMessage *message = _channel.messages[_channel.messages.count-1];
+    if (_isChannel &&
+        [(IRCChannel*)_channel isJoinedByUser] &&
+        message.messageType == ET_JOIN &&
+        [message.sender.nick isEqualToString:_channel.client.currentUserOnConnection.nick] &&
+        [message.conversation.configuration.uniqueIdentifier isEqualToString:_channel.configuration.uniqueIdentifier]) {
+        
+        UIBarButtonItem *userlistButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Userlist"]
+                                                                           style:UIBarButtonItemStylePlain
+                                                                          target:self
+                                                                          action:@selector(showUserList:)];
+        self.navigationItem.rightBarButtonItem = userlistButton;
+        
+    }
     [_tableView reloadData];
     if (_channel.messages.count)
         [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_channel.messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
