@@ -466,9 +466,6 @@
             break;
     }
     
-    NSDate *date = [NSDate date];
-    self.configuration.lastMessageTime = (long) [date timeIntervalSince1970];
-    
     free(command);
     free(recipient);
 }

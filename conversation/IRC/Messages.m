@@ -172,6 +172,7 @@
     
     NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:[client configuration]];
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
     
     /* Check if this message is a channel message or a private message */
     if ([recipientString isValidChannelName:client]) {
@@ -245,6 +246,7 @@
     NSString *messageString = [NSString stringWithCString:messageCopy usingEncodingPreference:client.configuration];
     NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:client.configuration];
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
     
     if ([recipientString isValidChannelName:client]) {
         IRCChannel *channel = [IRCChannel getChannelOrCreate:recipientString onClient:client];
@@ -282,6 +284,7 @@
     IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
     
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
     /* TODO: handle timestamps */
     
     /* Check if this message is a channel message or a private message */
@@ -320,6 +323,7 @@
     
     NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:[client configuration]];
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
     
     int messageType = isServer ? ET_SERVERNOTICE : ET_NOTICE;
     
@@ -368,6 +372,7 @@
     NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
     NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:client.configuration];
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
     
     if ([recipientString isValidChannelName:client]) {
         IRCChannel *channel = [IRCChannel getChannelOrCreate:recipientString onClient:client];
@@ -412,6 +417,7 @@
     }
     
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
     
     IRCMessage *message = [[IRCMessage alloc] initWithMessage:nil
                                                        OfType:ET_JOIN
@@ -442,6 +448,7 @@
     }
     
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
     
     NSString *partMessage = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
     
@@ -463,6 +470,7 @@
     }
     
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
     NSString *newNickString = [NSString stringWithCString:newNick usingEncodingPreference:client.configuration];
     
     for (IRCChannel *channel in [client getChannels]) {
@@ -561,6 +569,8 @@
     IRCUser *user = [[IRCUser alloc] initWithNickname:nickString andUsername:userString andHostname:hostString onClient:client];
     
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
+    
     for (IRCChannel *channel in [client getChannels]) {
         IRCUser *userOnChannel = [IRCUser fromNickname:senderDict[0] onChannel:channel];
         if (userOnChannel) {
