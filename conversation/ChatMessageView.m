@@ -327,7 +327,7 @@ uint32_t FNV32(const char *s)
     textLayer.frame = CGRectMake(10, 5, self.bounds.size.width-20, size.height);
 
     
-    [self.contentView.layer addSublayer:textLayer];
+    [self.layer addSublayer:textLayer];
     textLayer = nil;
     
     
@@ -358,7 +358,7 @@ uint32_t FNV32(const char *s)
         [textLayer setRasterizationScale:[[UIScreen mainScreen] scale]];
         textLayer.wrapped = YES;
         textLayer.frame = CGRectMake(self.bounds.size.width-timestamp.size.width-5, 5, timestamp.size.width, timestamp.size.height);
-        [self.contentView.layer addSublayer:textLayer];
+        [self.layer addSublayer:textLayer];
         
         self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
     }
