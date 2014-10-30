@@ -6,5 +6,4 @@
 *.xcuserstate
 .tmp
 xcuserdata
-*.xcworkspace
 build/*

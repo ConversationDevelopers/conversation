@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6997E5A7824BC453E8545580 /* libPods-conversation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D5FFDFFE43DD259ED5E0B5C /* libPods-conversation.a */; };
 		DA1A4ABD19E1770700565763 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4ABC19E1770700565763 /* main.m */; };
 		DA1A4AC019E1770700565763 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4ABF19E1770700565763 /* AppDelegate.m */; };
 		DA1A4AC319E1770700565763 /* ConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AC219E1770700565763 /* ConversationListViewController.m */; };
@@ -30,6 +31,7 @@
 		DA7B687A1A00A66D00D82B4C /* UIAlertView+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7B68791A00A66D00D82B4C /* UIAlertView+Methods.m */; };
 		DA7B687D1A00C55500D82B4C /* UIBarButtonItem+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7B687C1A00C55500D82B4C /* UIBarButtonItem+Methods.m */; };
 		DA7B68801A01504100D82B4C /* CertificateInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7B687F1A01504100D82B4C /* CertificateInfoViewController.m */; };
+		DA7B68821A02AEA500D82B4C /* libPods-conversation-CDRTranslucentSideBar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA7B68811A02AEA500D82B4C /* libPods-conversation-CDRTranslucentSideBar.a */; };
 		DA96223F19EDE217008D42EB /* networks.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA96223E19EDE217008D42EB /* networks.plist */; };
 		DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */; };
 		DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */; };
@@ -70,6 +72,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2D5FFDFFE43DD259ED5E0B5C /* libPods-conversation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-conversation.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		73F09C084499DBEBB7D0F214 /* Pods-conversation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-conversation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-conversation/Pods-conversation.debug.xcconfig"; sourceTree = "<group>"; };
 		DA1A4AB719E1770700565763 /* conversation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = conversation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA1A4ABB19E1770700565763 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DA1A4ABC19E1770700565763 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -117,6 +121,7 @@
 		DA7B687C1A00C55500D82B4C /* UIBarButtonItem+Methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIBarButtonItem+Methods.m"; path = "conversation/UIBarButtonItem+Methods.m"; sourceTree = "<group>"; };
 		DA7B687E1A01504100D82B4C /* CertificateInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CertificateInfoViewController.h; sourceTree = "<group>"; };
 		DA7B687F1A01504100D82B4C /* CertificateInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CertificateInfoViewController.m; sourceTree = "<group>"; };
+		DA7B68811A02AEA500D82B4C /* libPods-conversation-CDRTranslucentSideBar.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-conversation-CDRTranslucentSideBar.a"; path = "Pods/build/Debug-iphoneos/libPods-conversation-CDRTranslucentSideBar.a"; sourceTree = "<group>"; };
 		DA96223E19EDE217008D42EB /* networks.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = networks.plist; path = Resources/networks.plist; sourceTree = "<group>"; };
 		DAA3229C19E56CBF0068E2B6 /* EditConnectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditConnectionViewController.h; sourceTree = "<group>"; };
 		DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditConnectionViewController.m; sourceTree = "<group>"; };
@@ -127,6 +132,7 @@
 		DAC65A3C19EAA2ED00E00A73 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		DAC65A3E19EAA2ED00E00A73 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Localizable.strings; sourceTree = "<group>"; };
 		DAC65A4219EAA2ED00E00A73 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = conversation/Resources/Images.xcassets; sourceTree = "<group>"; };
+		E433C77E4DDB7D2D0A67FF7E /* Pods-conversation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-conversation.release.xcconfig"; path = "Pods/Target Support Files/Pods-conversation/Pods-conversation.release.xcconfig"; sourceTree = "<group>"; };
 		FA00A38219E5A69F00E7B4D7 /* IRCMessageIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCMessageIndex.h; sourceTree = "<group>"; };
 		FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCMessageIndex.m; sourceTree = "<group>"; };
 		FA00A38E19E5DD3D00E7B4D7 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSKeychain.h; path = Preferences/SSKeychain.h; sourceTree = "<group>"; };
@@ -247,9 +253,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA7B68821A02AEA500D82B4C /* libPods-conversation-CDRTranslucentSideBar.a in Frameworks */,
 				FAC0E4B31A0073C4001CFB48 /* libcrypto.a in Frameworks */,
 				DA1A4AF019E181C400565763 /* CFNetwork.framework in Frameworks */,
 				FAC0E4B41A0073C4001CFB48 /* libssl.a in Frameworks */,
+				6997E5A7824BC453E8545580 /* libPods-conversation.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,6 +271,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		698704FDF3795A4BE254087A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				73F09C084499DBEBB7D0F214 /* Pods-conversation.debug.xcconfig */,
+				E433C77E4DDB7D2D0A67FF7E /* Pods-conversation.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		8A74870B6C537413F25D905C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DA7B68811A02AEA500D82B4C /* libPods-conversation-CDRTranslucentSideBar.a */,
+				2D5FFDFFE43DD259ED5E0B5C /* libPods-conversation.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		DA1A4AAE19E1770700565763 = {
 			isa = PBXGroup;
 			children = (
@@ -270,6 +296,8 @@
 				DA1A4AB919E1770700565763 /* conversation */,
 				DA1A4AD619E1770700565763 /* conversationTests */,
 				DA1A4AB819E1770700565763 /* Products */,
+				698704FDF3795A4BE254087A /* Pods */,
+				8A74870B6C537413F25D905C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -561,10 +589,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DA1A4ADD19E1770700565763 /* Build configuration list for PBXNativeTarget "conversation" */;
 			buildPhases = (
+				69FC910AD157115751225A0F /* Check Pods Manifest.lock */,
 				DA1A4AB319E1770700565763 /* Sources */,
 				DA1A4AB419E1770700565763 /* Frameworks */,
 				DA1A4AB519E1770700565763 /* Resources */,
 				50524F424C454D533F /* ShellScript */,
+				9DE6D7435E7BF42BE39EB90D /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -664,6 +694,36 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export CODESIGN_ALLOCATE=/Library/JailCoder/codesign_allocate\nif [ \"${PLATFORM_NAME}\" == \"iphoneos\" ]; then\n/Library/JailCoder/Entitlements/Entitlements.py \"my.company.${PROJECT_NAME}\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/${PROJECT_NAME}.xcent\";\ncodesign -f -s \"iPhone Developer\" --entitlements \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/${PROJECT_NAME}.xcent\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/\"\nfi";
+		};
+		69FC910AD157115751225A0F /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		9DE6D7435E7BF42BE39EB90D /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-conversation/Pods-conversation-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -835,6 +895,7 @@
 		};
 		DA1A4ADE19E1770700565763 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 73F09C084499DBEBB7D0F214 /* Pods-conversation.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -848,6 +909,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/conversation/lib",
+					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -855,6 +917,7 @@
 		};
 		DA1A4ADF19E1770700565763 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E433C77E4DDB7D2D0A67FF7E /* Pods-conversation.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -868,6 +931,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/conversation/lib",
+					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
