@@ -342,9 +342,11 @@
         case PING:
             [self.connection send:[NSString stringWithFormat:@"PONG :%s", line]];
             break;
-        case ERROR:
-            
+        case ERROR: {
+            NSString *error = [NSString stringWithCString:line usingEncodingPreference:self.configuration];
+            [self clientDidDisconnectWithError:error];
             break;
+        }
             
         case AUTHENTICATE:
             [Messages clientReceivedAuthenticationMessage:line onClient:self];
