@@ -35,6 +35,7 @@
 #import "IRCMessage.h"
 #import "IRCKickMessage.h"
 #import "ConversationListViewController.h"
+#import "znc-buffextras.h"
 
 @implementation Messages
 
@@ -183,6 +184,12 @@
         if (sender == nil) {
             sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
         }
+        
+        if ([[sender nick] isEqualToString:@"*buffextras"]) {
+            [znc_buffextras messageWithBufferString:message onChannel:channel onClient:client withTags:tags];
+            return;
+        }
+        
         NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
         IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
                                                            OfType:ET_PRIVMSG
