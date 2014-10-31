@@ -65,6 +65,8 @@
 @property (nonatomic) char* halfopUserModeCharacter;
 @property (nonatomic) char* voiceUserModeCharacter;
 
++ (NSArray *) IRCv3CapabilitiesSupportedByApplication;
+
 - (instancetype)initWithConfiguration:(IRCConnectionConfiguration *)config;
 - (void)connect;
 - (void)clientDidConnect;

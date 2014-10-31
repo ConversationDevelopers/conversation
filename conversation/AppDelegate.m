@@ -62,18 +62,8 @@
     navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
     splitViewController.delegate = self;
 */
-    [IRCMessageIndex initialiseMessageIndex];
-    [IRCMessageIndex initialiseCapIndex];
     [InputCommands initializeCommandReference];
     
-    self.IRCv3CapabilitiesSupportedByApplication = @[
-        @"server-time",
-        @"znc.in/server-time",
-        @"znc.in/server-time-iso",
-        @"sasl",
-        @"znc.in/playback"
-    ];
-
     return YES;
 }
 

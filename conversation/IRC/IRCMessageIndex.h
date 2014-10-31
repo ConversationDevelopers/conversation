@@ -202,7 +202,4 @@ typedef NS_ENUM(NSUInteger, MessageType) {
 + (NSUInteger)indexValueFromString:(NSString *)key;
 + (NSUInteger)capIndexValueFromString:(NSString *)key;
 
-+ (void)initialiseMessageIndex;
-+ (void)initialiseCapIndex;
-
 @end

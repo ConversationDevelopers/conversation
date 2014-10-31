@@ -54,6 +54,17 @@
 
 @implementation IRCClient
 
++ (NSArray *) IRCv3CapabilitiesSupportedByApplication
+{
+    return @[
+        @"server-time",
+        @"znc.in/server-time",
+        @"znc.in/server-time-iso",
+        @"sasl",
+        @"znc.in/playback"
+    ];
+}
+
 - (instancetype)initWithConfiguration:(IRCConnectionConfiguration *)config
 {
     if ((self = [super init])) {
@@ -104,7 +115,6 @@
     NSLog(@"Connecting to %@ on %ld", self.configuration.serverAddress, (long)self.configuration.connectionPort);
     
     [self.connection connectToHost:self.configuration.serverAddress onPort:self.configuration.connectionPort useSSL:self.configuration.connectUsingSecureLayer];
-    
 }
 
 - (void)clientDidConnect

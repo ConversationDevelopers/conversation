@@ -33,11 +33,10 @@
 @implementation IRCMessageIndex
 
 static NSArray *IRCMessageIndexReference = nil;
-static NSArray *IRCCAPIndexReference = nil;
 
 + (NSUInteger)indexValueFromString:(NSString *)key
 {
-    NSUInteger indexFromArray = [IRCMessageIndexReference indexOfObject:key];
+    NSUInteger indexFromArray = [[IRCMessageIndex messageIndex] indexOfObject:key];
     if (indexFromArray) {
         return indexFromArray;
     }
@@ -46,16 +45,16 @@ static NSArray *IRCCAPIndexReference = nil;
 
 + (NSUInteger)capIndexValueFromString:(NSString *)key
 {
-    NSUInteger indexFromArray = [IRCCAPIndexReference indexOfObject:key];
+    NSUInteger indexFromArray = [[IRCMessageIndex IRCV3capabilityCommandIndex] indexOfObject:key];
     if (indexFromArray) {
         return indexFromArray;
     }
     return NSNotFound;
 }
 
-+ (void)initialiseCapIndex
++ (NSArray *)IRCV3capabilityCommandIndex
 {
-    IRCCAPIndexReference = @[
+    return @[
         @"LS",
         @"ACK",
         @"NAK",
@@ -63,9 +62,9 @@ static NSArray *IRCCAPIndexReference = nil;
     ];
 }
 
-+ (void)initialiseMessageIndex
++ (NSArray *)messageIndex
 {
-    IRCMessageIndexReference = @[
+   return @[
         @"PING",
         @"ERROR",
         @"AUTHENTICATE",

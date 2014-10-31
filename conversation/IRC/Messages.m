@@ -131,11 +131,10 @@
     NSString *capabilitiesString = [NSString stringWithCString:capabilities usingEncodingPreference:client.configuration];
     NSArray *capabilitiesList = [capabilitiesString componentsSeparatedByString:@" "];
     
-    NSArray *applicationCapabilities = ((AppDelegate *)[UIApplication sharedApplication].delegate).IRCv3CapabilitiesSupportedByApplication;
     
     NSMutableArray *capabilitiesToNegotiate = [[NSMutableArray alloc] init];
     for (NSString *capability in capabilitiesList) {
-        if ([applicationCapabilities indexOfObject:capability] != NSNotFound) {
+        if ([[IRCClient IRCv3CapabilitiesSupportedByApplication] indexOfObject:capability] != NSNotFound) {
             [capabilitiesToNegotiate addObject:capability];
         }
     }
