@@ -41,14 +41,19 @@
 
 @implementation ChatMessageView
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)identifier
+- (id)initWithFrame:(CGRect)frame message:(IRCMessage *)message conversation:(IRCConversation *)conversation
 {
-    self = [super initWithStyle:style reuseIdentifier:identifier];
+    self = [super initWithFrame:frame];
+    
     if(!self)
         return nil;
     
-    [self.textLabel removeFromSuperview];
+    self.message = message;
+    self.conversation = conversation;
+    
     self.backgroundColor = [UIColor clearColor];
+    _attributedString = [self attributedString];
+    _size = [self frameSize];
     
     _messageLayer = [CATextLayer layer];
     _messageLayer.backgroundColor = [UIColor clearColor].CGColor;
@@ -56,9 +61,7 @@
     _messageLayer.contentsScale = [[UIScreen mainScreen] scale];
     _messageLayer.rasterizationScale = [[UIScreen mainScreen] scale];
     _messageLayer.wrapped = YES;
-    
-    [self.contentView.layer addSublayer:_messageLayer];
-    
+
     _timeLayer = [CATextLayer layer];
     _timeLayer.backgroundColor = [UIColor clearColor].CGColor;
     _timeLayer.foregroundColor = [[UIColor clearColor] CGColor];
@@ -66,7 +69,9 @@
     _timeLayer.rasterizationScale = [[UIScreen mainScreen] scale];
     _timeLayer.wrapped = YES;
     
-    [self.contentView.layer addSublayer:_timeLayer];
+    [self.layer addSublayer:_messageLayer];
+    [self.layer addSublayer:_timeLayer];
+    
     
     UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     [singleTapRecogniser setDelegate:self];
@@ -75,6 +80,89 @@
     [self addGestureRecognizer:singleTapRecogniser];
     
     return self;
+}
+
+- (void)layoutSubviews
+{
+    _messageLayer.string = _attributedString;
+    
+    _messageLayer.frame = CGRectMake(10, 5, self.bounds.size.width-20, _size.height);
+    
+    if (_message.messageType == ET_PRIVMSG) {
+        NSString *time = @"";
+        if (_message.timestamp) {
+            NSDate *date = _message.timestamp;
+            NSDateFormatter *format = [[NSDateFormatter alloc] init];
+            [format setDateFormat:@"HH:mm:ss"];
+            time = [format stringFromDate:date];
+        }
+        
+        NSMutableAttributedString *timestamp = [[NSMutableAttributedString alloc] initWithString:time];
+        
+        [timestamp addAttribute:NSFontAttributeName
+                          value:[UIFont systemFontOfSize:12.0]
+                          range:NSMakeRange(0, timestamp.length)];
+        
+        [timestamp addAttribute:NSForegroundColorAttributeName
+                          value:[UIColor lightGrayColor]
+                          range:NSMakeRange(0, timestamp.length)];
+        
+        _timeLayer.string = timestamp;
+        _timeLayer.frame = CGRectMake(self.bounds.size.width-timestamp.size.width-5, 5, timestamp.size.width, timestamp.size.height);
+        self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
+    }
+    
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, _size.height+10);
+    
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)_attributedString);
+    
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddRect(path, NULL,
+                  CGRectMake(0, 0,
+                             self.bounds.size.width,
+                             self.bounds.size.height));
+    
+    CTFrameRef frameref = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    
+    NSArray* lines = (NSArray*)CTFrameGetLines(frameref);
+    CFIndex lineCount = [lines count];
+    
+    // Get the origin point of each of the lines
+    CGPoint origins[lineCount];
+    CTFrameGetLineOrigins(frameref, CFRangeMake(0, 0), origins);
+    
+    for(CFIndex idx = 0; idx < lineCount; idx++)
+    {
+        // For each line, get the bounds for the line
+        CTLineRef line = CFArrayGetValueAtIndex((CFArrayRef)lines, idx);
+        
+        // Go through the glyph runs in the line
+        CFArrayRef glyphRuns = CTLineGetGlyphRuns(line);
+        CFIndex glyphCount = CFArrayGetCount(glyphRuns);
+        for (int i = 0; i < glyphCount; ++i)    {
+            CTRunRef run = CFArrayGetValueAtIndex(glyphRuns, i);
+            
+            NSDictionary *attributes = (NSDictionary*)CTRunGetAttributes(run);
+            
+            if ([attributes objectForKey:@"NSLink"]){
+                CGRect runBounds;
+                
+                CGFloat ascent;//height above the baseline
+                CGFloat descent;//height below the baseline
+                runBounds.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, NULL);
+                runBounds.size.height = ascent + descent;
+                
+                // The bounds returned by the Core Text function are in the coordinate system used by Core Text.  Convert the values here into the coordinate system which our gesture recognizers will use.
+                runBounds.origin.x = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL) + 10.0;
+                runBounds.origin.y = self.frame.size.height - origins[idx].y - runBounds.size.height + 10.0;
+                
+                // Create a view which will open up the URL when the user taps on it
+                LinkTapView *linkTapView = [[LinkTapView alloc] initWithFrame:runBounds url:[attributes objectForKey:@"NSLink"]];
+                linkTapView.backgroundColor = [UIColor clearColor];
+                [self addSubview:linkTapView];
+            }
+        }
+    }
 }
 
 uint32_t FNV32(const char *s)
@@ -127,22 +215,22 @@ uint32_t FNV32(const char *s)
 {
     switch(status) {
         case VOICE:
-            return _channel.client.voiceUserModeCharacter;
+            return _conversation.client.voiceUserModeCharacter;
             break;
         case HALFOP:
-            return _channel.client.halfopUserModeCharacter;
+            return _conversation.client.halfopUserModeCharacter;
             break;
         case OPERATOR:
-            return _channel.client.operatorUserModeCharacter;
+            return _conversation.client.operatorUserModeCharacter;
             break;
         case ADMIN:
-            return _channel.client.adminUserModeCharacter;
+            return _conversation.client.adminUserModeCharacter;
             break;
         case OWNER:
-            return _channel.client.ownerUserModeCharacter;
+            return _conversation.client.ownerUserModeCharacter;
             break;
         case IRCOP:
-            return _channel.client.ircopUserModeCharacter;
+            return _conversation.client.ircopUserModeCharacter;
             break;
     }
     return "";
@@ -153,15 +241,6 @@ uint32_t FNV32(const char *s)
     return [self.userColors objectAtIndex:(int)floor(FNV32(nick.UTF8String) / 300000000)];
 }
 
-- (void) prepareForReuse
-{
-    [super prepareForReuse];
-    self.frame = CGRectZero;
-    _attributedString = nil;
-    _messageLayer.string = @"";
-    _timeLayer.string = @"";
-}
-    
 - (NSAttributedString *)setLinks:(NSString *)string
 {
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
@@ -330,98 +409,9 @@ uint32_t FNV32(const char *s)
     return string;
 }
 
-- (void)layoutSubviews
+- (CGSize)frameSize
 {
-    
-    [super layoutSubviews];
-    
-    _attributedString = [self attributedString];
-    _messageLayer.string = _attributedString;
-    
-    CGSize size = [self frameSizeForString:_attributedString];
-    _messageLayer.frame = CGRectMake(10, 5, self.bounds.size.width-20, size.height);
-
-
-    if (_message.messageType == ET_PRIVMSG) {
-        NSString *time = @"";
-        if (_message.timestamp) {
-            NSDate *date = _message.timestamp;
-            NSDateFormatter *format = [[NSDateFormatter alloc] init];
-            [format setDateFormat:@"HH:mm:ss"];
-            time = [format stringFromDate:date];
-        }
-        
-        NSMutableAttributedString *timestamp = [[NSMutableAttributedString alloc] initWithString:time];
-        
-        [timestamp addAttribute:NSFontAttributeName
-                           value:[UIFont systemFontOfSize:12.0]
-                           range:NSMakeRange(0, timestamp.length)];
-        
-        [timestamp addAttribute:NSForegroundColorAttributeName
-                           value:[UIColor lightGrayColor]
-                           range:NSMakeRange(0, timestamp.length)];
-
-        _timeLayer.string = timestamp;
-        _timeLayer.frame = CGRectMake(self.bounds.size.width-timestamp.size.width-5, 5, timestamp.size.width, timestamp.size.height);
-        self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];        
-    }
-    
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, size.height+10);
-
-    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)_attributedString);
-    
-    CGMutablePathRef path = CGPathCreateMutable();
-    CGPathAddRect(path, NULL,
-                  CGRectMake(0, 0,
-                             self.bounds.size.width,
-                             self.bounds.size.height));
-    
-    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
-    
-    NSArray* lines = (NSArray*)CTFrameGetLines(frame);
-    CFIndex lineCount = [lines count];
-    
-    // Get the origin point of each of the lines
-    CGPoint origins[lineCount];
-    CTFrameGetLineOrigins(frame, CFRangeMake(0, 0), origins);
-    
-    for(CFIndex idx = 0; idx < lineCount; idx++)
-    {
-        // For each line, get the bounds for the line
-        CTLineRef line = CFArrayGetValueAtIndex((CFArrayRef)lines, idx);
-        
-        // Go through the glyph runs in the line
-        CFArrayRef glyphRuns = CTLineGetGlyphRuns(line);
-        CFIndex glyphCount = CFArrayGetCount(glyphRuns);
-        for (int i = 0; i < glyphCount; ++i)    {
-            CTRunRef run = CFArrayGetValueAtIndex(glyphRuns, i);
-            
-            NSDictionary *attributes = (NSDictionary*)CTRunGetAttributes(run);
-            
-            if ([attributes objectForKey:@"NSLink"]){
-                CGRect runBounds;
-                
-                CGFloat ascent;//height above the baseline
-                CGFloat descent;//height below the baseline
-                runBounds.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, NULL);
-                runBounds.size.height = ascent + descent;
-                
-                // The bounds returned by the Core Text function are in the coordinate system used by Core Text.  Convert the values here into the coordinate system which our gesture recognizers will use.
-                runBounds.origin.x = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL) + 10.0;
-                runBounds.origin.y = self.frame.size.height - origins[idx].y - runBounds.size.height + 10.0;
-                
-                // Create a view which will open up the URL when the user taps on it
-                LinkTapView *linkTapView = [[LinkTapView alloc] initWithFrame:runBounds url:[attributes objectForKey:@"NSLink"]];
-                linkTapView.backgroundColor = [UIColor clearColor];
-                [self.contentView addSubview:linkTapView];
-            }
-        }
-    }
-}
-
-- (CGSize)frameSizeForString:(NSAttributedString *)string
-{
-    CTTypesetterRef typesetter = CTTypesetterCreateWithAttributedString((CFAttributedStringRef)string);
+    CTTypesetterRef typesetter = CTTypesetterCreateWithAttributedString((CFAttributedStringRef)_attributedString);
     CGFloat width = self.bounds.size.width;
     
     CFIndex offset = 0, length;
@@ -437,18 +427,16 @@ uint32_t FNV32(const char *s)
         
         offset += length;
         y += ascent + descent + leading;
-    } while (offset < [string length]);
+    } while (offset < [_attributedString length]);
     
     CFRelease(typesetter);
     
     return CGSizeMake(width, ceil(y));
 }
 
-- (CGFloat)cellHeight
+- (CGFloat)frameHeight
 {
-    NSAttributedString *string = [self attributedString];
-    CGSize size = [self frameSizeForString:string];
-    return size.height;
+    return _size.height;
 }
 
 - (void)handleTap:(UITapGestureRecognizer *)recognizer

@@ -208,10 +208,10 @@
 - (void)selectConversationWithIdentifier:(NSString *)identifier
 {
     IRCClient *client;
-    IRCConversation *channel;
+    IRCConversation *conversation;
     for (client in _connections) {
-        for (channel in client.getQueries) {
-            if ([channel.configuration.uniqueIdentifier isEqualToString:identifier]) {
+        for (conversation in client.getQueries) {
+            if ([conversation.configuration.uniqueIdentifier isEqualToString:identifier]) {
                 break;
             }
         }
@@ -220,7 +220,7 @@
     ChatViewController *chatViewController = [[ChatViewController alloc] init];
     
     chatViewController.isChannel = NO;
-    chatViewController.channel = channel;
+    chatViewController.conversation = conversation;
 
     [self.navigationController pushViewController:chatViewController animated:YES];
 }
@@ -237,17 +237,17 @@
 
     ChatViewController *chatViewController = [[ChatViewController alloc] init];
     
-    IRCConversation *channel;
+    IRCConversation *conversation;
     if ((int)indexPath.row > (int)client.getChannels.count-1) {
         NSInteger index = indexPath.row - client.getChannels.count;
-        channel = client.getQueries[index];
+        conversation = client.getQueries[index];
         chatViewController.isChannel = NO;
     } else {
-        channel = client.getChannels[indexPath.row];
+        conversation = client.getChannels[indexPath.row];
         chatViewController.isChannel = YES;
     }
     
-    chatViewController.channel = channel;
+    chatViewController.conversation = conversation;
     
     [self.navigationController pushViewController:chatViewController animated:YES];
 

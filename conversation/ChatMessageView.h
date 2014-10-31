@@ -33,15 +33,17 @@
 
 @class IRCChannel;
 
-@interface ChatMessageView : UITableViewCell <UIActionSheetDelegate> {
+@interface ChatMessageView : UIView <UIActionSheetDelegate, UIGestureRecognizerDelegate> {
     NSAttributedString *_attributedString;
+    CGSize _size;    
     CATextLayer *_messageLayer;
     CATextLayer *_timeLayer;
 }
 
-- (CGFloat)cellHeight;
+- (id)initWithFrame:(CGRect)frame message:(IRCMessage *)message conversation:(IRCConversation *)conversation;
+- (CGFloat)frameHeight;
 
-@property (nonatomic) IRCConversation *channel;
+@property (nonatomic) IRCConversation *conversation;
 @property (nonatomic) IRCMessage *message;
 
 @end

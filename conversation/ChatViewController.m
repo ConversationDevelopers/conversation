@@ -36,9 +36,8 @@
 
 @interface ChatViewController ()
 @property (nonatomic) BOOL userlistIsVisible;
-@property (readonly, nonatomic) ChatMessageView *dummyCell;
-@property (readonly, nonatomic) UITableView *tableView;
 @property (readonly, nonatomic) UIView *container;
+@property (readonly, nonatomic) UIScrollView *contentView;
 @property (readonly, nonatomic) PHFComposeBarView *composeBarView;
 @property (readonly, nonatomic) UserListView *userListView;
 @end
@@ -66,7 +65,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                              selector:@selector(messageReceived:)
                                                  name:@"messageReceived"
                                                object:nil];
-    
+    _messageEntryHeight = 0.0;
     return self;
 }
 
@@ -97,6 +96,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)loadView
 {
+    
     UIBarButtonItem *joinButton = [[UIBarButtonItem alloc] initWithTitle:@"Join" style:UIBarButtonItemStylePlain target:self action:@selector(join:)];
     
     UIBarButtonItem *userlistButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Userlist"]
@@ -104,19 +104,19 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                                                       target:self
                                                                       action:@selector(showUserList:)];
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ChannelIcon_Light"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
-    if (!_isChannel || [(IRCChannel*)_channel isJoinedByUser])
+    if (!_isChannel || [(IRCChannel*)_conversation isJoinedByUser])
         self.navigationItem.rightBarButtonItem = userlistButton;
     else
         self.navigationItem.rightBarButtonItem = joinButton;
     
-    self.title = _channel.name;
+    self.title = _conversation.name;
     self.navigationItem.leftBarButtonItem = backButton;
     
     UIView *view = [[UIView alloc] initWithFrame:kInitialViewFrame];
     [view setBackgroundColor:[UIColor whiteColor]];
 
     UIView *container = [self container];
-    [container addSubview:[self tableView]];
+    [container addSubview:[self contentView]];
     [container addSubview:[self composeBarView]];
     
     [view addSubview:container];
@@ -126,10 +126,35 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     [self setView:view];
 }
 
+- (void)viewDidLoad
+{
+    for (IRCMessage *message in _conversation.messages) {
+        [self addMessage:message];
+    }
+}
+
+- (void)addMessage:(IRCMessage *)message
+{
+    ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, _messageEntryHeight, _contentView.bounds.size.width, 15.0)
+                                                                  message:message
+                                                             conversation:_conversation];
+    _messageEntryHeight += [messageView frameHeight] + 15.0;
+    [_contentView addSubview:messageView];
+    _contentView.contentSize = CGSizeMake(_container.bounds.size.width, _messageEntryHeight);
+    
+    // Scroll to bottom if content is bigger than view and user didnt scroll up
+    if (_contentView.contentSize.height > _contentView.bounds.size.height &&
+        (_contentView.contentOffset.y == 0.0 || _contentView.contentOffset.y > _contentView.contentSize.height - _contentView.bounds.size.height - 65)) {
+        
+        CGPoint bottomOffset = CGPointMake(0, _contentView.contentSize.height - _contentView.bounds.size.height);
+        [_contentView setContentOffset:bottomOffset animated:YES];
+    }
+}
+
 - (void)join:(id)sender
 {
     ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
-    [controller joinChannelWithName:_channel.name onClient:_channel.client];
+    [controller joinChannelWithName:_conversation.name onClient:_conversation.client];
 }
 
 - (void)keyboardWillToggle:(NSNotification *)notification
@@ -166,9 +191,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                          [[self container] setFrame:newContainerFrame];
                      }
                      completion:NULL];
-
-    if(_channel.messages.count)
-        [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_channel.messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
 }
 
 - (void)goBack:(id)sender
@@ -183,12 +205,12 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     [_composeBarView resignFirstResponder];    
     UserListView *userlist = [self userListView];
     
-    userlist.channel = (IRCChannel*)_channel;
+    userlist.channel = (IRCChannel*)_conversation;
 
     [self.navigationController.view addSubview:userlist];
 
     CGRect frame = userlist.frame;
-    frame.origin.x = _tableView.frame.size.width - 205.0f;
+    frame.origin.x = _container.frame.size.width - 205.0f;
     
     [UIView animateWithDuration:0.5
                           delay:0.0
@@ -215,52 +237,18 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)sendMessage:(NSString *)message
 {
-    [IRCCommands sendMessage:message toRecipient:_channel.name onClient:_channel.client];
+    [IRCCommands sendMessage:message toRecipient:_conversation.name onClient:_conversation.client];
     IRCMessage *ircmsg = [[IRCMessage alloc] initWithMessage:message
                                                        OfType:ET_PRIVMSG
-                                               inConversation:_channel
-                                                     bySender:_channel.client.currentUserOnConnection
+                                               inConversation:_conversation
+                                                     bySender:_conversation.client.currentUserOnConnection
                                                        atTime:[NSDate date]];
-    [_channel.messages addObject:ircmsg];
+    [self addMessage:ircmsg];
+    [_conversation.messages addObject:ircmsg];
     [_composeBarView setText:@"" animated:YES];
-    [_tableView reloadData];
-    
-    [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_channel.messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+
 }
 
-#pragma mark - Table View
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ( !_dummyCell )
-        _dummyCell = [[ChatMessageView alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
-
-    _dummyCell.message = _channel.messages[indexPath.row];
-    _dummyCell.channel = _channel;
-    
-    CGFloat height = [_dummyCell cellHeight];
-    return height+15.0;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return _channel.messages.count;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    
-    static NSString *CellIdentifier = @"cell";
-    ChatMessageView *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[ChatMessageView alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
-    
-    cell.message = _channel.messages[indexPath.row];
-    cell.channel = _channel;
-    
-    return cell;
-}
 
 
 - (BOOL) textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
@@ -277,7 +265,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     if (_userlistIsVisible) {
         
         CGRect frame = _userListView.frame;
-        frame.origin.x = _tableView.frame.size.width;
+        frame.origin.x = _container.frame.size.width;
         _userListView.frame = frame;
         
         [_userListView removeFromSuperview];
@@ -296,12 +284,12 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)messageReceived:(NSNotification *)notification
 {
-    IRCMessage *message = _channel.messages[_channel.messages.count-1];
+    IRCMessage *message = notification.object;
     if (_isChannel &&
-        [(IRCChannel*)_channel isJoinedByUser] &&
+        [(IRCChannel*)_conversation isJoinedByUser] &&
         message.messageType == ET_JOIN &&
-        [message.sender.nick isEqualToString:_channel.client.currentUserOnConnection.nick] &&
-        [message.conversation.configuration.uniqueIdentifier isEqualToString:_channel.configuration.uniqueIdentifier]) {
+        [message.sender.nick isEqualToString:_conversation.client.currentUserOnConnection.nick] &&
+        [message.conversation.configuration.uniqueIdentifier isEqualToString:_conversation.configuration.uniqueIdentifier]) {
         
         UIBarButtonItem *userlistButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Userlist"]
                                                                            style:UIBarButtonItemStylePlain
@@ -310,44 +298,20 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         self.navigationItem.rightBarButtonItem = userlistButton;
         
     }
-    [_tableView reloadData];
-    if (_channel.messages.count)
-        [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_channel.messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    
+    if([message.conversation.configuration.uniqueIdentifier isEqualToString:_conversation.configuration.uniqueIdentifier]) {
+        [self addMessage:message];
+    }
 }
 
 @synthesize container = _container;
 - (UIView *)container {
     if (!_container) {
-        _container = [[UIView alloc] initWithFrame:kInitialViewFrame];
+        _container = [[UIScrollView alloc] initWithFrame:kInitialViewFrame];
         _container.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     }
     
     return _container;
-}
-
-@synthesize tableView = _tableView;
-- (UITableView *)tableView {
-    
-    if(!_tableView) {
-        CGRect frame = CGRectMake(0.0,
-                                  0.0,
-                                  kInitialViewFrame.size.width,
-                                  kInitialViewFrame.size.height - PHFComposeBarViewInitialHeight);
-        
-        _tableView = [[UITableView alloc] initWithFrame:frame];
-        _tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.dataSource = self;
-        _tableView.delegate = self;
-        
-        UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideAccessories:)];
-        [singleTapRecogniser setDelegate:self];
-        singleTapRecogniser.numberOfTouchesRequired = 1;
-        singleTapRecogniser.numberOfTapsRequired = 1;
-        [_tableView addGestureRecognizer:singleTapRecogniser];
-        
-    }
-    return _tableView;
 }
 
 @synthesize composeBarView = _composeBarView;
@@ -378,14 +342,35 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     
     if (!_userListView) {
         CGFloat width = 200.0f;
-        CGRect frame = CGRectMake(_tableView.frame.size.width,
+        CGRect frame = CGRectMake(_container.frame.size.width,
                                   30.0f,
                                   width,
-                                  _tableView.frame.size.height+30.0f);
+                                  _container.frame.size.height+30.0f);
         
         _userListView = [[UserListView alloc] initWithFrame:frame];
     }
     return _userListView;
 }
 
+@synthesize contentView = _contentView;
+- (UIScrollView *)contentView {
+    
+    if(!_contentView) {
+        CGRect frame = CGRectMake(0.0,
+                                  0.0,
+                                  [UIScreen mainScreen].bounds.size.width,
+                                  kInitialViewFrame.size.height - PHFComposeBarViewInitialHeight);
+        
+        _contentView = [[UIScrollView alloc] initWithFrame:frame];
+        _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        
+        UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideAccessories:)];
+        [singleTapRecogniser setDelegate:self];
+        singleTapRecogniser.numberOfTouchesRequired = 1;
+        singleTapRecogniser.numberOfTapsRequired = 1;
+        [_contentView addGestureRecognizer:singleTapRecogniser];
+        
+    }
+    return _contentView;
+}
 @end

@@ -33,9 +33,11 @@
 
 @class IRCConversation;
 
-@interface ChatViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, PHFComposeBarViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate>
+@interface ChatViewController : UIViewController <PHFComposeBarViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate> {
+    CGFloat _messageEntryHeight;
+}
 
 @property (nonatomic) BOOL isChannel;
-@property (nonatomic) IRCConversation *channel;
+@property (nonatomic) IRCConversation *conversation;
 
 @end
