@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>4ABA27BD-A7A7-4915-8BD1-1D0804B9AFE4</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Conversation</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>CD6DEC9CC5C9AE1EEB120A5EECED1E52233B8A62</key>
+		<string>github.com:ConversationDevelopers/conversation.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Conversation.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>CD6DEC9CC5C9AE1EEB120A5EECED1E52233B8A62</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:ConversationDevelopers/conversation.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>CD6DEC9CC5C9AE1EEB120A5EECED1E52233B8A62</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>CD6DEC9CC5C9AE1EEB120A5EECED1E52233B8A62</string>
+			<key>IDESourceControlWCCName</key>
+			<string>conversation</string>
+		</dict>
+	</array>
+</dict>
+</plist>

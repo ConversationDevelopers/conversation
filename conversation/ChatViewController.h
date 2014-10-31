@@ -29,7 +29,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "PHFComposeBarView.h"
+#import <PHFComposeBarView/PHFComposeBarView.h>
 
 @class IRCConversation;
 
