@@ -420,7 +420,10 @@
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         [client.connection send:[NSString stringWithFormat:@"WHO %@", channelName]];
         channel.isJoinedByUser = YES;
-        [controller reloadClient:client];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [controller reloadClient:client];
+        });
     }
     
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
@@ -448,7 +451,9 @@
         /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
         if (channel != nil) {
             channel.isJoinedByUser = NO;
-            [controller reloadClient:client];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [controller reloadClient:client];
+            });
         }
     } else {
         [[channel users] removeObject:channel];
@@ -548,7 +553,9 @@
         /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
         if (channel != nil) {
             channel.isJoinedByUser = NO;
-            [controller reloadClient:client];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [controller reloadClient:client];
+            });
         }
     } else {
         [[channel users] removeObject:channel];
@@ -637,12 +644,16 @@
             conversation.conversationPartnerIsOnline = YES;
             
             /* Set the conversation item in "enabled" mode. */
-            [controller reloadClient:client];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [controller reloadClient:client];
+            });
         } else {
             conversation.conversationPartnerIsOnline = NO;
             
             /* Set the conversation item in "disabled" mode */
-            [controller reloadClient:client];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [controller reloadClient:client];
+            });
         }
         indexOfItem++;
     }

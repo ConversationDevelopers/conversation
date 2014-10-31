@@ -37,6 +37,7 @@
 
 @interface IRCConnection : NSObject {
     GCDAsyncSocket *socket;
+    dispatch_queue_t queue;
 }
 
 - (id)initWithClient:(IRCClient *)client;

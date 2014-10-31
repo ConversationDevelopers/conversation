@@ -53,10 +53,11 @@
 {
     IRCConversation *conversation = [IRCConversation fromString:nickname withClient:client];
     if (conversation == nil) {
-        /* We don't have a query for this message, we need to create one */
-        ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
-        [controller createConversationWithName:nickname onClient:client];
-        conversation = [IRCConversation fromString:nickname withClient:client];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            /* We don't have a query for this message, we need to create one */
+            ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+            [controller createConversationWithName:nickname onClient:client];
+        });
     }
     return conversation;
 }
@@ -102,8 +103,9 @@
 - (void)addMessageToConversation:(id)object
 {
     [self.messages addObject:object];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:object];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:object];
+    });
     while ([self.messages count] > MAX_BUFFER_COUNT) {
         [self.messages removeObjectAtIndex:0];
     }

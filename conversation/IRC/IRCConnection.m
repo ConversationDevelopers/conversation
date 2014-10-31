@@ -53,6 +53,8 @@
     if ((self = [super init])) {
         self.sslEnabled = NO;
         self.client = client;
+        NSString *queueName = [@"conversation-client-" stringByAppendingString:self.client.configuration.uniqueIdentifier];
+        queue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_SERIAL);
         
         self.messagesSentSinceLastTick = 0;
         self.messageQueue = [[NSMutableArray alloc] init];
@@ -128,25 +130,27 @@
 
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
-    const char *bytes = [data bytes] + '\0';
-    int positionOfLineBreak = 0;
-    const char* positionBeforeIteration = bytes;
-    while (*bytes != '\0' && *bytes != '\n' && *bytes != '\r') {
-        bytes++;
-        positionOfLineBreak++;
-    }
-    bytes = positionBeforeIteration;
-    char* message = malloc(positionOfLineBreak +1);
-    strncpy(message, bytes, positionOfLineBreak);
-    message[positionOfLineBreak] = '\0';
-    
-    if (message) {
-        [self.client clientDidReceiveData:message];
-    } else {
-        NSLog(@"Read msg error: %s",message);
-    }
-    [socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:1];
-    free(message);
+    dispatch_async(queue, ^{
+        const char *bytes = [data bytes] + '\0';
+        int positionOfLineBreak = 0;
+        const char* positionBeforeIteration = bytes;
+        while (*bytes != '\0' && *bytes != '\n' && *bytes != '\r') {
+            bytes++;
+            positionOfLineBreak++;
+        }
+        bytes = positionBeforeIteration;
+        char* message = malloc(positionOfLineBreak +1);
+        strncpy(message, bytes, positionOfLineBreak);
+        message[positionOfLineBreak] = '\0';
+        
+        if (message) {
+            [self.client clientDidReceiveData:message];
+        } else {
+            NSLog(@"Read msg error: %s",message);
+        }
+        [socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:1];
+        free(message);
+    });
 }
 
 - (void)socketDidSecure:(GCDAsyncSocket *)sock
