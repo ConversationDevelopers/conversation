@@ -36,20 +36,12 @@ static NSArray *IRCMessageIndexReference = nil;
 
 + (NSUInteger)indexValueFromString:(NSString *)key
 {
-    NSUInteger indexFromArray = [[IRCMessageIndex messageIndex] indexOfObject:key];
-    if (indexFromArray) {
-        return indexFromArray;
-    }
-    return NSNotFound;
+    return [[IRCMessageIndex messageIndex] indexOfObject:key];
 }
 
 + (NSUInteger)capIndexValueFromString:(NSString *)key
 {
-    NSUInteger indexFromArray = [[IRCMessageIndex IRCV3capabilityCommandIndex] indexOfObject:key];
-    if (indexFromArray) {
-        return indexFromArray;
-    }
-    return NSNotFound;
+    return [[IRCMessageIndex IRCV3capabilityCommandIndex] indexOfObject:key];
 }
 
 + (NSArray *)IRCV3capabilityCommandIndex
