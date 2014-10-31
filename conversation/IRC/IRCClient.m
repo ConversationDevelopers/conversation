@@ -416,7 +416,7 @@
         }
             
         case RPL_TOPIC:
-            [Messages userReceivedTOPIC:line onChannel:recipient byUser:nil onClient:self withTags:tagsList];
+            //[Messages userReceivedTOPIC:line onChannel:recipient byUser:nil onClient:self withTags:tagsList];
             break;
             
         case RPL_WHOREPLY:
