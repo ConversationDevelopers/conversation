@@ -500,8 +500,8 @@ uint32_t FNV32(const char *s)
 
 - (void)hideImage:(UITapGestureRecognizer *)recognizer
 {
-    UIImageView *imageView = (UIImageView*)recognizer.view;
-    [imageView removeFromSuperview];
+    UIView *container = (UIView*)recognizer.view;
+    [container removeFromSuperview];
 }
 
 - (void)showImage:(UITapGestureRecognizer *)recognizer
