@@ -133,6 +133,19 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    if (_contentView.contentSize.height > _contentView.bounds.size.height) {
+        [self scrollToBottom:NO];
+    }
+}
+
+- (void)scrollToBottom:(BOOL)animated
+{
+    CGPoint bottomOffset = CGPointMake(0, _contentView.contentSize.height - _contentView.bounds.size.height);
+    [_contentView setContentOffset:bottomOffset animated:animated];
+}
+
 - (void)addMessage:(IRCMessage *)message
 {
     ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, _messageEntryHeight, _contentView.bounds.size.width, 15.0)
@@ -146,8 +159,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     if (_contentView.contentSize.height > _contentView.bounds.size.height &&
         (_contentView.contentOffset.y == 0.0 || _contentView.contentOffset.y > _contentView.contentSize.height - _contentView.bounds.size.height - 65)) {
         
-        CGPoint bottomOffset = CGPointMake(0, _contentView.contentSize.height - _contentView.bounds.size.height);
-        [_contentView setContentOffset:bottomOffset animated:YES];
+        [self scrollToBottom:YES];
     }
 }
 
