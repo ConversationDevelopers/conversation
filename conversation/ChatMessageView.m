@@ -87,13 +87,12 @@
         singleTapRecogniser.numberOfTapsRequired = 1;
         [imageView addGestureRecognizer:singleTapRecogniser];
     }
-/*
+
     UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     [singleTapRecogniser setDelegate:self];
     singleTapRecogniser.numberOfTouchesRequired = 1;
     singleTapRecogniser.numberOfTapsRequired = 1;
     [self addGestureRecognizer:singleTapRecogniser];
-*/
     
     return self;
 }
