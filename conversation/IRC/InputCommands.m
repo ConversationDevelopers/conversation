@@ -29,10 +29,26 @@
  */
 
 #import "InputCommands.h"
+#import "IRCClient.h"
+#import "IRCConnection.h"
+#import "IRCConversation.h"
 
 @implementation InputCommands
 
 static NSArray *IRCInputCommandsReference;
+
++ (void)performCommand:(NSString *)message inConversation:(IRCConversation *)conversation onClient:(IRCClient *)client
+{
+    NSArray *messageComponents = [message componentsSeparatedByString:@" "];
+    if ([messageComponents count] > 0) {
+        InputCommand command = [InputCommands indexValueFromString:messageComponents[0]];
+        switch (command) {
+            default:
+                [client.connection send:message];
+                break;
+        }
+    }
+}
 
 + (NSUInteger)indexValueFromString:(NSString *)key
 {
