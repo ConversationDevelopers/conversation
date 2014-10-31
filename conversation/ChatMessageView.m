@@ -92,13 +92,22 @@
     return self;
 }
 
+- (NSURL *)getImageLink:(NSURL *)url
+{
+    if ([url.host isEqualToString:@"dropbox.com"] || [url.host isEqualToString:@"www.dropbox.com"]) {
+        return [NSURL URLWithString:
+                [[NSString stringWithFormat:@"%@://%@%@?dl=1", url.scheme, url.host, url.path] stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding]];
+    }
+    return url;
+}
+
 - (BOOL)isImageLink:(NSURL *)url
 {
-    if ([url.absoluteString hasSuffix:@".png"] ||
-        [url.absoluteString hasSuffix:@".jpg"] ||
-        [url.absoluteString hasSuffix:@".jpeg"] ||
-        [url.absoluteString hasSuffix:@".tiff"] ||
-        [url.absoluteString hasSuffix:@".gif"]) {
+    if ([url.pathExtension isEqualToString:@"png"] ||
+        [url.pathExtension isEqualToString:@"jpg"] ||
+        [url.pathExtension isEqualToString:@"jpeg"] ||
+        [url.pathExtension isEqualToString:@"tiff"] ||
+        [url.pathExtension isEqualToString:@"gif"]) {
         return YES;
     }
     return NO;
@@ -274,8 +283,8 @@ uint32_t FNV32(const char *s)
             NSURL *url = [match URL];
             [attributedString addAttribute:NSLinkAttributeName value:url range:matchRange];
             [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:matchRange];
-//            if ([self isImageLink:url])
-                [_images addObject:url];
+            if ([self isImageLink:url])
+                [_images addObject:[self getImageLink:url]];
         }
     }
     
