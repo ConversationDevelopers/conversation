@@ -5,7 +5,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 target 'conversation' do
 	pod 'PHFComposeBarView', '~> 2.0.1'
-	pod 'DLImageLoader', '~> 2.0.0'
+	pod 'DLImageLoader', :git => 'https://github.com/AndreyLunevich/DLImageLoader-iOS.git'
 end
 
 target 'conversationTests' do
