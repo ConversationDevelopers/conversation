@@ -77,7 +77,6 @@
     for (NSURL *url in _images) {
         DLImageView *imageView = [[DLImageView alloc] initWithFrame:CGRectMake(20, _size.height+10, 200, 120)];
         imageView.backgroundColor = [UIColor blackColor];
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
         [imageView displayImageFromUrl:url.absoluteString];
         _size.height += 130;
         
