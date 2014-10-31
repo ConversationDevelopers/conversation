@@ -159,7 +159,7 @@
         line++;
         lineBeforeIteration++;
         
-        int tagsLength;
+        int tagsLength = 0;
         while (*line != ' ' && *line != '\0') {
             line++;
             tagsLength++;
