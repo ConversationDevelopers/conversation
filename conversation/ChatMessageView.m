@@ -34,6 +34,7 @@
 #import "LinkTapView.h"
 #import <CoreText/CoreText.h>
 #import <DLImageLoader/DLIL.h>
+#import <DLImageLoader/DLImageView.h>
 #import <string.h>
 
 #define FNV_PRIME_32 16777619
@@ -48,8 +49,9 @@
     if(!self)
         return nil;
     
-    self.message = message;
-    self.conversation = conversation;
+    _images = [[NSMutableArray alloc] init];
+    _message = message;
+    _conversation = conversation;
     
     self.backgroundColor = [UIColor clearColor];
     _attributedString = [self attributedString];
@@ -72,6 +74,15 @@
     [self.layer addSublayer:_messageLayer];
     [self.layer addSublayer:_timeLayer];
     
+    for (NSURL *url in _images) {
+        DLImageView *imageView = [[DLImageView alloc] initWithFrame:CGRectMake(20, _size.height+10, 200, 120)];
+        imageView.backgroundColor = [UIColor blackColor];
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        [imageView displayImageFromUrl:url.absoluteString];
+        _size.height += 130;
+        
+        [self addSubview:imageView];
+    }
     
     UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     [singleTapRecogniser setDelegate:self];
@@ -80,6 +91,18 @@
     [self addGestureRecognizer:singleTapRecogniser];
     
     return self;
+}
+
+- (BOOL)isImageLink:(NSURL *)url
+{
+    if ([url.absoluteString hasSuffix:@".png"] ||
+        [url.absoluteString hasSuffix:@".jpg"] ||
+        [url.absoluteString hasSuffix:@".jpeg"] ||
+        [url.absoluteString hasSuffix:@".tiff"] ||
+        [url.absoluteString hasSuffix:@".gif"]) {
+        return YES;
+    }
+    return NO;
 }
 
 - (void)layoutSubviews
@@ -252,6 +275,8 @@ uint32_t FNV32(const char *s)
             NSURL *url = [match URL];
             [attributedString addAttribute:NSLinkAttributeName value:url range:matchRange];
             [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:matchRange];
+//            if ([self isImageLink:url])
+                [_images addObject:url];
         }
     }
     

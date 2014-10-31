@@ -35,6 +35,7 @@
 
 @interface ChatMessageView : UIView <UIActionSheetDelegate, UIGestureRecognizerDelegate> {
     NSAttributedString *_attributedString;
+    NSMutableArray *_images;
     CGSize _size;    
     CATextLayer *_messageLayer;
     CATextLayer *_timeLayer;
