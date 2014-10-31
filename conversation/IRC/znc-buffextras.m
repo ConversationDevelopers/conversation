@@ -76,7 +76,7 @@
         strncpy(sender, lineBeforeIteration, senderLength);
         sender[senderLength] = '\0';
     } else {
-        sender = "";
+        sender = malloc(1);
     }
     
     /* Copy the characters of the nickname range we calculated earlier, and consume the same characters from the string as well as the following '!' */
@@ -86,7 +86,7 @@
         nickname[nicknameLength] = '\0';
         lineBeforeIteration = lineBeforeIteration + nicknameLength + 1;
     } else {
-        nickname = "";
+        nickname = malloc(1);
     }
     
     /* Copy the characters from the username range we calculated earlier, and consume the same characters from the string as well as the following '@' */
@@ -96,7 +96,7 @@
         username[usernameLength] = '\0';
         lineBeforeIteration = lineBeforeIteration + usernameLength;
     } else {
-        username = "";
+        username = malloc(1);
     }
     
     /* Copy the characters from the hostname range we calculated earlier */
@@ -106,7 +106,7 @@
         strncpy(hostname, lineBeforeIteration, hostnameLength);
         hostname[hostnameLength] = '\0';
     } else {
-        hostname = "";
+        hostname = malloc(1);
     }
     
     const char* senderDict[] = {
@@ -147,8 +147,8 @@
             partMessage = [messageComponents componentsJoinedByString:@" "];
             
             NSRange substrRange;
-            range.location = 1;
-            range.length = [partMessage length] - 2;
+            substrRange.location = 1;
+            substrRange.length = [partMessage length] - 2;
             partMessage = [partMessage substringWithRange:substrRange];
         }
         IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:partMessage
@@ -176,8 +176,8 @@
         NSString *quitMessage = [messageComponents componentsJoinedByString:@" "];
         
         NSRange substrRange;
-        range.location = 1;
-        range.length = [quitMessage length] - 2;
+        substrRange.location = 1;
+        substrRange.length = [quitMessage length] - 2;
         quitMessage = [quitMessage substringWithRange:substrRange];
         
         IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:quitMessage
@@ -188,6 +188,11 @@
         
         [channel addMessageToConversation:messageObject];
     }
+    
+    free(sender);
+    free(nickname);
+    free(username);
+    free(hostname);
 }
 
 @end
