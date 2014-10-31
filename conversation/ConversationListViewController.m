@@ -517,6 +517,7 @@
     IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
     configuration.name = name;
     IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:configuration withClient:client];
+    channel.isJoinedByUser = YES;
     [client addChannel:channel];
 
     if(client.isConnected == NO)
