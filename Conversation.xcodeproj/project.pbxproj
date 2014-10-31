@@ -43,6 +43,7 @@
 		FA109B3719E419040068DC29 /* IRCConnectionConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B3619E419040068DC29 /* IRCConnectionConfiguration.m */; };
 		FA109B3B19E41D540068DC29 /* IRCChannelConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B3A19E41D540068DC29 /* IRCChannelConfiguration.m */; };
 		FA109B3E19E420320068DC29 /* IRCChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B3D19E420320068DC29 /* IRCChannel.m */; };
+		FA36D2FA1A0446BD00AEDB20 /* InputCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = FA36D2F91A0446BD00AEDB20 /* InputCommands.m */; };
 		FA6E45ED19ED65590083A326 /* IRCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6E45EC19ED65590083A326 /* IRCUser.m */; };
 		FA93176419FB4DD200A94912 /* IRCCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = FA93176319FB4DD200A94912 /* IRCCommands.m */; };
 		FAC0E4121A00665D001CFB48 /* IRCCertificateTrust.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC0E4111A00665D001CFB48 /* IRCCertificateTrust.m */; };
@@ -141,6 +142,8 @@
 		FA109B3A19E41D540068DC29 /* IRCChannelConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IRCChannelConfiguration.m; path = Preferences/IRCChannelConfiguration.m; sourceTree = "<group>"; };
 		FA109B3C19E420320068DC29 /* IRCChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCChannel.h; sourceTree = "<group>"; };
 		FA109B3D19E420320068DC29 /* IRCChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCChannel.m; sourceTree = "<group>"; };
+		FA36D2F81A0446BD00AEDB20 /* InputCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputCommands.h; sourceTree = "<group>"; };
+		FA36D2F91A0446BD00AEDB20 /* InputCommands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputCommands.m; sourceTree = "<group>"; };
 		FA6E45EB19ED65590083A326 /* IRCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCUser.h; sourceTree = "<group>"; };
 		FA6E45EC19ED65590083A326 /* IRCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCUser.m; sourceTree = "<group>"; };
 		FA93176219FB4DD200A94912 /* IRCCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCCommands.h; sourceTree = "<group>"; };
@@ -438,6 +441,8 @@
 				FAC0E4111A00665D001CFB48 /* IRCCertificateTrust.m */,
 				FACFC18F1A02BD6E0012CED9 /* znc-buffextras.h */,
 				FACFC1901A02BD6E0012CED9 /* znc-buffextras.m */,
+				FA36D2F81A0446BD00AEDB20 /* InputCommands.h */,
+				FA36D2F91A0446BD00AEDB20 /* InputCommands.m */,
 			);
 			path = IRC;
 			sourceTree = "<group>";
@@ -755,6 +760,7 @@
 				FAEE1E6019EBEA040041439F /* Messages.m in Sources */,
 				FAEE1E6319EBFBA20041439F /* IRCConversation.m in Sources */,
 				DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */,
+				FA36D2FA1A0446BD00AEDB20 /* InputCommands.m in Sources */,
 				FA00A39219E5DD3D00E7B4D7 /* SSKeychain.m in Sources */,
 				DA7B68771A00A43500D82B4C /* LinkTapView.m in Sources */,
 				DA6F61DA19FD1B2800F22F78 /* UserListView.m in Sources */,
