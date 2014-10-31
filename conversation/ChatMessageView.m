@@ -76,17 +76,24 @@
         DLImageView *imageView = [[DLImageView alloc] initWithFrame:CGRectMake(20, _size.height+10, 200, 120)];
         imageView.layer.cornerRadius = 5;
         imageView.backgroundColor = [UIColor blackColor];
+        imageView.userInteractionEnabled = YES;
         [imageView displayImageFromUrl:url.absoluteString];
         _size.height += 130;
-        
         [self addSubview:imageView];
+
+        UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showImage:)];
+        [singleTapRecogniser setDelegate:self];
+        singleTapRecogniser.numberOfTouchesRequired = 1;
+        singleTapRecogniser.numberOfTapsRequired = 1;
+        [imageView addGestureRecognizer:singleTapRecogniser];
     }
-    
+/*
     UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     [singleTapRecogniser setDelegate:self];
     singleTapRecogniser.numberOfTouchesRequired = 1;
     singleTapRecogniser.numberOfTapsRequired = 1;
     [self addGestureRecognizer:singleTapRecogniser];
+*/
     
     return self;
 }
@@ -469,6 +476,63 @@ uint32_t FNV32(const char *s)
 - (CGFloat)frameHeight
 {
     return _size.height;
+}
+
+- (void)adjustAnchorPointForGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer {
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        UIView *piece = gestureRecognizer.view;
+        CGPoint locationInView = [gestureRecognizer locationInView:piece];
+        CGPoint locationInSuperview = [gestureRecognizer locationInView:piece.superview];
+        
+        piece.layer.anchorPoint = CGPointMake(locationInView.x / piece.bounds.size.width, locationInView.y / piece.bounds.size.height);
+        piece.center = locationInSuperview;
+    }
+}
+
+- (void)scaleImage:(UIPinchGestureRecognizer *)recognizer
+{
+    [self adjustAnchorPointForGestureRecognizer:recognizer];
+    
+    if ([recognizer state] == UIGestureRecognizerStateBegan || [recognizer state] == UIGestureRecognizerStateChanged) {
+        [recognizer view].transform = CGAffineTransformScale([[recognizer view] transform], [recognizer scale], [recognizer scale]);
+        [recognizer setScale:1];
+    }
+}
+
+- (void)hideImage:(UITapGestureRecognizer *)recognizer
+{
+    UIImageView *imageView = (UIImageView*)recognizer.view;
+    [imageView removeFromSuperview];
+}
+
+- (void)showImage:(UITapGestureRecognizer *)recognizer
+{
+    UIImageView *preview = (UIImageView*)recognizer.view;
+    CGRect frame = [[UIScreen mainScreen] bounds];
+    
+    UIView *containerView = [[UIView alloc] initWithFrame:frame];
+    containerView.backgroundColor = [UIColor blackColor];
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    imageView.userInteractionEnabled = YES;
+    imageView.image = preview.image;
+    
+    [containerView addSubview:imageView];
+    
+    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    [controller.navigationController.view addSubview:containerView];
+
+    UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideImage:)];
+    [singleTapRecogniser setDelegate:self];
+    singleTapRecogniser.numberOfTouchesRequired = 1;
+    singleTapRecogniser.numberOfTapsRequired = 1;
+    [containerView addGestureRecognizer:singleTapRecogniser];
+    
+    UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(scaleImage:)];
+    [pinchGesture setDelegate:self];
+    [imageView addGestureRecognizer:pinchGesture];
+
 }
 
 - (void)handleTap:(UITapGestureRecognizer *)recognizer
