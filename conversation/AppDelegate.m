@@ -62,7 +62,6 @@
     navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
     splitViewController.delegate = self;
 */
-    [InputCommands initializeCommandReference];
     
     return YES;
 }

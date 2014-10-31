@@ -35,8 +35,6 @@
 
 @implementation InputCommands
 
-static NSArray *IRCInputCommandsReference;
-
 + (void)performCommand:(NSString *)message inConversation:(IRCConversation *)conversation onClient:(IRCClient *)client
 {
     NSArray *messageComponents = [message componentsSeparatedByString:@" "];
@@ -52,16 +50,16 @@ static NSArray *IRCInputCommandsReference;
 
 + (NSUInteger)indexValueFromString:(NSString *)key
 {
-    NSUInteger indexFromArray = [IRCInputCommandsReference indexOfObject:key];
+    NSUInteger indexFromArray = [[InputCommands inputCommandReference] indexOfObject:key];
     if (indexFromArray) {
         return indexFromArray;
     }
     return NSNotFound;
 }
 
-+ (void)initializeCommandReference
++ (NSArray *)inputCommandReference
 {
-    IRCInputCommandsReference = @[
+    return @[
         @"ADMIN",
         @"CMD_BAN",
         @"CLEAR",

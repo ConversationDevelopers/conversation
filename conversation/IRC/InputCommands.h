@@ -34,8 +34,6 @@
 
 + (NSUInteger)indexValueFromString:(NSString *)key;
 
-+ (void)initializeCommandReference;
-
 typedef NS_ENUM(NSUInteger, InputCommand) {
     CMD_ADMIN,
     CMD_BAN,
