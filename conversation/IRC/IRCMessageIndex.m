@@ -41,7 +41,7 @@ static NSArray *IRCCAPIndexReference = nil;
     if (indexFromArray) {
         return indexFromArray;
     }
-    return 0;
+    return NSNotFound;
 }
 
 + (NSUInteger)capIndexValueFromString:(NSString *)key
@@ -50,7 +50,7 @@ static NSArray *IRCCAPIndexReference = nil;
     if (indexFromArray) {
         return indexFromArray;
     }
-    return 0;
+    return NSNotFound;
 }
 
 + (void)initialiseCapIndex
