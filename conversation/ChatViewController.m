@@ -152,6 +152,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                                                   message:message
                                                              conversation:_conversation];
     _messageEntryHeight += [messageView frameHeight] + 15.0;
+    messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [_contentView addSubview:messageView];
     _contentView.contentSize = CGSizeMake(_container.bounds.size.width, _messageEntryHeight);
     
@@ -370,7 +371,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     if(!_contentView) {
         CGRect frame = CGRectMake(0.0,
                                   0.0,
-                                  [UIScreen mainScreen].bounds.size.width,
+                                  kInitialViewFrame.size.width,
                                   kInitialViewFrame.size.height - PHFComposeBarViewInitialHeight);
         
         _contentView = [[UIScrollView alloc] initWithFrame:frame];
