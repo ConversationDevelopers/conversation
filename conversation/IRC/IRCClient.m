@@ -582,8 +582,6 @@
             }
             prefixIdentifier++;
             prefixes++;
-            
-            free(character);
         }
     }
 }
