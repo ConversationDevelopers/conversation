@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2014, Tobias Pollmann, Alex Sørlie Glomsaas.
+ Copyright (c) 2014", Tobias Pollmann, Alex Sørlie Glomsaas.
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modification,
@@ -31,5 +31,61 @@
 #import "InputCommands.h"
 
 @implementation InputCommands
+
+static NSArray *IRCInputCommandsReference;
+
++ (NSUInteger)indexValueFromString:(NSString *)key
+{
+    NSUInteger indexFromArray = [IRCInputCommandsReference indexOfObject:key];
+    if (indexFromArray) {
+        return indexFromArray;
+    }
+    return NSNotFound;
+}
+
++ (void)initializeCommandReference
+{
+    IRCInputCommandsReference = @[
+        @"ADMIN",
+        @"CMD_BAN",
+        @"CLEAR",
+        @"CLEARALL",
+        @"CLOSE",
+        @"CTCP",
+        @"CTCPREPLY",
+        @"DEADMIN",
+        @"DEHALFOP",
+        @"DEHOP",
+        @"DEVOICE",
+        @"DEOWNER",
+        @"ECHO",
+        @"HALFOP",
+        @"HOP",
+        @"J",
+        @"JOIN",
+        @"KB",
+        @"KICK",
+        @"KICKBAN",
+        @"LEAVE",
+        @"ME",
+        @"MODE",
+        @"MSG",
+        @"MUTE",
+        @"NICK",
+        @"OP",
+        @"NOTICE",
+        @"PART",
+        @"QUERY",
+        @"QUIT",
+        @"QUOTE",
+        @"RAW",
+        @"REJOIN",
+        @"TOPIC",
+        @"VOICE",
+        @"UMODE",
+        @"UNBAN",
+        @"UNMUTE"
+    ];
+}
 
 @end

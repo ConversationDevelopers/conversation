@@ -31,6 +31,7 @@
 #import <UIKit/UIKit.h>
 #import "IRC/IRCClient.h"
 #import "IRC/IRCMessageIndex.h"
+#import "InputCommands.h"
 #import "ConversationListViewController.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>

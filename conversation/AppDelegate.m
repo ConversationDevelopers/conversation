@@ -65,6 +65,7 @@
 */
     [IRCMessageIndex initialiseMessageIndex];
     [IRCMessageIndex initialiseCapIndex];
+    [InputCommands initializeCommandReference];
     
     self.IRCv3CapabilitiesSupportedByApplication = @[
         @"server-time",

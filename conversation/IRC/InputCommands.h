@@ -32,4 +32,50 @@
 
 @interface InputCommands : NSObject
 
++ (NSUInteger)indexValueFromString:(NSString *)key;
+
++ (void)initializeCommandReference;
+
+typedef NS_ENUM(NSUInteger, InputCommand) {
+    CMD_ADMIN,
+    CMD_BAN,
+    CMD_CLEAR,
+    CMD_CLEARALL,
+    CMD_CLOSE,
+    CMD_CTCP,
+    CMD_CTCPREPLY,
+    CMD_DEADMIN,
+    CMD_DEHALFOP,
+    CMD_DEHOP,
+    CMD_DEVOICE,
+    CMD_DEOWNER,
+    CMD_ECHO,
+    CMD_HALFOP,
+    CMD_HOP,
+    CMD_J,
+    CMD_JOIN,
+    CMD_KB,
+    CMD_KICK,
+    CMD_KICKBAN,
+    CMD_LEAVE,
+    CMD_ME,
+    CMD_MODE,
+    CMD_MSG,
+    CMD_MUTE,
+    CMD_NICK,
+    CMD_OP,
+    CMD_NOTICE,
+    CMD_PART,
+    CMD_QUERY,
+    CMD_QUIT,
+    CMD_QUOTE,
+    CMD_RAW,
+    CMD_REJOIN,
+    CMD_TOPIC,
+    CMD_VOICE,
+    CMD_UMODE,
+    CMD_UNBAN,
+    CMD_UNMUTE
+};
+
 @end
