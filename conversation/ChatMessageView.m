@@ -28,13 +28,11 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "ChatMessageView.h"
-#import "IRCUser.h"
-#import "IRCClient.h"
-#import "LinkTapView.h"
+#import <QuartzCore/QuartzCore.h>
 #import <CoreText/CoreText.h>
-#import <DLImageLoader/DLIL.h>
+#import "ChatMessageView.h"
 #import <DLImageLoader/DLImageView.h>
+#import "LinkTapView.h"
 #import <string.h>
 
 #define FNV_PRIME_32 16777619
@@ -76,6 +74,7 @@
     
     for (NSURL *url in _images) {
         DLImageView *imageView = [[DLImageView alloc] initWithFrame:CGRectMake(20, _size.height+10, 200, 120)];
+        imageView.layer.cornerRadius = 5;
         imageView.backgroundColor = [UIColor blackColor];
         [imageView displayImageFromUrl:url.absoluteString];
         _size.height += 130;
