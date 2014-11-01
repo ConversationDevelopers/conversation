@@ -36,7 +36,7 @@
 
 @implementation InputCommands
 
-+ (void)performCommand:(NSString *)message inConversation:(IRCConversation *)conversation onClient:(IRCClient *)client
++ (void)performCommand:(NSString *)message inConversation:(IRCConversation *)conversation
 {
     NSMutableArray *messageComponents = [[message componentsSeparatedByString:@" "] mutableCopy];
     if ([messageComponents count] > 0) {
@@ -67,7 +67,7 @@
                     [messageComponents removeObjectsInRange:range];
                     
                     NSString *message = [messageComponents componentsJoinedByString:@" "];
-                    [IRCCommands sendCTCPMessage:message toRecipient:recipient onClient:client];
+                    [IRCCommands sendCTCPMessage:message toRecipient:recipient onClient:conversation.client];
                 } else {
                     [InputCommands incompleteParametersError:@"/CTCP <channel/user> <command>"];
                 }
@@ -121,7 +121,7 @@
                 if ([messageComponents count] > 1) {
                     [messageComponents removeObjectAtIndex:0];
                     NSString *message = [messageComponents componentsJoinedByString:@" "];
-                    [IRCCommands sendACTIONMessage:message toRecipient:[conversation name] onClient:client];
+                    [IRCCommands sendACTIONMessage:message toRecipient:[conversation name] onClient:conversation.client];
                 } else {
                     [InputCommands incompleteParametersError:@"/ME <action>"];
                 }
@@ -140,7 +140,7 @@
                     [messageComponents removeObjectsInRange:range];
                     
                     NSString *message = [messageComponents componentsJoinedByString:@" "];
-                    [IRCCommands sendMessage:message toRecipient:recipient onClient:client];
+                    [IRCCommands sendMessage:message toRecipient:recipient onClient:conversation.client];
                 } else {
                     [InputCommands incompleteParametersError:@"/MSG <channel/user> <message>"];
                 }
@@ -154,7 +154,7 @@
                 if ([messageComponents count] > 1) {
                     [messageComponents removeObjectAtIndex:0];
                     NSString *message = [messageComponents componentsJoinedByString:@" "];
-                    [IRCCommands changeNicknameToNick:message onClient:client];
+                    [IRCCommands changeNicknameToNick:message onClient:conversation.client];
                 } else {
                     [InputCommands incompleteParametersError:@"/NICK <new nickname>"];
                 }
@@ -171,7 +171,7 @@
                     [messageComponents removeObjectsInRange:range];
                     
                     NSString *message = [messageComponents componentsJoinedByString:@" "];
-                    [IRCCommands sendNotice:message toRecipient:recipient onClient:client];
+                    [IRCCommands sendNotice:message toRecipient:recipient onClient:conversation.client];
                 } else {
                     [InputCommands incompleteParametersError:@"/NOTICE <channel/user> <message>"];
                 }
@@ -206,7 +206,7 @@
                 break;
                 
             default:
-                [client.connection send:message];
+                [conversation.client.connection send:message];
                 break;
         }
     }

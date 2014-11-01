@@ -35,7 +35,7 @@
 
 @interface InputCommands : NSObject
 
-+ (void)performCommand:(NSString *)message inConversation:(IRCConversation *)conversation onClient:(IRCClient *)client;
++ (void)performCommand:(NSString *)message inConversation:(IRCConversation *)conversation;
 
 + (NSUInteger)indexValueFromString:(NSString *)key;
 
