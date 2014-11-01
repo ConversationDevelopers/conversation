@@ -501,6 +501,12 @@ uint32_t FNV32(const char *s)
         [recognizer view].transform = CGAffineTransformScale([[recognizer view] transform], [recognizer scale], [recognizer scale]);
         [recognizer setScale:1];
     }
+    if ([recognizer state] == UIGestureRecognizerStateEnded) {
+        if (recognizer.view.frame.size.width < [[UIScreen mainScreen] bounds].size.width) {
+            CGRect frame = recognizer.view.superview.frame;
+            recognizer.view.frame = frame;
+        }
+    }
 }
 
 - (void)hideImage:(UITapGestureRecognizer *)recognizer
