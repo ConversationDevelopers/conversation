@@ -74,7 +74,7 @@
 {
     IRCUser *userFromUserlist = nil;
     for (IRCUser *user in [channel users]) {
-        if ([[user nick] isEqualToString:sender]) {
+        if ([[user nick] caseInsensitiveCompare:sender]) {
             userFromUserlist = user;
             break;
         }
