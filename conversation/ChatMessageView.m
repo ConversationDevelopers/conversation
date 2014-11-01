@@ -289,25 +289,22 @@ uint32_t FNV32(const char *s)
     NSMutableArray *links = [[NSMutableArray alloc] init];
     NSDataDetector* detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
     NSArray *matches = [detector matchesInString:string options:0 range:NSMakeRange(0, [string length])];
-    NSString *truncatedString = [string mutableCopy];
     for (NSTextCheckingResult *match in matches) {
         NSRange matchRange = [match range];
         NSURL *url = [match URL];
-        if ([match resultType] == NSTextCheckingTypeLink) {
-            NSString *replace = [[NSString stringWithString:url.absoluteString] stringByTruncatingToWidth:250.0
-                                                                                           withAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12.0]}];
-            
-            truncatedString = [truncatedString stringByReplacingOccurrencesOfString:url.absoluteString withString:replace];
-            [ranges addObject:[NSValue valueWithRange:NSMakeRange(matchRange.location, replace.length)]];
-            [offsets addObject:[NSNumber numberWithInteger:url.absoluteString.length-replace.length]];
-            [links addObject:url];
+        NSString *replace = [[NSString stringWithString:url.absoluteString] stringByTruncatingToWidth:250.0
+                                                                                       withAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12.0]}];
+        
+        string = [string stringByReplacingOccurrencesOfString:url.absoluteString withString:replace];
+        [ranges addObject:[NSValue valueWithRange:NSMakeRange(matchRange.location, replace.length)]];
+        [offsets addObject:[NSNumber numberWithInteger:url.absoluteString.length-replace.length]];
+        [links addObject:url];
 
-            if ([self isImageLink:url])
-                [_images addObject:[self getImageLink:url]];
-        }
+        if ([self isImageLink:url])
+            [_images addObject:[self getImageLink:url]];
     }
 
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:truncatedString];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
 
     int offset = 0;
     for (int i=0; i<ranges.count; i++) {
