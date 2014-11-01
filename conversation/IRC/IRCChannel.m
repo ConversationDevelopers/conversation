@@ -37,6 +37,7 @@
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client
 {
     if ((self = [super init])) {
+        /* Set the initial values for a channel before it receives necessary information from the server */
         self.name = config.name;
         self.client = client;
         self.topic = @"(No Topic)";
@@ -53,7 +54,7 @@
 {
     IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:channelName withClient:client];
     if (channel == nil) {
-        /* We don't have this channel, let's make a request to the UI to create the channel. */
+        /* We don't have this channel, let's make a request to the UI to create it. */
         dispatch_async(dispatch_get_main_queue(), ^{
             ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
             [controller joinChannelWithName:channelName onClient:client];
@@ -74,6 +75,7 @@
 
 - (void)removeUserByName:(NSString *)nickname
 {
+    /* Shorthand method to remove a user from the userlist. */
     for (IRCUser *user in self.users) {
         if ([[user nick] isEqualToString:nickname]) {
             [self.users removeObject:user];
@@ -84,6 +86,8 @@
 
 - (void)givePrivilegieToUsers:(NSArray *)users toStatus:(int)status onChannel:(IRCChannel *)channel
 {
+    /* This method takes an array of users and gives them the operator (+o) permission. 
+     with multiple users it will build a string like "+oooo user1 user2 user3 user4" and run the mode command. */
     NSString *modeSymbol = [IRCUser statusToModeSymbol:status];
     if (modeSymbol) {
         NSString *modeString = @"+";
@@ -97,6 +101,8 @@
 
 - (void)revokePrivilegieFromUsers:(NSArray *)users toStatus:(int)status onChannel:(IRCChannel *)channel
 {
+    /* This method takes an array of users and gives revokes operator permission (-o)
+     with multiple users it will build a string like "-oooo user1 user2 user3 user4" and run the mode command. */
     NSString *modeSymbol = [IRCUser statusToModeSymbol:status];
     if (modeSymbol) {
         NSString *modeString = @"-";
@@ -110,6 +116,7 @@
 
 - (void)sortUserlist
 {
+    /* Sort the userlist, first by privilegie, then by name. */
     NSSortDescriptor *nicknameSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"nick" ascending:YES];
     NSSortDescriptor *privilegiesSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"channelPrivileges" ascending:NO];
     NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:privilegiesSortDescriptor,nicknameSortDescriptor,  nil];

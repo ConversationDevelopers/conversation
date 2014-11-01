@@ -36,11 +36,15 @@ static NSArray *IRCMessageIndexReference = nil;
 
 + (NSUInteger)indexValueFromString:(NSString *)key
 {
+    /* Converts a string into its appropriate MessageType enum value by using its correlated position in the messageIndex array for the IRC parser.
+     It is important that elements are in the same order in MessageType and messageIndex or the parser will start activating the wrong commands. */
     return [[IRCMessageIndex messageIndex] indexOfObject:key];
 }
 
 + (NSUInteger)capIndexValueFromString:(NSString *)key
 {
+    /* Converts a string into its appropriate CapMessageType using its correlated position in the IRCV3capabilityCommandIndex array.
+     As with messageIndex these must be in the correct order to function. */
     return [[IRCMessageIndex IRCV3capabilityCommandIndex] indexOfObject:key];
 }
 

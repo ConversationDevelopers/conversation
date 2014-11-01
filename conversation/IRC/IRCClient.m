@@ -884,7 +884,7 @@
     
     NSString *timeObjectEpochTime = [tags objectForKey:@"t"];
     if (timeObjectEpochTime) {
-        /* This tag is using UNIX epoch time. <http://imgs.xkcd.com/comics/bug.png> Parse accordingly.*/
+        /* This tag is using UNIX epoch time. <http://xkcd.com/376/> Parse accordingly.*/
         NSTimeInterval epochTimeAsDouble = [timeObjectEpochTime doubleValue];
         return [NSDate dateWithTimeIntervalSince1970:epochTimeAsDouble];
     }
