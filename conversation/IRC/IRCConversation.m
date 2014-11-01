@@ -64,19 +64,22 @@
 
 + (id) fromString:(NSString *)name withClient:(IRCClient *)client
 {
+    /* Return an existing channel or query in this client */
     if ([name isValidChannelName:client]) {
+        /* If this is a channel iterate through the list of channels and return one that matches */
         for (IRCChannel *channel in [client getChannels]) {
             if ([channel.name caseInsensitiveCompare:name] == NSOrderedSame)
                 return channel;
         }
     } else if ([name isValidNickname:client]) {
+        /* If this is a query, iterate through the list of queries and return one that matches*/
         for (IRCConversation *query in [client getQueries]) {
             if ([query.name caseInsensitiveCompare:name] == NSOrderedSame) {
                 return query;
             }
         }
     }
-    
+    /* We couldn't find any object that matches, we will return nil. */
     return nil;
 }
 
@@ -88,24 +91,33 @@
 
 - (void)addPreviewMessage:(NSAttributedString *)message
 {
+    /* Create the preview messages list if it is not already created */
     if(!_previewMessages)
         _previewMessages = [[NSMutableArray alloc] init];
     
+    /* We can only display two items at a time. If we have already reached capacity, we will remove the first item. and move the second one to take its place. */
     if (_previewMessages.count > 1) {
         id string = _previewMessages[1];
         [_previewMessages removeObjectAtIndex:0];
         [_previewMessages setObject:string atIndexedSubscript:0];
     }
+    /* Add the new item to the list */
     [_previewMessages addObject:message];
 }
 
 
 - (void)addMessageToConversation:(id)object
 {
+    /* Add the message to the message list. */
     [self.messages addObject:object];
+    
+    /* Notify all parts of the application listening for messages that a new message has been added. */
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:object];
     });
+    
+    /* We cannot store an unlimited amount of messages. To keep memory consumption down we will remove the
+     oldest messages if necessary. */
     while ([self.messages count] > MAX_BUFFER_COUNT) {
         [self.messages removeObjectAtIndex:0];
     }
