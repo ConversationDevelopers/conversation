@@ -196,11 +196,13 @@
 
 - (void)enableFloodControl {
     self.floodControlEnabled = YES;
-    self.floodControlTimer = [NSTimer scheduledTimerWithTimeInterval:floodControlInterval
-                                                              target:self
-                                                            selector:@selector(floodTimerTick)
-                                                            userInfo:nil
-                                                             repeats:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.floodControlTimer = [NSTimer scheduledTimerWithTimeInterval:floodControlInterval
+                                                                  target:self
+                                                                selector:@selector(floodTimerTick)
+                                                                userInfo:nil
+                                                                 repeats:YES];
+    });
 }
 
 - (void)disableFloodControl {

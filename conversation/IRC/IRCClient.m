@@ -347,11 +347,11 @@
     
     NSString *commandString = [NSString stringWithCString:command usingEncodingPreference:[self configuration]];
     MessageType commandIndexValue = [IRCMessageIndex indexValueFromString:commandString];
-    
     switch (commandIndexValue) {
         case PING:
             [self.connection send:[NSString stringWithFormat:@"PONG :%s", line]];
             break;
+            
         case ERROR: {
             NSString *error = [NSString stringWithCString:line usingEncodingPreference:self.configuration];
             [self clientDidDisconnectWithError:error];
