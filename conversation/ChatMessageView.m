@@ -506,20 +506,24 @@ uint32_t FNV32(const char *s)
 
 - (void)showImage:(UITapGestureRecognizer *)recognizer
 {
+    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     UIImageView *preview = (UIImageView*)recognizer.view;
-    CGRect frame = [[UIScreen mainScreen] bounds];
     
-    UIView *containerView = [[UIView alloc] initWithFrame:frame];
+    CGRect f = [preview convertRect:preview.bounds toView:controller.navigationController.view];
+    
+    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(preview.frame.origin.x,
+                                                                     f.origin.y,
+                                                                     preview.frame.size.width,
+                                                                     preview.frame.size.height)];
     containerView.backgroundColor = [UIColor blackColor];
     
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, preview.frame.size.width, preview.frame.size.height)];
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     imageView.userInteractionEnabled = YES;
     imageView.image = preview.image;
     
     [containerView addSubview:imageView];
     
-    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     [controller.navigationController.view addSubview:containerView];
 
     UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideImage:)];
@@ -531,6 +535,13 @@ uint32_t FNV32(const char *s)
     UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(scaleImage:)];
     [pinchGesture setDelegate:self];
     [imageView addGestureRecognizer:pinchGesture];
+    
+    CGRect frame = [[UIScreen mainScreen] bounds];
+    
+    [UIView animateWithDuration:0.4 animations:^{
+        containerView.frame = frame;
+        imageView.frame = frame;
+    }];
 
 }
 
