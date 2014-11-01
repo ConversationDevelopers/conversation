@@ -39,6 +39,8 @@
 
 + (NSUInteger)indexValueFromString:(NSString *)key;
 
++ (void)sendMessage:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client;
+
 typedef NS_ENUM(NSUInteger, InputCommand) {
     CMD_ADMIN,
     CMD_BAN,

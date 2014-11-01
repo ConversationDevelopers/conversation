@@ -217,6 +217,11 @@
     
 }
 
++ (void)sendMessage:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client
+{
+    [IRCCommands sendMessage:message toRecipient:recipient onClient:client];
+}
+
 + (NSUInteger)indexValueFromString:(NSString *)key
 {
     NSUInteger indexFromArray = [[InputCommands inputCommandReference] indexOfObject:key];
