@@ -3,18 +3,23 @@ PODS:
   - PHFComposeBarView (2.0.1):
     - PHFDelegateChain (~> 1.0)
   - PHFDelegateChain (1.0.1)
+  - YLGIFImage (0.11)
 
 DEPENDENCIES:
   - DLImageLoader (from `https://github.com/AndreyLunevich/DLImageLoader-iOS.git`)
   - PHFComposeBarView (~> 2.0.1)
+  - YLGIFImage (from `https://github.com/liyong03/YLGIFImage.git`)
 
 EXTERNAL SOURCES:
   DLImageLoader:
     :git: https://github.com/AndreyLunevich/DLImageLoader-iOS.git
+  YLGIFImage:
+    :git: https://github.com/liyong03/YLGIFImage.git
 
 SPEC CHECKSUMS:
   DLImageLoader: ed4a058375bcef56e2493769d375612715189659
   PHFComposeBarView: 0fa52137ecb23725d219dc90cf77c4c95aa29d05
   PHFDelegateChain: f4d5a2847960b3dd16fc2f2196833f3a66704745
+  YLGIFImage: bcff4a5200b060f655372f939989ddc0a0b21dde
 
 COCOAPODS: 0.34.4

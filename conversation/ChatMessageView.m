@@ -32,6 +32,8 @@
 #import <CoreText/CoreText.h>
 #import "ChatMessageView.h"
 #import <DLImageLoader/DLImageView.h>
+#import <YLGIFImage/YLGIFImage.h>
+#import <YLGIFImage/YLImageView.h>
 #import "LinkTapView.h"
 #import <string.h>
 
@@ -72,8 +74,10 @@
     [self.layer addSublayer:_messageLayer];
     [self.layer addSublayer:_timeLayer];
     
+    int i=0;
     for (NSURL *url in _images) {
         DLImageView *imageView = [[DLImageView alloc] initWithFrame:CGRectMake(20, _size.height+10, 200, 120)];
+        imageView.tag = i;
         imageView.layer.cornerRadius = 5;
         imageView.backgroundColor = [UIColor blackColor];
         imageView.userInteractionEnabled = YES;
@@ -86,6 +90,7 @@
         singleTapRecogniser.numberOfTouchesRequired = 1;
         singleTapRecogniser.numberOfTapsRequired = 1;
         [imageView addGestureRecognizer:singleTapRecogniser];
+        i++;
     }
 
     UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
@@ -517,11 +522,20 @@ uint32_t FNV32(const char *s)
                                                                      preview.frame.size.height)];
     containerView.backgroundColor = [UIColor blackColor];
     
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, preview.frame.size.width, preview.frame.size.height)];
-    imageView.contentMode = UIViewContentModeScaleAspectFit;
-    imageView.userInteractionEnabled = YES;
-    imageView.image = preview.image;
-    
+    UIImageView *imageView;
+    NSURL *url = _images[recognizer.view.tag];
+    if ([url.pathExtension isEqualToString:@"gif"]) {
+        imageView = [[YLImageView alloc] initWithFrame:CGRectMake(0, 0, preview.frame.size.width, preview.frame.size.height)];
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        imageView.userInteractionEnabled = YES;
+        imageView.image = [YLGIFImage imageWithData:[NSData dataWithContentsOfURL:url]];
+    } else {
+        imageView = [[YLImageView alloc] initWithFrame:CGRectMake(0, 0, preview.frame.size.width, preview.frame.size.height)];
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        imageView.userInteractionEnabled = YES;
+        imageView.image = preview.image;
+    }
+
     [containerView addSubview:imageView];
     
     [controller.navigationController.view addSubview:containerView];

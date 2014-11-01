@@ -1,0 +1,1 @@
+../../../YLGIFImage/YLGIFImage/YLGIFImageInSwiftProjectDemo-Bridging-Header.h
