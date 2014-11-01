@@ -32,12 +32,13 @@
 #import "IRCClient.h"
 #import "IRCConnection.h"
 #import "IRCConversation.h"
+#import "IRCCommands.h"
 
 @implementation InputCommands
 
 + (void)performCommand:(NSString *)message inConversation:(IRCConversation *)conversation onClient:(IRCClient *)client
 {
-    NSArray *messageComponents = [message componentsSeparatedByString:@" "];
+    NSMutableArray *messageComponents = [[message componentsSeparatedByString:@" "] mutableCopy];
     if ([messageComponents count] > 0) {
         InputCommand command = [InputCommands indexValueFromString:messageComponents[0]];
         switch (command) {
@@ -154,6 +155,11 @@
                 break;
         }
     }
+}
+
++ (void)incompleteParametersError:(NSString *)parameters
+{
+    
 }
 
 + (NSUInteger)indexValueFromString:(NSString *)key
