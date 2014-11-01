@@ -77,4 +77,28 @@
     return userFromUserlist;
 }
 
+
++ (NSString *)statusToModeSymbol:(int)status
+{
+    switch (status) {
+        case OWNER:
+            return @"q";
+        
+        case ADMIN:
+            return @"a";
+            
+        case OPERATOR:
+            return @"o";
+            
+        case HALFOP:
+            return @"h";
+            
+        case VOICE:
+            return @"v";
+            
+        default:
+            return nil;
+    }
+}
+
 @end

@@ -30,6 +30,7 @@
 
 #import "IRCChannel.h"
 #import "IRCClient.h"
+#import "IRCConnection.h"
 
 @implementation IRCChannel
 
@@ -78,6 +79,32 @@
             [self.users removeObject:user];
             break;
         }
+    }
+}
+
+- (void)givePrivilegieToUsers:(NSArray *)users toStatus:(int)status onChannel:(IRCChannel *)channel
+{
+    NSString *modeSymbol = [IRCUser statusToModeSymbol:status];
+    if (modeSymbol) {
+        NSString *modeString = @"+";
+        int i = 1;
+        while (i <= [users count]) {
+            modeString = [modeString stringByAppendingString:modeSymbol];
+        }
+        [channel.client.connection send:[NSString stringWithFormat:@"MODE %@ %@", channel.name, modeString]];
+    }
+}
+
+- (void)revokePrivilegieFromUsers:(NSArray *)users toStatus:(int)status onChannel:(IRCChannel *)channel
+{
+    NSString *modeSymbol = [IRCUser statusToModeSymbol:status];
+    if (modeSymbol) {
+        NSString *modeString = @"-";
+        int i = 1;
+        while (i <= [users count]) {
+            modeString = [modeString stringByAppendingString:modeSymbol];
+        }
+        [channel.client.connection send:[NSString stringWithFormat:@"MODE %@ %@", channel.name, modeString]];
     }
 }
 

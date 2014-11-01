@@ -49,6 +49,9 @@
 - (void)setTopic:(NSString *)topic;
 - (void)removeUserByName:(NSString *)nickname;
 
+- (void)givePrivilegieToUsers:(NSArray *)users toStatus:(int)status onChannel:(IRCChannel *)channel;
+- (void)revokePrivilegieFromUsers:(NSArray *)users toStatus:(int)status onChannel:(IRCChannel *)channel;
+
 - (void)sortUserlist;
 
 @end

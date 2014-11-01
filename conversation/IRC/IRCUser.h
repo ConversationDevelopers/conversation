@@ -47,6 +47,7 @@
 - (instancetype) initWithSenderDict:(const char **)senderDict onClient:(IRCClient *)client;
 - (instancetype) initWithNickname:(NSString *)nickname andUsername:(NSString *)username andHostname:(NSString *)hostname onClient:(IRCClient *)client;
 + (IRCUser *)fromNickname:(const char *)sender onChannel:(IRCChannel *)channel;
++ (NSString *)statusToModeSymbol:(int)status;
 
 typedef enum ChannelPrivileges : NSUInteger {
     NORMAL,

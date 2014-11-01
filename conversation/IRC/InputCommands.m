@@ -31,6 +31,7 @@
 #import "InputCommands.h"
 #import "IRCClient.h"
 #import "IRCConnection.h"
+#import "IRCChannel.h"
 #import "IRCConversation.h"
 #import "IRCCommands.h"
 
@@ -43,8 +44,15 @@
         InputCommand command = [InputCommands indexValueFromString:messageComponents[0]];
         switch (command) {
             case CMD_ADMIN:
+                if ([messageComponents count] > 1) {
+                    IRCChannel *channel = (IRCChannel *)conversation;
+                    [messageComponents removeObjectAtIndex:0];
+                    [channel givePrivilegieToUsers:messageComponents toStatus:ADMIN onChannel:channel];
+                } else {
+                    [InputCommands incompleteParametersError:@"/ADMIN <user1> <user2> etc.."];
+                }
                 break;
-                
+            
             case CMD_BAN:
                 break;
                 
@@ -91,24 +99,66 @@
                 break;
                 
             case CMD_DEADMIN:
+                if ([messageComponents count] > 1) {
+                    IRCChannel *channel = (IRCChannel *)conversation;
+                    [messageComponents removeObjectAtIndex:0];
+                    [channel revokePrivilegieFromUsers:messageComponents toStatus:ADMIN onChannel:channel];
+                } else {
+                    [InputCommands incompleteParametersError:@"/DEADMIN <user1> <user2> etc.."];
+                }
                 break;
                 
             case CMD_DEHALFOP:
+                if ([messageComponents count] > 1) {
+                    IRCChannel *channel = (IRCChannel *)conversation;
+                    [messageComponents removeObjectAtIndex:0];
+                    [channel revokePrivilegieFromUsers:messageComponents toStatus:HALFOP onChannel:channel];
+                } else {
+                    [InputCommands incompleteParametersError:@"/DEHALFOP <user1> <user2> etc.."];
+                }
                 break;
                 
             case CMD_DEOP:
+                if ([messageComponents count] > 1) {
+                    IRCChannel *channel = (IRCChannel *)conversation;
+                    [messageComponents removeObjectAtIndex:0];
+                    [channel revokePrivilegieFromUsers:messageComponents toStatus:OPERATOR onChannel:channel];
+                } else {
+                    [InputCommands incompleteParametersError:@"/DEOP <user1> <user2> etc.."];
+                }
                 break;
                 
             case CMD_DEVOICE:
+                if ([messageComponents count] > 1) {
+                    IRCChannel *channel = (IRCChannel *)conversation;
+                    [messageComponents removeObjectAtIndex:0];
+                    [channel revokePrivilegieFromUsers:messageComponents toStatus:VOICE onChannel:channel];
+                } else {
+                    [InputCommands incompleteParametersError:@"/DEVOICE <user1> <user2> etc.."];
+                }
                 break;
                 
             case CMD_DEOWNER:
+                if ([messageComponents count] > 1) {
+                    IRCChannel *channel = (IRCChannel *)conversation;
+                    [messageComponents removeObjectAtIndex:0];
+                    [channel revokePrivilegieFromUsers:messageComponents toStatus:OWNER onChannel:channel];
+                } else {
+                    [InputCommands incompleteParametersError:@"/DEOWNER <user1> <user2> etc.."];
+                }
                 break;
                 
             case CMD_ECHO:
                 break;
                 
             case CMD_HALFOP:
+                if ([messageComponents count] > 1) {
+                    IRCChannel *channel = (IRCChannel *)conversation;
+                    [messageComponents removeObjectAtIndex:0];
+                    [channel givePrivilegieToUsers:messageComponents toStatus:HALFOP onChannel:channel];
+                } else {
+                    [InputCommands incompleteParametersError:@"/HALFOP <user1> <user2> etc.."];
+                }
                 break;
                 
             case CMD_REJOIN:
@@ -192,6 +242,23 @@
                 break;
                 
             case CMD_OP:
+                if ([messageComponents count] > 1) {
+                    IRCChannel *channel = (IRCChannel *)conversation;
+                    [messageComponents removeObjectAtIndex:0];
+                    [channel givePrivilegieToUsers:messageComponents toStatus:OPERATOR onChannel:channel];
+                } else {
+                    [InputCommands incompleteParametersError:@"/OP <user1> <user2> etc.."];
+                }
+                break;
+                
+            case CMD_OWNER:
+                if ([messageComponents count] > 1) {
+                    IRCChannel *channel = (IRCChannel *)conversation;
+                    [messageComponents removeObjectAtIndex:0];
+                    [channel revokePrivilegieFromUsers:messageComponents toStatus:OWNER onChannel:channel];
+                } else {
+                    [InputCommands incompleteParametersError:@"/OWNER <user1> <user2> etc.."];
+                }
                 break;
                 
             case CMD_QUERY:
@@ -217,6 +284,13 @@
                 break;
                 
             case CMD_VOICE:
+                if ([messageComponents count] > 1) {
+                    IRCChannel *channel = (IRCChannel *)conversation;
+                    [messageComponents removeObjectAtIndex:0];
+                    [channel givePrivilegieToUsers:messageComponents toStatus:VOICE onChannel:channel];
+                } else {
+                    [InputCommands incompleteParametersError:@"/VOICE <user1> <user2> etc.."];
+                }
                 break;
                 
             default:
@@ -276,6 +350,7 @@
         @"NICK",
         @"OP",
         @"NOTICE",
+        @"OWNER",
         @"PART",
         @"QUERY",
         @"QUIT",

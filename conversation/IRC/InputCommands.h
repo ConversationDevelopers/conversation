@@ -71,6 +71,7 @@ typedef NS_ENUM(NSUInteger, InputCommand) {
     CMD_NICK,
     CMD_OP,
     CMD_NOTICE,
+    CMD_OWNER,
     CMD_PART,
     CMD_QUERY,
     CMD_QUIT,
