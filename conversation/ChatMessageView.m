@@ -532,7 +532,9 @@ uint32_t FNV32(const char *s)
     if ([recognizer state] == UIGestureRecognizerStateEnded) {
         if (recognizer.view.frame.size.width < [[UIScreen mainScreen] bounds].size.width) {
             CGRect frame = recognizer.view.superview.frame;
-            recognizer.view.frame = frame;
+            [UIView animateWithDuration:0.3 animations:^{
+                recognizer.view.frame = frame;
+            }];
         }
     }
 }
