@@ -511,8 +511,21 @@ uint32_t FNV32(const char *s)
 
 - (void)hideImage:(UITapGestureRecognizer *)recognizer
 {
-    [recognizer.view removeFromSuperview];
-    [_containerView removeFromSuperview];
+    // Get absolute frame of preview image
+    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    CGRect frame;
+    for (int i=0; i < self.subviews.count; i++) {
+        if ([NSStringFromClass([self.subviews[i] class]) isEqualToString:@"DLImageView"] && i == (int)recognizer.view.tag) {
+            frame = [self.subviews[i] convertRect:[self.subviews[i] bounds] toView:controller.navigationController.view];
+        }
+    }
+    [UIView animateWithDuration:0.6 animations:^{
+        [recognizer.view setFrame:frame];
+        _containerView.alpha = 0.0;
+    } completion:^(BOOL finished){
+        [recognizer.view removeFromSuperview];
+        [_containerView removeFromSuperview];
+    }];
 }
 
 - (void)showImage:(UITapGestureRecognizer *)recognizer
@@ -541,7 +554,7 @@ uint32_t FNV32(const char *s)
         imageView.userInteractionEnabled = YES;
         imageView.image = preview.image;
     }
-    
+    imageView.tag = recognizer.view.tag;
     [controller.navigationController.view addSubview:_containerView];
     [controller.navigationController.view addSubview:imageView];
 
