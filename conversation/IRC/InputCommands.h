@@ -30,7 +30,12 @@
 
 #import <Foundation/Foundation.h>
 
+@class IRCConversation;
+@class IRCClient;
+
 @interface InputCommands : NSObject
+
++ (void)performCommand:(NSString *)message inConversation:(IRCConversation *)conversation onClient:(IRCClient *)client;
 
 + (NSUInteger)indexValueFromString:(NSString *)key;
 
