@@ -31,8 +31,8 @@
 #import "ChatViewController.h"
 #import "ChatMessageView.h"
 #import "IRCMessage.h"
-#import "IRCCommands.h"
 #import "UserListView.h"
+#import "InputCommands.h"
 
 @interface ChatViewController ()
 @property (nonatomic) BOOL userlistIsVisible;
@@ -250,7 +250,11 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)sendMessage:(NSString *)message
 {
-    [IRCCommands sendMessage:message toRecipient:_conversation.name onClient:_conversation.client];
+    if ([message hasPrefix:@"/"])
+        [InputCommands performCommand:[message substringFromIndex:1] inConversation:_conversation];
+    else
+        [InputCommands sendMessage:message toRecipient:_conversation.name onClient:_conversation.client];
+    
     IRCMessage *ircmsg = [[IRCMessage alloc] initWithMessage:message
                                                        OfType:ET_PRIVMSG
                                                inConversation:_conversation
