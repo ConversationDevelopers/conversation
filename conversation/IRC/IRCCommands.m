@@ -68,4 +68,23 @@
     [client.connection send:[NSString stringWithFormat:@"NICK %@", nickname]];
 }
 
++ (void)leaveChannel:(NSString *)channel withMessage:(NSString *)message onClient:(IRCClient *)client
+{
+    if (message == nil || [message length] == 0) {
+        message = client.configuration.channelDepartMessage;
+    }
+    [client.connection send:[NSString stringWithFormat:@"PART %@ %@", channel, message]];
+}
+
++ (void)joinChannel:(NSString *)channel onClient:(IRCClient *)client
+{
+    [client.connection send:[NSString stringWithFormat:@"JOIN %@", channel]];
+}
+
++ (void)rejoinChannel:(NSString *)channel withMessage:(NSString *)message onClient:(IRCClient *)client
+{
+    [IRCCommands leaveChannel:channel withMessage:message onClient:client];
+    [IRCCommands joinChannel:channel onClient:client];
+}
+
 @end

@@ -163,6 +163,22 @@
                 
             case CMD_REJOIN:
             case CMD_HOP:
+                if ([messageComponents count] > 1) {
+                    NSString *channel = messageComponents[1];
+                    NSString *partMessage = nil;
+                    
+                    if ([messageComponents count] > 2) {
+                        NSRange range;
+                        range.location = 0;
+                        range.length = 2;
+                        [messageComponents removeObjectsInRange:range];
+                        
+                        partMessage = [messageComponents componentsJoinedByString:@" "];
+                    }
+                    [IRCCommands rejoinChannel:channel withMessage:partMessage onClient:conversation.client];
+                } else {
+                    [IRCCommands rejoinChannel:[conversation name] withMessage:nil onClient:conversation.client];
+                }
                 break;
                 
             case CMD_J:
@@ -179,6 +195,22 @@
                 
             case CMD_PART:
             case CMD_LEAVE:
+                if ([messageComponents count] > 1) {
+                    NSString *channel = messageComponents[1];
+                    NSString *partMessage = nil;
+                    
+                    if ([messageComponents count] > 2) {
+                        NSRange range;
+                        range.location = 0;
+                        range.length = 2;
+                        [messageComponents removeObjectsInRange:range];
+                        
+                        partMessage = [messageComponents componentsJoinedByString:@" "];
+                    }
+                    [IRCCommands leaveChannel:channel withMessage:message onClient:conversation.client];
+                } else {
+                    [IRCCommands leaveChannel:[conversation name] withMessage:nil onClient:conversation.client];
+                }
                 break;
                 
             case CMD_ME:

@@ -39,5 +39,8 @@
 + (void)sendNotice:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client;
 + (void)sendCTCPReply:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client;
 + (void)changeNicknameToNick:(NSString *)nickname onClient:(IRCClient *)client;
++ (void)leaveChannel:(NSString *)channel withMessage:(NSString *)message onClient:(IRCClient *)client;
++ (void)joinChannel:(NSString *)channel onClient:(IRCClient *)client;
++ (void)rejoinChannel:(NSString *)channel withMessage:(NSString *)message onClient:(IRCClient *)client;
 
 @end
