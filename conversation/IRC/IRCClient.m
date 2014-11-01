@@ -86,6 +86,8 @@
         self.isBNCConnection =                  NO;
         self.isProcessingTermination =          NO;
         
+        /* Initialise default usermode characters. All servers should send a PREFIX attribute with their initial
+         RPL_ISUPPORT message, but in case some poorly designed server does not, we will attempt to use these. */
         self.ircopUserModeCharacter    = "!";
         self.ownerUserModeCharacter    = "~";
         self.adminUserModeCharacter    = "&";
@@ -124,12 +126,14 @@
     self.isAttemptingConnection = NO;
     self.isAttemptingRegistration = YES;
     
+    /* Set the object that identifies ourselves as a user. We should avoid using this object at this
+     stage because it is lacking important information passed by the server at a later point. */
     self.currentUserOnConnection = [[IRCUser alloc] initWithNickname:self.configuration.primaryNickname
                                                          andUsername:self.configuration.usernameForRegistration
                                                          andHostname:@""
                                                             onClient:self];
     
-    /* Send initial registration */
+    /* Send server password if applicable */
     if ([self.configuration.serverPasswordReference length] > 0) {
         NSString *password = [SSKeychain passwordForService:@"conversation" account:self.configuration.serverPasswordReference];
         if (password != nil && [password length] > 0) {
@@ -139,9 +143,11 @@
         }
     }
     
+    /* Request the IRCv3 capabilities of this server. If supported, initial registration will
+     be temporarily halted while we negotiate. */
     [self.connection send:@"CAP LS"];
     
-    
+    /* Send initial registration to the server with our user information */
     [IRCCommands changeNicknameToNick:self.configuration.primaryNickname onClient:self];
     [self.connection send:[NSString stringWithFormat:@"USER %@ 0 * :%@",
                     self.configuration.usernameForRegistration,
@@ -163,13 +169,16 @@
     /* Make a copy of the full message string */
     lineBeforeIteration = line;
     
-    /* This message starts with a message tag ( http://ircv3.atheme.org/specification/message-tags-3.2 ) */
     NSMutableDictionary *tagsList = [[NSMutableDictionary alloc] init];
     if (*line == '@') {
+        /* This message starts with a message tag ( http://ircv3.atheme.org/specification/message-tags-3.2 ) */
+        
         line++;
         lineBeforeIteration++;
         
         int tagsLength = 0;
+        
+        /* Pass over the message until we reach a space. This will be our list of tags in this message. */
         while (*line != ' ' && *line != '\0') {
             line++;
             tagsLength++;
@@ -179,14 +188,19 @@
         strncpy(tags, lineBeforeIteration, tagsLength);
         tags[tagsLength] = '\0';
         
+        /* Tags are seperated by semi-colons (;) so we will parse them accordingly. Usually there is only one
+         tag per message, but NSString handles this for us. */
         NSString *tagsString = [NSString stringWithCString:tags usingEncodingPreference:self.configuration];
         NSArray *seperatedTags = [tagsString componentsSeparatedByString:@";"];
         
         for (NSString *tag in seperatedTags) {
             if ([tag containsString:@"="]) {
+                /* This tag has a value. We will save the key and value into the dictionary. */
                 NSArray *components = [tag componentsSeparatedByString:@"="];
                 [tagsList setObject:components[1] forKey:components[0]];
             } else {
+                /* This tag does not have a value, only a key. We will save it in the dictionary 
+                 with a default value of "1" */
                 [tagsList setObject:@"1" forKey:tag];
             }
         }
@@ -406,13 +420,22 @@
             
         case RPL_WELCOME:
             self.isAttemptingRegistration = NO;
+            
+            /* The user might have some queries open from last time. Check if any of these users
+             are currently online, and update their list items */
             [self validateQueryStatusOnAllItems];
+            
+            /* At this point we will enable the flood control. */
             [self.connection enableFloodControl];
             
+            /* This server supports the ZNC advanced playback module. We will request all messages since the
+             last time we received a message. Or from the start of the ZNC logs if we don't have a time on record. */
             if ([self.ircv3CapabilitiesSupportedByServer indexOfObject:@"znc.in/playback"] != NSNotFound) {
                 [IRCCommands sendMessage:[NSString stringWithFormat:@"PLAY * %ld", self.configuration.lastMessageTime] toRecipient:@"*playback" onClient:self];
             }
             
+            /* We can enable autojoin at this point as long as the user does not wish us to authenticate with nickserv.
+             If this is the case we will wait until authentication is complete. */
             if (self.configuration.useServerAuthenticationService == NO) {
                 [self autojoin];
             }
@@ -550,6 +573,10 @@
     if (prefixString) {
         const char* prefixes = [prefixString UTF8String];
         prefixes++;
+        
+        /* The prefixes are sent to us in a manner that looks like: (yqaohv)!~&@%+
+         with the latter characters being example characters. Some servers may only be
+         using a few of the modes, for example "ohv" (Op, halfop, voice). */
         const char* prefixIdentifier = prefixes;
         while (*prefixes != ')' && *prefixes != '\0') {
             prefixes++;
@@ -644,6 +671,8 @@
 
 - (void)clearStatus
 {
+    /* The client has disconnected, we must clear all information related to an active connection in case of a possible reconnection attempt.
+     Failure to do so may result in conflictin or incorrect information. */
     self.isConnected =                      NO;
     self.isAttemptingRegistration =         NO;
     self.isAttemptingConnection =           NO;
@@ -668,6 +697,8 @@
 
 - (BOOL)isConnectedAndCompleted
 {
+    /* Short hand method to judge whether the client is fully connected to the server and has completed all initial
+     connection work. This is the point where the user will just be online and chatting */
     if (self.isAttemptingRegistration ||  self.isAwaitingAuthenticationResponse || self.isProcessingTermination) return NO;
     
     return self.isConnected;
@@ -675,8 +706,10 @@
 
 - (void)validateQueryStatusOnAllItems
 {
+    /* There are no queries, no point in continuing. */
     if ([self.queries count] == 0) return;
     
+    /* We are not connected. Loop over all query items and ensure that they are set to an inactive state. */
     if (self.isConnected == NO) {
         for (IRCConversation *query in self.queries) {
             query.conversationPartnerIsOnline = NO;
@@ -686,6 +719,8 @@
         return;
     }
     
+    /* We are connected and have query items. We will generate and send an ISON command to the server to check which of these users are currently online.
+     The result of this request will be handled by the "clientReceivedISONResponse" method in the "Messages" class. */
     NSString *requestString = @"";
     for (IRCConversation *query in self.queries) {
         requestString = [requestString stringByAppendingString:[NSString stringWithFormat:@"%@ ", query.name]];
@@ -720,8 +755,11 @@
 
 - (NSMutableArray *)sortChannelItems
 {
+    /* Get a list of the channel prefixes allowed on this server. For example #& */
     NSCharacterSet *prefixes = [NSCharacterSet characterSetWithCharactersInString:[IRCClient getChannelPrefixCharacters:self]];
     
+    /* Remove prefix characters to avoid channels with multiple prefix characters from being bumped to the top
+     then sort the channels by name. */
     NSArray *sortedArray;
     sortedArray = [self.channels sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
         NSString *channel1 = [(IRCChannel *)a name];
@@ -730,31 +768,39 @@
         channel2 = [[channel2 componentsSeparatedByCharactersInSet:prefixes] componentsJoinedByString:@""];
         return [channel1 compare:channel2];
     }];
+    
+    /* Return the result */
     self.channels = [sortedArray mutableCopy];
     return self.channels;
 }
 
 - (NSMutableArray *)sortQueryItems
 {
+    /* Sort queries by name */
     NSArray *sortedArray;
     sortedArray = [self.queries sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
         NSString *query1 = [(IRCConversation *)a name];
         NSString *query2 = [(IRCConversation *)b name];
         return [query1 compare:query2];
     }];
+    
+    /* Return the result */
     self.queries = [sortedArray mutableCopy];
     return self.queries;
 }
 
 - (BOOL)addChannel:(IRCChannel *)channel
 {
+    /* Check if the channel we are trying to add already exists in order to avoid duplicates. */
     IRCChannel *channelExists = [IRCChannel fromString:channel.name withClient:self];
-    
     if (channelExists != nil) {
         return NO;
     }
+    
+    /* Add the channel to the channel list. */
     [self.channels addObject:channel];
     
+    /* If we are on an active connection we can join this channel immediately. */
     if ([self isConnectedAndCompleted]) {
         [self.connection send:[NSString stringWithFormat:@"JOIN %@", [channel name]]];
     }
@@ -764,8 +810,10 @@
 
 - (BOOL)removeChannel:(IRCChannel *)channel
 {
+    /* Remove the channel from our list. */
     IRCChannel *channelExists = [IRCChannel fromString:channel.name withClient:self];
     if (channelExists != nil) {
+        /* If we are on an active connection we will leave the channel immediately. */
         if ([channel isJoinedByUser]) {
             [self.connection send:[NSString stringWithFormat:@"PART %@ :%@", [channel name], [channel.client.configuration channelDepartMessage]]];
         }
@@ -777,14 +825,19 @@
 
 - (BOOL)addQuery:(IRCConversation *)query
 {
+    /* Check if the query we are trying to add already exists in order to avoid duplicates. */
     NSUInteger i = [self.queries indexOfObjectPassingTest:^BOOL(id element,NSUInteger idx,BOOL *stop) {
         return [[element name] isEqualToString:query.name];
     }];
     if (i != NSNotFound) {
         return NO;
     }
+    
+    /* Add the query to our list. */
     [self.queries addObject:query];
     
+    /* If we are on an active connection we will make a request to check if the user
+     we initiated a query with is currently online. */
     if ([self isConnectedAndCompleted]) {
         [self validateQueryStatusOnAllItems];
     }
@@ -794,6 +847,7 @@
 
 - (BOOL)removeQuery:(IRCConversation *)query
 {
+    /* Remove the query from our list */
     NSUInteger indexOfObject = [self.queries indexOfObject:query];
     if (indexOfObject != NSNotFound) {
         [self.queries removeObjectAtIndex:indexOfObject];
@@ -804,6 +858,9 @@
 
 - (void)autojoin
 {
+    /* Iterate each channel in our list which has autojoin enabled and send a join request.
+     We do not need to think about sending too many requests since this is taken care of by
+     our flood control. */
     for (IRCChannel *channel in self.channels) {
         if (channel.configuration.autoJoin) {
             [self.connection send:[NSString stringWithFormat:@"JOIN %@", channel.name]];
@@ -813,8 +870,11 @@
 
 + (NSDate *)getTimestampFromMessageTags:(NSMutableDictionary *)tags
 {
+    /* Parse the IRC server-time tags to get the actual time the message weas sent.
+     If this is not available we will use the curernt time. */
     NSString *timeObjectISO = [tags objectForKey:@"time"];
     if (timeObjectISO) {
+        /* This tag is using ISO8601. <http://xkcd.com/1179/> We will parse accordingly. */
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSZ"];
         NSLocale *posix = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
@@ -824,6 +884,7 @@
     
     NSString *timeObjectEpochTime = [tags objectForKey:@"t"];
     if (timeObjectEpochTime) {
+        /* This tag is using UNIX epoch time. <http://imgs.xkcd.com/comics/bug.png> Parse accordingly.*/
         NSTimeInterval epochTimeAsDouble = [timeObjectEpochTime doubleValue];
         return [NSDate dateWithTimeIntervalSince1970:epochTimeAsDouble];
     }

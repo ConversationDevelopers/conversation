@@ -54,6 +54,7 @@
         self.sslEnabled = NO;
         self.client = client;
         
+        /* Initialise dispatch queue used for parsing incoming data from this connection */
         NSString *queueName = [@"conversation-client-" stringByAppendingString:self.client.configuration.uniqueIdentifier];
         queue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_SERIAL);
         
@@ -70,9 +71,13 @@
 {
     self.sslEnabled = sslEnabled;
     NSError *err = nil;
+    
+    /* Initialise socket and ensure it uses our queue to operate off the UI thread */
     socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:queue];
     self.connectionHost = host;
     self.connectionPort = port;
+    
+    /* Establish a TCP connection */
     if (![socket connectToHost:host onPort:port error:&err]) {
         NSLog(@"Error: %@", err);
     } else {
@@ -84,6 +89,7 @@
 {
     NSLog(@"onSocket:%p didConnectToHost:%@ port:%hu", sock, host, port);
     
+    /* Start SSL/TLS handshake if appropriate */
     if (self.client.configuration.connectUsingSecureLayer) {
         NSMutableDictionary *settings = [NSMutableDictionary dictionaryWithCapacity:1];
         [settings setObject:@YES forKey:GCDAsyncSocketManuallyEvaluateTrust];
@@ -92,22 +98,28 @@
     
     [self.client clientDidConnect];
     
+    /* The server will probably send us some initial data, let's queue up a read immediately */
     [socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:1];
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didReceiveTrust:(SecTrustRef)trust completionHandler:(void (^)(BOOL shouldTrustPeer))completionHandler {
     
+    /* A TLS/SSL handshake has been initialised, let's verify the certificate. */
     SecTrustResultType trustResult;
     SecTrustEvaluate(trust, &trustResult);
     
     switch (trustResult) {
         case kSecTrustResultProceed:
         case kSecTrustResultUnspecified:
+            /* This certificate is completely valid, we can proceed with no further issue */
             completionHandler(YES);
             break;
             
         case kSecTrustResultInvalid:
         case kSecTrustResultRecoverableTrustFailure: {
+            /* An issue occured validating this certificate, it might have some mismatching information
+             or it is simply unsigned. Many users run small IRC users or bouncers on sunsigned certificates
+             so we will present this predicament to the user and let them decide what to do. */
             IRCCertificateTrust *trustDialog = [[IRCCertificateTrust alloc] init:trust onClient:self.client];
             [trustDialog requestTrustFromUser:completionHandler];
             break;
@@ -116,7 +128,9 @@
         case kSecTrustResultDeny:
         case kSecTrustResultFatalTrustFailure:
         case kSecTrustResultOtherError:
+            /* The ssl verification encountered an unrecoverable error. We will terminate the connection immediately. */
             completionHandler(NO);
+            [self.client disconnect];
             break;
     }
 }
@@ -132,6 +146,9 @@
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
     dispatch_async(queue, ^{
+        /* While the socket is supposed to only read to the next linebreak we may at some point
+         encounter a data overflow, therefor we will manually validate the input from the socket
+         and truncate the message at any potential linebreak before passing it to the parser */
         const char *bytes = [data bytes] + '\0';
         int positionOfLineBreak = 0;
         const char* positionBeforeIteration = bytes;
@@ -196,6 +213,9 @@
 }
 
 - (void)enableFloodControl {
+    /* Enable flood control. This will ensure no more than 5 messages every 2 seconds get sent over the connection.
+     This is necessary because many servers employ anti attack measures that will forcibly disconnect us if we overwhelm
+     the server with messages. */
     self.floodControlEnabled = YES;
     dispatch_async(dispatch_get_main_queue(), ^{
         self.floodControlTimer = [NSTimer scheduledTimerWithTimeInterval:floodControlInterval
@@ -207,12 +227,15 @@
 }
 
 - (void)disableFloodControl {
+    /* The flood control is no longer necessary. We will disable it.*/
     self.floodControlEnabled = NO;
     [self.floodControlTimer invalidate];
     self.floodControlTimer = nil;
 }
 
 - (void)floodTimerTick {
+    /* This method is activated by a time every two seconds. It will clear the message limit
+     and send any messages currently backlogged until the limit is reached again. */
     self.messagesSentSinceLastTick = 0;
     BOOL messageQueueIsSendingItems = YES;
     while (messageQueueIsSendingItems) {
@@ -222,22 +245,32 @@
 
 - (void)send:(NSString *)line
 {
+    /* Add the outgoing message to our queue and attempt to send it immediately. 
+     If the flood control is on a backlog it might not be sent right away. */
     [self.messageQueue addObject:line];
     [self continueSending];
 }
 
 - (BOOL)continueSending
 {
+    /* There are no messages in the queue, we have nothing to do. So we will let the queue handler know
+     the flood gates are open. */
     if ([self.messageQueue count] == 0) {
         return NO;
     }
     
     if (self.floodControlEnabled) {
+        /* We have reached the message limit, messages are now backloged until the next flood control tick. 
+         We wil llet the queue handler know it must stop attempting a send until the next tick. */
         if (self.messagesSentSinceLastTick > floodControlMessageLimit) {
             return NO;
         }
+        
         self.messagesSentSinceLastTick++;
     }
+    
+    /* We are under the message limit and are free to send the message to the server.
+     We will send it to the socket and clear it from the queue immediately. */
     NSString *queueItemToSend = [self.messageQueue objectAtIndex:0];
     [self sendData:queueItemToSend];
     [self.messageQueue removeObjectAtIndex:0];
