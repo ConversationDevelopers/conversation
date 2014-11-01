@@ -41,7 +41,7 @@
 {
     NSMutableArray *messageComponents = [[message componentsSeparatedByString:@" "] mutableCopy];
     if ([messageComponents count] > 0) {
-        InputCommand command = [InputCommands indexValueFromString:messageComponents[0]];
+        InputCommand command = [InputCommands indexValueFromString:[messageComponents[0] uppercaseString]];
         switch (command) {
             case CMD_ADMIN:
                 if ([messageComponents count] > 1) {
@@ -414,18 +414,14 @@
 
 + (NSUInteger)indexValueFromString:(NSString *)key
 {
-    NSUInteger indexFromArray = [[InputCommands inputCommandReference] indexOfObject:key];
-    if (indexFromArray) {
-        return indexFromArray;
-    }
-    return NSNotFound;
+    return [[InputCommands inputCommandReference] indexOfObject:key];
 }
 
 + (NSArray *)inputCommandReference
 {
     return @[
         @"ADMIN",
-        @"CMD_BAN",
+        @"BAN",
         @"CLEAR",
         @"CLEARALL",
         @"CLOSE",
