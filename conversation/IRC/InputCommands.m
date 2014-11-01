@@ -41,6 +41,114 @@
     if ([messageComponents count] > 0) {
         InputCommand command = [InputCommands indexValueFromString:messageComponents[0]];
         switch (command) {
+            case CMD_ADMIN:
+                break;
+                
+            case CMD_BAN:
+                break;
+                
+            case CMD_CLEAR:
+                break;
+                
+            case CMD_CLEARALL:
+                break;
+                
+            case CMD_CLOSE:
+                break;
+                
+            case CMD_CTCP:
+                break;
+                
+            case CMD_CTCPREPLY:
+                break;
+                
+            case CMD_DEADMIN:
+                break;
+                
+            case CMD_DEHALFOP:
+                break;
+                
+            case CMD_DEOP:
+                break;
+                
+            case CMD_DEVOICE:
+                break;
+                
+            case CMD_DEOWNER:
+                break;
+                
+            case CMD_ECHO:
+                break;
+                
+            case CMD_HALFOP:
+                break;
+                
+            case CMD_REJOIN:
+            case CMD_HOP:
+                break;
+                
+            case CMD_J:
+            case CMD_JOIN:
+                break;
+                
+            case CMD_K:
+            case CMD_KICK:
+                break;
+                
+            case CMD_KB:
+            case CMD_KICKBAN:
+                break;
+                
+            case CMD_PART:
+            case CMD_LEAVE:
+                break;
+                
+            case CMD_ME:
+                break;
+                
+            case CMD_MODE:
+                break;
+                
+            case CMD_MSG:
+                break;
+                
+            case CMD_MUTE:
+                break;
+                
+            case CMD_NICK:
+                break;
+                
+            case CMD_NOTICE:
+                break;
+                
+            case CMD_OP:
+                break;
+                
+            case CMD_QUERY:
+                break;
+                
+            case CMD_QUIT:
+                break;
+                
+            case CMD_QUOTE:
+            case CMD_RAW:
+                break;
+                
+            case CMD_TOPIC:
+                break;
+                
+            case CMD_UMODE:
+                break;
+                
+            case CMD_UNBAN:
+                break;
+                
+            case CMD_UNMUTE:
+                break;
+                
+            case CMD_VOICE:
+                break;
+                
             default:
                 [client.connection send:message];
                 break;
