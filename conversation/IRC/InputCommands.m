@@ -184,6 +184,12 @@
                 
             case CMD_J:
             case CMD_JOIN:
+                if ([messageComponents count] > 1) {
+                    NSString *channel = messageComponents[1];
+                    [IRCCommands joinChannel:channel onClient:conversation.client];
+                } else {
+                    [InputCommands incompleteParametersError:@"/JOIN <channel>"];
+                }
                 break;
                 
             case CMD_K:
