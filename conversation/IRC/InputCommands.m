@@ -108,7 +108,7 @@
                 if ([messageComponents count] > 1) {
                     [messageComponents removeObjectAtIndex:0];
                     NSString *message = [messageComponents componentsJoinedByString:@" "];
-                    [IRCCommands sendMessage:message toRecipient:[conversation name] onClient:client];
+                    [IRCCommands sendACTIONMessage:message toRecipient:[conversation name] onClient:client];
                 } else {
                     [InputCommands incompleteParametersError:@"/ME <action>"];
                 }
