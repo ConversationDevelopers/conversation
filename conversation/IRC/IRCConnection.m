@@ -53,6 +53,7 @@
     if ((self = [super init])) {
         self.sslEnabled = NO;
         self.client = client;
+        
         NSString *queueName = [@"conversation-client-" stringByAppendingString:self.client.configuration.uniqueIdentifier];
         queue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_SERIAL);
         
@@ -69,7 +70,7 @@
 {
     self.sslEnabled = sslEnabled;
     NSError *err = nil;
-    socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+    socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:queue];
     self.connectionHost = host;
     self.connectionPort = port;
     if (![socket connectToHost:host onPort:port error:&err]) {
