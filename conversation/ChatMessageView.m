@@ -90,6 +90,10 @@
         singleTapRecogniser.numberOfTouchesRequired = 1;
         singleTapRecogniser.numberOfTapsRequired = 1;
         [imageView addGestureRecognizer:singleTapRecogniser];
+        
+        UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(shareImage:)];
+        [imageView addGestureRecognizer:longPressRecognizer];
+        
         i++;
     }
 
@@ -539,6 +543,15 @@ uint32_t FNV32(const char *s)
     }
 }
 
+- (void)shareImage:(UILongPressGestureRecognizer *)recognizer
+{
+    UIImageView *imageView = (UIImageView *)recognizer.view;
+    UIImage *image = imageView.image;
+    UIActivityViewController *sharer = [[UIActivityViewController alloc] initWithActivityItems:@[image] applicationActivities:nil];
+    [[self viewController] presentViewController:sharer animated:YES completion:nil];
+
+}
+
 - (void)hideImage:(UITapGestureRecognizer *)recognizer
 {
     // Get absolute frame of preview image
@@ -625,4 +638,15 @@ uint32_t FNV32(const char *s)
         [pasteboard setValue:pasteString forPasteboardType:@"public.plain-text"];
     }
 }
+
+- (UIViewController *)viewController {
+    Class vcc = [UIViewController class];
+    UIResponder *responder = self;
+    while ((responder = [responder nextResponder]))
+        if ([responder isKindOfClass: vcc])
+            return (UIViewController *)responder;
+    
+    return nil;
+}
+
 @end
