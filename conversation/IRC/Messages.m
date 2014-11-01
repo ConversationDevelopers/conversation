@@ -41,10 +41,14 @@
 
 + (void)clientReceivedAuthenticationMessage:(const char*)message onClient:(IRCClient *)client
 {
+    /* This method is called when the client has received an authentication SASL request from the server under initial negotiation. */
     if (client.isAwaitingAuthenticationResponse) {
         if (client.configuration.authenticationPasswordReference) {
+            /* Retrieve the appropriate password from keychain using our identifier from the user's preferences */
             NSString *password = [SSKeychain passwordForService:@"conversation" account:client.configuration.authenticationPasswordReference];
             if (password != nil && [password length] > 0) {
+                /* Send authentication to the server. As of now we only support SASL PLAIN authentication. Which is username username password encoded
+                 in base64 separated by an ASCII null termination character. */
                 NSData *authenticationStringAsBinaryData = [[NSString stringWithFormat:@"%@\0%@\0%@",
                                                              client.configuration.usernameForRegistration,
                                                              client.configuration.usernameForRegistration,
@@ -54,33 +58,43 @@
                 [client.connection send:[NSString stringWithFormat:@"AUTHENTICATE %@", [authenticationStringAsBinaryData base64EncodedStringWithOptions:0]]];
                 return;
             } else {
+                /* We had a reference to an item in keychain but the keychain item didn't exist for some reason.
+                 We will act like there is no password saved and abort authentication. */
                 NSLog(@"An authentication password reference was found but no password: %@", client.configuration.authenticationPasswordReference);
             }
         }
     }
+    /* Authentication was unsuccessful somewhere earlier in the method so we will abort authentication.*/
     [client.connection send:@"CAP END"];
 }
 
 + (void)clientReceivedAuthenticationAccepted:(const char*)message onClient:(IRCClient *)client
 {
+    /* Our password has bene accepted by SASL and we can end the authentication process and continue registration */
     client.isAwaitingAuthenticationResponse = NO;
     [client.connection send:@"CAP END"];
 }
 
 + (void)clientreceivedAuthenticationAborted:(const char *)message onClient:(IRCClient *)client
 {
+    /* Authentication was aborted either by the servers actions or ours. We will continue registration as normal. */
     client.isAwaitingAuthenticationResponse = NO;
 }
 
 + (void)clientReceivedAuthenticationError:(const char*)message onClient:(IRCClient *)client
 {
+    /* SASL has rejected our authentication attempt, the username, password, or authentication method is wrong.
+    We will stop attempting authentication at this point and just try again with nickserv if possible at a later stage. */
     [client.connection send:@"CAP END"];
 }
 
 + (void)clientReceivedCAPMessage:(const char *)message onClient:(IRCClient *)client
 {
+    /* Client received An IRCv3 CAP message. We will parse the message and find out what command it is sending. */
     const char* messageBeforeIteration = message;
     int lengthOfCommand = 0;
+    
+    /* Iterate until the next space and copy it to our command string. */
     while (*message != ' ' && *message != '\0') {
         lengthOfCommand++;
         message++;
@@ -91,32 +105,40 @@
     
     messageBeforeIteration = message;
     
+    /* The message may be a single word command, but in case it is not, let's continue parsing past the next space. */
     if (*message != '\0') {
         message++;
         messageBeforeIteration++;
         
+        /* This next bit may be prefixed by an ':' let's consume it. */
         if (*message == ':') {
             message++;
             messageBeforeIteration++;
         }
     }
     
+    /* Parse the command we retrived and call the appropriate method. */
     NSString *capCommandString = [NSString stringWithCString:capCommand usingEncodingPreference:client.configuration];
     CapMessageType capIndexValue = [IRCMessageIndex capIndexValueFromString:capCommandString];
     switch (capIndexValue) {
         case CAP_LS:
+            /* The server has returned a list of capabilities. We will call the method to negotiate these with the server. */
             [Messages clientReceivedListOfServerIRCv3Capabilities:message onClient:client];
             break;
             
         case CAP_ACK:
+            /* The server has accepted our requested list of capabilities. */
             [Messages clientReceivedAcknowledgedCapabilities:message onClient:client];
             break;
             
         case CAP_NAK:
+            /* The server has rejected our requested list of capabilities. It is not worth wasting time trying to negotiate why so let's just
+             end negotiating and connect in IRCv2 mode. */
             [client.connection send:@"CAP END"];
             break;
             
         case CAP_CLEAR:
+            /* The server has asked us to clear our IRCv3 capabilities. Possibly in await for a new list of capabilities. */
             client.ircv3CapabilitiesSupportedByServer = [[NSMutableArray alloc] init];
             break;
             
@@ -128,30 +150,39 @@
 
 + (void)clientReceivedListOfServerIRCv3Capabilities:(const char *)capabilities onClient:(IRCClient *)client
 {
+    /* The server has sent us a list of capabilities, these capabilities are delimited by a space. We will seperate them into an array
+     and parse them accordingly. */
     NSString *capabilitiesString = [NSString stringWithCString:capabilities usingEncodingPreference:client.configuration];
     NSArray *capabilitiesList = [capabilitiesString componentsSeparatedByString:@" "];
     
-    
     NSMutableArray *capabilitiesToNegotiate = [[NSMutableArray alloc] init];
     for (NSString *capability in capabilitiesList) {
+        /* Check if our application supports this capability, if it does we will add it to the list of capabilities to request later */
         if ([[IRCClient IRCv3CapabilitiesSupportedByApplication] indexOfObject:capability] != NSNotFound) {
             [capabilitiesToNegotiate addObject:capability];
         }
     }
+    
     if ([capabilitiesToNegotiate count] > 0) {
+        /* We were able to find at least one IRCv3 capability that both our application and the server supports. We will request them. */
         NSString *negotiateCapabilitiesString = [capabilitiesToNegotiate componentsJoinedByString:@" "];
         [client.connection send:[NSString stringWithFormat:@"CAP REQ :%@", negotiateCapabilitiesString]];
     } else {
+        /* We couldn't agree on any feature set to use :( End negotiation and continue registration */
         [client.connection send:@"CAP END"];
     }
 }
 
 + (void)clientReceivedAcknowledgedCapabilities:(const char*)capabilities onClient:(IRCClient *)client
 {
+    /* The server accepted our requested list of capabilities to enable. Let's add them to our list so other parts of 
+     the application are aware of them being turned on. */
     NSString *capabilitiesString = [NSString stringWithCString:capabilities usingEncodingPreference:client.configuration];
     NSArray *capabilitiesList = [capabilitiesString componentsSeparatedByString:@" "];
     client.ircv3CapabilitiesSupportedByServer = [capabilitiesList mutableCopy];
+    
     if ([client.ircv3CapabilitiesSupportedByServer indexOfObject:@"sasl"] != NSNotFound) {
+        /* This server supports SASL based authentication. We will atttempt to use it if applicable. */
         NSString *password = [SSKeychain passwordForService:@"conversation" account:client.configuration.authenticationPasswordReference];
         if (password != nil && [password length] > 0) {
             client.isAwaitingAuthenticationResponse = YES;
@@ -159,6 +190,7 @@
             return;
         }
     }
+    /* there is nothing more for us to do. End negotiation and continue registration. */
     [client.connection send:@"CAP END"];
 }
 
@@ -171,7 +203,11 @@
     }
     
     NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:[client configuration]];
+    
+    /* Get the timestamp from the message or create one if it is not available. */
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    
+    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
     client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
     
     /* Check if this message is a channel message or a private message */
@@ -184,11 +220,13 @@
             sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
         }
         
+        /* This is a message by the ZNC buffextras module. We will send it off to be parsed and not show this message as a channel message */
         if ([[sender nick] isEqualToString:@"*buffextras"]) {
             [znc_buffextras messageWithBufferString:message onChannel:channel onClient:client withTags:tags];
             return;
         }
         
+        /* Create an IRCMessage object and add it to the chat buffer. */
         NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
         IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
                                                            OfType:ET_PRIVMSG
@@ -201,6 +239,7 @@
         IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
         IRCConversation *conversation = [IRCConversation getConversationOrCreate:sender.nick onClient:client];
         
+        /* Create an IRCMessage object and add it to the chat buffer */
         NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
         IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
                                                            OfType:ET_PRIVMSG
@@ -251,7 +290,11 @@
     }
     NSString *messageString = [NSString stringWithCString:messageCopy usingEncodingPreference:client.configuration];
     NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:client.configuration];
+    
+    /* Get the timestamp from the message or create one if it is not available. */
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    
+    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
     client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
     
     if ([recipientString isValidChannelName:client]) {
@@ -262,6 +305,7 @@
             sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
         }
         
+        /* Create an IRCMessage object and add it to the chat buffer. */
         IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
                                                            OfType:ET_CTCP
                                                    inConversation:channel
@@ -272,6 +316,7 @@
         IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
         IRCConversation *conversation = [IRCConversation getConversationOrCreate:sender.nick onClient:client];
         
+        /* Create an IRCMessage object and add it to the chat buffer. */
         NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
         IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
                                                            OfType:ET_CTCP
@@ -289,15 +334,18 @@
     NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:[client configuration]];
     IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
     
+    /* Get the timestamp from the message or create one if it is not available. */
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    
+    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
     client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
-    /* TODO: handle timestamps */
     
     /* Check if this message is a channel message or a private message */
     if ([recipientString isValidChannelName:client]) {
         /* Get the channel object associated with this channel */
         IRCChannel *channel = [IRCChannel getChannelOrCreate:recipientString onClient:client];
         
+        /* Create an IRCMessage object and add it to the chat buffer. */
         NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
         IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
                                                            OfType:ET_ACTION
@@ -309,6 +357,7 @@
     } else {
         IRCConversation *conversation = [IRCConversation getConversationOrCreate:recipientString onClient:client];
         
+        /* Create an IRCMessage object and add it to the chat buffer. */
         NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
         IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
                                                            OfType:ET_ACTION
@@ -328,7 +377,11 @@
     }
     
     NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:[client configuration]];
+    
+    /* Get the timestamp from the message or create one if it is not available. */
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    
+    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
     client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
     
     int messageType = isServer ? ET_SERVERNOTICE : ET_NOTICE;
@@ -343,7 +396,7 @@
             sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
         }
         
-        
+        /* Create an IRCMessage object and add it to the chat buffer. */
         NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
         IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
                                                            OfType:messageType
@@ -358,6 +411,8 @@
         if (messageType != ET_SERVERNOTICE) {
             conversation = [IRCConversation getConversationOrCreate:sender.nick onClient:client];
         }
+        
+        /* Create an IRCMessage object and add it to the chat buffer. */
         NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
         IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
                                                            OfType:messageType
@@ -377,7 +432,11 @@
 {
     NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
     NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:client.configuration];
+    
+    /* Get the timestamp from the message or create one if it is not available. */
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    
+    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
     client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
     
     if ([recipientString isValidChannelName:client]) {
@@ -388,6 +447,7 @@
             sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
         }
         
+        /* Create an IRCMessage object and add it to the chat buffer. */
         IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
                                                            OfType:ET_CTCPREPLY
                                                    inConversation:channel
@@ -398,6 +458,7 @@
         IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
         IRCConversation *conversation = [IRCConversation getConversationOrCreate:sender.nick onClient:client];
         
+        /* Create an IRCMessage object and add it to the chat buffer. */
         NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
         IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
                                                            OfType:ET_CTCPREPLY
@@ -425,9 +486,13 @@
         });
     }
     
+    /* Get the timestamp from the message or create one if it is not available. */
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    
+    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
     client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
     
+    /* Create an IRCMessage object and add it to the chat buffer. */
     IRCMessage *message = [[IRCMessage alloc] initWithMessage:nil
                                                        OfType:ET_JOIN
                                                inConversation:channel
@@ -458,11 +523,15 @@
         [[channel users] removeObject:channel];
     }
     
+    /* Get the timestamp from the message or create one if it is not available. */
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    
+    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
     client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
     
     NSString *partMessage = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
     
+    /* Create an IRCMessage object and add it to the chat buffer. */
     IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:partMessage
                                                        OfType:ET_PART
                                                inConversation:channel
@@ -480,8 +549,12 @@
         client.currentUserOnConnection.hostname =   [NSString stringWithCString:senderDict[2] usingEncodingPreference:client.configuration];
     }
     
+    /* Get the timestamp from the message or create one if it is not available. */
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    
+    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
     client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
+    
     NSString *newNickString = [NSString stringWithCString:newNick usingEncodingPreference:client.configuration];
     
     for (IRCChannel *channel in [client getChannels]) {
@@ -492,6 +565,7 @@
             [channel.users addObject:userOnChannel];
             [channel sortUserlist];
             
+            /* Create an IRCMessage object and add it to the chat buffer. */
             IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:newNickString
                                                                      OfType:ET_NICK
                                                              inConversation:channel
@@ -510,6 +584,7 @@
             [[client getQueries] removeObject:conversation];
             [[client getQueries] addObject:conversationWithChanges];
             
+            /* Create an IRCMessage object and add it to the chat buffer. */
             IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:newNickString
                                                                      OfType:ET_NICK
                                                              inConversation:conversation
@@ -561,8 +636,14 @@
     }
     
     NSString *kickMessage = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
+    
+    /* Get the timestamp from the message or create one if it is not available. */
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
     
+    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
+    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
+    
+    /* Create an IRCMessage object and add it to the chat buffer. */
     IRCKickMessage *messageObject = [[IRCKickMessage alloc] initWithMessage:kickMessage
                                                              inConversation:channel
                                                                  kickedUser:kickedUser
@@ -582,12 +663,16 @@
     IRCUser *user = [[IRCUser alloc] initWithNickname:nickString andUsername:userString andHostname:hostString onClient:client];
     
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    
+    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
     client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
     
     for (IRCChannel *channel in [client getChannels]) {
         IRCUser *userOnChannel = [IRCUser fromNickname:senderDict[0] onChannel:channel];
         if (userOnChannel) {
             [channel removeUserByName:[userOnChannel nick]];
+            
+            /* Create an IRCMessage object and add it to the chat buffer. */
             IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:quitMessage
                                                                      OfType:ET_QUIT
                                                              inConversation:channel
@@ -606,6 +691,7 @@
             [[client getQueries] removeObject:conversation];
             [[client getQueries] addObject:conversationWithChanges];
             
+            /* Create an IRCMessage object and add it to the chat buffer. */
             IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:quitMessage
                                                                          OfType:ET_QUIT
                                                                  inConversation:conversation
