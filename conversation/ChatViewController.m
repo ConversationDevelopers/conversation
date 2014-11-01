@@ -252,16 +252,18 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 {
     if ([message hasPrefix:@"/"])
         [InputCommands performCommand:[message substringFromIndex:1] inConversation:_conversation];
-    else
+    else {
         [InputCommands sendMessage:message toRecipient:_conversation.name onClient:_conversation.client];
+        
+        IRCMessage *ircmsg = [[IRCMessage alloc] initWithMessage:message
+                                                          OfType:ET_PRIVMSG
+                                                  inConversation:_conversation
+                                                        bySender:_conversation.client.currentUserOnConnection
+                                                          atTime:[NSDate date]];
+        [self addMessage:ircmsg];
+        [_conversation.messages addObject:ircmsg];
+    }
     
-    IRCMessage *ircmsg = [[IRCMessage alloc] initWithMessage:message
-                                                       OfType:ET_PRIVMSG
-                                               inConversation:_conversation
-                                                     bySender:_conversation.client.currentUserOnConnection
-                                                       atTime:[NSDate date]];
-    [self addMessage:ircmsg];
-    [_conversation.messages addObject:ircmsg];
     [_composeBarView setText:@"" animated:YES];
 
 }
