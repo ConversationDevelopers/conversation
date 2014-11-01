@@ -349,6 +349,13 @@
                 
             case CMD_QUOTE:
             case CMD_RAW:
+                if ([messageComponents count] > 1) {
+                    [messageComponents removeObjectAtIndex:0];
+                    NSString *commandString = [messageComponents componentsJoinedByString:@" "];
+                    [conversation.client.connection send:commandString];
+                } else {
+                    [InputCommands incompleteParametersError:command withParameters:@"<command>"];
+                }
                 break;
                 
             case CMD_TIMER:
