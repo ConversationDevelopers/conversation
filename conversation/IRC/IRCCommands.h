@@ -42,5 +42,6 @@
 + (void)leaveChannel:(NSString *)channel withMessage:(NSString *)message onClient:(IRCClient *)client;
 + (void)joinChannel:(NSString *)channel onClient:(IRCClient *)client;
 + (void)rejoinChannel:(NSString *)channel withMessage:(NSString *)message onClient:(IRCClient *)client;
++ (void)onTimer:(float)seconds runCommand:(NSString *)command inConversation:(IRCConversation *)conversation;
 
 @end

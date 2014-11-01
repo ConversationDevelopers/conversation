@@ -310,6 +310,21 @@
             case CMD_RAW:
                 break;
                 
+            case CMD_TIMER:
+                if ([messageComponents count] > 2) {
+                    float seconds = [messageComponents[1] floatValue];
+                    
+                    NSRange range;
+                    range.location = 0;
+                    range.length = 2;
+                    [messageComponents removeObjectsInRange:range];
+                    NSString *commandMessage = [messageComponents componentsJoinedByString:@" "];
+                    [IRCCommands onTimer:seconds runCommand:commandMessage inConversation:conversation];
+                } else {
+                    [InputCommands incompleteParametersError:@"/TIMER <seconds> <command>"];
+                }
+                break;
+                
             case CMD_TOPIC:
                 break;
                 
@@ -397,6 +412,7 @@
         @"QUOTE",
         @"RAW",
         @"REJOIN",
+        @"TIMER",
         @"TOPIC",
         @"VOICE",
         @"UMODE",

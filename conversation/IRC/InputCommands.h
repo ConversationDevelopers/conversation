@@ -79,6 +79,7 @@ typedef NS_ENUM(NSUInteger, InputCommand) {
     CMD_QUOTE,
     CMD_RAW,
     CMD_REJOIN,
+    CMD_TIMER,
     CMD_TOPIC,
     CMD_VOICE,
     CMD_UMODE,

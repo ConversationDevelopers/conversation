@@ -87,4 +87,16 @@
     [IRCCommands joinChannel:channel onClient:client];
 }
 
++ (void)onTimer:(float)seconds runCommand:(NSString *)command inConversation:(IRCConversation *)conversation
+{
+    SEL selector = @selector(performCommand:inConversation:);
+    NSMethodSignature *signature = [self methodSignatureForSelector:selector];
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+    [invocation setTarget:[InputCommands class]];
+    [invocation setSelector:selector];
+    [invocation setArgument:&command atIndex:2];
+    [invocation setArgument:&conversation atIndex:3];
+    [NSTimer scheduledTimerWithTimeInterval:seconds invocation:invocation repeats:NO];
+}
+
 @end
