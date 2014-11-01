@@ -35,7 +35,7 @@
 #import <YLGIFImage/YLGIFImage.h>
 #import <YLGIFImage/YLImageView.h>
 #import "LinkTapView.h"
-#import <string.h>
+#import "NSString+Methods.h"
 
 #define FNV_PRIME_32 16777619
 #define FNV_OFFSET_32 2166136261U
@@ -284,20 +284,39 @@ uint32_t FNV32(const char *s)
 
 - (NSAttributedString *)setLinks:(NSString *)string
 {
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+    NSMutableArray *ranges = [[NSMutableArray alloc] init];
+    NSMutableArray *offsets = [[NSMutableArray alloc] init];
+    NSMutableArray *links = [[NSMutableArray alloc] init];
     NSDataDetector* detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
-    NSArray* matches = [detector matchesInString:string options:0 range:NSMakeRange(0, [string length])];
+    NSArray *matches = [detector matchesInString:string options:0 range:NSMakeRange(0, [string length])];
+    NSString *truncatedString = [string mutableCopy];
     for (NSTextCheckingResult *match in matches) {
         NSRange matchRange = [match range];
+        NSURL *url = [match URL];
         if ([match resultType] == NSTextCheckingTypeLink) {
-            NSURL *url = [match URL];
-            [attributedString addAttribute:NSLinkAttributeName value:url range:matchRange];
-            [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:matchRange];
+            NSString *replace = [[NSString stringWithString:url.absoluteString] stringByTruncatingToWidth:250.0
+                                                                                           withAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12.0]}];
+            
+            truncatedString = [truncatedString stringByReplacingOccurrencesOfString:url.absoluteString withString:replace];
+            [ranges addObject:[NSValue valueWithRange:NSMakeRange(matchRange.location, replace.length)]];
+            [offsets addObject:[NSNumber numberWithInteger:url.absoluteString.length-replace.length]];
+            [links addObject:url];
+
             if ([self isImageLink:url])
                 [_images addObject:[self getImageLink:url]];
         }
     }
-    
+
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:truncatedString];
+
+    int offset = 0;
+    for (int i=0; i<ranges.count; i++) {
+        NSRange range = [ranges[i] rangeValue];
+        [attributedString addAttribute:NSLinkAttributeName value:links[i] range:NSMakeRange(range.location-offset, range.length)];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(range.location-offset, range.length)];
+        offset += [offsets[i] intValue];
+    }
+
     return attributedString;
     
 }
@@ -425,10 +444,9 @@ uint32_t FNV32(const char *s)
             break;
         }
         case ET_PRIVMSG: {
-            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@%@\n%@", status, user.nick, msg]];
-
-            string = [[self setLinks:string.string] mutableCopy];
             
+            string = [[NSMutableAttributedString alloc] initWithAttributedString:[self setLinks:[NSString stringWithFormat:@"%@%@\n%@", status, user.nick, msg]]];
+
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
             [string addAttribute:NSParagraphStyleAttributeName
@@ -445,7 +463,8 @@ uint32_t FNV32(const char *s)
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont systemFontOfSize:12.0]
-                           range:NSMakeRange(status.length+user.nick.length+1, msg.length)];
+                           range:NSMakeRange(status.length+user.nick.length+1, string.length-status.length-user.nick.length-1)];
+
             break;
         }
         default: {

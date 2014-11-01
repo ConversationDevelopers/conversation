@@ -29,6 +29,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "IRCConnectionConfiguration.h"
 
 @class IRCClient;
@@ -40,6 +41,8 @@
 - (BOOL) isValidNickname:(IRCClient *)client;
 - (BOOL) isValidUsername;
 - (NSData *)dataUsingEncodingFromConfiguration:(IRCConnectionConfiguration *)configuration;
+
+- (NSString*)stringByTruncatingToWidth:(CGFloat)width withAttributes:(NSDictionary *)attributes;
 
 + (NSString *) stringWithCString:(const char *)string usingEncodingPreference:(IRCConnectionConfiguration *)configuration;
 

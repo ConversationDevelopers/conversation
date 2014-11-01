@@ -185,4 +185,29 @@
     return [self dataUsingEncoding:encoding allowLossyConversion:NO];
 }
 
+- (NSString*)stringByTruncatingToWidth:(CGFloat)width withAttributes:(NSDictionary *)attributes
+{
+    NSString *ellipsis = @"…";
+    NSMutableString *truncatedString = [self mutableCopy];
+    
+    // Make sure string is longer than requested width
+    if ([self sizeWithAttributes:attributes].width > width) {
+        width -= [ellipsis sizeWithAttributes:attributes].width;
+        NSRange range = {floor(truncatedString.length / 2), 1};
+
+        // Loop, deleting characters until string fits within width
+        while ([truncatedString sizeWithAttributes:attributes].width > width) {
+
+            // Delete character at the middle
+            [truncatedString deleteCharactersInRange:range];
+            range.location = floor(truncatedString.length / 2)-floor(range.length / 2);
+            range.length++;
+        }
+        
+        [truncatedString replaceCharactersInRange:range withString:ellipsis];
+    }
+    
+    return truncatedString;
+}
+
 @end
