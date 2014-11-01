@@ -73,7 +73,7 @@
     NSError *err = nil;
     
     /* Initialise socket and ensure it uses our queue to operate off the UI thread */
-    socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:queue];
+    socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
     self.connectionHost = host;
     self.connectionPort = port;
     
