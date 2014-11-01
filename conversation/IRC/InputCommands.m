@@ -74,6 +74,20 @@
                 break;
                 
             case CMD_CTCPREPLY:
+                if ([messageComponents count] > 3) {
+                    NSString *recipient = messageComponents[1];
+                    
+                    NSRange range;
+                    range.location = 0;
+                    range.length = 2;
+                    [messageComponents removeObjectsInRange:range];
+                    
+                    NSString *message = [messageComponents componentsJoinedByString:@" "];
+                    [IRCCommands sendCTCPReply:message toRecipient:recipient onClient:conversation.client];
+                } else {
+                    [InputCommands incompleteParametersError:@"/CTCPREPLY <channel/user> <command> <response>"];
+                }
+                break;
                 break;
                 
             case CMD_DEADMIN:
