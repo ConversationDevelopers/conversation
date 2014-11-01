@@ -303,7 +303,6 @@
                     [InputCommands incompleteParametersError:command withParameters:@"<new nickname>"];
                 }
                 break;
-                break;
                 
             case CMD_NOTICE:
                 if ([messageComponents count] > 2) {
@@ -345,6 +344,7 @@
                 break;
                 
             case CMD_QUIT:
+                [conversation.client disconnect];
                 break;
                 
             case CMD_QUOTE:
