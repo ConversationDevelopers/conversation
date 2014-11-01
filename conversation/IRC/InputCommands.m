@@ -54,6 +54,13 @@
                 break;
             
             case CMD_BAN:
+                if ([messageComponents count] > 1) {
+                    IRCChannel *channel = (IRCChannel *)conversation;
+                    NSString *nickname = messageComponents[1];
+                    [IRCCommands banUser:nickname onChannel:channel];
+                } else {
+                    [InputCommands incompleteParametersError:command withParameters:@"<nickname/host>"];
+                }
                 break;
                 
             case CMD_CLEAR:
@@ -194,11 +201,44 @@
                 
             case CMD_K:
             case CMD_KICK:
-                
+                if ([messageComponents count] > 1) {
+                    NSString *nickname = messageComponents[1];
+                    IRCChannel *channel = (IRCChannel *)conversation;
+                    NSString *kickMessage = nil;
+                    
+                    if ([messageComponents count] > 2) {
+                        NSRange range;
+                        range.location = 0;
+                        range.length = 2;
+                        [messageComponents removeObjectsInRange:range];
+                        
+                        kickMessage = [messageComponents componentsJoinedByString:@" "];
+                    }
+                    [IRCCommands kickUser:nickname onChannel:channel withMessage:kickMessage];
+                } else {
+                    [InputCommands incompleteParametersError:command withParameters:@"<nickname> [<message>]"];
+                }
                 break;
                 
             case CMD_KB:
             case CMD_KICKBAN:
+                if ([messageComponents count] > 1) {
+                    NSString *nickname = messageComponents[1];
+                    IRCChannel *channel = (IRCChannel *)conversation;
+                    NSString *kickMessage = nil;
+                    
+                    if ([messageComponents count] > 2) {
+                        NSRange range;
+                        range.location = 0;
+                        range.length = 2;
+                        [messageComponents removeObjectsInRange:range];
+                        
+                        kickMessage = [messageComponents componentsJoinedByString:@" "];
+                    }
+                    [IRCCommands kickBanUser:nickname onChannel:channel withMessage:kickMessage];
+                } else {
+                    [InputCommands incompleteParametersError:command withParameters:@"<nickname> [<message>]"];
+                }
                 break;
                 
             case CMD_PART:

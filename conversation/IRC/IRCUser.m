@@ -67,9 +67,14 @@
 {
     NSString *nickString = [NSString stringWithCString:sender usingEncodingPreference:[[channel client] configuration]];
     
+    return [IRCUser fromNicknameString:nickString onChannel:channel];
+}
+
++ (IRCUser *)fromNicknameString:(NSString *)sender onChannel:(IRCChannel *)channel
+{
     IRCUser *userFromUserlist = nil;
     for (IRCUser *user in [channel users]) {
-        if ([[user nick] isEqualToString:nickString]) {
+        if ([[user nick] isEqualToString:sender]) {
             userFromUserlist = user;
             break;
         }

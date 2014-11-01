@@ -30,6 +30,8 @@
 #import <Foundation/Foundation.h>
 
 @class IRCClient;
+@class IRCConversation;
+@class IRCChannel;
 
 @interface IRCCommands : NSObject
 
@@ -43,5 +45,8 @@
 + (void)joinChannel:(NSString *)channel onClient:(IRCClient *)client;
 + (void)rejoinChannel:(NSString *)channel withMessage:(NSString *)message onClient:(IRCClient *)client;
 + (void)onTimer:(float)seconds runCommand:(NSString *)command inConversation:(IRCConversation *)conversation;
++ (void)kickUser:(NSString *)nickname onChannel:(IRCChannel *)channel withMessage:(NSString *)message;
++ (void)banUser:(NSString *)nickname onChannel:(IRCChannel *)channel;
++ (void)kickBanUser:(NSString *)nickname onChannel:(IRCChannel *)channel withMessage:(NSString *)message;
 
 @end

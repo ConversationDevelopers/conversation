@@ -87,6 +87,37 @@
     [IRCCommands joinChannel:channel onClient:client];
 }
 
++ (void)kickUser:(NSString *)nickname onChannel:(IRCChannel *)channel withMessage:(NSString *)message
+{
+    if (message == nil || [message length] == 0) {
+        //TODO use a default kick message.
+    }
+    [channel.client.connection send:[NSString stringWithFormat:@"KICK %@ %@ %@", channel.name, nickname, message]];
+}
+
++ (void)banUser:(NSString *)nickname onChannel:(IRCChannel *)channel
+{
+    NSString *banMask;
+    if ([nickname containsString:@"@"]) {
+        banMask = nickname;
+    } else {
+        IRCUser *bannedUser = [IRCUser fromNicknameString:nickname onChannel:channel];
+        if (bannedUser != nil) {
+            banMask = [NSString stringWithFormat:@"*!*@%@", bannedUser.hostname];
+        } else {
+            banMask = [NSString stringWithFormat:@"%@!*@*", nickname];
+        }
+    }
+    
+    [channel.client.connection send:[NSString stringWithFormat:@"MODE %@ +b %@", channel.name, banMask]];
+}
+
++ (void)kickBanUser:(NSString *)nickname onChannel:(IRCChannel *)channel withMessage:(NSString *)message
+{
+    [IRCCommands banUser:nickname onChannel:channel];
+    [IRCCommands kickUser:nickname onChannel:channel withMessage:message];
+}
+
 + (void)onTimer:(float)seconds runCommand:(NSString *)command inConversation:(IRCConversation *)conversation
 {
     SEL selector = @selector(performCommand:inConversation:);
