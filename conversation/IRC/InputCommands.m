@@ -161,6 +161,7 @@
                 }
                 break;
                 
+            case CMD_CYCLE:
             case CMD_REJOIN:
             case CMD_HOP:
                 if ([messageComponents count] > 1) {
@@ -361,6 +362,7 @@
         @"CLOSE",
         @"CTCP",
         @"CTCPREPLY",
+        @"CYCLE",
         @"DEADMIN",
         @"DEHALFOP",
         @"DEHOP",

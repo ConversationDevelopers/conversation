@@ -49,6 +49,7 @@ typedef NS_ENUM(NSUInteger, InputCommand) {
     CMD_CLOSE,
     CMD_CTCP,
     CMD_CTCPREPLY,
+    CMD_CYCLE,
     CMD_DEADMIN,
     CMD_DEHALFOP,
     CMD_DEOP,
