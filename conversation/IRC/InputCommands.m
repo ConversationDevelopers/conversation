@@ -138,6 +138,14 @@
                 break;
                 
             case CMD_NICK:
+                if ([messageComponents count] > 1) {
+                    [messageComponents removeObjectAtIndex:0];
+                    NSString *message = [messageComponents componentsJoinedByString:@" "];
+                    [IRCCommands changeNicknameToNick:message onClient:client];
+                } else {
+                    [InputCommands incompleteParametersError:@"/NICK <new nickname>"];
+                }
+                break;
                 break;
                 
             case CMD_NOTICE:
