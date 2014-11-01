@@ -34,6 +34,7 @@
 @class IRCChannel;
 
 @interface ChatMessageView : UIView <UIActionSheetDelegate, UIGestureRecognizerDelegate> {
+    UIView *_containerView;
     NSAttributedString *_attributedString;
     NSMutableArray *_images;
     CGSize _size;    

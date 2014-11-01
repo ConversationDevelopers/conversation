@@ -511,8 +511,8 @@ uint32_t FNV32(const char *s)
 
 - (void)hideImage:(UITapGestureRecognizer *)recognizer
 {
-    UIView *container = (UIView*)recognizer.view;
-    [container removeFromSuperview];
+    [recognizer.view removeFromSuperview];
+    [_containerView removeFromSuperview];
 }
 
 - (void)showImage:(UITapGestureRecognizer *)recognizer
@@ -520,47 +520,44 @@ uint32_t FNV32(const char *s)
     ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     UIImageView *preview = (UIImageView*)recognizer.view;
     
-    CGRect f = [preview convertRect:preview.bounds toView:controller.navigationController.view];
+    CGRect startFrame = [preview convertRect:preview.bounds toView:controller.navigationController.view];
+    CGRect endFrame = [[UIScreen mainScreen] bounds];
     
-    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(preview.frame.origin.x,
-                                                                     f.origin.y,
-                                                                     preview.frame.size.width,
-                                                                     preview.frame.size.height)];
-    containerView.backgroundColor = [UIColor blackColor];
+    if (!_containerView)
+        _containerView = [[UIView alloc] initWithFrame:endFrame];
+    _containerView.backgroundColor = [UIColor blackColor];
+    _containerView.alpha = 0.0;
     
     UIImageView *imageView;
     NSURL *url = _images[recognizer.view.tag];
     if ([url.pathExtension isEqualToString:@"gif"]) {
-        imageView = [[YLImageView alloc] initWithFrame:CGRectMake(0, 0, preview.frame.size.width, preview.frame.size.height)];
+        imageView = [[YLImageView alloc] initWithFrame:startFrame];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         imageView.userInteractionEnabled = YES;
         imageView.image = [YLGIFImage imageWithData:[NSData dataWithContentsOfURL:url]];
     } else {
-        imageView = [[YLImageView alloc] initWithFrame:CGRectMake(0, 0, preview.frame.size.width, preview.frame.size.height)];
+        imageView = [[UIImageView alloc] initWithFrame:startFrame];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         imageView.userInteractionEnabled = YES;
         imageView.image = preview.image;
     }
-
-    [containerView addSubview:imageView];
     
-    [controller.navigationController.view addSubview:containerView];
+    [controller.navigationController.view addSubview:_containerView];
+    [controller.navigationController.view addSubview:imageView];
 
     UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideImage:)];
     [singleTapRecogniser setDelegate:self];
     singleTapRecogniser.numberOfTouchesRequired = 1;
     singleTapRecogniser.numberOfTapsRequired = 1;
-    [containerView addGestureRecognizer:singleTapRecogniser];
+    [imageView addGestureRecognizer:singleTapRecogniser];
     
     UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(scaleImage:)];
     [pinchGesture setDelegate:self];
     [imageView addGestureRecognizer:pinchGesture];
     
-    CGRect frame = [[UIScreen mainScreen] bounds];
-    
-    [UIView animateWithDuration:0.4 animations:^{
-        containerView.frame = frame;
-        imageView.frame = frame;
+    [UIView animateWithDuration:0.6 animations:^{
+        _containerView.alpha = 1.0;
+        imageView.frame = endFrame;
     }];
 
 }
