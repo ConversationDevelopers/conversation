@@ -110,8 +110,22 @@
             case CMD_MODE:
                 break;
                 
-            case CMD_MSG:
+            case CMD_MSG: {
+                if ([messageComponents count] > 2) {
+                    NSString *recipient = messageComponents[1];
+                    
+                    NSRange range;
+                    range.location = 0;
+                    range.length = 2;
+                    [messageComponents removeObjectsInRange:range];
+                    
+                    NSString *message = [messageComponents componentsJoinedByString:@" "];
+                    [IRCCommands sendMessage:message toRecipient:recipient onClient:client];
+                } else {
+                    [InputCommands incompleteParametersError:@"/MSG <channel/user> <message>"];
+                }
                 break;
+            }
                 
             case CMD_MUTE:
                 break;
