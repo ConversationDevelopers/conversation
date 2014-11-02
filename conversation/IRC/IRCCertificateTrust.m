@@ -53,15 +53,20 @@
 {
     CFIndex count = SecTrustGetCertificateCount(self.trustReference);
     if (count > 0) {
+        /* iOS does not have any useful APIs for getting information from certificates so we will convert
+         this into an OpenSSL X509 certificate object and parse it using the OpenSSL C library. */
         SecCertificateRef certificate = SecTrustGetCertificateAtIndex(self.trustReference, 0);
         NSData *certificateData = (__bridge NSData *) SecCertificateCopyData(certificate);
         const unsigned char *certificateDataBytes = (const unsigned char *)[certificateData bytes];
         X509 *certificateX509 = d2i_X509(NULL, &certificateDataBytes, [certificateData length]);
         
+        /* Create dictionaries with all the fields required for the details dialog. */
         self.subjectInformation      = [IRCCertificateTrust getCertificateSubject:certificateX509];
         self.issuerInformation       = [IRCCertificateTrust getCertificateIssuer:certificateX509];
         self.certificateInformation  = [IRCCertificateTrust getCertificateAlgorithmInformation:certificateX509];
         
+        /* The user may already have chosen to trust this certificate, in which case there is no point going further,
+         we will approve the connection */
         CertificateItemRow *certificateSignature = [self.certificateInformation objectAtIndex:6];
         for (NSString *signature in [[self.client configuration] trustedSSLSignatures]) {
             if ([signature isEqualToString:[certificateSignature itemDescription]]) {
@@ -71,9 +76,12 @@
         }
         self.signature = certificateSignature.itemDescription;
         
+        /* Make a request to the UI for a certificate trust dialog and wait for the response */
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         [controller requestUserTrustForCertificate:self];
         
+        /* The certificate trust operation is unfortunately not asynchronous so we will have to continually run in a loop
+         on another thread and check for a response from the user every 100ms */
         [self checkTrustActionCompleted:completionHandler];
     }
 }
@@ -82,18 +90,21 @@
 {
     switch (self.trustStatus) {
         case CERTIFICATE_ACCEPTED: {
+            /* The user approved the connection, we will save the certificate and approve the connection */
             [self addSignature:self.signature];
             completionHandler(YES);
             break;
         }
         
         case CERTIFICATE_DENIED: {
+            /* The user did not approve the connection, there is nothing we can do anymore so we will disconnect */
             completionHandler(NO);
             [self.client disconnect];
             break;
         }
             
         case AWAITING_RESPONSE: {
+            /* The user has not yet approved the certificate, we will wait another 100ms and try again */
             SEL selector = @selector(checkTrustActionCompleted:);
             NSMethodSignature *signature = [self methodSignatureForSelector:selector];
             NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -108,6 +119,7 @@
 
 - (void)addSignature:(NSString *)signature
 {
+    /* Add a signature to the configuration file for this connection */
     NSMutableArray *signatures = [[[self.client configuration] trustedSSLSignatures] mutableCopy];
     [signatures addObject:signature];
     self.client.configuration.trustedSSLSignatures = signatures;
@@ -128,6 +140,7 @@
     if (certificateX509 != NULL) {
         X509_NAME *subjectX509Name = X509_get_subject_name(certificateX509);
         
+        /* Retrieve the necessary information fields for the subject of this SSL certificate. */
         if (subjectX509Name != NULL) {
             [subject addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Country") andDescription:getKeyString(NID_countryName, subjectX509Name)]];
             [subject addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Province/State") andDescription:getKeyString(NID_stateOrProvinceName, subjectX509Name)]];
@@ -147,6 +160,7 @@
     if (certificateX509 != NULL) {
         X509_NAME *issuerX509Name = X509_get_issuer_name(certificateX509);
         
+        /* Retrieve the necessary information for the issuer of this SSL certificate. */
         if (issuerX509Name != NULL) {
             [issuer addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Country") andDescription:getKeyString(NID_countryName, issuerX509Name)]];
             [issuer addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Province/State") andDescription:getKeyString(NID_stateOrProvinceName, issuerX509Name)]];
@@ -162,9 +176,12 @@
 
 + (NSArray *) getCertificateAlgorithmInformation:(X509 *)certificateX509
 {
+    /* Retrieve the necessary information about the actual SSL certificate. */
     NSMutableArray *algorithm = [[NSMutableArray alloc] init];
     if (certificateX509 != NULL) {
         char alg[128];
+        
+        /* Get the algorithm used for this SSL certificate, for example SHA-1 with RSA Encryption */
         OBJ_obj2txt(alg, sizeof(alg), certificateX509->sig_alg->algorithm, 0);
         NSString *signatureAlgorithm;
         if (alg) {
@@ -174,23 +191,30 @@
         }
         [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Algorithm") andDescription:signatureAlgorithm]];
         
+        /* Get the version of OpenSSL used to create this certificate */
         NSString *version = [NSString stringWithFormat:@"%ld", X509_get_version(certificateX509)];
         [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Version") andDescription:version]];
         
+        /* Get the serial number the certificate authority assigned to this certficiate */
         long serial = ASN1_INTEGER_get(X509_get_serialNumber(certificateX509));
         [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Serial") andDescription:[NSString stringWithFormat:@"%ld", serial]]];
         
+        /* Create a date formatter to be used to convert NSDate objects to the format commonly used to display
+         date times in SSL certificate dialogs */
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"dd/MM/yyyy HH:mm:ss"];
         
+        /* Get the date and time this certficiate was created */
         NSDate *certStartTime = CertificateGetStartDate(certificateX509);
         NSString *startTimeString = [formatter stringFromDate:certStartTime];
         [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Not Valid Before") andDescription:startTimeString]];
         
+        /* Get the date and time this certificate will expire */
         NSDate *certExpireTime = CertificateGetExpiryDate(certificateX509);
         NSString *expireTimeString = [formatter stringFromDate:certExpireTime];
         [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Not Valid After") andDescription:expireTimeString]];
         
+        /* Get the public key and display it as a string of hexadecimal pairs */
         ASN1_BIT_STRING *pubKey = X509_get0_pubkey_bitstr(certificateX509);
         NSString *publicKey = @"";
         for (int i = 0; i < pubKey->length; i++) {
@@ -199,6 +223,7 @@
         
         [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Public Key") andDescription:publicKey]];
         
+        /* Get the signature of the certficiate and display it as a string of hexadecimal pairs */
         ASN1_BIT_STRING *signature = certificateX509->signature;
         NSString *signatureKey = @"";
         for (int i = 0; i < signature->length; i++) {
@@ -212,6 +237,7 @@
 
 static NSString *getKeyString(int nid, X509_NAME *issuer)
 {
+    /* Short hand function used to convert an X509 name entry into an NSString, by key. */
     int index = X509_NAME_get_index_by_NID(issuer, nid, -1);
     X509_NAME_ENTRY *issuerNameEntry = X509_NAME_get_entry(issuer, index);
     if (issuerNameEntry) {
@@ -226,18 +252,22 @@ static NSString *getKeyString(int nid, X509_NAME *issuer)
 
 static NSDate *CertificateGetStartDate(X509 *certificateX509)
 {
+    /* Method used to retrieve the date and time the certificate was created */
     NSDate *startDate = nil;
-    
     if (certificateX509 != NULL) {
         ASN1_TIME *certificateStartASN1 = X509_get_notBefore(certificateX509);
         if (certificateStartASN1 != NULL) {
+            
+            /* Retrieve the actual value from the certificate */
             ASN1_GENERALIZEDTIME *certificateStartASN1Generalized = ASN1_TIME_to_generalizedtime(certificateStartASN1, NULL);
             if (certificateStartASN1Generalized != NULL) {
+                
+                /* Convert it into a string that we can parse */
                 unsigned char *certificateStartData = ASN1_STRING_data(certificateStartASN1Generalized);
-                
                 NSString *startTimeStr = [NSString stringWithUTF8String:(char *)certificateStartData];
-                NSDateComponents *startDateComponents = [[NSDateComponents alloc] init];
                 
+                /* Turn it into an NSDate object that we can use to display the date to our needs. */
+                NSDateComponents *startDateComponents = [[NSDateComponents alloc] init];
                 startDateComponents.year   = [[startTimeStr substringWithRange:NSMakeRange(0, 4)] intValue];
                 startDateComponents.month  = [[startTimeStr substringWithRange:NSMakeRange(4, 2)] intValue];
                 startDateComponents.day    = [[startTimeStr substringWithRange:NSMakeRange(6, 2)] intValue];
@@ -260,13 +290,17 @@ static NSDate *CertificateGetExpiryDate(X509 *certificateX509)
     if (certificateX509 != NULL) {
         ASN1_TIME *certificateExpiryASN1 = X509_get_notAfter(certificateX509);
         if (certificateExpiryASN1 != NULL) {
+            
+            /* Retrieve the actual value from the certificate */
             ASN1_GENERALIZEDTIME *certificateExpiryASN1Generalized = ASN1_TIME_to_generalizedtime(certificateExpiryASN1, NULL);
             if (certificateExpiryASN1Generalized != NULL) {
+                
+                 /* Convert it into a string that we can parse*/
                 unsigned char *certificateExpiryData = ASN1_STRING_data(certificateExpiryASN1Generalized);
-                
                 NSString *expiryTimeStr = [NSString stringWithUTF8String:(char *)certificateExpiryData];
-                NSDateComponents *expiryDateComponents = [[NSDateComponents alloc] init];
                 
+                /* Turn it into an NSDate object that we can use to display the date to our needs. */
+                NSDateComponents *expiryDateComponents = [[NSDateComponents alloc] init];
                 expiryDateComponents.year   = [[expiryTimeStr substringWithRange:NSMakeRange(0, 4)] intValue];
                 expiryDateComponents.month  = [[expiryTimeStr substringWithRange:NSMakeRange(4, 2)] intValue];
                 expiryDateComponents.day    = [[expiryTimeStr substringWithRange:NSMakeRange(6, 2)] intValue];
