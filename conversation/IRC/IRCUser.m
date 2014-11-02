@@ -65,6 +65,10 @@
     return nil;
 }
 
+- (NSString *)description {
+    return [NSString stringWithFormat:@"%@!%@@%@", self.nick, self.username, self.hostname];
+}
+
 + (IRCUser *)fromNickname:(const char *)sender onChannel:(IRCChannel *)channel
 {
     NSString *nickString = [NSString stringWithCString:sender usingEncodingPreference:[[channel client] configuration]];
