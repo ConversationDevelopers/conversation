@@ -45,5 +45,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>ImgurAnonymousAPIClientID</key>
+	<string>b22b5d448393fdb</string>
 </dict>
 </plist>

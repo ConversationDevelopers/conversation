@@ -1,25 +1,57 @@
 PODS:
+  - AFNetworking (2.4.1):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+    - AFNetworking/UIKit
+  - AFNetworking/NSURLConnection (2.4.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.4.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.4.1)
+  - AFNetworking/Security (2.4.1)
+  - AFNetworking/Serialization (2.4.1)
+  - AFNetworking/UIKit (2.4.1):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
   - DLImageLoader (2.0.0)
+  - ImgurAnonymousAPIClient (0.1.1):
+    - AFNetworking (>= 2.2.2)
   - PHFComposeBarView (2.0.1):
     - PHFDelegateChain (~> 1.0)
   - PHFDelegateChain (1.0.1)
+  - UIActionSheet+Blocks (0.8.1)
   - YLGIFImage (0.11)
 
 DEPENDENCIES:
   - DLImageLoader (from `https://github.com/AndreyLunevich/DLImageLoader-iOS.git`)
+  - ImgurAnonymousAPIClient (from `https://github.com/nolanw/ImgurAnonymousAPIClient.git`, tag `v0.1.1`)
   - PHFComposeBarView (~> 2.0.1)
+  - UIActionSheet+Blocks
   - YLGIFImage (from `https://github.com/liyong03/YLGIFImage.git`)
 
 EXTERNAL SOURCES:
   DLImageLoader:
     :git: https://github.com/AndreyLunevich/DLImageLoader-iOS.git
+  ImgurAnonymousAPIClient:
+    :git: https://github.com/nolanw/ImgurAnonymousAPIClient.git
+    :tag: v0.1.1
   YLGIFImage:
     :git: https://github.com/liyong03/YLGIFImage.git
 
 SPEC CHECKSUMS:
+  AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
   DLImageLoader: ed4a058375bcef56e2493769d375612715189659
+  ImgurAnonymousAPIClient: a59b74c3500b29b6d3b08c61c1304b65085f7aac
   PHFComposeBarView: 0fa52137ecb23725d219dc90cf77c4c95aa29d05
   PHFDelegateChain: f4d5a2847960b3dd16fc2f2196833f3a66704745
+  UIActionSheet+Blocks: c8b9c02f3d08964e8f7a4202f004a639c15eab80
   YLGIFImage: bcff4a5200b060f655372f939989ddc0a0b21dde
 
 COCOAPODS: 0.34.4
