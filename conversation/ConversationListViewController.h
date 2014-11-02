@@ -37,6 +37,7 @@
 @interface ConversationListViewController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, retain) NSMutableArray *connections;
+@property (nonatomic) ChatViewController *chatViewController;
 
 - (void)reloadData;
 - (void)reloadClient:(IRCClient *)client;

@@ -54,7 +54,9 @@
 {
     if (!(self = [super init]))
         return nil;
+    
     self.connections = [[NSMutableArray alloc] init];
+    self.chatViewController = [[ChatViewController alloc] init];
     
     return self;
 }
@@ -82,8 +84,6 @@
     self.navigationItem.rightBarButtonItem = addButton;
     
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    
-//    self.chatViewController = (ChatViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     
     NSArray *configurations = [[AppPreferences sharedPrefs] getConnectionConfigurations];
     for (NSDictionary *dict in configurations) {
@@ -217,12 +217,10 @@
         }
     }
     
-    ChatViewController *chatViewController = [[ChatViewController alloc] init];
-    
-    chatViewController.isChannel = NO;
-    chatViewController.conversation = conversation;
+    _chatViewController.isChannel = NO;
+    _chatViewController.conversation = conversation;
 
-    [self.navigationController pushViewController:chatViewController animated:YES];
+    [self.navigationController pushViewController:_chatViewController animated:YES];
 }
 
 #pragma mark - Table View
@@ -234,22 +232,20 @@
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath
 {
     IRCClient *client = [self.connections objectAtIndex:indexPath.section];
-
-    ChatViewController *chatViewController = [[ChatViewController alloc] init];
     
     IRCConversation *conversation;
     if ((int)indexPath.row > (int)client.getChannels.count-1) {
         NSInteger index = indexPath.row - client.getChannels.count;
         conversation = client.getQueries[index];
-        chatViewController.isChannel = NO;
+        _chatViewController.isChannel = NO;
     } else {
         conversation = client.getChannels[indexPath.row];
-        chatViewController.isChannel = YES;
+        _chatViewController.isChannel = YES;
     }
     
-    chatViewController.conversation = conversation;
+    _chatViewController.conversation = conversation;
     
-    [self.navigationController pushViewController:chatViewController animated:YES];
+    [self.navigationController pushViewController:_chatViewController animated:YES];
 
 }
 

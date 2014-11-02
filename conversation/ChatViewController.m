@@ -67,7 +67,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                              selector:@selector(messageReceived:)
                                                  name:@"messageReceived"
                                                object:nil];
-    _messageEntryHeight = 0.0;
     return self;
 }
 
@@ -99,19 +98,8 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (void)loadView
 {
     
-    UIBarButtonItem *joinButton = [[UIBarButtonItem alloc] initWithTitle:@"Join" style:UIBarButtonItemStylePlain target:self action:@selector(join:)];
-    
-    UIBarButtonItem *userlistButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Userlist"]
-                                                                       style:UIBarButtonItemStylePlain
-                                                                      target:self
-                                                                      action:@selector(showUserList:)];
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ChannelIcon_Light"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
-    if (!_isChannel || [(IRCChannel*)_conversation isJoinedByUser])
-        self.navigationItem.rightBarButtonItem = userlistButton;
-    else
-        self.navigationItem.rightBarButtonItem = joinButton;
     
-    self.title = _conversation.name;
     self.navigationItem.leftBarButtonItem = backButton;
     
     UIView *view = [[UIView alloc] initWithFrame:kInitialViewFrame];
@@ -128,8 +116,24 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     [self setView:view];
 }
 
-- (void)viewDidLoad
+- (void)viewWillAppear:(BOOL)animated
 {
+    UIBarButtonItem *joinButton = [[UIBarButtonItem alloc] initWithTitle:@"Join" style:UIBarButtonItemStylePlain target:self action:@selector(join:)];
+    
+    UIBarButtonItem *userlistButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Userlist"]
+                                                                       style:UIBarButtonItemStylePlain
+                                                                      target:self
+                                                                      action:@selector(showUserList:)];
+    if (!_isChannel || [(IRCChannel*)_conversation isJoinedByUser])
+        self.navigationItem.rightBarButtonItem = userlistButton;
+    else
+        self.navigationItem.rightBarButtonItem = joinButton;
+    
+    self.title = _conversation.name;
+    
+    [self clearContent];
+    
+    // Add initial messages
     for (IRCMessage *message in _conversation.messages) {
         [self addMessage:message];
     }
@@ -140,6 +144,19 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     if (_contentView.contentSize.height > _contentView.bounds.size.height) {
         [self scrollToBottom:NO];
     }
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [self hideAccessories:nil];
+}
+
+- (void)clearContent
+{
+    for (UIView *view in _contentView.subviews) {
+        [view removeFromSuperview];
+    }
+    _messageEntryHeight = 0.0;
 }
 
 - (void)scrollToBottom:(BOOL)animated
@@ -210,7 +227,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)goBack:(id)sender
 {
-    [self hideUserList];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
@@ -293,7 +309,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     [_composeBarView setText:@"" animated:YES];
 
 }
-
 
 
 - (BOOL) textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
