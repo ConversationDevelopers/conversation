@@ -33,6 +33,7 @@
 #import "IRCMessage.h"
 #import "UserListView.h"
 #import "InputCommands.h"
+#import "AppPreferences.h"
 #import <UIActionSheet+Blocks/UIActionSheet+Blocks.h>
 #import <ImgurAnonymousAPIClient/ImgurAnonymousAPIClient.h>
 
@@ -133,6 +134,12 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     for (IRCMessage *message in _conversation.messages) {
         [self addMessage:message];
     }
+    _composeBarView.text = [[AppPreferences sharedPrefs] getUserInputString];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [[AppPreferences sharedPrefs] setUserInputString:_composeBarView.text];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -444,6 +451,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         else
             string = imgurURL.absoluteString;
         [_composeBarView setText:string];
+        [[AppPreferences sharedPrefs] setUserInputString:string];
         [indicator stopAnimating];
         [indicator removeFromSuperview];
         cameraButton.hidden = NO;

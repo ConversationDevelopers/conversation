@@ -69,6 +69,20 @@
     return NO;
 }
 
+- (void)setUserInputString:(NSString *)string
+{
+    NSMutableDictionary *prefs = [self.preferences mutableCopy];
+    prefs[@"userInputString"] = string;
+    self.preferences = prefs;
+}
+
+- (NSString *)getUserInputString
+{
+    if (self.preferences[@"userInputString"])
+        return self.preferences[@"userInputString"];
+    return nil;
+}
+
 - (void)setConnectionConfiguration:(IRCConnectionConfiguration *)configuration atIndex:(NSInteger)index
 {
     NSMutableDictionary *prefs = [self.preferences mutableCopy];
