@@ -98,7 +98,7 @@
         
         self.messageEncoding = (unsigned long) [dict[@"messageEncoding"] integerValue];
         
-        self.lastMessageTime = [dict[@"lastMessageTime"] longLongValue];
+        self.lastMessageTime = [dict[@"lastMessageTime"] longValue];
         
         NSMutableArray *channels = [[NSMutableArray alloc] init];
         for (NSDictionary *channel in dict[@"channels"]) {

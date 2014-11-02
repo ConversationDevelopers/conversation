@@ -43,7 +43,7 @@ limitations under the License.
 
 ## ImgurAnonymousAPIClient
 
-ImgurHTTPClient is in the public domain.
+ImgurAnonymousAPIClient is in the public domain.
 
 
 ## PHFComposeBarView

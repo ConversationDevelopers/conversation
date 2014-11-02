@@ -62,7 +62,7 @@ limitations under the License.
 		</dict>
 		<dict>
 			<key>FooterText</key>
-			<string>ImgurHTTPClient is in the public domain.
+			<string>ImgurAnonymousAPIClient is in the public domain.
 </string>
 			<key>Title</key>
 			<string>ImgurAnonymousAPIClient</string>

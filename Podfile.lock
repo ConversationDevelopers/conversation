@@ -21,8 +21,8 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - DLImageLoader (2.0.0)
-  - ImgurAnonymousAPIClient (0.1.1):
-    - AFNetworking (>= 2.2.2)
+  - ImgurAnonymousAPIClient (0.2):
+    - AFNetworking (>= 2.3.1)
   - PHFComposeBarView (2.0.1):
     - PHFDelegateChain (~> 1.0)
   - PHFDelegateChain (1.0.1)
@@ -31,7 +31,7 @@ PODS:
 
 DEPENDENCIES:
   - DLImageLoader (from `https://github.com/AndreyLunevich/DLImageLoader-iOS.git`)
-  - ImgurAnonymousAPIClient (from `https://github.com/nolanw/ImgurAnonymousAPIClient.git`, tag `v0.1.1`)
+  - ImgurAnonymousAPIClient (from `https://github.com/nolanw/ImgurAnonymousAPIClient.git`, tag `v0.2`)
   - PHFComposeBarView (~> 2.0.1)
   - UIActionSheet+Blocks
   - YLGIFImage (from `https://github.com/liyong03/YLGIFImage.git`)
@@ -41,14 +41,14 @@ EXTERNAL SOURCES:
     :git: https://github.com/AndreyLunevich/DLImageLoader-iOS.git
   ImgurAnonymousAPIClient:
     :git: https://github.com/nolanw/ImgurAnonymousAPIClient.git
-    :tag: v0.1.1
+    :tag: v0.2
   YLGIFImage:
     :git: https://github.com/liyong03/YLGIFImage.git
 
 SPEC CHECKSUMS:
   AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
   DLImageLoader: ed4a058375bcef56e2493769d375612715189659
-  ImgurAnonymousAPIClient: a59b74c3500b29b6d3b08c61c1304b65085f7aac
+  ImgurAnonymousAPIClient: 34d68a1f5549b3dbe64028a44b8074bf44da2e82
   PHFComposeBarView: 0fa52137ecb23725d219dc90cf77c4c95aa29d05
   PHFDelegateChain: f4d5a2847960b3dd16fc2f2196833f3a66704745
   UIActionSheet+Blocks: c8b9c02f3d08964e8f7a4202f004a639c15eab80
