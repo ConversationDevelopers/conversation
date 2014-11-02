@@ -39,9 +39,6 @@
 
 + (id)sharedPrefs;
 
-- (void)setUserInputString:(NSString *)string;
-- (NSString *)getUserInputString;
-
 - (BOOL)hasConnectionWithIdentifier:(NSString *)identifier;
 
 - (void)addConnectionConfiguration:(IRCConnectionConfiguration *)configuration;
