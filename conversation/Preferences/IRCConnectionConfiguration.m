@@ -64,6 +64,8 @@
 
         self.channels = [[NSArray alloc] init];
         self.queries = [[NSArray alloc] init];
+        self.ignoreList = @[@"*!bill@microsoft.com", @"*!woz@apple.com", @"larry!page@*"];
+        
         self.trustedSSLSignatures = [[NSArray alloc] init];
         
         return self;
@@ -120,6 +122,7 @@
         }
         
         self.trustedSSLSignatures = trustedSSLSignatures;
+        self.ignoreList = dict[@"ignoreList"];
     }
     return self;
 }
