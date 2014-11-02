@@ -40,6 +40,8 @@
 - (BOOL) isValidServerAddress;
 - (BOOL) isValidNickname:(IRCClient *)client;
 - (BOOL) isValidUsername;
+- (BOOL) isValidWildcardIgnoreMask;
+
 - (NSData *)dataUsingEncodingFromConfiguration:(IRCConnectionConfiguration *)configuration;
 
 - (NSString*)stringByTruncatingToWidth:(CGFloat)width withAttributes:(NSDictionary *)attributes;

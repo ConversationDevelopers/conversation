@@ -158,6 +158,18 @@
     return YES;
 }
 
+- (BOOL)isValidWildcardIgnoreMask
+{
+    NSArray *nicknameAndHostmask = [self componentsSeparatedByString:@"!"];
+    if ([nicknameAndHostmask count] == 2) {
+        NSArray *usernameAndHostname = [nicknameAndHostmask[1] componentsSeparatedByString:@"@"];
+        if ([usernameAndHostname count] == 2) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
 + (NSString *) stringWithCString:(const char *)string usingEncodingPreference:(IRCConnectionConfiguration *)configuration
 {
     NSStringEncoding encoding;
