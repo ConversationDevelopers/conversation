@@ -249,6 +249,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 {
     NSLog(@"Utility button pressed");
 
+    [self hideAccessories:nil];
     [UIActionSheet showInView:self.view
                     withTitle:NSLocalizedString(@"Photo Source", @"Photo Source")
             cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
