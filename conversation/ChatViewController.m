@@ -268,44 +268,9 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                              [imagePicker setDelegate:(id)self];
                              [self presentViewController:imagePicker animated:YES completion:nil];
                          }
-                         
 
                      }];
     
-}
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
-{
-    [picker dismissViewControllerAnimated:YES completion:nil];
-    
-    UIButton *cameraButton = [_composeBarView utilityButton];
-    cameraButton.hidden = YES;
-    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    indicator.frame = _composeBarView.utilityButton.frame;
-    [indicator setHidesWhenStopped:YES];
-    [indicator startAnimating];
-    [_composeBarView addSubview:indicator];
-    
-    UIImage *image = info[UIImagePickerControllerOriginalImage];
-    [[ImgurAnonymousAPIClient client] uploadImage:image withFilename:nil completionHandler:^(NSURL *imgurURL, NSError *error) {
-        if(error)
-            NSLog(@"Error while uploading image: %@", error.description);
-        NSString *string;
-        if ([_composeBarView.text isEqualToString:@""] == NO)
-            string = [[_composeBarView text] stringByAppendingFormat:@" %@", imgurURL.absoluteString];
-        else
-            string = imgurURL.absoluteString;
-        [_composeBarView setText:string];
-        [indicator stopAnimating];
-        [indicator removeFromSuperview];
-        cameraButton.hidden = NO;
-    }];
-    
-}
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
-{
-    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)sendMessage:(NSString *)message
@@ -452,4 +417,47 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     }
     return _contentView;
 }
+
+#pragma mark -
+#pragma mark UIImagePickerController Delegate Methods
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    
+    UIButton *cameraButton = [_composeBarView utilityButton];
+    cameraButton.hidden = YES;
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    indicator.frame = _composeBarView.utilityButton.frame;
+    [indicator setHidesWhenStopped:YES];
+    [indicator startAnimating];
+    [_composeBarView addSubview:indicator];
+    
+    UIImage *image = info[UIImagePickerControllerOriginalImage];
+    [[ImgurAnonymousAPIClient client] uploadImage:image withFilename:nil completionHandler:^(NSURL *imgurURL, NSError *error) {
+        if(error)
+            NSLog(@"Error while uploading image: %@", error.description);
+        NSString *string;
+        if ([_composeBarView.text isEqualToString:@""] == NO)
+            string = [[_composeBarView text] stringByAppendingFormat:@" %@", imgurURL.absoluteString];
+        else
+            string = imgurURL.absoluteString;
+        [_composeBarView setText:string];
+        [indicator stopAnimating];
+        [indicator removeFromSuperview];
+        cameraButton.hidden = NO;
+    }];
+    
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+}
+
 @end
