@@ -71,6 +71,7 @@
 - (void)connect;
 - (void)clientDidConnect;
 - (void)clientDidDisconnect;
+- (BOOL)isConnectedAndCompleted;
 - (void)clientDidDisconnectWithError:(NSString *)error;
 - (void)clientDidReceiveData:(const char *)decodedData;
 - (void)clientDidSendData;
