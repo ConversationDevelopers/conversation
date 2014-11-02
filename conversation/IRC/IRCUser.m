@@ -36,6 +36,8 @@
 - (instancetype) initWithSenderDict:(const char **)senderDict onClient:(IRCClient *)client
 {
     if ((self = [super init])) {
+        /* senderDicts are C arrays of C strings returned by the parser that represents a sender.
+         They contain the nickname, username, and hostname. */
         self.nick = [NSString stringWithCString:senderDict[0] usingEncodingPreference:[client configuration]];
         self.username = [NSString stringWithCString:senderDict[1] usingEncodingPreference:[client configuration]];
         self.hostname = [NSString stringWithCString:senderDict[2] usingEncodingPreference:[client configuration]];
@@ -72,6 +74,7 @@
 
 + (IRCUser *)fromNicknameString:(NSString *)sender onChannel:(IRCChannel *)channel
 {
+    /* Iterate through the userlist and return the first user with the same nickname as the sender. */
     IRCUser *userFromUserlist = nil;
     for (IRCUser *user in [channel users]) {
         if ([[user nick] caseInsensitiveCompare:sender]) {

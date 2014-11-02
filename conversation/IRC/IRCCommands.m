@@ -35,6 +35,7 @@
 
 + (void)sendMessage:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client
 {
+    /* The message may be multiple lines, we will split them by their line break and send them as inividual messages. */
     NSArray *lines = [message componentsSeparatedByString:@"\n"];
     for (NSString *line in lines) {
         if ([line length] > 0) {
@@ -99,16 +100,20 @@
 {
     NSString *banMask;
     if ([nickname containsString:@"@"]) {
+        /* The input seems to already be a hostmask. We will use it as it is. */
         banMask = nickname;
     } else {
         IRCUser *bannedUser = [IRCUser fromNicknameString:nickname onChannel:channel];
         if (bannedUser != nil) {
+            /* We found the user in the userlist, we will use their information to ban the hostname. */
             banMask = [NSString stringWithFormat:@"*!*@%@", bannedUser.hostname];
         } else {
+            /* This user dosen't seem to be online so we can't find their hostname. We will just do a general ban on their nick */
             banMask = [NSString stringWithFormat:@"%@!*@*", nickname];
         }
     }
     
+    /* Set the ban. */
     [channel.client.connection send:[NSString stringWithFormat:@"MODE %@ +b %@", channel.name, banMask]];
 }
 
@@ -120,6 +125,7 @@
 
 + (void)onTimer:(float)seconds runCommand:(NSString *)command inConversation:(IRCConversation *)conversation
 {
+    /* Create the invocation for the command */
     SEL selector = @selector(performCommand:inConversation:);
     NSMethodSignature *signature = [self methodSignatureForSelector:selector];
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -127,6 +133,8 @@
     [invocation setSelector:selector];
     [invocation setArgument:&command atIndex:2];
     [invocation setArgument:&conversation atIndex:3];
+    
+    /* Set the timer to run the invocation */
     [NSTimer scheduledTimerWithTimeInterval:seconds invocation:invocation repeats:NO];
 }
 
