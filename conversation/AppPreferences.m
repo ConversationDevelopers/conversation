@@ -72,7 +72,9 @@
 - (void)setConnectionConfiguration:(IRCConnectionConfiguration *)configuration atIndex:(NSInteger)index
 {
     NSMutableDictionary *prefs = [self.preferences mutableCopy];
-    [prefs[@"configurations"] setObject:configuration.getDictionary atIndex:index];
+    NSMutableArray *configurations = [self.preferences[@"configurations"] mutableCopy];
+    [configurations setObject:configuration.getDictionary atIndexedSubscript:index];
+    prefs[@"configurations"] = configurations;
     self.preferences = prefs;
 }
 
