@@ -134,7 +134,6 @@
 - (void)showSettings:(id)sender
 {
     NSLog(@"Show Settings");
-    [self displayPasswordEntryDialog:_connections[0]];
 }
 
 - (void)addConversation:(id)sender
@@ -633,7 +632,6 @@
             }
         }
     }];
-    
 }
 
 - (void)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest
@@ -688,7 +686,6 @@
         }
         
     }];
-
 }
 
 @end
