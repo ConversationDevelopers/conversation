@@ -264,6 +264,28 @@
         header.textLabel.text = client.configuration.connectionName;
         header.tag = section;
         
+        if (client.isAttemptingConnection || client.isAttemptingRegistration) {
+            UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+            spinner.frame = CGRectMake(header.bounds.size.width-40, 0, header.bounds.size.height, header.bounds.size.height);
+            [header.contentView addSubview:spinner];
+            [spinner startAnimating];
+        }
+        
+        if (client.isConnectedAndCompleted) {
+            UIButton *checkmark = [UIButton buttonWithType:UIButtonTypeCustom];
+            
+            // Define unicode character
+            unichar *code = malloc(sizeof(unichar) * 1);
+            code[0] = (unichar)0x2713;
+            
+            checkmark.frame = CGRectMake(header.bounds.size.width-40, 0, header.bounds.size.height, header.bounds.size.height);
+            checkmark.titleLabel.font = [UIFont fontWithName:@"Symbola" size:16.0];
+            [checkmark setTitle:[NSString stringWithCharacters:code length:1] forState:UIControlStateNormal];
+            [checkmark setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [header.contentView addSubview:checkmark];
+            free(code);
+        }
+        
         // Add Tap Event
         UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(headerViewSelected:)];
         [singleTapRecogniser setDelegate:self];
@@ -276,7 +298,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     
-    return 20.0;
+    return 30.0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -420,10 +442,12 @@
         switch (buttonIndex) {
             case 0:
                 // Connect or disconnect
-                if(client.isConnected)
+                if(client.isConnected) {
                    [client disconnect];
-                else
+                } else {
                     [client connect];
+                    [self.tableView reloadData];
+                }
                 break;
             case 1:
                 // Sort Conversations
