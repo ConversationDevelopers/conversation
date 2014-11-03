@@ -62,7 +62,7 @@
 @property (nonatomic, copy) NSArray *autoJoinChannels;
 @property (nonatomic, copy) NSArray *channels;
 @property (nonatomic, copy) NSArray *queries;
-@property (nonatomic, copy) NSArray *ignoreList;
+@property (nonatomic, copy) NSArray *ignores;
 @property (nonatomic, copy) NSArray *trustedSSLSignatures;
 
 @end
