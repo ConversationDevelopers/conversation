@@ -13,6 +13,7 @@
 		DA1A4AC319E1770700565763 /* ConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AC219E1770700565763 /* ConversationListViewController.m */; };
 		DA1A4ADA19E1770700565763 /* conversationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AD919E1770700565763 /* conversationTests.m */; };
 		DA1A4AF019E181C400565763 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1A4AEF19E181C400565763 /* CFNetwork.framework */; };
+		DA2F9A081A0726E60028B2BD /* AddStringItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2F9A071A0726E60028B2BD /* AddStringItemViewController.m */; };
 		DA379D4719FB35E80031E30B /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA379D4619FB35E80031E30B /* ChatViewController.m */; };
 		DA41794B19FAF9FF007784F0 /* ChatMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA41794A19FAF9FF007784F0 /* ChatMessageView.m */; };
 		DA6F61D719FD1A6600F22F78 /* ILTranslucentView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA6F61D619FD1A6600F22F78 /* ILTranslucentView.m */; };
@@ -83,6 +84,8 @@
 		DA1A4AD819E1770700565763 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DA1A4AD919E1770700565763 /* conversationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = conversationTests.m; sourceTree = "<group>"; };
 		DA1A4AEF19E181C400565763 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		DA2F9A061A0726E60028B2BD /* AddStringItemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddStringItemViewController.h; sourceTree = "<group>"; };
+		DA2F9A071A0726E60028B2BD /* AddStringItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddStringItemViewController.m; sourceTree = "<group>"; };
 		DA379D4519FB35E80031E30B /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
 		DA379D4619FB35E80031E30B /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
 		DA41794919FAF9FF007784F0 /* ChatMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatMessageView.h; sourceTree = "<group>"; };
@@ -316,6 +319,8 @@
 				FA109B3819E4190C0068DC29 /* Preferences */,
 				DA1A4ABE19E1770700565763 /* AppDelegate.h */,
 				DA1A4ABF19E1770700565763 /* AppDelegate.m */,
+				DA2F9A061A0726E60028B2BD /* AddStringItemViewController.h */,
+				DA2F9A071A0726E60028B2BD /* AddStringItemViewController.m */,
 				DA79EA2E19E92AF20027A370 /* PreferencesListViewController.h */,
 				DA79EA2F19E92AF20027A370 /* PreferencesListViewController.m */,
 				DAA322A819E5DE490068E2B6 /* PreferencesSwitchCell.h */,
@@ -754,6 +759,7 @@
 				FAC1679119F84268009856F0 /* IRCMessage.m in Sources */,
 				FA109B3419E410D80068DC29 /* IRCClient.m in Sources */,
 				FA6E45ED19ED65590083A326 /* IRCUser.m in Sources */,
+				DA2F9A081A0726E60028B2BD /* AddStringItemViewController.m in Sources */,
 				FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */,
 				DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */,
 				FAC0E50C1A018AC2001CFB48 /* CertificateItemRow.m in Sources */,

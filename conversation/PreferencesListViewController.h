@@ -30,16 +30,25 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PreferencesListViewController : UITableViewController {
+@interface PreferencesListViewController : UITableViewController <UIGestureRecognizerDelegate> {
     BOOL _pendingChanges;
 }
+
+typedef NS_ENUM(NSUInteger, ListType) {
+    Clients,
+    Channels,
+    Strings
+};
 
 @property (nonatomic, weak) id target;
 @property (nonatomic) SEL action;
 @property (nonatomic, retain) NSMutableArray *items;
 @property (nonatomic) BOOL allowEditing;
+@property (nonatomic) BOOL allowSelection;
+@property (nonatomic) BOOL allowReorder;
 @property (nonatomic, assign) NSInteger selectedItem;
 @property (nonatomic, strong) UIImage *itemImage;
+@property (nonatomic) NSInteger type;
 
 @property (nonatomic) NSString *noItemsText;
 @property (nonatomic) NSString *addItemText;

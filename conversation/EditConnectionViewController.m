@@ -42,7 +42,8 @@
 static unsigned short ServerTableSection = 0;
 static unsigned short IdentityTableSection = 1;
 static unsigned short AutomaticTableSection = 2;
-static unsigned short EncodingTableSection = 3;
+static unsigned short IgnoreTableSection = 3;
+static unsigned short EncodingTableSection = 4;
 
 @implementation EditConnectionViewController
 
@@ -168,6 +169,7 @@ static unsigned short EncodingTableSection = 3;
         }
         
         listViewController.title = NSLocalizedString(@"Servers", @"Servers view title");
+        listViewController.type = Strings;
         listViewController.items = networks;
         listViewController.selectedItem = selectedIndex;
         listViewController.itemImage = [UIImage imageNamed:@"NetworkIcon"];
@@ -192,6 +194,8 @@ static unsigned short EncodingTableSection = 3;
         return 5;
     if (section == AutomaticTableSection)
         return 3;
+    if (section == IgnoreTableSection)
+        return 1;
     if (section == EncodingTableSection)
         return 1;
     return 0;
@@ -200,7 +204,9 @@ static unsigned short EncodingTableSection = 3;
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
     if (indexPath.section == AutomaticTableSection && indexPath.row == 2)
         return indexPath;
-    if (indexPath.section == EncodingTableSection && indexPath.row == 0)
+    if (indexPath.section == IgnoreTableSection)
+        return indexPath;
+    if (indexPath.section == EncodingTableSection)
         return indexPath;
     return nil;
 }
@@ -270,11 +276,12 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         }
         
         listViewController.title = NSLocalizedString(@"Join Channels", @"Title of auto join channels view");
-        listViewController.addItemText = NSLocalizedString(@"Add Channel", @"Title of add item label");
+        listViewController.addItemText = NSLocalizedString(@"Add Channel", @"Title of add channel item label");
         listViewController.saveButtonTitle = NSLocalizedString(@"Save", @"Save");
         listViewController.noItemsText = NSLocalizedString(@"No Channels", @"No Channels");
         listViewController.itemImage = [UIImage imageNamed:@"ChannelIcon_small"];
         
+        listViewController.type = Channels;
         listViewController.items = items;
         listViewController.allowEditing = YES;
         listViewController.target = self;
@@ -284,7 +291,27 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         
         return;
     }
-	if (indexPath.section == EncodingTableSection && indexPath.row == 0) {
+    if (indexPath.section == IgnoreTableSection) {
+        PreferencesListViewController *listViewController = [[PreferencesListViewController alloc] init];
+        listViewController.title = NSLocalizedString(@"Ignore List", @"Ignore List");
+        listViewController.addItemText = NSLocalizedString(@"Add Ignore", @"Title of add ignore item label");
+        listViewController.saveButtonTitle = NSLocalizedString(@"Save", @"Save");
+        listViewController.noItemsText = NSLocalizedString(@"No Ignores", @"No Ignores");
+        
+        listViewController.type = Strings;
+        listViewController.items = [_configuration.ignores mutableCopy];
+        listViewController.allowSelection = NO;
+        listViewController.allowEditing = YES;
+        listViewController.allowReorder = NO;
+        listViewController.target = self;
+        listViewController.action = @selector(ignoresChanged:);
+        
+        [self.navigationController pushViewController:listViewController animated:YES];
+        
+        return;
+        
+    }
+	if (indexPath.section == EncodingTableSection) {
         PreferencesListViewController *listViewController = [[PreferencesListViewController alloc] init];
         
         NSUInteger selectedEncodingIndex = NSNotFound;
@@ -295,6 +322,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         }
         
         listViewController.title = NSLocalizedString(@"Encoding", @"Encoding view title");
+        listViewController.type = Strings;
         listViewController.items = encodings;
         listViewController.selectedItem = selectedEncodingIndex;
         
@@ -315,8 +343,10 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         return @"Identity";
     if (section == AutomaticTableSection)
         return @"Automatic Actions";
+    if (section == IgnoreTableSection)
+        return @"";
     if (section == EncodingTableSection)
-        return @"Encoding";
+        return @"";
     return nil;
 }
 
@@ -482,14 +512,17 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             }
             return cell;
         }
+    } else if (indexPath.section == IgnoreTableSection) {
+        UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];
+        cell.textLabel.text = NSLocalizedString(@"Ignore List", @"Ignore List");
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        return cell;
     } else if (indexPath.section == EncodingTableSection) {
-        if (indexPath.row == 0) {
-            UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];
-            cell.textLabel.text = NSLocalizedString(@"Encoding", @"Encoding");
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            cell.detailTextLabel.text = localizedNameOfStringEncoding(_configuration.socketEncodingType);
-            return cell;
-        }
+        UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];
+        cell.textLabel.text = NSLocalizedString(@"Encoding", @"Encoding");
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.detailTextLabel.text = localizedNameOfStringEncoding(_configuration.socketEncodingType);
+        return cell;
     }
     NSCAssert(NO, @"Should not reach this point.");
     return nil;
@@ -684,6 +717,11 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 {
     _configuration.channels = sender.items;
     [self.tableView reloadData];
+}
+
+- (void)ignoresChanged:(PreferencesListViewController *)sender
+{
+    _configuration.ignores = sender.items;
 }
 
 - (void)encodingChanged:(PreferencesListViewController *)sender

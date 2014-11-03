@@ -122,7 +122,7 @@
         }
         
         self.trustedSSLSignatures = trustedSSLSignatures;
-        self.ignores = dict[@"ignoreList"];
+        self.ignores = dict[@"ignores"];
     }
     return self;
 }

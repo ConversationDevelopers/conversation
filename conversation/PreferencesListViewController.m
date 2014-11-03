@@ -30,7 +30,7 @@
 #import "PreferencesListViewController.h"
 #import "UITableView+Methods.h"
 #import "AddConversationViewController.h"
-
+#import "AddStringItemViewController.h"
 
 @implementation PreferencesListViewController
 
@@ -40,6 +40,8 @@
     
     _items = [[NSMutableArray alloc] init];
     _allowEditing = NO;
+    _allowSelection = YES;
+    _allowReorder = YES;
     _selectedItem = NSNotFound;
     _addItemText = NSLocalizedString(@"Add Item", @"Add Item");
     _saveButtonTitle = NSLocalizedString(@"Save", @"Save");
@@ -109,16 +111,22 @@
 
 - (void) editItemAtIndex:(NSUInteger)index
 {
-    
-    AddConversationViewController *editViewController = [[AddConversationViewController alloc] init];
-    editViewController.navigationItem.leftBarButtonItem.enabled = YES;
-    editViewController.title = _addViewTitle;
-    editViewController.saveButtonTitle = _saveButtonTitle;
-    editViewController.target = self;
-    editViewController.action = @selector(itemAdded:);
-    
-    [self.navigationController pushViewController:editViewController animated:YES];
- 
+    if (_type == Channels) {
+        AddConversationViewController *editViewController = [[AddConversationViewController alloc] init];
+        editViewController.navigationItem.leftBarButtonItem.enabled = YES;
+        editViewController.title = _addViewTitle;
+        editViewController.saveButtonTitle = _saveButtonTitle;
+        editViewController.target = self;
+        editViewController.action = @selector(conversationAdded:);
+        [self.navigationController pushViewController:editViewController animated:YES];
+    } else if (_type == Strings) {
+        AddStringItemViewController *editViewController = [[AddStringItemViewController alloc] init];
+        editViewController.title = _addViewTitle;
+        editViewController.saveButtonTitle = _saveButtonTitle;
+        editViewController.target = self;
+        editViewController.action = @selector(stringAdded:);
+        [self.navigationController pushViewController:editViewController animated:YES];        
+    }
 }
 
 #pragma mark - Table view data source
@@ -160,6 +168,13 @@
         cell.textLabel.textColor = [UIColor blackColor];
         cell.textLabel.text = _addItemText;
         cell.imageView.image = nil;
+        
+        UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editItemAtIndex:)];
+        [singleTapRecogniser setDelegate:self];
+        singleTapRecogniser.numberOfTouchesRequired = 1;
+        singleTapRecogniser.numberOfTapsRequired = 1;
+        [cell addGestureRecognizer:singleTapRecogniser];
+        
     } else {
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.textLabel.textColor = [UIColor lightGrayColor];
@@ -171,12 +186,14 @@
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath
 {
-    return indexPath;
+    if (_allowSelection)
+        return indexPath;
+    else
+        return nil;
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     if (_allowEditing && indexPath.row < _items.count && !self.editing) {
         id item = _items[indexPath.row];
         if([item isKindOfClass:[IRCChannelConfiguration class]]) {
@@ -193,7 +210,7 @@
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     } else {
         _selectedItem = indexPath.row;
-    
+
         if (!_target || [_target respondsToSelector:_action])
             if ([[UIApplication sharedApplication] sendAction:_action to:_target from:self forEvent:nil])
                 [self.navigationController popToRootViewControllerAnimated:YES];
@@ -203,7 +220,7 @@
 - (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath
 {
     if (!self.editing)
-        return UITableViewCellEditingStyleNone;
+        return UITableViewCellEditingStyleInsert;
     
     if (indexPath.row >= (NSInteger)_items.count)
         return UITableViewCellEditingStyleInsert;
@@ -229,7 +246,10 @@
 
 - (BOOL) tableView:(UITableView *) tableView canMoveRowAtIndexPath:(NSIndexPath *) indexPath
 {
-    return (indexPath.row < (NSInteger)_items.count);
+    if (_allowReorder)
+        return (indexPath.row < (NSInteger)_items.count);
+    else
+        return NO;
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *) sourceIndexPath toProposedIndexPath:(NSIndexPath *) proposedDestinationIndexPath
@@ -251,7 +271,13 @@
     _pendingChanges = YES;
 }
 
-- (void)itemAdded:(AddConversationViewController *)sender
+- (void)stringAdded:(AddStringItemViewController *)sender
+{
+    [_items addObject:sender.stringValue];
+    [self.tableView reloadData];
+}
+
+- (void)conversationAdded:(AddConversationViewController *)sender
 {
     [_items addObject:sender.configuration];
     [self.tableView reloadData];

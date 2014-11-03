@@ -66,10 +66,10 @@ static unsigned short ConversationTableSection = 1;
         else
             self.title = NSLocalizedString(@"Message a User", @"Message a User");
     }
-    
+
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = cancelButton;
-    
+ 
     UIBarButtonItem *chatButton = [[UIBarButtonItem alloc] initWithTitle:_saveButtonTitle
                                                                       style:UIBarButtonItemStylePlain
                                                                      target:self
@@ -95,7 +95,10 @@ static unsigned short ConversationTableSection = 1;
 
 - (void) cancel:(id)sender
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if ([self.navigationController isBeingPresented])
+        [self dismissViewControllerAnimated:YES completion:nil];
+    else
+        [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void) chat:(id)sender
@@ -161,6 +164,7 @@ static unsigned short ConversationTableSection = 1;
         }
 
         connectionListViewController.title = NSLocalizedString(@"Connections", @"Connection");
+        connectionListViewController.type = Clients;
         connectionListViewController.items = [connections copy];
         connectionListViewController.itemImage = [UIImage imageNamed:@"NetworkIcon"];
         connectionListViewController.target = self;
@@ -231,8 +235,10 @@ static unsigned short ConversationTableSection = 1;
 
 - (void) connectionDidChanged:(PreferencesListViewController *)sender
 {
-    _client = [_connections objectAtIndex:sender.selectedItem];
-    [self.tableView reloadData];
+    if ((int)sender.selectedItem > -1) {
+        _client = [_connections objectAtIndex:sender.selectedItem];
+        [self.tableView reloadData];
+    }
     if(_client != nil && _configuration.name) {
         self.navigationItem.rightBarButtonItem.enabled = YES;
     }
