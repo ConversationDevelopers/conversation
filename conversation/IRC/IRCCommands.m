@@ -123,6 +123,19 @@
     [IRCCommands kickUser:nickname onChannel:channel withMessage:message];
 }
 
++ (void)sendServerPasswordForClient:(IRCClient *)client
+{
+    /* Send server password if applicable */
+    if ([self.configuration.serverPasswordReference length] > 0) {
+        NSString *password = [SSKeychain passwordForService:@"conversation" account:self.configuration.serverPasswordReference];
+        if (password != nil && [password length] > 0) {
+            [self.connection send:[NSString stringWithFormat:@"PASS %@", password]];
+        } else {
+            NSLog(@"A server password reference was found but no password: %@", self.configuration.serverPasswordReference);
+        }
+    }
+}
+
 + (void)onTimer:(float)seconds runCommand:(NSString *)command inConversation:(IRCConversation *)conversation
 {
     /* Create the invocation for the command */

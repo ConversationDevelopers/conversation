@@ -44,6 +44,7 @@
 + (void)leaveChannel:(NSString *)channel withMessage:(NSString *)message onClient:(IRCClient *)client;
 + (void)joinChannel:(NSString *)channel onClient:(IRCClient *)client;
 + (void)rejoinChannel:(NSString *)channel withMessage:(NSString *)message onClient:(IRCClient *)client;
++ (void)sendServerPasswordForClient:(IRCClient *)client;
 + (void)onTimer:(float)seconds runCommand:(NSString *)command inConversation:(IRCConversation *)conversation;
 + (void)kickUser:(NSString *)nickname onChannel:(IRCChannel *)channel withMessage:(NSString *)message;
 + (void)banUser:(NSString *)nickname onChannel:(IRCChannel *)channel;

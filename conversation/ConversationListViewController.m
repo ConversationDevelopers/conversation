@@ -47,6 +47,7 @@
 #import "UIBarButtonItem+Methods.h"
 #import "CertificateInfoViewController.h"
 #import "CertificateItemRow.h"
+#import "IRCCommands.h"
 
 @implementation ConversationListViewController
 
@@ -628,7 +629,11 @@
                 }
                 [blockself.connections setObject:client atIndexedSubscript:i];
                 [[AppPreferences sharedPrefs] setConnectionConfiguration:client.configuration atIndex:i];
-                [client connect];
+                if ([client isConnected]) {
+                    [IRCCommands sendServerPasswordForClient:client];
+                } else {
+                    [client connect];
+                }
             }
         }
     }];
