@@ -30,6 +30,7 @@
 #import "IRCCommands.h"
 #import "IRCConnection.h"
 #import "IRCClient.h"
+#import "NSString+Methods.h"
 
 @implementation IRCCommands
 
@@ -99,7 +100,7 @@
 + (void)banUser:(NSString *)nickname onChannel:(IRCChannel *)channel
 {
     NSString *banMask;
-    if ([nickname containsString:@"@"]) {
+    if ([nickname isValidWildcardIgnoreMask]) {
         /* The input seems to already be a hostmask. We will use it as it is. */
         banMask = nickname;
     } else {
