@@ -290,6 +290,22 @@ uint32_t FNV32(const char *s)
     return [self.userColors objectAtIndex:(int)floor(FNV32(nick.UTF8String) / 300000000)];
 }
 
+- (NSArray *)getMentions:(NSString *)string
+{
+    IRCChannel *channel = (IRCChannel*)_conversation;
+    NSMutableArray *ranges = [[NSMutableArray alloc] init];
+    NSCharacterSet *wordBoundries = [[NSCharacterSet letterCharacterSet] invertedSet];
+    for (IRCUser *user in channel.users) {
+        NSRange range = [string rangeOfString:user.nick];
+        if (range.location != NSNotFound &&
+            (range.location == 0 || [[string substringWithRange:NSMakeRange(range.location-1, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound) &&
+            (range.location+range.length+1 > string.length || [[string substringWithRange:NSMakeRange(range.location+range.length, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound)) {
+            [ranges addObject:[NSValue valueWithRange:range]];
+        }
+    }
+    return ranges;
+}
+
 - (NSAttributedString *)setLinks:(NSString *)string
 {
     NSMutableArray *ranges = [[NSMutableArray alloc] init];
@@ -451,7 +467,8 @@ uint32_t FNV32(const char *s)
         case ET_PRIVMSG: {
             
             string = [[NSMutableAttributedString alloc] initWithAttributedString:[self setLinks:[NSString stringWithFormat:@"%@%@\n%@", status, user.nick, msg]]];
-
+            msg = [string.string substringFromIndex:status.length+user.nick.length+1];
+            
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
             [string addAttribute:NSParagraphStyleAttributeName
@@ -461,14 +478,23 @@ uint32_t FNV32(const char *s)
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:16.0]
                            range:NSMakeRange(0, status.length+user.nick.length)];
+
             
             [string addAttribute:NSForegroundColorAttributeName
                            value:[self colorForNick:user.nick]
                            range:NSMakeRange(0, status.length+user.nick.length)];
-            
+
             [string addAttribute:NSFontAttributeName
                            value:[UIFont systemFontOfSize:12.0]
                            range:NSMakeRange(status.length+user.nick.length+1, string.length-status.length-user.nick.length-1)];
+
+            
+            NSArray *mentions = [self getMentions:msg];
+            for (NSValue *range in mentions) {
+                [string addAttribute:NSFontAttributeName
+                               value:[UIFont boldSystemFontOfSize:12.0]
+                               range:NSMakeRange(range.rangeValue.location+status.length+user.nick.length+1, range.rangeValue.length)];
+            }
 
             break;
         }
