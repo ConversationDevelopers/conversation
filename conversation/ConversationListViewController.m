@@ -134,6 +134,7 @@
 - (void)showSettings:(id)sender
 {
     NSLog(@"Show Settings");
+    [self displayPasswordEntryDialog:_connections[0]];
 }
 
 - (void)addConversation:(id)sender
@@ -590,6 +591,49 @@
     [message.conversation addPreviewMessage:string];
     message.conversation.unreadCount++;
     [self.tableView reloadData];
+}
+
+- (void)displayPasswordEntryDialog:(IRCClient *)client
+{
+    
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle:NSLocalizedString(@"Please enter a password", @"Please enter a password")
+                          message:NSLocalizedString(@"You haven't specified a password or the entered password did not match", @"You haven't specified a password or the entered password did not match")
+                          delegate:self
+                          cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                          otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil ];
+    
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    UITextField* answerField = [alert textFieldAtIndex:0];
+    answerField.keyboardType = UIKeyboardTypeNumberPad;
+    answerField.placeholder = @"Password";
+    
+    __block ConversationListViewController *blockself = self;
+    [alert showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
+        if (buttonIndex == 1) {
+            if (answerField.text.length) {
+                if (client.configuration.serverPasswordReference.length) {
+                    NSString *password = [SSKeychain passwordForService:@"conversation" account:client.configuration.serverPasswordReference];
+                    if (password.length)
+                        [SSKeychain deletePasswordForService:@"conversation" account:client.configuration.serverPasswordReference];
+                }
+                NSString *identifier = [[NSUUID UUID] UUIDString];
+                [SSKeychain setPassword:answerField.text forService:@"conversation" account:identifier];
+                client.configuration.serverPasswordReference = identifier;
+                IRCClient *cl;
+                int i;
+                for (i=0; i<blockself.connections.count; i++) {
+                    cl = [blockself.connections objectAtIndex:i];
+                    if([client.configuration.uniqueIdentifier isEqualToString:client.configuration.uniqueIdentifier])
+                        break;
+                }
+                [blockself.connections setObject:client atIndexedSubscript:i];
+                [[AppPreferences sharedPrefs] setConnectionConfiguration:client.configuration atIndex:i];
+                [client connect];
+            }
+        }
+    }];
+    
 }
 
 - (void)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest
