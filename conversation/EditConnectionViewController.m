@@ -111,14 +111,20 @@ static unsigned short EncodingTableSection = 4;
     
     // Store passwords in keychain
     if(_configuration.serverPasswordReference.length) {
-        NSString *identifier = [[NSUUID UUID] UUIDString];
-        [SSKeychain setPassword:_configuration.serverPasswordReference forService:@"conversation" account:identifier];
-        _configuration.serverPasswordReference = identifier;
+        NSString *password = [SSKeychain passwordForService:@"conversation" account:_configuration.serverPasswordReference];
+        if (password.length == 0) {
+            NSString *identifier = [[NSUUID UUID] UUIDString];
+            [SSKeychain setPassword:_configuration.serverPasswordReference forService:@"conversation" account:identifier];
+            _configuration.serverPasswordReference = identifier;
+        }
     }
     if(_configuration.authenticationPasswordReference.length) {
-        NSString *identifier = [[NSUUID UUID] UUIDString];
-        [SSKeychain setPassword:_configuration.authenticationPasswordReference forService:@"conversation" account:identifier];
-        _configuration.authenticationPasswordReference = identifier;
+        NSString *password = [SSKeychain passwordForService:@"conversation" account:_configuration.authenticationPasswordReference];
+        if (password.length == 0) {
+            NSString *identifier = [[NSUUID UUID] UUIDString];
+            [SSKeychain setPassword:_configuration.authenticationPasswordReference forService:@"conversation" account:identifier];
+            _configuration.authenticationPasswordReference = identifier;
+        }
     }
     
     IRCClient *client = [[IRCClient alloc] initWithConfiguration:_configuration];
@@ -597,6 +603,12 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
     sender.accessoryType = UITableViewCellAccessoryNone;
     badInput = YES;
     
+    if ([_connection.serverPasswordReference isEqualToString:_configuration.serverPasswordReference]) {
+        NSString *password = [SSKeychain passwordForService:@"conversation" account:_configuration.serverPasswordReference];
+        if (password.length)
+            [SSKeychain deletePasswordForService:@"conversation" account:_configuration.serverPasswordReference];
+    }
+    
     if(sender.textField.text.length == 0) {
         _configuration.serverPasswordReference = @"";
         badInput = NO;
@@ -690,8 +702,14 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
     sender.accessoryType = UITableViewCellAccessoryNone;
     badInput = YES;
     
+    if ([_connection.authenticationPasswordReference isEqualToString:_configuration.authenticationPasswordReference]) {
+        NSString *password = [SSKeychain passwordForService:@"conversation" account:_configuration.authenticationPasswordReference];
+        if (password.length)
+            [SSKeychain deletePasswordForService:@"conversation" account:_configuration.authenticationPasswordReference];
+    }
+    
     if(sender.textField.text.length == 0) {
-        _configuration.authenticationPasswordReference = _connection.authenticationPasswordReference;
+        _configuration.authenticationPasswordReference = @"";
         badInput = NO;
     }
     
