@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AddStringItemViewController : UITableViewController <UITableViewDataSource>
+@interface AddStringItemViewController : UITableViewController <UITableViewDataSource> {
+    BOOL _badInput;
+}
+
 @property (nonatomic, weak) id target;
 @property (nonatomic) SEL action;
 @property (nonatomic) NSString *stringValue;

@@ -300,6 +300,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
     if (indexPath.section == IgnoreTableSection) {
         PreferencesListViewController *listViewController = [[PreferencesListViewController alloc] init];
         listViewController.title = NSLocalizedString(@"Ignore List", @"Ignore List");
+        listViewController.addViewTitle = NSLocalizedString(@"Add Ignore", @"Title of add ignore item label");
         listViewController.addItemText = NSLocalizedString(@"Add Ignore", @"Title of add ignore item label");
         listViewController.saveButtonTitle = NSLocalizedString(@"Save", @"Save");
         listViewController.noItemsText = NSLocalizedString(@"No Ignores", @"No Ignores");

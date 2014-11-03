@@ -32,6 +32,7 @@
 #import "AddStringItemViewController.h"
 #import "PreferencesTextCell.h"
 #import "UITableView+Methods.h"
+#import "NSString+Methods.h"
 
 @implementation AddStringItemViewController
 
@@ -78,6 +79,15 @@
 
 - (void) save:(id)sender
 {
+    if (_badInput) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Please check input values", @"Please check input values")
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
     if ([[UIApplication sharedApplication] sendAction:_action to:_target from:self forEvent:nil]) {
         [self.navigationController popViewControllerAnimated:YES];
     }
@@ -108,6 +118,11 @@
 
 - (void)ignoreChanged:(PreferencesTextCell *)sender
 {
+    if ([self.title containsString:@"Ignore"]) {
+        _badInput = YES;
+        if ([sender.textField.text isValidWildcardIgnoreMask])
+            _badInput = NO;
+    }
     if(sender.textField.text.length > 1) {
         _stringValue = sender.textField.text;
         self.navigationItem.rightBarButtonItem.enabled = YES;
