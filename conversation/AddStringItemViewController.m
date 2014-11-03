@@ -120,8 +120,14 @@
 {
     if ([self.title containsString:@"Ignore"]) {
         _badInput = YES;
-        if ([sender.textField.text isValidWildcardIgnoreMask])
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        if ([sender.textField.text isValidWildcardIgnoreMask] || [sender.textField.text isValidNickname:nil]) {
             _badInput = NO;
+            sender.accessoryType = UITableViewCellAccessoryCheckmark;
+            _stringValue = sender.textField.text;
+        }
+
+        return;
     }
     if(sender.textField.text.length > 1) {
         _stringValue = sender.textField.text;
