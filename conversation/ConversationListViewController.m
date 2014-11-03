@@ -254,7 +254,14 @@
 {
     if(self.connections.count > 0) {
         UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
-        
+    
+        // Remove old stuff
+        for (UIView *v in header.contentView.subviews) {
+            if ([v isKindOfClass:[UIButton class]] || [v isKindOfClass:[UIActivityIndicatorView class]]) {
+                [v removeFromSuperview];
+            }
+        }
+
         // Set colors
         [header.textLabel setTextColor:[UIColor darkGrayColor]];
         header.contentView.backgroundColor = [UIColor whiteColor];
