@@ -31,6 +31,7 @@
 #import "IRCCertificateTrust.h"
 #import "ConversationItemView.h"
 #import "CertificateItemRow.h"
+#import "AppPreferences.h"
 
 #define NSLocalisedString(x) NSLocalizedString(x, x)
 
@@ -123,6 +124,13 @@
     NSMutableArray *signatures = [[[self.client configuration] trustedSSLSignatures] mutableCopy];
     [signatures addObject:signature];
     self.client.configuration.trustedSSLSignatures = signatures;
+    NSUInteger index = 0;
+    for (IRCClient *connection in [[AppPreferences sharedPrefs] connections]) {
+        if ([connection.configuration.uniqueIdentifier isEqualToString:self.client.configuration.uniqueIdentifier]) {
+            [[AppPreferences sharedPrefs] setConnectionConfiguration:self.client.configuration atIndex:index];
+        }
+        index++;
+    }
 }
 
 - (void)receivedTrustFromUser:(BOOL)trust
