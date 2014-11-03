@@ -126,12 +126,12 @@
 + (void)sendServerPasswordForClient:(IRCClient *)client
 {
     /* Send server password if applicable */
-    if ([self.configuration.serverPasswordReference length] > 0) {
-        NSString *password = [SSKeychain passwordForService:@"conversation" account:self.configuration.serverPasswordReference];
+    if ([client.configuration.serverPasswordReference length] > 0) {
+        NSString *password = [SSKeychain passwordForService:@"conversation" account:client.configuration.serverPasswordReference];
         if (password != nil && [password length] > 0) {
-            [self.connection send:[NSString stringWithFormat:@"PASS %@", password]];
+            [client.connection send:[NSString stringWithFormat:@"PASS %@", password]];
         } else {
-            NSLog(@"A server password reference was found but no password: %@", self.configuration.serverPasswordReference);
+            NSLog(@"A server password reference was found but no password: %@", client.configuration.serverPasswordReference);
         }
     }
 }
