@@ -623,7 +623,7 @@
                 int i;
                 for (i=0; i<blockself.connections.count; i++) {
                     cl = [blockself.connections objectAtIndex:i];
-                    if([client.configuration.uniqueIdentifier isEqualToString:client.configuration.uniqueIdentifier])
+                    if([client.configuration.uniqueIdentifier isEqualToString:cl.configuration.uniqueIdentifier])
                         break;
                 }
                 [blockself.connections setObject:client atIndexedSubscript:i];
