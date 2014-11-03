@@ -170,6 +170,17 @@
     return NO;
 }
 
+- (BOOL)isInoredHostMask:(IRCClient *)client
+{
+    for (NSString *ignoreMaskString in [client.configuration ignores]) {
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF like %@", ignoreMaskString];
+        if ([predicate evaluateWithObject:self] == YES) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
 + (NSString *) stringWithCString:(const char *)string usingEncodingPreference:(IRCConnectionConfiguration *)configuration
 {
     NSStringEncoding encoding;

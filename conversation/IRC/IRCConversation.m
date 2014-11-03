@@ -30,6 +30,7 @@
 
 #import "IRCConversation.h"
 #import "IRCClient.h"
+#import "IRCMessage.h"
 
 #define MAX_BUFFER_COUNT 3000
 
@@ -108,6 +109,12 @@
 
 - (void)addMessageToConversation:(id)object
 {
+    IRCMessage *message = (IRCMessage *)object;
+    NSString *sender = (NSString *)[message sender];
+    if ([sender isInoredHostMask:message.conversation.client]) {
+        return;
+    }
+    
     /* Add the message to the message list. */
     [self.messages addObject:object];
     

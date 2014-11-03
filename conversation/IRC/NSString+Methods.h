@@ -41,6 +41,7 @@
 - (BOOL) isValidNickname:(IRCClient *)client;
 - (BOOL) isValidUsername;
 - (BOOL) isValidWildcardIgnoreMask;
+- (BOOL)isInoredHostMask:(IRCClient *)client;
 
 - (NSData *)dataUsingEncodingFromConfiguration:(IRCConnectionConfiguration *)configuration;
 

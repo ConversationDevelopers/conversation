@@ -65,7 +65,8 @@
     return nil;
 }
 
-- (NSString *)description {
+- (NSString *)description
+{
     return [NSString stringWithFormat:@"%@!%@@%@", self.nick, self.username, self.hostname];
 }
 
