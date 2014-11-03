@@ -45,6 +45,7 @@
 - (void)selectConversationWithIdentifier:(NSString *)identifier;
 - (NSString *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client;
 - (void)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest;
+- (void)displayPasswordEntryDialog:(IRCClient *)client;
 
 @end
 

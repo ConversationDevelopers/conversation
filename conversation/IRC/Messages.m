@@ -848,7 +848,10 @@
 
 + (void)clientReceivedServerPasswordMismatchError:(IRCClient *)client
 {
-    // TODO: Display password entry dialog.
+    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [controller displayPasswordEntryDialog:client];
+    });
 }
 
 @end
