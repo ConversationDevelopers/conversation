@@ -170,7 +170,11 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, _messageEntryHeight, _contentView.bounds.size.width, 15.0)
                                                                   message:message
                                                              conversation:_conversation];
-    _messageEntryHeight += [messageView frameHeight] + 15.0;
+    if (message.messageType == ET_PRIVMSG)
+        _messageEntryHeight += [messageView frameHeight] + 15.0;
+    else
+        _messageEntryHeight += [messageView frameHeight];
+    
     messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [_contentView addSubview:messageView];
     _contentView.contentSize = CGSizeMake(_container.bounds.size.width, _messageEntryHeight);

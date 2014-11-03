@@ -132,6 +132,7 @@
     _messageLayer.string = _attributedString;
     
     _messageLayer.frame = CGRectMake(10, 5, self.bounds.size.width-20, _size.height);
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, _size.height+10);
     
     if (_message.messageType == ET_PRIVMSG) {
         NSString *time = @"";
@@ -155,9 +156,12 @@
         _timeLayer.string = timestamp;
         _timeLayer.frame = CGRectMake(self.bounds.size.width-timestamp.size.width-5, 5, timestamp.size.width, timestamp.size.height);
         self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
+    } else {
+        _messageLayer.frame = CGRectMake(10, 0, self.bounds.size.width-20, _size.height);
+        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, _size.height);
     }
     
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, _size.height+10);
+
     
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)_attributedString);
     
