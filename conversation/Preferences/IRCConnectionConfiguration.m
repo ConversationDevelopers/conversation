@@ -65,7 +65,7 @@
         self.channels = [[NSArray alloc] init];
         self.queries = [[NSArray alloc] init];
         self.ignores = [[NSArray alloc] init];
-        self.connectCommands = @[@"MSG Alex` hi", @"MSG nickserv identify secret"];
+        self.connectCommands = [[NSArray alloc] init];
         
         self.trustedSSLSignatures = [[NSArray alloc] init];
         
