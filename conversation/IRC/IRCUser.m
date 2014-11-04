@@ -70,11 +70,17 @@
     return [NSString stringWithFormat:@"%@!%@@%@", self.nick, self.username, self.hostname];
 }
 
+- (NSString *)fullhostmask
+{
+    return [NSString stringWithFormat:@"%@!%@@%@", self.nick, self.username, self.hostname];
+}
+
 - (BOOL)isIgnoredHostMask:(IRCClient *)client
 {
     for (NSString *ignoreMaskString in [client.configuration ignores]) {
         if ([ignoreMaskString isValidWildcardIgnoreMask]) {
-            NSString *hostmask = (NSString *)self;
+            NSString *hostmask = [self fullhostmask];
+            
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF like %@", ignoreMaskString];
             if ([predicate evaluateWithObject:hostmask] == YES) {
                 return YES;
