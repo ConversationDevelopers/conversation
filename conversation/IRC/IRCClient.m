@@ -272,7 +272,7 @@
         }
         
         /* Copy the characters from the hostname range we calculated earlier */
-        long hostnameLength = (senderLength - usernameLength - nicknameLength);
+        long hostnameLength = (senderLength - usernameLength - nicknameLength - 1);
         if (hostnameLength > 0) {
             hostname = malloc(hostnameLength+1);
             strncpy(hostname, lineBeforeIteration, hostnameLength);
@@ -281,7 +281,7 @@
             hostname = "";
         }
         
-        lineBeforeIteration = lineBeforeIteration + hostnameLength;
+        lineBeforeIteration = lineBeforeIteration + hostnameLength + 1;
         
         /* Consume the following space leading to the IRC command */
         line++;
