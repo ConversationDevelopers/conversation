@@ -125,8 +125,8 @@
     [signatures addObject:signature];
     self.client.configuration.trustedSSLSignatures = signatures;
     NSUInteger index = 0;
-    for (IRCClient *connection in [[AppPreferences sharedPrefs] connections]) {
-        if ([connection.configuration.uniqueIdentifier isEqualToString:self.client.configuration.uniqueIdentifier]) {
+    for (NSDictionary *config in [[AppPreferences sharedPrefs] getConnectionConfigurations]) {
+        if ([config[@"uniqueIdentifier"] isEqualToString:self.client.configuration.uniqueIdentifier]) {
             [[AppPreferences sharedPrefs] setConnectionConfiguration:self.client.configuration atIndex:index];
         }
         index++;
