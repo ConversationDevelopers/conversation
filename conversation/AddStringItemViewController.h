@@ -17,4 +17,5 @@
 @property (nonatomic) NSString *stringValue;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic) NSString *saveButtonTitle;
+@property (nonatomic) NSString *textFieldLabelTitle;
 @end

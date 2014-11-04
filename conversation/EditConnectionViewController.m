@@ -199,7 +199,7 @@ static unsigned short EncodingTableSection = 4;
     if (section == IdentityTableSection)
         return 5;
     if (section == AutomaticTableSection)
-        return 3;
+        return 4;
     if (section == IgnoreTableSection)
         return 1;
     if (section == EncodingTableSection)
@@ -208,7 +208,7 @@ static unsigned short EncodingTableSection = 4;
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-    if (indexPath.section == AutomaticTableSection && indexPath.row == 2)
+    if (indexPath.section == AutomaticTableSection && (indexPath.row == 2 || indexPath.row == 3))
         return indexPath;
     if (indexPath.section == IgnoreTableSection)
         return indexPath;
@@ -297,10 +297,32 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         
         return;
     }
+    if (indexPath.section == AutomaticTableSection && indexPath.row == 3) {
+        PreferencesListViewController *listViewController = [[PreferencesListViewController alloc] init];
+        listViewController.title = NSLocalizedString(@"Connect Commands", @"Connect Commands");
+        listViewController.addViewTitle = NSLocalizedString(@"Add Command", @"Title of add command item label");
+        listViewController.addViewTextFieldLabelTitle = NSLocalizedString(@"Command", @"Command");        
+        listViewController.addItemText = NSLocalizedString(@"Add Command", @"Title of add command item label");
+        listViewController.saveButtonTitle = NSLocalizedString(@"Save", @"Save");
+        listViewController.noItemsText = NSLocalizedString(@"No Commands", @"No Commands");
+        
+        listViewController.type = Strings;
+        listViewController.items = [_configuration.connectCommands mutableCopy];
+        listViewController.allowSelection = NO;
+        listViewController.allowEditing = YES;
+        listViewController.allowReorder = YES;
+        listViewController.target = self;
+        listViewController.action = @selector(connectCommandsChanged:);
+        
+        [self.navigationController pushViewController:listViewController animated:YES];
+        
+        return;
+    }
     if (indexPath.section == IgnoreTableSection) {
         PreferencesListViewController *listViewController = [[PreferencesListViewController alloc] init];
         listViewController.title = NSLocalizedString(@"Ignore List", @"Ignore List");
         listViewController.addViewTitle = NSLocalizedString(@"Add Ignore", @"Title of add ignore item label");
+        listViewController.addViewTextFieldLabelTitle = NSLocalizedString(@"Ignore Mask", @"Ignore Mask");
         listViewController.addItemText = NSLocalizedString(@"Add Ignore", @"Title of add ignore item label");
         listViewController.saveButtonTitle = NSLocalizedString(@"Save", @"Save");
         listViewController.noItemsText = NSLocalizedString(@"No Ignores", @"No Ignores");
@@ -316,7 +338,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         [self.navigationController pushViewController:listViewController animated:YES];
         
         return;
-        
     }
 	if (indexPath.section == EncodingTableSection) {
         PreferencesListViewController *listViewController = [[PreferencesListViewController alloc] init];
@@ -516,6 +537,14 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%i", i];
             } else {
                 cell.detailTextLabel.text = NSLocalizedString(@"None", @"No entries");
+            }
+            return cell;
+        } else if (indexPath.row == 3) {
+            UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];
+            cell.textLabel.text = NSLocalizedString(@"Connect Commands", @"Connect Commands");
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            if(_configuration.connectCommands.count) {
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%i", (int)_configuration.connectCommands.count];
             }
             return cell;
         }
@@ -735,6 +764,12 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 - (void)autoJoinChannelsChanged:(PreferencesListViewController *)sender
 {
     _configuration.channels = sender.items;
+    [self.tableView reloadData];
+}
+
+- (void)connectCommandsChanged:(PreferencesListViewController *)sender
+{
+    _configuration.connectCommands = sender.items;
     [self.tableView reloadData];
 }
 

@@ -54,6 +54,7 @@ typedef NS_ENUM(NSUInteger, ListType) {
 @property (nonatomic) NSString *addItemText;
 @property (nonatomic) NSString *saveButtonTitle;
 @property (nonatomic) NSString *addViewTitle;
+@property (nonatomic) NSString *addViewTextFieldLabelTitle;
 
 
 @end

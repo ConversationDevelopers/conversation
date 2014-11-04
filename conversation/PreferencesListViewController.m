@@ -47,7 +47,7 @@
     _saveButtonTitle = NSLocalizedString(@"Save", @"Save");
     _noItemsText = NSLocalizedString(@"No Items", @"No Items");
     _addViewTitle = NSLocalizedString(@"Add Channel", @"Add Channel");
-    
+    _addViewTextFieldLabelTitle = @"";
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     return self;
@@ -123,6 +123,7 @@
         AddStringItemViewController *editViewController = [[AddStringItemViewController alloc] init];
         editViewController.title = _addViewTitle;
         editViewController.saveButtonTitle = _saveButtonTitle;
+        editViewController.textFieldLabelTitle = _addViewTextFieldLabelTitle;
         editViewController.target = self;
         editViewController.action = @selector(stringAdded:);
         [self.navigationController pushViewController:editViewController animated:YES];        

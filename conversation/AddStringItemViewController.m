@@ -41,6 +41,7 @@
         return nil;
     
     _saveButtonTitle = NSLocalizedString(@"Save", @"Save");
+    _textFieldLabelTitle = @"";
     
     return self;
 }
@@ -108,15 +109,15 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
-    cell.textLabel.text = NSLocalizedString(@"Ignore Mask", @"Ignore Mask");
+    cell.textLabel.text = _textFieldLabelTitle;
     cell.textField.placeholder = @"Required";
     cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    cell.textEditAction = @selector(ignoreChanged:);
+    cell.textEditAction = @selector(valueChanged:);
     return cell;
 }
 
-- (void)ignoreChanged:(PreferencesTextCell *)sender
+- (void)valueChanged:(PreferencesTextCell *)sender
 {
     if ([self.title containsString:@"Ignore"]) {
         _badInput = YES;
