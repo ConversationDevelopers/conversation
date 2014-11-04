@@ -50,6 +50,7 @@
 + (IRCUser *)fromNicknameString:(NSString *)sender onChannel:(IRCChannel *)channel;
 + (NSString *)statusToModeSymbol:(int)status;
 - (NSString *)description;
+- (BOOL)isIgnoredHostMask:(IRCClient *)client;
 
 typedef enum ChannelPrivileges : NSUInteger {
     NORMAL,

@@ -110,8 +110,7 @@
 - (void)addMessageToConversation:(id)object
 {
     IRCMessage *message = (IRCMessage *)object;
-    NSString *sender = (NSString *)[message sender];
-    if ([sender isInoredHostMask:message.conversation.client]) {
+    if ([message.sender isIgnoredHostMask:message.conversation.client]) {
         return;
     }
     

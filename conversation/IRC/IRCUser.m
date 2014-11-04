@@ -70,6 +70,24 @@
     return [NSString stringWithFormat:@"%@!%@@%@", self.nick, self.username, self.hostname];
 }
 
+- (BOOL)isIgnoredHostMask:(IRCClient *)client
+{
+    for (NSString *ignoreMaskString in [client.configuration ignores]) {
+        if ([ignoreMaskString isValidWildcardIgnoreMask]) {
+            NSString *hostmask = (NSString *)self;
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF like %@", ignoreMaskString];
+            if ([predicate evaluateWithObject:hostmask] == YES) {
+                return YES;
+            }
+        } else {
+            if ([ignoreMaskString isEqualToString:self.nick]) {
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+
 + (IRCUser *)fromNickname:(const char *)sender onChannel:(IRCChannel *)channel
 {
     NSString *nickString = [NSString stringWithCString:sender usingEncodingPreference:[[channel client] configuration]];
