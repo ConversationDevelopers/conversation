@@ -40,4 +40,6 @@
 @property (nonatomic) BOOL isChannel;
 @property (nonatomic) IRCConversation *conversation;
 
+- (void)hideAccessories:(UIGestureRecognizer*)sender;
+
 @end

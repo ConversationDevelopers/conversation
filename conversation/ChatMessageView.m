@@ -625,10 +625,11 @@ uint32_t FNV32(const char *s)
 
 - (void)showImage:(UITapGestureRecognizer *)recognizer
 {
-    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+
+    [_chatViewController hideAccessories:nil];
     UIImageView *preview = (UIImageView*)recognizer.view;
     
-    CGRect startFrame = [preview convertRect:preview.bounds toView:controller.navigationController.view];
+    CGRect startFrame = [preview convertRect:preview.bounds toView:[self viewController].navigationController.view];
     CGRect endFrame = [[UIScreen mainScreen] bounds];
     
     if (!_containerView)
@@ -650,8 +651,9 @@ uint32_t FNV32(const char *s)
         imageView.image = preview.image;
     }
     imageView.tag = recognizer.view.tag;
-    [controller.navigationController.view addSubview:_containerView];
-    [controller.navigationController.view addSubview:imageView];
+    
+    [[[self viewController] navigationController].view addSubview:_containerView];
+    [[[self viewController] navigationController].view addSubview:imageView];
 
     UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideImage:)];
     [singleTapRecogniser setDelegate:self];
