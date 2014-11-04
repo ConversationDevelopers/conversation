@@ -563,14 +563,36 @@ uint32_t FNV32(const char *s)
         [recognizer view].transform = CGAffineTransformScale([[recognizer view] transform], [recognizer scale], [recognizer scale]);
         [recognizer setScale:1];
     }
+
     if ([recognizer state] == UIGestureRecognizerStateEnded) {
-        if (recognizer.view.frame.size.width < [[UIScreen mainScreen] bounds].size.width) {
+        if (recognizer.view.frame.size.width < [[UIScreen mainScreen] bounds].size.width ||
+            recognizer.view.frame.origin.x + recognizer.view.frame.size.width < _containerView.frame.size.width ||
+            recognizer.view.frame.origin.y + recognizer.view.frame.size.height < _containerView.frame.size.height){
+            
             CGRect frame = recognizer.view.superview.frame;
             [UIView animateWithDuration:0.3 animations:^{
                 recognizer.view.frame = frame;
             }];
         }
     }
+
+}
+
+- (void)panImage:(UIPanGestureRecognizer *)recognizer
+{
+    CGPoint translation = [recognizer translationInView:_containerView];
+    
+    if (recognizer.view.frame.origin.x + translation.x > 0 ||
+        recognizer.view.frame.origin.y + translation.y > 0 ||
+        recognizer.view.frame.origin.x + recognizer.view.frame.size.width < _containerView.frame.size.width ||
+        recognizer.view.frame.origin.y + recognizer.view.frame.size.height < _containerView.frame.size.height) {
+        return;
+    }
+    
+    recognizer.view.center = CGPointMake(recognizer.view.center.x + translation.x,
+                                         recognizer.view.center.y + translation.y);
+    [recognizer setTranslation:CGPointMake(0, 0) inView:_containerView];
+
 }
 
 - (void)shareImage:(UILongPressGestureRecognizer *)recognizer
@@ -640,6 +662,10 @@ uint32_t FNV32(const char *s)
     UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(scaleImage:)];
     [pinchGesture setDelegate:self];
     [imageView addGestureRecognizer:pinchGesture];
+    
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panImage:)];
+    [panGesture setDelegate:self];
+    [imageView addGestureRecognizer:panGesture];
     
     [UIView animateWithDuration:0.6 animations:^{
         _containerView.alpha = 1.0;
