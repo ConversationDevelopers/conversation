@@ -64,7 +64,8 @@
 
         self.channels = [[NSArray alloc] init];
         self.queries = [[NSArray alloc] init];
-        self.ignores = @[@"*!bill@microsoft.com", @"*!woz@apple.com", @"larry!page@*"];
+        self.ignores = [[NSArray alloc] init];
+        self.connectCommands = @[@"MSG Alex` hi", @"MSG nickserv identify secret"];
         
         self.trustedSSLSignatures = [[NSArray alloc] init];
         
@@ -123,6 +124,7 @@
         
         self.trustedSSLSignatures = trustedSSLSignatures;
         self.ignores = dict[@"ignores"];
+        self.connectCommands = dict[@"connectCommands"];
     }
     return self;
 }

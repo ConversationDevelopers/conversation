@@ -63,6 +63,7 @@
 @property (nonatomic, copy) NSArray *channels;
 @property (nonatomic, copy) NSArray *queries;
 @property (nonatomic, copy) NSArray *ignores;
+@property (nonatomic, copy) NSArray *connectCommands;
 @property (nonatomic, copy) NSArray *trustedSSLSignatures;
 
 @end
