@@ -438,6 +438,7 @@
         @"HOP",
         @"J",
         @"JOIN",
+        @"K",
         @"KB",
         @"KICK",
         @"KICKBAN",
