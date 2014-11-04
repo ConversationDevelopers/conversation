@@ -439,6 +439,8 @@
             if (self.configuration.useServerAuthenticationService == NO) {
                 [self autojoin];
             }
+            
+            [self performUserDefinedConnectCommands];
             break;
             
         case RPL_ISUPPORT:
@@ -865,6 +867,20 @@
         if (channel.configuration.autoJoin) {
             [self.connection send:[NSString stringWithFormat:@"JOIN %@", channel.name]];
         }
+    }
+}
+
+- (void)performUserDefinedConnectCommands
+{
+    IRCChannelConfiguration *config = [[IRCChannelConfiguration alloc] init];
+    IRCConversation *conversation = [[IRCConversation alloc] initWithConfiguration:config withClient:self];
+    for (NSString *command in self.configuration.connectCommands) {
+        NSString *commandCopy = command;
+        if ([commandCopy hasPrefix:@"/"]) {
+            [commandCopy substringFromIndex:1];
+        }
+        commandCopy = [commandCopy stringByReplacingOccurrencesOfString:@"$NICK" withString:self.currentUserOnConnection.nick];
+        [InputCommands performCommand:commandCopy inConversation:conversation];
     }
 }
 
