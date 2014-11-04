@@ -38,6 +38,8 @@
 }
 
 @property (nonatomic) BOOL isChannel;
+@property (nonatomic) BOOL userlistIsVisible;
+@property (nonatomic) BOOL keyboardIsVisible;
 @property (nonatomic) IRCConversation *conversation;
 
 - (void)hideAccessories:(UIGestureRecognizer*)sender;

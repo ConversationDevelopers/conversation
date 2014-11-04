@@ -37,7 +37,6 @@
 #import <ImgurAnonymousAPIClient/ImgurAnonymousAPIClient.h>
 
 @interface ChatViewController ()
-@property (nonatomic) BOOL userlistIsVisible;
 @property (readonly, nonatomic) UIView *container;
 @property (readonly, nonatomic) UIScrollView *contentView;
 @property (readonly, nonatomic) PHFComposeBarView *composeBarView;
@@ -217,6 +216,11 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     CGFloat widthChange  = (endFrame.origin.x - startFrame.origin.x) * signCorrection;
     CGFloat heightChange = (endFrame.origin.y - startFrame.origin.y) * signCorrection;
     
+    if (heightChange < 0)
+        _keyboardIsVisible = YES;
+    else
+        _keyboardIsVisible = NO;
+    
     CGFloat sizeChange = UIInterfaceOrientationIsLandscape([self interfaceOrientation]) ? widthChange : heightChange;
     
     CGRect newContainerFrame = [[self container] frame];
@@ -239,7 +243,10 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (void)showUserList:(id)sender
 {
     _userlistIsVisible = YES;
-    [_composeBarView resignFirstResponder];    
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"userlistWillToggle" object:nil];
+    
+    [_composeBarView resignFirstResponder];
     UserListView *userlist = [self userListView];
     
     userlist.channel = (IRCChannel*)_conversation;
@@ -330,12 +337,16 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 {
     if (_userlistIsVisible) {
         
+        _userlistIsVisible = NO;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"userlistWillToggle" object:nil];
+        
         CGRect frame = _userListView.frame;
         frame.origin.x = _container.frame.size.width;
         _userListView.frame = frame;
         
         [_userListView removeFromSuperview];
-        _userlistIsVisible = NO;
+        
         return YES;
     }
     return NO;

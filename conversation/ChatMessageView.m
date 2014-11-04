@@ -103,6 +103,21 @@
     singleTapRecogniser.numberOfTapsRequired = 1;
     [self addGestureRecognizer:singleTapRecogniser];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(accessoryWillToggle:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(accessoryWillToggle:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(accessoryWillToggle:)
+                                                 name:@"userlistWillToggle"
+                                               object:nil];
+    
     return self;
 }
 
@@ -212,6 +227,9 @@
             }
         }
     }
+    
+    if (_chatViewController.keyboardIsVisible || _chatViewController.userlistIsVisible)
+        self.userInteractionEnabled = NO;
 }
 
 uint32_t FNV32(const char *s)
@@ -696,6 +714,15 @@ uint32_t FNV32(const char *s)
         [pasteboard setValue:pasteString forPasteboardType:@"public.plain-text"];
     }
 }
+
+- (void)accessoryWillToggle:(NSNotification *)notification
+{
+    if (_chatViewController.keyboardIsVisible || _chatViewController.userlistIsVisible)
+        self.userInteractionEnabled = NO;
+    else
+        self.userInteractionEnabled = YES;
+}
+
 
 - (UIViewController *)viewController {
     Class vcc = [UIViewController class];
