@@ -65,7 +65,6 @@
                                                                   target:self
                                                                   action:@selector(save:)];
     [saveButton setTintColor:[UIColor lightGrayColor]];
-    saveButton.enabled = NO;
     self.navigationItem.rightBarButtonItem = saveButton;
     
 }

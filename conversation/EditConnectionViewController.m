@@ -552,6 +552,9 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];
         cell.textLabel.text = NSLocalizedString(@"Ignore List", @"Ignore List");
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        if(_configuration.ignores.count) {
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%i", (int)_configuration.ignores.count];
+        }
         return cell;
     } else if (indexPath.section == EncodingTableSection) {
         UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];
@@ -776,6 +779,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 - (void)ignoresChanged:(PreferencesListViewController *)sender
 {
     _configuration.ignores = sender.items;
+    [self.tableView reloadData];    
 }
 
 - (void)encodingChanged:(PreferencesListViewController *)sender
