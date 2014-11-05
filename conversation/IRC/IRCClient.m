@@ -265,7 +265,7 @@
         username = malloc(usernameLength);
         if (usernameLength > 0) {
             strncpy(username, lineBeforeIteration, usernameLength -1);
-            username[usernameLength] = '\0';
+            username[usernameLength - 1] = '\0';
             lineBeforeIteration = lineBeforeIteration + usernameLength;
         } else {
             username = "";
