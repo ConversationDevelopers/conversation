@@ -178,6 +178,8 @@
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)socket withError:(NSError *)err
 {
+    if (err == nil) return;
+    
     NSString *errorMessage = nil;
     if ([err.domain isEqualToString:NSPOSIXErrorDomain]) {
         const char *error = strerror((int)err.domain);
