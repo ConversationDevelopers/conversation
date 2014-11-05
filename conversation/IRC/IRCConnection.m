@@ -78,7 +78,7 @@
     self.connectionPort = port;
     
     /* Establish a TCP connection */
-    if (![socket connectToHost:host onPort:port error:&err]) {
+    if (![socket connectToHost:host onPort:port withTimeout:15.0 error:&err]) {
         NSLog(@"Error: %@", err);
     } else {
         NSLog(@"Connecting..");
