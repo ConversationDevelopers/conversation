@@ -176,7 +176,7 @@
     NSLog(@"onSocketDidSecure:%p", sock);
 }
 
-- (void)socket:(GCDAsyncSocket *)sock willDisconnectWithError:(NSError *)err
+- (void)socketDidDisconnect:(GCDAsyncSocket *)socket withError:(NSError *)err
 {
     [self.client clientDidDisconnectWithError:[err localizedFailureReason]];
 }
