@@ -555,7 +555,7 @@
 - (NSString *)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client
 {
     for (IRCConversation *channel in client.getChannels) {
-        if ([channel.name isEqualToString:name]) {
+        if ([channel.name.lowercaseString isEqualToString:name.lowercaseString]) {
             return channel.configuration.uniqueIdentifier;
         }
     }
