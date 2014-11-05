@@ -262,7 +262,7 @@
         }
         
         /* Copy the characters from the username range we calculated earlier, and consume the same characters from the string as well as the following '@' */
-        username = malloc(usernameLength + 1);
+        username = malloc(usernameLength);
         if (usernameLength > 0) {
             strncpy(username, lineBeforeIteration, usernameLength -1);
             username[usernameLength] = '\0';
