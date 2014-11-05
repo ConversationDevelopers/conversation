@@ -398,6 +398,8 @@ uint32_t FNV32(const char *s)
     NSMutableAttributedString *string;
     NSString *status = [NSString stringWithFormat:@"%s", [self characterForStatus:user.channelPrivileges]];
     
+    msg = [msg stringByInsertingNewlineToFitInWidth:self.frame.size.width widthAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12.0]}];
+    
     switch(_message.messageType) {
         case ET_JOIN: {
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@@%@) %@",
@@ -513,7 +515,7 @@ uint32_t FNV32(const char *s)
         }
         case ET_PRIVMSG: {
             
-            string = [[NSMutableAttributedString alloc] initWithAttributedString:[self setLinks:[NSString stringWithFormat:@"%@%@\n%@", status, user.nick, msg]]];
+            string = [[NSMutableAttributedString alloc] initWithAttributedString:[self setLinks:[[NSString alloc] initWithFormat:@"%@%@\n%@", status, user.nick, msg]]];
             msg = [string.string substringFromIndex:status.length+user.nick.length+1];
             
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];

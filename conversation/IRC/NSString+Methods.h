@@ -44,6 +44,7 @@
 
 - (NSData *)dataUsingEncodingFromConfiguration:(IRCConnectionConfiguration *)configuration;
 
+- (NSString*)stringByInsertingNewlineToFitInWidth:(CGFloat)width widthAttributes:(NSDictionary *)attributes;
 - (NSString*)stringByTruncatingToWidth:(CGFloat)width withAttributes:(NSDictionary *)attributes;
 
 + (NSString *) stringWithCString:(const char *)string usingEncodingPreference:(IRCConnectionConfiguration *)configuration;
