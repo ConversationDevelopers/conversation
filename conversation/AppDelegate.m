@@ -95,6 +95,76 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:
 }
 
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    /* Check if this is an SSL irc link or not */
+    BOOL isSSLConnection = NO;
+    if ([[url scheme] caseInsensitiveCompare:@"ircs"]) {
+        isSSLConnection = YES;
+    }
+    
+    /* Retrive the host and make sure it is valid. If it is NULL or invalid there is not much we can do, so we will return false
+     and send the user back to the application they came from. */
+    NSString *address = [url host];
+    if ([address isValidServerAddress] == NO) {
+        return NO;
+    }
+    
+    /* Retrieve the port from the link. This parameter is optional and if none is provided we will default to 6697 for SSL, and 6667 otherwise */
+    NSUInteger port = [[url port] longValue];
+    if (port == 0) {
+        port = isSSLConnection ? 6697 : 6667;
+    }
+    
+    /* Check if the user already has a connection to this server, and if so; use it and add the channels in the link to the existing item */
+    IRCClient *client = nil;
+    for (IRCClient *connection in self.conversationsController.connections) {
+        if ([connection.configuration.serverAddress caseInsensitiveCompare:address] && connection.configuration.connectUsingSecureLayer == isSSLConnection) {
+            client = connection;
+        }
+    }
+    
+    if (client == nil) {
+        /* The user didn't already have a connection to this server so we will create a new one. */
+        IRCConnectionConfiguration *configuration = [[IRCConnectionConfiguration alloc] init];
+        configuration.serverAddress = address;
+        configuration.connectionPort = port;
+        configuration.connectUsingSecureLayer = isSSLConnection;
+        [[AppPreferences sharedPrefs] addConnectionConfiguration:configuration];
+        
+        
+        client = [[IRCClient alloc] initWithConfiguration:configuration];
+        [self.conversationsController.connections addObject:client];
+    }
+    
+    /* NSRL mangles IRC channel names with its native methods so we will get the full URL out as a string and parse it
+     to retrieve the list of channels to join */
+    NSString *path = [url absoluteString];
+    NSArray *pathComponents = [path componentsSeparatedByString:@"/"];
+    
+    if ([pathComponents count] >= 4) {
+        NSString *channelListString = [pathComponents[3] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        
+        /* Get the channels delimited by commas from the link path and add them to the channel list */
+        NSArray *channelStrings = [channelListString componentsSeparatedByString:@","];
+        for (NSString *channelString in channelStrings) {
+            if ([channelString isValidChannelName:client]) {
+                [self.conversationsController joinChannelWithName:channelString onClient:client];
+            }
+        }
+    }
+    
+    [self.conversationsController reloadData];
+    [[AppPreferences sharedPrefs] save];
+    
+    /* Connect automatically if this is a new or disconnected connection */
+    if ([client isConnected] == NO) {
+        [client connect];
+    }
+    return YES;
+}
+
 #pragma mark - Split view
 
 - (BOOL)splitViewController:(UISplitViewController *)splitViewController collapseSecondaryViewController:(UIViewController *)secondaryViewController ontoPrimaryViewController:(UIViewController *)primaryViewController
