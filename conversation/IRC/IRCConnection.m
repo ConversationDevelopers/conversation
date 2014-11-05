@@ -178,7 +178,17 @@
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)socket withError:(NSError *)err
 {
-    [self.client clientDidDisconnectWithError:[err localizedFailureReason]];
+    NSString *errorMessage = nil;
+    if ([err.domain isEqualToString:NSPOSIXErrorDomain]) {
+        const char *error = strerror((int)err.domain);
+        errorMessage = [NSString stringWithCString:error encoding:NSUTF8StringEncoding];
+    } else {
+        errorMessage = [err.userInfo objectForKey:@"NSLocalizedDescription"];
+        if (errorMessage == nil) {
+            errorMessage = [err localizedFailureReason];
+        }
+    }
+    [self.client clientDidDisconnectWithError:errorMessage];
 }
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock
