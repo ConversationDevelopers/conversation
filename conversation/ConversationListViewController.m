@@ -540,7 +540,7 @@
     }
 }
 
-- (void)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client
+- (NSString *)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client
 {
     IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
     configuration.name = name;
@@ -551,6 +551,7 @@
     [self.tableView reloadData];
     [[AppPreferences sharedPrefs] addChannelConfiguration:configuration forConnectionConfiguration:client.configuration];
     [[AppPreferences sharedPrefs] save];
+    return configuration.uniqueIdentifier;
 }
 
 - (NSString *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client
