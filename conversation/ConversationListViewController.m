@@ -220,9 +220,6 @@
         }
         if (conversation == nil) {
             for (conversation in client.getChannels) {
-                NSLog(@"ID: %@", identifier);
-                NSLog(@"ID2: %@", conversation.configuration.uniqueIdentifier);
-                NSLog(@"CONVO: %@", conversation.name);
                 if ([conversation.configuration.uniqueIdentifier isEqualToString:identifier]) {
                     _chatViewController.isChannel = YES;
                     _chatViewController.conversation = conversation;
