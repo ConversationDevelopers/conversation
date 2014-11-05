@@ -213,13 +213,25 @@
     for (client in _connections) {
         for (conversation in client.getQueries) {
             if ([conversation.configuration.uniqueIdentifier isEqualToString:identifier]) {
+                _chatViewController.isChannel = NO;
+                _chatViewController.conversation = conversation;
                 break;
             }
         }
+        if (conversation == nil) {
+            for (conversation in client.getChannels) {
+                NSLog(@"ID: %@", identifier);
+                NSLog(@"ID2: %@", conversation.configuration.uniqueIdentifier);
+                NSLog(@"CONVO: %@", conversation.name);
+                if ([conversation.configuration.uniqueIdentifier isEqualToString:identifier]) {
+                    _chatViewController.isChannel = YES;
+                    _chatViewController.conversation = conversation;
+                    break;
+                }
+            }
+        }
     }
-    
-    _chatViewController.isChannel = NO;
-    _chatViewController.conversation = conversation;
+
     [self.navigationController popToRootViewControllerAnimated:YES];
     [self.navigationController pushViewController:_chatViewController animated:YES];
 }
@@ -542,6 +554,12 @@
 
 - (NSString *)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client
 {
+    for (IRCConversation *channel in client.getChannels) {
+        if ([channel.name isEqualToString:name]) {
+            return channel.configuration.uniqueIdentifier;
+        }
+    }
+    
     IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
     configuration.name = name;
     IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:configuration withClient:client];
