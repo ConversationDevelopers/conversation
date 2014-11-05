@@ -106,7 +106,7 @@
     /* Iterate through the userlist and return the first user with the same nickname as the sender. */
     IRCUser *userFromUserlist = nil;
     for (IRCUser *user in [channel users]) {
-        if ([[user nick] caseInsensitiveCompare:sender]) {
+        if ([[user nick] caseInsensitiveCompare:sender] == NSOrderedSame) {
             userFromUserlist = user;
             break;
         }
