@@ -361,6 +361,7 @@ uint32_t FNV32(const char *s)
             [_images addObject:[self getImageLink:url]];
     }
 
+    
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
 
     int offset = 0;
@@ -370,6 +371,19 @@ uint32_t FNV32(const char *s)
         [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(range.location-offset, range.length)];
         offset += [offsets[i] intValue];
     }
+    
+    
+    // Search for mentions of channel names
+    NSError *error = NULL;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"#\\b\\w+\\b" options:NSRegularExpressionCaseInsensitive error:&error];
+    [regex enumerateMatchesInString:string
+                            options:NSMatchingReportCompletion
+                              range:NSMakeRange(0, string.length)
+                         usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                             NSURL *link = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@", [string substringWithRange:result.range]]];
+                             [attributedString addAttribute:NSLinkAttributeName value:link range:result.range];
+                             [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:result.range];
+                         }];
 
     return attributedString;
     
