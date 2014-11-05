@@ -220,7 +220,7 @@
     
     _chatViewController.isChannel = NO;
     _chatViewController.conversation = conversation;
-
+    [self.navigationController popToRootViewControllerAnimated:YES];
     [self.navigationController pushViewController:_chatViewController animated:YES];
 }
 
