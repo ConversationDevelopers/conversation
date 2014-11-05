@@ -150,7 +150,8 @@
         NSArray *channelStrings = [channelListString componentsSeparatedByString:@","];
         for (NSString *channelString in channelStrings) {
             if ([channelString isValidChannelName:client]) {
-                [self.conversationsController joinChannelWithName:channelString onClient:client];
+                NSString *identifier = [self.conversationsController joinChannelWithName:channelString onClient:client];
+                [self.conversationsController selectConversationWithIdentifier:identifier];
             }
         }
     }
