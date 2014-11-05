@@ -100,7 +100,7 @@
 {
     /* Check if this is an SSL irc link or not */
     BOOL isSSLConnection = NO;
-    if ([[url scheme] caseInsensitiveCompare:@"ircs"]) {
+    if ([[url scheme] caseInsensitiveCompare:@"ircs"] == NSOrderedSame) {
         isSSLConnection = YES;
     }
     
@@ -120,7 +120,7 @@
     /* Check if the user already has a connection to this server, and if so; use it and add the channels in the link to the existing item */
     IRCClient *client = nil;
     for (IRCClient *connection in self.conversationsController.connections) {
-        if ([connection.configuration.serverAddress caseInsensitiveCompare:address] && connection.configuration.connectUsingSecureLayer == isSSLConnection) {
+        if ([connection.configuration.serverAddress caseInsensitiveCompare:address] == NSOrderedSame && connection.configuration.connectUsingSecureLayer == isSSLConnection) {
             client = connection;
         }
     }
