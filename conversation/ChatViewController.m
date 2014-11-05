@@ -248,10 +248,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)showUserList:(id)sender
 {
-    for (IRCMessage *msg in _conversation.messages) {
-        NSLog(@"MESSAGE: %i %@ %@", (int)msg.messageType, msg.sender.nick, msg.message);
-    }
-    return;
     _userlistIsVisible = YES;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"userlistWillToggle" object:nil];
