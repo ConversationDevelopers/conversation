@@ -190,6 +190,10 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)join:(id)sender
 {
+    // Connect client if it isn't already connected
+    if (_conversation.client.isConnected == NO)
+        [_conversation.client connect];
+    
     ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     [controller joinChannelWithName:_conversation.name onClient:_conversation.client];
 }
