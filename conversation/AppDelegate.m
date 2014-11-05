@@ -98,6 +98,17 @@
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
+    
+    /* Check if we are inside our app and URL contains only a channel name */
+    if ([sourceApplication isEqualToString:[[NSBundle mainBundle] bundleIdentifier]]) {
+        IRCClient *client = self.conversationsController.chatViewController.conversation.client;
+        if (client && [url.resourceSpecifier isValidChannelName:client]) {
+            NSString *identifier = [self.conversationsController joinChannelWithName:url.resourceSpecifier onClient:client];
+            [self.conversationsController selectConversationWithIdentifier:identifier];
+            return YES;
+        }
+    }
+
     /* Check if this is an SSL irc link or not */
     BOOL isSSLConnection = NO;
     if ([[url scheme] caseInsensitiveCompare:@"ircs"] == NSOrderedSame) {
