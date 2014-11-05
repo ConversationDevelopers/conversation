@@ -375,7 +375,7 @@ uint32_t FNV32(const char *s)
     
     // Search for mentions of channel names
     NSError *error = NULL;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"#\\b\\w+\\b" options:NSRegularExpressionCaseInsensitive error:&error];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(#|&)\\w+\\b" options:NSRegularExpressionCaseInsensitive error:&error];
     [regex enumerateMatchesInString:string
                             options:NSMatchingReportCompletion
                               range:NSMakeRange(0, string.length)
