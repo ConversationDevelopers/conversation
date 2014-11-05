@@ -41,6 +41,7 @@
         self.name = @"#lobby";
         self.uniqueIdentifier = [[NSUUID UUID] UUIDString];
         self.passwordReference = @"";
+        self.autoJoin = YES;
         
         return self;
     }
