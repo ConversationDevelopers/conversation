@@ -706,12 +706,45 @@
 + (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(const char *[3])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
 {
     NSString *topicString = [NSString stringWithCString:topic usingEncodingPreference:[client configuration]];
-    NSString *channelString = [NSString stringWithCString:rchannel usingEncodingPreference:[client configuration]];
     
-    IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:channelString withClient:client];
-    if (channel != nil) {
-        [channel setTopic:topicString];
+    /* If there is no sender this is a topic message sent as the user joins the channel. We must process it differently */
+    if (senderDict != nil) {
+        NSMutableArray *topicComponents = [[topicString componentsSeparatedByString:@" "] mutableCopy];
+        
+        /* Get the channel name from the first "word" */
+        NSString *channelString = topicComponents[0];
+        [topicComponents removeObjectAtIndex:0];
+        
+        /* Get the topic message by removing the first "word" and consuming the colon in front of it. */
+        topicString = [topicComponents componentsJoinedByString:@" "];
+        topicString = [topicString substringFromIndex:1];
+        
+        /* Update the channel topic */
+        IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:channelString withClient:client];
+        if (channel != nil) {
+            [channel setTopic:topicString];
+        }
+    } else {
+        /* A user has just set the topic, update the channel topic and send a topic message to the user interface. */
+        NSString *channelString = [NSString stringWithCString:rchannel usingEncodingPreference:[client configuration]];
+        IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:channelString withClient:client];
+        
+        if (channel != nil) {
+            [channel setTopic:topicString];
+            
+            IRCUser *user = [IRCUser fromNickname:senderDict[0] onChannel:channel];
+            NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+            
+            IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:topicString
+                                                                     OfType:ET_TOPIC
+                                                             inConversation:channel
+                                                                   bySender:user
+                                                                     atTime:now];
+            
+            [channel addMessageToConversation:messageObject];
+        }
     }
+    
 }
 
 + (void)clientReceivedISONResponse:(const char *)message onClient:(IRCClient *)client;
