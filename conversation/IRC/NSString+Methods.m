@@ -92,6 +92,11 @@
 
 - (BOOL) isValidServerAddress
 {
+    /* "localhost" is a unix alias to 127.0.0.1 and we can accept it as valid */
+    if ([self caseInsensitiveCompare:@"localhost"] == NSOrderedSame) {
+        return YES;
+    }
+    
     /* Convert address to character array */
     const char* addressAsCharArray = [self UTF8String];
     
