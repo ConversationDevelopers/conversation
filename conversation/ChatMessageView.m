@@ -233,7 +233,7 @@
                 
                 // The bounds returned by the Core Text function are in the coordinate system used by Core Text.  Convert the values here into the coordinate system which our gesture recognizers will use.
                 runBounds.origin.x = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL) + 10.0;
-                runBounds.origin.y = self.frame.size.height - origins[idx].y - runBounds.size.height + 10.0;
+                runBounds.origin.y = self.frame.size.height - origins[idx].y - runBounds.size.height + 9.0;
                 
                 // Create a view which will open up the URL when the user taps on it
                 LinkTapView *linkTapView = [[LinkTapView alloc] initWithFrame:runBounds url:[attributes objectForKey:@"NSLink"]];

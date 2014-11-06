@@ -38,6 +38,7 @@
     if (!(self = [super initWithFrame:frame]))
         return nil;
     self.url = url;
+    self.alpha = 0.5;
     
     UITapGestureRecognizer *tapGesture =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     [self addGestureRecognizer:tapGesture];
@@ -46,8 +47,9 @@
 }
 
 - (void)handleTap: (UITapGestureRecognizer*)sender  {
+    
     UIApplication *application = [UIApplication sharedApplication];
-
+    
     if ([application canOpenURL:_url])   {
         [[UIApplication sharedApplication] openURL:_url];
     } else {
@@ -55,5 +57,13 @@
     }
 }
 
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    self.backgroundColor = [UIColor darkGrayColor];
+}
 
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    self.backgroundColor = [UIColor clearColor];
+}
 @end
