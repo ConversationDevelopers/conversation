@@ -78,6 +78,8 @@
     for (NSURL *url in _images) {
         DLImageView *imageView = [[DLImageView alloc] initWithFrame:CGRectMake(20, _size.height+10, 200, 120)];
         imageView.tag = i;
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.clipsToBounds = YES;
         imageView.layer.cornerRadius = 5;
         imageView.backgroundColor = [UIColor blackColor];
         imageView.userInteractionEnabled = YES;
