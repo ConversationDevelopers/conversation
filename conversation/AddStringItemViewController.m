@@ -71,10 +71,10 @@
 
 - (void) cancel:(id)sender
 {
-    if ([self.navigationController isBeingPresented])
+    id obj = [self.navigationController popViewControllerAnimated:YES];
+    if (!obj) {
         [self dismissViewControllerAnimated:YES completion:nil];
-    else
-        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (void) save:(id)sender
