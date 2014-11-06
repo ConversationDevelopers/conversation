@@ -140,6 +140,16 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
+    
+    double delayInSeconds = 2.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        
+        //[self.navigationController performSegueWithIdentifier:@"modal" sender:nil];
+    });
+
+    
     if (_contentView.contentSize.height > _contentView.bounds.size.height) {
         [self scrollToBottom:NO];
     }
@@ -387,12 +397,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     }
 }
 
-- (void)swipeRight:(UIScreenEdgePanGestureRecognizer *)recognizer
-{
-    if (recognizer.state == UIGestureRecognizerStateChanged)
-        [self.navigationController popViewControllerAnimated:YES];
-}
-
 - (void)swipeLeft:(UIScreenEdgePanGestureRecognizer *)recognizer
 {
     
@@ -493,11 +497,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         singleTapRecogniser.numberOfTouchesRequired = 1;
         singleTapRecogniser.numberOfTapsRequired = 1;
         [_contentView addGestureRecognizer:singleTapRecogniser];
-        
-        UIScreenEdgePanGestureRecognizer *swipeRightRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
-        [swipeRightRecognizer setEdges:UIRectEdgeLeft];
-        [swipeRightRecognizer setDelegate:self];
-        [_contentView addGestureRecognizer:swipeRightRecognizer];
         
         UIScreenEdgePanGestureRecognizer *swipeLeftRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
         [swipeLeftRecognizer setEdges:UIRectEdgeRight];

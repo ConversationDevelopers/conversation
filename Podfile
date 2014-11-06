@@ -9,6 +9,8 @@ target 'conversation' do
 	pod 'YLGIFImage', :git => 'https://github.com/liyong03/YLGIFImage.git'
 	pod 'UIActionSheet+Blocks'
 	pod 'ImgurAnonymousAPIClient', :git => 'https://github.com/nolanw/ImgurAnonymousAPIClient.git', :tag => 'v0.2'
+	pod 'SHTransitionBlocks' 
+	pod 'SHNavigationControllerBlocks'
 end
 
 target 'conversationTests' do

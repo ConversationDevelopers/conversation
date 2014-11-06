@@ -72,6 +72,18 @@
 #define COCOAPODS_VERSION_MINOR_PHFDelegateChain 0
 #define COCOAPODS_VERSION_PATCH_PHFDelegateChain 1
 
+// SHNavigationControllerBlocks
+#define COCOAPODS_POD_AVAILABLE_SHNavigationControllerBlocks
+#define COCOAPODS_VERSION_MAJOR_SHNavigationControllerBlocks 2
+#define COCOAPODS_VERSION_MINOR_SHNavigationControllerBlocks 1
+#define COCOAPODS_VERSION_PATCH_SHNavigationControllerBlocks 1
+
+// SHTransitionBlocks
+#define COCOAPODS_POD_AVAILABLE_SHTransitionBlocks
+#define COCOAPODS_VERSION_MAJOR_SHTransitionBlocks 1
+#define COCOAPODS_VERSION_MINOR_SHTransitionBlocks 0
+#define COCOAPODS_VERSION_PATCH_SHTransitionBlocks 1
+
 // UIActionSheet+Blocks
 #define COCOAPODS_POD_AVAILABLE_UIActionSheet_Blocks
 #define COCOAPODS_VERSION_MAJOR_UIActionSheet_Blocks 0
