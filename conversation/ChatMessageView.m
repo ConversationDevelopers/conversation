@@ -668,11 +668,26 @@ uint32_t FNV32(const char *s)
     // Get absolute frame of preview image
     ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     CGRect frame;
+    CGFloat aspect = 0.0;
+    UIImageView *view;
     for (int i=0; i < self.subviews.count; i++) {
         if ([NSStringFromClass([self.subviews[i] class]) isEqualToString:@"DLImageView"] && i == (int)recognizer.view.tag) {
+            view = self.subviews[i];
             frame = [self.subviews[i] convertRect:[self.subviews[i] bounds] toView:controller.navigationController.view];
+            aspect = view.image.size.height / view.image.size.width;
         }
     }
+    
+    if (aspect > 0) {
+        frame.size.width = view.bounds.size.width;
+        frame.size.height = view.bounds.size.width * aspect;
+        frame.origin.y -= (frame.size.height - view.bounds.size.height) / 2;
+    } else {
+        frame.size.height = view.bounds.size.height;
+        frame.size.width = view.bounds.size.height * aspect;
+        frame.origin.x -= (frame.size.width - view.bounds.size.width) / 2;
+    }
+    
     [UIView animateWithDuration:0.6 animations:^{
         [recognizer.view setFrame:frame];
         _containerView.alpha = 0.0;
@@ -688,7 +703,22 @@ uint32_t FNV32(const char *s)
     [_chatViewController hideAccessories:nil];
     UIImageView *preview = (UIImageView*)recognizer.view;
     
-    CGRect startFrame = [preview convertRect:preview.bounds toView:[self viewController].navigationController.view];
+    CGRect frame = preview.bounds;
+    
+    CGFloat aspect = preview.image.size.height / preview.image.size.width;
+
+    if (aspect > 0) {
+        frame.size.width = preview.bounds.size.width;
+        frame.size.height = preview.bounds.size.width * aspect;
+        frame.origin.y -= (frame.size.height - preview.bounds.size.height) / 2;
+    } else {
+        frame.size.height = preview.bounds.size.height;
+        frame.size.width = preview.bounds.size.height * aspect;
+        frame.origin.x -= (frame.size.width - preview.bounds.size.width) / 2;
+    }
+    
+    
+    CGRect startFrame = [preview convertRect:frame toView:[self viewController].navigationController.view];
     CGRect endFrame = [[UIScreen mainScreen] bounds];
     
     if (!_containerView)
@@ -709,6 +739,7 @@ uint32_t FNV32(const char *s)
         imageView.userInteractionEnabled = YES;
         imageView.image = preview.image;
     }
+
     imageView.tag = recognizer.view.tag;
     
     [[[self viewController] navigationController].view addSubview:_containerView];
