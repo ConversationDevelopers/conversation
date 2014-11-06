@@ -725,17 +725,6 @@ uint32_t FNV32(const char *s)
 
 }
 
-- (void)handleTap:(UITapGestureRecognizer *)recognizer
-{
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Message", @"Message")
-                                                       delegate:self
-                                              cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
-                                         destructiveButtonTitle:nil
-                                              otherButtonTitles:NSLocalizedString(@"Copy", @"Copy"), nil];
-    [sheet setTag:-1];
-    [sheet showInView:self];
-}
-
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 0 && self.message.messageType == ET_PRIVMSG) {
@@ -754,7 +743,6 @@ uint32_t FNV32(const char *s)
         self.userInteractionEnabled = YES;
 }
 
-
 - (UIViewController *)viewController {
     Class vcc = [UIViewController class];
     UIResponder *responder = self;
@@ -765,4 +753,36 @@ uint32_t FNV32(const char *s)
     return nil;
 }
 
+
+#pragma mark -
+#pragma mark UITapGestureRecognizer delegate methods
+
+- (void)handleTap:(UITapGestureRecognizer *)recognizer
+{
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Message", @"Message")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                                         destructiveButtonTitle:nil
+                                              otherButtonTitles:NSLocalizedString(@"Copy", @"Copy"), nil];
+    [sheet setTag:-1];
+    [sheet showInView:self];
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UIView *view = [[[event touchesForView:self] allObjects][0] view];
+    view.backgroundColor = [UIColor lightGrayColor];
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UIView *view = [[[event touchesForView:self] allObjects][0] view];
+    view.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
+}
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UIView *view = [[[event touchesForView:self] allObjects][0] view];
+    view.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
+}
 @end

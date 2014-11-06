@@ -66,4 +66,10 @@
 {
     self.backgroundColor = [UIColor clearColor];
 }
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    self.backgroundColor = [UIColor clearColor];
+}
+
 @end
