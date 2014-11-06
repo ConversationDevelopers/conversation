@@ -395,8 +395,37 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)swipeLeft:(UIScreenEdgePanGestureRecognizer *)recognizer
 {
-    if (recognizer.state == UIGestureRecognizerStateChanged)
-        [self showUserList:nil];
+    
+    UserListView *userlist = [self userListView];
+    
+    CGFloat progress = [recognizer translationInView:_contentView].x;
+
+    __block CGRect frame = userlist.frame;
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        [self.navigationController.view addSubview:userlist];
+    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
+        if (frame.origin.x >= _container.frame.size.width - 205.0)
+            frame.origin.x = _container.frame.size.width + progress;
+    } else if (recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled) {
+        // Finish or cancel the interactive transition
+        if (frame.origin.x < _container.frame.size.width - 100) {
+            [UIView animateWithDuration:0.5 animations:^{
+                frame.origin.x = _container.frame.size.width - 205.0;
+            } completion:^(BOOL finished) {
+                _userlistIsVisible = YES;
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"userlistWillToggle" object:nil];
+            }];
+        }
+        else {
+            [UIView animateWithDuration:0.5 animations:^{
+                frame.origin.x = _container.frame.size.width;
+            } completion:^(BOOL finished) {
+                [userlist removeFromSuperview];
+            }];
+        }
+    }
+    userlist.frame = frame;
+        
 }
 
 @synthesize container = _container;
