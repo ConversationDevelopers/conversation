@@ -33,6 +33,7 @@
 #import "IRCMessage.h"
 #import "UserListView.h"
 #import "InputCommands.h"
+#import "ChannelInfoViewController.h"
 #import <UIActionSheet+Blocks/UIActionSheet+Blocks.h>
 #import <ImgurAnonymousAPIClient/ImgurAnonymousAPIClient.h>
 
@@ -286,6 +287,16 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView
 {
     NSLog(@"Info button clicked");
+    IRCChannel *channel = (IRCChannel *)_conversation;
+    NSLog(@"TOPIC: %@", channel.topic);
+    ChannelInfoViewController *channelInfoViewController = [[ChannelInfoViewController alloc] init];
+    channelInfoViewController.channel = (IRCChannel *)_conversation;
+    
+    UINavigationController *navigationController = [[UINavigationController alloc]
+                                                    
+                                                    initWithRootViewController:channelInfoViewController];
+    
+    [self presentViewController:navigationController animated:YES completion: nil];
 }
 
 - (void)composeBarViewDidPressUtilityButton:(PHFComposeBarView *)composeBarView
