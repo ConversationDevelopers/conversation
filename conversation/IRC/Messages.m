@@ -853,18 +853,21 @@
         NSString *hostnameString = [NSString stringWithCString:hostname usingEncodingPreference:client.configuration];
         user = [[IRCUser alloc] initWithNickname:nicknameString andUsername:usernameString andHostname:hostnameString onClient:client];
     }
-    if (*line == *[client ircopUserModeCharacter]) {
-        user.ircop = YES;
-    } else if (*line == *[client ownerUserModeCharacter]) {
-        user.owner = YES;
-    } else if (*line == *[client adminUserModeCharacter]) {
-        user.admin = YES;
-    } else if (*line == *[client operatorUserModeCharacter]) {
-        user.op = YES;
-    } else if (*line == *[client halfopUserModeCharacter]) {
-        user.halfop = YES;
-    } else if (*line == *[client voiceUserModeCharacter]) {
-        user.voice = YES;
+    
+    while (*line != ' ' & *line != '\0') {
+        if (*line == *[client ircopUserModeCharacter]) {
+            user.ircop = YES;
+        } else if (*line == *[client ownerUserModeCharacter]) {
+            user.owner = YES;
+        } else if (*line == *[client adminUserModeCharacter]) {
+            user.admin = YES;
+        } else if (*line == *[client operatorUserModeCharacter]) {
+            user.op = YES;
+        } else if (*line == *[client halfopUserModeCharacter]) {
+            user.halfop = YES;
+        } else if (*line == *[client voiceUserModeCharacter]) {
+            user.voice = YES;
+        }
     }
     
     [ircChannel removeUserByName:nicknameString];
