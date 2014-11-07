@@ -868,6 +868,7 @@
         } else if (*line == *[client voiceUserModeCharacter]) {
             user.voice = YES;
         }
+        line++;
     }
     
     [ircChannel removeUserByName:nicknameString];
