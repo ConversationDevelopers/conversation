@@ -118,7 +118,7 @@
 {
     /* Sort the userlist, first by privilegie, then by name. */
     NSSortDescriptor *nicknameSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"nick" ascending:YES];
-    NSSortDescriptor *privilegiesSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"channelPrivileges" ascending:NO];
+    NSSortDescriptor *privilegiesSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"channelPrivilege" ascending:NO];
     NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:privilegiesSortDescriptor,nicknameSortDescriptor,  nil];
     self.users = [[self.users sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
 }
