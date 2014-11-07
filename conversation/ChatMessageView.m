@@ -381,7 +381,7 @@ uint32_t FNV32(const char *s)
     NSString *msg = _message.message;
 
     NSMutableAttributedString *string;
-    NSString *status = [NSString stringWithFormat:@"%s", [self characterForStatus:user.channelPrivileges]];
+    NSString *status = [NSString stringWithFormat:@"%s", [self characterForStatus:user.channelPrivilege]];
     
     switch(_message.messageType) {
         case ET_JOIN: {
@@ -753,7 +753,7 @@ uint32_t FNV32(const char *s)
 {
     if (buttonIndex == 0 && self.message.messageType == ET_PRIVMSG) {
         UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-        NSString *status = [NSString stringWithFormat:@"%s", [self characterForStatus:self.message.sender.channelPrivileges]];
+        NSString *status = [NSString stringWithFormat:@"%s", [self characterForStatus:self.message.sender.channelPrivilege]];
         NSString *pasteString = [NSString stringWithFormat:@"<%@%@> %@", status, self.message.sender.nick, self.message.message];
         [pasteboard setValue:pasteString forPasteboardType:@"public.plain-text"];
     }

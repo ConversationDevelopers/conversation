@@ -854,19 +854,17 @@
         user = [[IRCUser alloc] initWithNickname:nicknameString andUsername:usernameString andHostname:hostnameString onClient:client];
     }
     if (*line == *[client ircopUserModeCharacter]) {
-        user.channelPrivileges = IRCOP;
+        user.ircop = YES;
     } else if (*line == *[client ownerUserModeCharacter]) {
-        user.channelPrivileges = OWNER;
+        user.owner = YES;
     } else if (*line == *[client adminUserModeCharacter]) {
-        user.channelPrivileges = ADMIN;
+        user.admin = YES;
     } else if (*line == *[client operatorUserModeCharacter]) {
-        user.channelPrivileges = OPERATOR;
+        user.op = YES;
     } else if (*line == *[client halfopUserModeCharacter]) {
-        user.channelPrivileges = HALFOP;
+        user.halfop = YES;
     } else if (*line == *[client voiceUserModeCharacter]) {
-        user.channelPrivileges = VOICE;
-    } else {
-        user.channelPrivileges = NORMAL;
+        user.voice = YES;
     }
     
     [ircChannel removeUserByName:nicknameString];

@@ -42,10 +42,7 @@
         self.username = [NSString stringWithCString:senderDict[1] usingEncodingPreference:[client configuration]];
         self.hostname = [NSString stringWithCString:senderDict[2] usingEncodingPreference:[client configuration]];
         
-        self.isAway = NO;
-        
-        self.channelPrivileges = 0;
-        return self;
+        return [self initWithNickname:self.nick andUsername:self.username andHostname:self.hostname onClient:client];
     }
     return nil;
 }
@@ -59,10 +56,34 @@
         
         self.isAway = NO;
         
-        self.channelPrivileges = 0;
+        self.ircop  = NO;
+        self.owner  = NO;
+        self.admin  = NO;
+        self.op     = NO;
+        self.halfop = NO;
+        self.voice  = NO;
+        
         return self;
     }
     return nil;
+}
+
+- (int) channelPrivilege
+{
+    if (self.ircop) {
+        return IRCOP;
+    } else if (self.owner) {
+        return OWNER;
+    } else if (self.admin) {
+        return ADMIN;
+    } else if (self.op) {
+        return OPERATOR;
+    } else if (self.halfop) {
+        return HALFOP;
+    } else if (self.voice) {
+        return VOICE;
+    }
+    return NORMAL;
 }
 
 - (NSString *)description
@@ -112,6 +133,11 @@
         }
     }
     return userFromUserlist;
+}
+
++ (int) channelPrivilege
+{
+    return NORMAL;
 }
 
 
