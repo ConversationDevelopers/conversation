@@ -135,6 +135,32 @@
     return userFromUserlist;
 }
 
+- (void)setPrivilegeMode:(const char *)mode granted:(BOOL)granted
+{
+    switch (*mode) {
+        case 'q':
+            self.owner = granted;
+            break;
+            
+        case 'a':
+            self.admin = granted;
+            break;
+            
+        case 'o':
+            self.op = granted;
+            break;
+            
+        case 'h':
+            self.halfop = granted;
+            break;
+            
+        case 'v':
+            self.voice = granted;
+            break;
+    }
+    NSLog(@"%d", self.channelPrivilege);
+}
+
 + (int) channelPrivilege
 {
     return NORMAL;

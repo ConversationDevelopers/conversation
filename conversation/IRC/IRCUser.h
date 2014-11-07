@@ -51,6 +51,7 @@
 - (instancetype) initWithSenderDict:(const char **)senderDict onClient:(IRCClient *)client;
 - (instancetype) initWithNickname:(NSString *)nickname andUsername:(NSString *)username andHostname:(NSString *)hostname onClient:(IRCClient *)client;
 - (int) channelPrivilege;
+- (void)setPrivilegeMode:(const char *)mode granted:(BOOL)granted;
 
 + (IRCUser *)fromNickname:(const char *)sender onChannel:(IRCChannel *)channel;
 + (IRCUser *)fromNicknameString:(NSString *)sender onChannel:(IRCChannel *)channel;

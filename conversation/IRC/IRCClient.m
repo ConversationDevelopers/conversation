@@ -411,7 +411,7 @@
             break;
             
         case MODE:
-            
+            [Messages userReceivedModesOnChannel:line inChannel:recipient byUser:senderDict onClient:self withTags:tagsList];
             break;
             
         case NICK:

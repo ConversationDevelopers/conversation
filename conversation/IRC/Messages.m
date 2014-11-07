@@ -703,6 +703,45 @@
     }
 }
 
++ (void)userReceivedModesOnChannel:(const char*)modes inChannel:(char *)rchannel byUser:(const char *[3])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
+{
+    NSString *modeString = [NSString stringWithCString:modes usingEncodingPreference:client.configuration];
+    NSArray *modeComponents = [modeString componentsSeparatedByString:@" "];
+    int componentIndex = 1;
+    BOOL isGrantedMode = NO;
+    
+    NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
+    IRCChannel *channel = [IRCChannel fromString:channelName withClient:client];
+    
+    while (*modes != ' ' && *modes != '\0') {
+        switch (*modes) {
+            case '+':
+                isGrantedMode = YES;
+                break;
+                
+            case '-':
+                isGrantedMode = NO;
+                break;
+                
+            case 'q': case 'a': case 'o': case 'h': case 'v':
+                if ([modeComponents count] >= componentIndex - 1) {
+                    NSString *nickname = [modeComponents objectAtIndex:componentIndex];
+                    
+                    IRCUser *user = [IRCUser fromNicknameString:nickname onChannel:channel];
+                    if (user != nil) {
+                        [user setPrivilegeMode:modes granted:isGrantedMode];
+                    }
+                }
+                componentIndex++;
+                break;
+                
+            default:
+                break;
+        }
+        modes++;
+    }
+}
+
 + (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(const char *[3])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
 {
     NSString *topicString = [NSString stringWithCString:topic usingEncodingPreference:[client configuration]];
