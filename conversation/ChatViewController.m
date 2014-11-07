@@ -542,9 +542,8 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     [indicator setHidesWhenStopped:YES];
     [indicator startAnimating];
     [_composeBarView addSubview:indicator];
-    
-    UIImage *image = info[UIImagePickerControllerOriginalImage];
-    [[ImgurAnonymousAPIClient client] uploadImage:image withFilename:nil completionHandler:^(NSURL *imgurURL, NSError *error) {
+
+    [[ImgurAnonymousAPIClient client] uploadAssetWithURL:info[UIImagePickerControllerReferenceURL] filename:nil completionHandler:^(NSURL *imgurURL, NSError *error) {
         if(error)
             NSLog(@"Error while uploading image: %@", error.description);
         NSString *string;
@@ -557,7 +556,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         [indicator removeFromSuperview];
         cameraButton.hidden = NO;
     }];
-    
+
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
