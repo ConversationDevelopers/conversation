@@ -533,7 +533,9 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    [picker dismissViewControllerAnimated:YES completion:nil];
+    [picker dismissViewControllerAnimated:YES completion:^{
+        [_composeBarView becomeFirstResponder];        
+    }];
     
     UIButton *cameraButton = [_composeBarView utilityButton];
     cameraButton.hidden = YES;
