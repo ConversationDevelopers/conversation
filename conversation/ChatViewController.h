@@ -33,7 +33,7 @@
 
 @class IRCConversation;
 
-@interface ChatViewController : UIViewController <UIImagePickerControllerDelegate, PHFComposeBarViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate> {
+@interface ChatViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, PHFComposeBarViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate> {
     CGFloat _messageEntryHeight;
 }
 

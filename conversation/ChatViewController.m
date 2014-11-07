@@ -36,6 +36,7 @@
 #import <UIActionSheet+Blocks/UIActionSheet+Blocks.h>
 #import <ImgurAnonymousAPIClient/ImgurAnonymousAPIClient.h>
 
+
 @interface ChatViewController ()
 @property (readonly, nonatomic) UIView *container;
 @property (readonly, nonatomic) UIScrollView *contentView;
@@ -53,16 +54,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         return nil;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillToggle:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillToggle:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(messageReceived:)
                                                  name:@"messageReceived"
                                                object:nil];
@@ -72,17 +63,10 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillShowNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
-
-    [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"receivedMessage"
                                                   object:nil];
 }
+
 
 - (NSUInteger)supportedInterfaceOrientations
 {
@@ -131,7 +115,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     self.title = _conversation.name;
     
     [self clearContent];
-    
     // Add initial messages
     for (IRCMessage *message in _conversation.messages) {
         [self addMessage:message];
@@ -141,6 +124,15 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillToggle:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillToggle:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
     
     double delayInSeconds = 2.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -149,15 +141,22 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         //[self.navigationController performSegueWithIdentifier:@"modal" sender:nil];
     });
 
-    
     if (_contentView.contentSize.height > _contentView.bounds.size.height) {
         [self scrollToBottom:NO];
     }
 }
 
-- (void)viewDidDisappear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
     [self hideAccessories:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillShowNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillHideNotification
+                                                  object:nil];
+    
 }
 
 - (void)clearContent
@@ -212,6 +211,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)keyboardWillToggle:(NSNotification *)notification
 {
+
     if (_userlistIsVisible)
         [_userListView removeFromSuperview];
 
@@ -291,7 +291,8 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (void)composeBarViewDidPressUtilityButton:(PHFComposeBarView *)composeBarView
 {
     NSLog(@"Utility button pressed");
-
+    
+    
     [self hideAccessories:nil];
     [UIActionSheet showInView:self.view
                     withTitle:NSLocalizedString(@"Photo Source", @"Photo Source")
@@ -537,7 +538,9 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-    [picker dismissViewControllerAnimated:YES completion:nil];
+    [picker dismissViewControllerAnimated:YES completion:^{
+        [_composeBarView becomeFirstResponder];
+    }];
 }
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
