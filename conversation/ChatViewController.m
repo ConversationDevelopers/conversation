@@ -260,8 +260,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 {
     _userlistIsVisible = YES;
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"userlistWillToggle" object:nil];
-    
     [_composeBarView resignFirstResponder];
     UserListView *userlist = [self userListView];
     
@@ -355,8 +353,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         
         _userlistIsVisible = NO;
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"userlistWillToggle" object:nil];
-        
         CGRect frame = _userListView.frame;
         frame.origin.x = _container.frame.size.width;
         _userListView.frame = frame;
@@ -417,7 +413,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                 frame.origin.x = _container.frame.size.width - 205.0;
             } completion:^(BOOL finished) {
                 _userlistIsVisible = YES;
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"userlistWillToggle" object:nil];
             }];
         }
         else {
