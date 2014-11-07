@@ -54,6 +54,12 @@
 #define COCOAPODS_VERSION_MINOR_DLImageLoader 0
 #define COCOAPODS_VERSION_PATCH_DLImageLoader 0
 
+// GTScrollNavigationBar
+#define COCOAPODS_POD_AVAILABLE_GTScrollNavigationBar
+#define COCOAPODS_VERSION_MAJOR_GTScrollNavigationBar 0
+#define COCOAPODS_VERSION_MINOR_GTScrollNavigationBar 1
+#define COCOAPODS_VERSION_PATCH_GTScrollNavigationBar 2
+
 // ImgurAnonymousAPIClient
 #define COCOAPODS_POD_AVAILABLE_ImgurAnonymousAPIClient
 #define COCOAPODS_VERSION_MAJOR_ImgurAnonymousAPIClient 0

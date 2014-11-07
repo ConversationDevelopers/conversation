@@ -51,6 +51,7 @@
 #import <SHTransitionBlocks.h>
 #import <UIViewController+SHTransitionBlocks.h>
 #import <SHNavigationControllerBlocks.h>
+#import <GTScrollNavigationBar/GTScrollNavigationBar.h>
 
 @implementation ConversationListViewController
 

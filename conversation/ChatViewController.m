@@ -36,6 +36,7 @@
 #import "ChannelInfoViewController.h"
 #import <UIActionSheet+Blocks/UIActionSheet+Blocks.h>
 #import <ImgurAnonymousAPIClient/ImgurAnonymousAPIClient.h>
+#import <GTScrollNavigationBar/GTScrollNavigationBar.h>
 
 
 @interface ChatViewController ()
@@ -58,6 +59,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                              selector:@selector(messageReceived:)
                                                  name:@"messageReceived"
                                                object:nil];
+    
     return self;
 }
 
@@ -94,6 +96,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     [container addSubview:[self composeBarView]];
     
     [view addSubview:container];
+    self.view = view;
     
     [self setEdgesForExtendedLayout:UIRectEdgeNone];
     
@@ -116,6 +119,9 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     self.title = _conversation.name;
     
     [self clearContent];
+    
+    self.navigationController.scrollNavigationBar.scrollView = _contentView;
+    
     // Add initial messages
     for (IRCMessage *message in _conversation.messages) {
         [self addMessage:message];
@@ -150,6 +156,8 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (void)viewWillDisappear:(BOOL)animated
 {
     [self hideAccessories:nil];
+    [self.navigationController.scrollNavigationBar resetToDefaultPositionWithAnimation:NO];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillShowNotification
                                                   object:nil];
@@ -172,6 +180,15 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 {
     CGPoint bottomOffset = CGPointMake(0, _contentView.contentSize.height - _contentView.bounds.size.height);
     [_contentView setContentOffset:bottomOffset animated:animated];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGRect frame = self.view.frame;
+    CGFloat height = frame.origin.y;
+    frame.origin.y = 0.0;
+    frame.size.height += height;
+    self.view.frame = frame;
 }
 
 - (void)addMessage:(IRCMessage *)message
@@ -286,9 +303,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView
 {
-    NSLog(@"Info button clicked");
-    IRCChannel *channel = (IRCChannel *)_conversation;
-    NSLog(@"TOPIC: %@", channel.topic);
     ChannelInfoViewController *channelInfoViewController = [[ChannelInfoViewController alloc] init];
     channelInfoViewController.channel = (IRCChannel *)_conversation;
     
@@ -301,8 +315,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)composeBarViewDidPressUtilityButton:(PHFComposeBarView *)composeBarView
 {
-    NSLog(@"Utility button pressed");
-    
     
     [self hideAccessories:nil];
     [UIActionSheet showInView:self.view
@@ -498,6 +510,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         
         _contentView = [[UIScrollView alloc] initWithFrame:frame];
         _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        _contentView.delegate = self;
         
         UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideAccessories:)];
         [singleTapRecogniser setDelegate:self];
