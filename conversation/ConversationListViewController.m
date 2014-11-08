@@ -644,8 +644,11 @@
 
 - (NSString *)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client
 {
-    for (IRCConversation *channel in client.getChannels) {
+    for (IRCChannel *channel in client.getChannels) {
         if ([channel.name.lowercaseString isEqualToString:name.lowercaseString]) {
+            if (channel.isJoinedByUser == NO) {
+                [IRCCommands joinChannel:channel.name onClient:client];
+            }
             return channel.configuration.uniqueIdentifier;
         }
     }
