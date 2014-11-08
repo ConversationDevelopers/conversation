@@ -101,12 +101,6 @@
         self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
         self.ircv3CapabilitiesSupportedByServer = [[NSMutableArray alloc] init];
         
-        IRCChannelConfiguration *rawConfig = [[IRCChannelConfiguration alloc] init];
-        rawConfig.name = @"@RAW";
-        
-        self.rawlog = [[IRCConversation alloc] initWithConfiguration:rawConfig withClient:self];
-        
-        
         return self;
     }
     return nil;
@@ -175,7 +169,7 @@
     NSString *rawMessageString = [NSString stringWithCString:line usingEncodingPreference:self.configuration];
     IRCMessage *rawMessage = [[IRCMessage alloc] initWithMessage:rawMessageString
                                                        OfType:ET_RAW
-                                               inConversation:self.rawlog
+                                               inConversation:nil
                                                      bySender:nil
                                                        atTime:[NSDate date]];
     

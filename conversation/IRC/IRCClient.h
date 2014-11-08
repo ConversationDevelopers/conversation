@@ -54,8 +54,6 @@
 @property (nonatomic, assign) BOOL isProcessingTermination;
 @property (nonatomic, strong) IRCUser *currentUserOnConnection;
 
-@property (nonatomic, strong) IRCConversation *rawlog;
-
 @property (nonatomic, strong) NSMutableDictionary *featuresSupportedByServer;
 @property (nonatomic, strong) NSMutableArray *ircv3CapabilitiesSupportedByServer;
 
