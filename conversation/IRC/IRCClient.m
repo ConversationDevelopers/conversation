@@ -806,6 +806,11 @@
 
 - (BOOL)addChannel:(IRCChannel *)channel
 {
+    /* If we are on an active connection we can join this channel immediately. */
+    if ([self isConnectedAndCompleted]) {
+        [self.connection send:[NSString stringWithFormat:@"JOIN %@", [channel name]]];
+    }
+    
     /* Check if the channel we are trying to add already exists in order to avoid duplicates. */
     IRCChannel *channelExists = [IRCChannel fromString:channel.name withClient:self];
     if (channelExists != nil) {
@@ -814,11 +819,6 @@
     
     /* Add the channel to the channel list. */
     [self.channels addObject:channel];
-    
-    /* If we are on an active connection we can join this channel immediately. */
-    if ([self isConnectedAndCompleted]) {
-        [self.connection send:[NSString stringWithFormat:@"JOIN %@", [channel name]]];
-    }
     
     return YES;
 }
