@@ -110,6 +110,8 @@
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedMessage:) name:@"messageReceived" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTableView:) name:@"clientDidConnect" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTableView:) name:@"clientDidDisconnect" object:nil];
     
 
     [self.navigationController SH_setAnimationDuration:0.5 withPreparedTransitionBlock:^(UIView *containerView, UIViewController *fromVC, UIViewController *toVC, NSTimeInterval duration, id<SHViewControllerAnimatedTransitioning> transitionObject, SHTransitionAnimationCompletionBlock transitionDidComplete) {
@@ -324,6 +326,12 @@
 
     [self.navigationController popToRootViewControllerAnimated:YES];
     [self.navigationController pushViewController:_chatViewController animated:YES];
+}
+
+- (void)updateTableView:(id)sender
+{
+    NSLog(@"JAU");
+    [self.tableView reloadData];
 }
 
 #pragma mark - Table View
