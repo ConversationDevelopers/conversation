@@ -126,6 +126,8 @@
     self.isAttemptingConnection = NO;
     self.isAttemptingRegistration = YES;
     
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"connected" object:self];
+    
     /* Set the object that identifies ourselves as a user. We should avoid using this object at this
      stage because it is lacking important information passed by the server at a later point. */
     self.currentUserOnConnection = [[IRCUser alloc] initWithNickname:self.configuration.primaryNickname
@@ -699,6 +701,8 @@
     self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
     self.ircv3CapabilitiesSupportedByServer = [[NSMutableArray alloc] init];
     [self.connection disableFloodControl];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"disconnected" object:self];
     
     for (IRCChannel *channel in self.channels) {
         channel.isJoinedByUser = NO;
