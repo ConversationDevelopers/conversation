@@ -330,7 +330,6 @@
 
 - (void)updateTableView:(id)sender
 {
-    NSLog(@"JAU");
     [self.tableView reloadData];
 }
 
