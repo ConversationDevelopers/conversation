@@ -70,7 +70,7 @@
 
 - (void)setTopic:(NSString *)topic
 {
-    
+    self.topic = topic;
 }
 
 - (void)removeUserByName:(NSString *)nickname
