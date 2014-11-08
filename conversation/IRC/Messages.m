@@ -747,7 +747,7 @@
     NSString *topicString = [NSString stringWithCString:topic usingEncodingPreference:[client configuration]];
     
     /* If there is no sender this is a topic message sent as the user joins the channel. We must process it differently */
-    if (senderDict != nil) {
+    if (senderDict == nil) {
         NSMutableArray *topicComponents = [[topicString componentsSeparatedByString:@" "] mutableCopy];
         
         /* Get the channel name from the first "word" */
