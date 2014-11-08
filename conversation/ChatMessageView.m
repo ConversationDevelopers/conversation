@@ -640,9 +640,9 @@ uint32_t FNV32(const char *s)
 - (void)shareImage:(UILongPressGestureRecognizer *)recognizer
 {
     UIImageView *imageView = (UIImageView *)recognizer.view;
-    UIImage *image = imageView.image;
-    UIActivityViewController *sharer = [[UIActivityViewController alloc] initWithActivityItems:@[image] applicationActivities:nil];
-    [[self viewController] presentViewController:sharer animated:YES completion:nil];
+    NSData *data = [NSData dataWithContentsOfURL:[_images objectAtIndex:imageView.tag]];
+    UIActivityViewController *sharer = [[UIActivityViewController alloc] initWithActivityItems:@[data] applicationActivities:nil];
+    [self.chatViewController.navigationController presentViewController:sharer animated:YES completion:nil];
 
 }
 
