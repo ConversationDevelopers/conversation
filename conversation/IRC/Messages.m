@@ -520,7 +520,7 @@
             });
         }
     } else {
-        [[channel users] removeObject:channel];
+        [channel removeUserByName:[user nick]];
     }
     
     /* Get the timestamp from the message or create one if it is not available. */
