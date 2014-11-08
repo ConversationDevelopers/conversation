@@ -101,6 +101,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     [self setEdgesForExtendedLayout:UIRectEdgeNone];
     
     [self setView:view];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated

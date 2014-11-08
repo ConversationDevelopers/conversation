@@ -46,7 +46,7 @@
 - (id)initWithFrame:(CGRect)frame message:(IRCMessage *)message conversation:(IRCConversation *)conversation;
 - (CGFloat)frameHeight;
 
-@property (nonatomic, weak) ChatViewController *chatViewController;
+@property (nonatomic) ChatViewController *chatViewController;
 @property (nonatomic) IRCConversation *conversation;
 @property (nonatomic) IRCMessage *message;
 

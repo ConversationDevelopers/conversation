@@ -53,7 +53,10 @@
 - (void)deleteChannelWithName:(NSString *)channelName forConnectionConfiguration:(IRCConnectionConfiguration *)connection;
 
 - (void)deleteConnectionWithIdentifier:(NSString *)identifier;
+
 - (NSArray *)getConnectionConfigurations;
+- (NSDictionary *)getEmoticons;
+
 - (void)save;
 
 @property (nonatomic, retain) NSDictionary *preferences;

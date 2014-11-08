@@ -36,6 +36,7 @@
 		DAC65A4519EAA2ED00E00A73 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A3D19EAA2ED00E00A73 /* Localizable.strings */; };
 		DAC65A4819EAA2ED00E00A73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A4219EAA2ED00E00A73 /* Images.xcassets */; };
 		DADA8AC61A0D3AC20085A130 /* ChannelInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DADA8AC51A0D3AC20085A130 /* ChannelInfoViewController.m */; };
+		DAF9002C1A0DA60900488896 /* emoticons.plist in Resources */ = {isa = PBXBuildFile; fileRef = DAF9002B1A0DA60900488896 /* emoticons.plist */; };
 		FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */; };
 		FA00A39219E5DD3D00E7B4D7 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A38F19E5DD3D00E7B4D7 /* SSKeychain.m */; };
 		FA00A39319E5DD3D00E7B4D7 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A39119E5DD3D00E7B4D7 /* SSKeychainQuery.m */; };
@@ -130,6 +131,7 @@
 		DAC65A4219EAA2ED00E00A73 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = conversation/Resources/Images.xcassets; sourceTree = "<group>"; };
 		DADA8AC41A0D3AC20085A130 /* ChannelInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelInfoViewController.h; sourceTree = "<group>"; };
 		DADA8AC51A0D3AC20085A130 /* ChannelInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelInfoViewController.m; sourceTree = "<group>"; };
+		DAF9002B1A0DA60900488896 /* emoticons.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = emoticons.plist; path = Resources/emoticons.plist; sourceTree = "<group>"; };
 		FA00A38219E5A69F00E7B4D7 /* IRCMessageIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCMessageIndex.h; sourceTree = "<group>"; };
 		FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCMessageIndex.m; sourceTree = "<group>"; };
 		FA00A38E19E5DD3D00E7B4D7 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSKeychain.h; path = Preferences/SSKeychain.h; sourceTree = "<group>"; };
@@ -365,6 +367,7 @@
 		DA1A4ABA19E1770700565763 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DAF9002B1A0DA60900488896 /* emoticons.plist */,
 				DA96223E19EDE217008D42EB /* networks.plist */,
 				DA1A4ABB19E1770700565763 /* Info.plist */,
 				DA1A4ABC19E1770700565763 /* main.m */,
@@ -669,6 +672,7 @@
 			files = (
 				DAC65A4419EAA2ED00E00A73 /* LaunchScreen.xib in Resources */,
 				DA96223F19EDE217008D42EB /* networks.plist in Resources */,
+				DAF9002C1A0DA60900488896 /* emoticons.plist in Resources */,
 				DAC65A4819EAA2ED00E00A73 /* Images.xcassets in Resources */,
 				DAC65A4519EAA2ED00E00A73 /* Localizable.strings in Resources */,
 			);

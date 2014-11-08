@@ -55,6 +55,7 @@
             NSMutableDictionary *dict = [NSMutableDictionary dictionary];
             self.preferences = dict;
         }
+        [self loadEmoticons];
     }
     return self;
 }
@@ -67,6 +68,19 @@
     }
     
     return NO;
+}
+
+- (void)loadEmoticons
+{
+    NSMutableDictionary *prefs = [self.preferences mutableCopy];
+    NSDictionary *emoticons = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"emoticons" ofType:@"plist"]];
+    prefs[@"emoticons"] = emoticons;
+    self.preferences = prefs;
+}
+
+- (NSDictionary *)getEmoticons
+{
+    return self.preferences[@"emoticons"];
 }
 
 - (void)setConnectionConfiguration:(IRCConnectionConfiguration *)configuration atIndex:(NSInteger)index

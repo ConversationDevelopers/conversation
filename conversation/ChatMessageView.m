@@ -36,6 +36,7 @@
 #import <YLGIFImage/YLImageView.h>
 #import "LinkTapView.h"
 #import "NSString+Methods.h"
+#import "AppPreferences.h"
 
 #define FNV_PRIME_32 16777619
 #define FNV_OFFSET_32 2166136261U
@@ -324,6 +325,22 @@ uint32_t FNV32(const char *s)
     return ranges;
 }
 
+- (NSString *)setEmoticons:(NSString *)string
+{
+    NSDictionary *emoticons = [[AppPreferences sharedPrefs] getEmoticons];
+    NSCharacterSet *wordBoundries = [[NSCharacterSet letterCharacterSet] invertedSet];
+    for (NSString *key in emoticons.allKeys) {
+        NSRange range = [string rangeOfString:key];
+        if (range.location != NSNotFound &&
+            (range.location == 0 || [[string substringWithRange:NSMakeRange(range.location-1, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound) &&
+            (range.location+range.length+1 > string.length || [[string substringWithRange:NSMakeRange(range.location+range.length, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound)) {
+            string = [string stringByReplacingOccurrencesOfString:key withString:emoticons[key]];
+        }
+
+    }
+    return string;
+}
+
 - (NSAttributedString *)setLinks:(NSString *)string
 {
     NSMutableArray *ranges = [[NSMutableArray alloc] init];
@@ -378,7 +395,7 @@ uint32_t FNV32(const char *s)
 {
 
     IRCUser *user = _message.sender;
-    NSString *msg = _message.message;
+    NSString *msg = [self setEmoticons:_message.message];
 
     NSMutableAttributedString *string;
     NSString *status = [NSString stringWithFormat:@"%s", [self characterForStatus:user.channelPrivilege]];
