@@ -454,6 +454,9 @@
             /* We can enable autojoin at this point as long as the user does not wish us to authenticate with nickserv.
              If this is the case we will wait until authentication is complete. */
             if (self.configuration.useServerAuthenticationService == NO) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"clientDidDisconnect" object:self];
+                });
                 [self autojoin];
             }
             
@@ -703,10 +706,6 @@
     self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
     self.ircv3CapabilitiesSupportedByServer = [[NSMutableArray alloc] init];
     [self.connection disableFloodControl];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"clientDidDisconnect" object:self];
-    });
     
     for (IRCChannel *channel in self.channels) {
         channel.isJoinedByUser = NO;
