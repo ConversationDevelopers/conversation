@@ -126,10 +126,6 @@
     self.isAttemptingConnection = NO;
     self.isAttemptingRegistration = YES;
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"clientDidConnect" object:self];
-    });
-    
     /* Set the object that identifies ourselves as a user. We should avoid using this object at this
      stage because it is lacking important information passed by the server at a later point. */
     self.currentUserOnConnection = [[IRCUser alloc] initWithNickname:self.configuration.primaryNickname
