@@ -101,6 +101,12 @@
         self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
         self.ircv3CapabilitiesSupportedByServer = [[NSMutableArray alloc] init];
         
+        IRCChannelConfiguration *rawConfig = [[IRCChannelConfiguration alloc] init];
+        rawConfig.name = @"@RAW";
+        
+        self.rawlog = [[IRCConversation alloc] initWithConfiguration:rawConfig withClient:self];
+        
+        
         return self;
     }
     return nil;
@@ -165,6 +171,19 @@
     char* username;
     char* hostname;
     
+    /* Create raw IRC message to show in the raw log */
+    NSString *rawMessageString = [NSString stringWithCString:line usingEncodingPreference:self.configuration];
+    IRCMessage *rawMessage = [[IRCMessage alloc] initWithMessage:rawMessageString
+                                                       OfType:ET_RAW
+                                               inConversation:self.rawlog
+                                                     bySender:nil
+                                                       atTime:[NSDate date]];
+    
+    
+    /* Notify the client of the message */
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:rawMessage];
+    });
     
     /* Make a copy of the full message string */
     lineBeforeIteration = line;

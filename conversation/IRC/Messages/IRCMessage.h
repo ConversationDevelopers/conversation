@@ -57,7 +57,8 @@ typedef NS_ENUM(NSUInteger, EventType) {
     ET_PART,
     ET_QUIT,
     ET_KICK,
-    ET_TOPIC
+    ET_TOPIC,
+    ET_RAW
 };
 
 @end
