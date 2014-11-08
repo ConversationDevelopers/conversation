@@ -68,11 +68,6 @@
     return [self.client isConnected] && self.isJoinedByUser;
 }
 
-- (void)setTopic:(NSString *)topic
-{
-    self.topic = topic;
-}
-
 - (void)removeUserByName:(NSString *)nickname
 {
     /* Shorthand method to remove a user from the userlist. */

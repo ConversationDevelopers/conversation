@@ -761,7 +761,7 @@
         /* Update the channel topic */
         IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:channelString withClient:client];
         if (channel != nil) {
-            [channel setTopic:topicString];
+            channel.topic = topicString;
         }
     } else {
         /* A user has just set the topic, update the channel topic and send a topic message to the user interface. */
@@ -769,7 +769,7 @@
         IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:channelString withClient:client];
         
         if (channel != nil) {
-            [channel setTopic:topicString];
+            channel.topic = topicString;
             
             IRCUser *user = [IRCUser fromNickname:senderDict[0] onChannel:channel];
             NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
