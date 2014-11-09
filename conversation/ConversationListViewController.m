@@ -347,9 +347,11 @@
     if ((int)indexPath.row > (int)client.getChannels.count-1) {
         NSInteger index = indexPath.row - client.getChannels.count;
         conversation = client.getQueries[index];
+        conversation.unreadCount = 0;
         _chatViewController.isChannel = NO;
     } else {
         conversation = client.getChannels[indexPath.row];
+        conversation.unreadCount = 0;
         _chatViewController.isChannel = YES;
     }
     
