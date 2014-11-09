@@ -36,6 +36,7 @@
 #import "IRCKickMessage.h"
 #import "ConversationListViewController.h"
 #import "znc-buffextras.h"
+#import "AppPreferences.h"
 
 @implementation Messages
 
@@ -731,6 +732,30 @@
                     if (user != nil) {
                         [user setPrivilegeMode:modes granted:isGrantedMode];
                     }
+                }
+                componentIndex++;
+                break;
+                
+            case 'k':
+                if (isGrantedMode) {
+                    if ([channel.configuration.passwordReference length] == 0) {
+                        channel.configuration.passwordReference = [[NSUUID UUID] UUIDString];
+                    }
+                    
+                    [SSKeychain setPassword:[modeComponents objectAtIndex:componentIndex] forService:@"conversation" account:channel.configuration.passwordReference];
+                } else {
+                    if ([channel.configuration.passwordReference length] > 0) {
+                        [SSKeychain deletePasswordForService:@"conversation" account:channel.configuration.passwordReference];
+                        channel.configuration.passwordReference = @"";
+                    }
+                }
+                
+                NSUInteger index = 0;
+                for (NSDictionary *config in [[AppPreferences sharedPrefs] getConnectionConfigurations]) {
+                    if ([config[@"uniqueIdentifier"] isEqualToString:client.configuration.uniqueIdentifier]) {
+                        [[AppPreferences sharedPrefs] setConnectionConfiguration:client.configuration atIndex:index];
+                    }
+                    index++;
                 }
                 componentIndex++;
                 break;
