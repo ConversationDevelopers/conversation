@@ -773,6 +773,16 @@
         }
         modes++;
     }
+    IRCUser *user = [IRCUser fromNickname:senderDict[0] onChannel:channel];
+    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    
+    IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:modeString
+                                                             OfType:ET_MODE
+                                                     inConversation:channel
+                                                           bySender:user
+                                                             atTime:now];
+    
+    [channel addMessageToConversation:messageObject];
 }
 
 + (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(const char *[3])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
