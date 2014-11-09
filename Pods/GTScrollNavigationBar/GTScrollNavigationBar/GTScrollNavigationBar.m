@@ -80,6 +80,7 @@
 
 - (void)resetToDefaultPositionWithAnimation:(BOOL)animated
 {
+    [self.scrollView setContentOffset:CGPointMake(self.scrollView.contentOffset.x,-self.scrollView.contentInset.top) animated:NO];
     self.scrollState = GTScrollNavigationBarNone;
     CGRect frame = self.frame;
     frame.origin.y = [self statusBarTopOffset];
