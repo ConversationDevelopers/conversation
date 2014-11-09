@@ -111,8 +111,8 @@
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedMessage:) name:@"messageReceived" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTableView:) name:@"clientDidConnect" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTableView:) name:@"clientDidDisconnect" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateClientState:) name:@"clientDidConnect" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateClientState:) name:@"clientDidDisconnect" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clientWillConnect:) name:@"clientWillConnect" object:nil];
     _backgroundTask = UIBackgroundTaskInvalid;
 
@@ -249,8 +249,9 @@
     }
 }
 
-- (void)reloadData
+- (void)updateClientState:(id)sender
 {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [self.tableView reloadData];
 }
 
@@ -328,11 +329,6 @@
 
     [self.navigationController popToRootViewControllerAnimated:YES];
     [self.navigationController pushViewController:_chatViewController animated:YES];
-}
-
-- (void)updateTableView:(id)sender
-{
-    [self.tableView reloadData];
 }
 
 - (void)clientWillConnect:(NSNotification *)notification
