@@ -101,7 +101,7 @@
     }
     char* capCommand = malloc(lengthOfCommand + 1);
     strncpy(capCommand, messageBeforeIteration, lengthOfCommand);
-    capCommand[lengthOfCommand + 1] = '\0';
+    capCommand[lengthOfCommand] = '\0';
     
     messageBeforeIteration = message;
     
