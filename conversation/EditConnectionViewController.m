@@ -772,6 +772,13 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 
 - (void)autoJoinChannelsChanged:(PreferencesListViewController *)sender
 {
+    NSString *password;
+    for (IRCChannelConfiguration *config in _configuration.channels) {
+        if (config.passwordReference.length)
+            password = [SSKeychain passwordForService:@"conversation" account:config.passwordReference];
+            if (password.length)
+                [SSKeychain deletePasswordForService:@"conversation" account:config.passwordReference];
+    }
     _configuration.channels = sender.items;
     [self.tableView reloadData];
 }
