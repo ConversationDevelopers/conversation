@@ -56,7 +56,7 @@
     _unreadCountLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     _unreadCountLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
     _unreadCountLabel.textColor = [UIColor lightGrayColor];
-
+    
     [self.contentView addSubview:_nameLabel];
     [self.contentView addSubview:_firstDetailLabel];
     [self.contentView addSubview:_secondDetailLabel];
@@ -125,44 +125,39 @@
     _secondDetailLabel.attributedText = seconddetail;
     _secondDetailLabel.frame = frame;
     
-    
-    if (self.accessoryType != UITableViewCellAccessoryNone) {
-        NSArray *subviews;
-        NSArray *vComp = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
-        if ([[vComp objectAtIndex:0] intValue] >= 8) {
-            // iOS 8 and newer
-            subviews = self.subviews;
-        } else {
-            // iOS 7
-            subviews = [self.subviews[0] subviews];
-        }
-        for (UIView *subview in subviews) {
-            if([NSStringFromClass(subview.class) isEqualToString:@"UIButton"]) {
-                // This subview should be the accessory view, change its frame
-                CGRect frame = subview.frame;
-                frame.origin.y -= 15;
-                subview.frame = frame;
+    NSArray *subviews;
+    NSArray *vComp = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
+    if ([[vComp objectAtIndex:0] intValue] >= 8) {
+        // iOS 8 and newer
+        subviews = self.subviews;
+    } else {
+        // iOS 7
+        subviews = [self.subviews[0] subviews];
+    }
+    for (UIView *subview in subviews) {
+        if([NSStringFromClass(subview.class) isEqualToString:@"DisclosureView"]) {
+            // This subview should be the accessory view, change its frame
+            CGRect frame = subview.frame;
+            frame.origin.y -= 15;
+            subview.frame = frame;
+            
+            if(_unreadCount > 0) {
                 
-                if(_unreadCount > 0) {
-                    
-                    // Add unread count label
-                    NSString *value = [NSString stringWithFormat:@"%li", (long)_unreadCount];
-                    _unreadCountLabel.textColor = [UIColor lightGrayColor];
-                    _unreadCountLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
+                // Add unread count label
+                NSString *value = [NSString stringWithFormat:@"%li", (long)_unreadCount];
 
-                    if(_unreadCount > 0)
-                        _unreadCountLabel.text = value;
-                    else
-                        _unreadCountLabel.text = @"";
-                    
-                    // Calculate frame size
-                    CGSize size = [value sizeWithAttributes:@{NSFontAttributeName: _unreadCountLabel.font }];
-                    _unreadCountLabel.frame = CGRectMake(frame.origin.x-size.width-5, frame.origin.y-2, size.width, size.height);
+                if(_unreadCount > 0)
+                    _unreadCountLabel.text = value;
+                else
+                    _unreadCountLabel.text = @"";
                 
-                }
-                
-                break;
+                // Calculate frame size
+                CGSize size = [value sizeWithAttributes:@{NSFontAttributeName: _unreadCountLabel.font }];
+                _unreadCountLabel.frame = CGRectMake(frame.origin.x-size.width-5, frame.origin.y-2, size.width, size.height);
+            
             }
+            
+            break;
         }
     }
     

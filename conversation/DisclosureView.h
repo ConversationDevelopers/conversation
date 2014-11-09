@@ -30,18 +30,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ConversationItemView : UITableViewCell {
-    UILabel *_firstDetailLabel;
-    UILabel *_secondDetailLabel;
-}
+@interface DisclosureView : UIView
 
-@property (nonatomic) BOOL isChannel;
-@property (nonatomic) BOOL enabled;
-@property (nonatomic) UIImage *image;
-@property (nonatomic) NSString *name;
-@property (nonatomic) NSMutableArray *previewMessages;
-@property (nonatomic) NSInteger unreadCount;
-@property (nonatomic) UILabel *nameLabel;
-@property (nonatomic) UILabel *unreadCountLabel;
+@property (assign) BOOL isHighlighted;
 
 @end

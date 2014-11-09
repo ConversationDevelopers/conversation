@@ -28,20 +28,38 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <UIKit/UIKit.h>
+#import "DisclosureView.h"
 
-@interface ConversationItemView : UITableViewCell {
-    UILabel *_firstDetailLabel;
-    UILabel *_secondDetailLabel;
+@implementation DisclosureView
+
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setBackgroundColor:[UIColor clearColor]];
+        // Initialization code.
+    }
+    return self;
 }
 
-@property (nonatomic) BOOL isChannel;
-@property (nonatomic) BOOL enabled;
-@property (nonatomic) UIImage *image;
-@property (nonatomic) NSString *name;
-@property (nonatomic) NSMutableArray *previewMessages;
-@property (nonatomic) NSInteger unreadCount;
-@property (nonatomic) UILabel *nameLabel;
-@property (nonatomic) UILabel *unreadCountLabel;
+- (void)drawRect:(CGRect)rect {
+    // (x,y) is the tip of the arrow
+    CGFloat x = CGRectGetMaxX(self.bounds) - 5;
+    CGFloat y = CGRectGetMidY(self.bounds);
+    const CGFloat R = 4.5;
+    CGContextRef ctxt = UIGraphicsGetCurrentContext();
+    CGContextMoveToPoint(ctxt, x-R, y-R);
+    CGContextAddLineToPoint(ctxt, x, y);
+    CGContextAddLineToPoint(ctxt, x-R, y+R);
+    CGContextSetLineCap(ctxt, kCGLineCapSquare);
+    CGContextSetLineJoin(ctxt, kCGLineJoinMiter);
+    CGContextSetLineWidth(ctxt, 3);
+    // If the cell is highlighted (blue background) draw in white; otherwise gray
+    if (_isHighlighted) {
+        CGContextSetRGBStrokeColor(ctxt, 0, 0.502, 0, 1);
+    } else {
+        CGContextSetRGBStrokeColor(ctxt, 0.5, 0.5, 0.5, 1);
+    }
+    CGContextStrokePath(ctxt);
+}
 
 @end

@@ -39,6 +39,7 @@
 #import "IRCMessage.h"
 #import "AppPreferences.h"
 #import "ConversationItemView.h"
+#import "DisclosureView.h"
 #import "UITableView+Methods.h"
 #import "AppPreferences.h"
 #import "SSKeychain.h"
@@ -449,25 +450,30 @@
     
     IRCClient *client = [_connections objectAtIndex:indexPath.section];
     NSArray *channels = client.getChannels;
+    DisclosureView *disclosure = [[DisclosureView alloc] initWithFrame:CGRectMake(-5, -10, 15, 15)];
     if((int)indexPath.row > (int)channels.count-1) {
         NSInteger index;
         index = indexPath.row - client.getChannels.count;
         IRCConversation *query = [client.getQueries objectAtIndex:index];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.accessoryView = disclosure;
         cell.enabled = query.conversationPartnerIsOnline;
-        cell.name = query.name;
         cell.isChannel = NO;
         cell.previewMessages = query.previewMessages;
         cell.unreadCount = query.unreadCount;
         
     } else {
         IRCChannel *channel = [client.getChannels objectAtIndex:indexPath.row];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.accessoryView = disclosure;
         cell.enabled = channel.isJoinedByUser;
         cell.name = channel.name;
         cell.isChannel = YES;
         cell.unreadCount = channel.unreadCount;
         cell.previewMessages = channel.previewMessages;
+        if (channel.isHighlighted) {
+            cell.nameLabel.textColor = [UIColor colorWithRed:0 green:0.502 blue:0 alpha:1];
+            cell.unreadCountLabel.textColor = [UIColor colorWithRed:0 green:0.502 blue:0 alpha:1];
+            disclosure.isHighlighted = YES;
+        }
     }
 
     return cell;
@@ -704,6 +710,17 @@
     } else {
         string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@", message.sender.nick, message.message]];
         [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, message.sender.nick.length+1)];
+    }
+
+    // Check for highlight
+    NSString *msg = message.message;
+    NSString *nick = [[message.conversation.client currentUserOnConnection] nick];
+    NSCharacterSet *wordBoundries = [[NSCharacterSet letterCharacterSet] invertedSet];
+    NSRange range = [msg rangeOfString:nick];
+    if (range.location != NSNotFound &&
+        (range.location == 0 || [[msg substringWithRange:NSMakeRange(range.location-1, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound) &&
+        (range.location+range.length+1 > msg.length || [[msg substringWithRange:NSMakeRange(range.location+range.length, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound)) {
+        message.conversation.isHighlighted = YES;
     }
     
     [message.conversation addPreviewMessage:string];

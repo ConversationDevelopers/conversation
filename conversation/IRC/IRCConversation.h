@@ -42,6 +42,7 @@
 @property (nonatomic) NSMutableArray *previewMessages;
 @property (nonatomic) NSMutableArray *messages;
 @property (nonatomic) NSUInteger unreadCount;
+@property (assign) BOOL isHighlighted;
 
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;
 

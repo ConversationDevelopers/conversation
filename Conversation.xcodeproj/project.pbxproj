@@ -36,6 +36,7 @@
 		DAC65A4519EAA2ED00E00A73 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A3D19EAA2ED00E00A73 /* Localizable.strings */; };
 		DAC65A4819EAA2ED00E00A73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A4219EAA2ED00E00A73 /* Images.xcassets */; };
 		DADA8AC61A0D3AC20085A130 /* ChannelInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DADA8AC51A0D3AC20085A130 /* ChannelInfoViewController.m */; };
+		DAE830591A0F47E10022F512 /* DisclosureView.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE830581A0F47E10022F512 /* DisclosureView.m */; };
 		DAF9002C1A0DA60900488896 /* emoticons.plist in Resources */ = {isa = PBXBuildFile; fileRef = DAF9002B1A0DA60900488896 /* emoticons.plist */; };
 		FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */; };
 		FA00A39219E5DD3D00E7B4D7 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A38F19E5DD3D00E7B4D7 /* SSKeychain.m */; };
@@ -131,6 +132,8 @@
 		DAC65A4219EAA2ED00E00A73 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = conversation/Resources/Images.xcassets; sourceTree = "<group>"; };
 		DADA8AC41A0D3AC20085A130 /* ChannelInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelInfoViewController.h; sourceTree = "<group>"; };
 		DADA8AC51A0D3AC20085A130 /* ChannelInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelInfoViewController.m; sourceTree = "<group>"; };
+		DAE830571A0F47E10022F512 /* DisclosureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisclosureView.h; sourceTree = "<group>"; };
+		DAE830581A0F47E10022F512 /* DisclosureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisclosureView.m; sourceTree = "<group>"; };
 		DAF9002B1A0DA60900488896 /* emoticons.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = emoticons.plist; path = Resources/emoticons.plist; sourceTree = "<group>"; };
 		FA00A38219E5A69F00E7B4D7 /* IRCMessageIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCMessageIndex.h; sourceTree = "<group>"; };
 		FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCMessageIndex.m; sourceTree = "<group>"; };
@@ -340,6 +343,8 @@
 				DA1A4AC219E1770700565763 /* ConversationListViewController.m */,
 				DA79EA3119EA6C810027A370 /* ConversationItemView.h */,
 				DA79EA3219EA6C810027A370 /* ConversationItemView.m */,
+				DAE830571A0F47E10022F512 /* DisclosureView.h */,
+				DAE830581A0F47E10022F512 /* DisclosureView.m */,
 				DA379D4519FB35E80031E30B /* ChatViewController.h */,
 				DA379D4619FB35E80031E30B /* ChatViewController.m */,
 				DA41794919FAF9FF007784F0 /* ChatMessageView.h */,
@@ -594,12 +599,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DA1A4ADD19E1770700565763 /* Build configuration list for PBXNativeTarget "conversation" */;
 			buildPhases = (
-				772B584BBDF3FC9098A65D70 /* Check Pods Manifest.lock */,
 				DA1A4AB319E1770700565763 /* Sources */,
 				DA1A4AB419E1770700565763 /* Frameworks */,
 				DA1A4AB519E1770700565763 /* Resources */,
-				50524F424C454D533F /* ShellScript */,
-				245A3F2B01344824D7A57682 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -688,8 +690,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-
-
 /* Begin PBXSourcesBuildPhase section */
 		DA1A4AB319E1770700565763 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -710,6 +710,7 @@
 				DA6F61D719FD1A6600F22F78 /* ILTranslucentView.m in Sources */,
 				FAFF19A619FDC35300F8C071 /* IRCKickMessage.m in Sources */,
 				DA1A4ABD19E1770700565763 /* main.m in Sources */,
+				DAE830591A0F47E10022F512 /* DisclosureView.m in Sources */,
 				FA109B3719E419040068DC29 /* IRCConnectionConfiguration.m in Sources */,
 				DA79EA2C19E9237A0027A370 /* UITableView+Methods.m in Sources */,
 				DA79EA3019E92AF20027A370 /* PreferencesListViewController.m in Sources */,
