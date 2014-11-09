@@ -34,7 +34,9 @@
 @class IRCClient;
 @class IRCCertificateTrust;
 
-@interface ConversationListViewController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+@interface ConversationListViewController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate> {
+    UIBackgroundTaskIdentifier _backgroundTask;    
+}
 
 @property (nonatomic, retain) NSMutableArray *connections;
 @property (nonatomic) ChatViewController *chatViewController;

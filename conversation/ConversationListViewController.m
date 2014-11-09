@@ -113,7 +113,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedMessage:) name:@"messageReceived" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTableView:) name:@"clientDidConnect" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTableView:) name:@"clientDidDisconnect" object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clientWillConnect:) name:@"clientWillConnect" object:nil];
+    _backgroundTask = UIBackgroundTaskInvalid;
 
     [self.navigationController SH_setAnimationDuration:0.5 withPreparedTransitionBlock:^(UIView *containerView, UIViewController *fromVC, UIViewController *toVC, NSTimeInterval duration, id<SHViewControllerAnimatedTransitioning> transitionObject, SHTransitionAnimationCompletionBlock transitionDidComplete) {
         
@@ -332,6 +333,16 @@
 - (void)updateTableView:(id)sender
 {
     [self.tableView reloadData];
+}
+
+- (void)clientWillConnect:(NSNotification *)notification
+{
+    [UIApplication sharedApplication].idleTimerDisabled = [self shouldDisableIdleTimer];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+
+    if (_backgroundTask == UIBackgroundTaskInvalid)
+        _backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{ [self _backgroundTaskExpired]; }];
+
 }
 
 #pragma mark - Table View
@@ -826,6 +837,26 @@
         }
         
     }];
+}
+
+- (BOOL)shouldDisableIdleTimer
+{
+    if ([UIDevice currentDevice].batteryState >= UIDeviceBatteryStateCharging)
+        return YES;
+    return [self anyConnectedOrConnectingConnections];
+}
+
+- (BOOL)anyConnectedOrConnectingConnections
+{
+    for (IRCClient *connection in _connections)
+        if (connection.isConnected || connection.isAttemptingConnection || connection.isAttemptingRegistration)
+            return YES;
+    return NO;
+}
+
+- (void) _backgroundTaskExpired {
+    [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
+    _backgroundTask = UIBackgroundTaskInvalid;
 }
 
 - (void)disconnect
