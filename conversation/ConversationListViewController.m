@@ -828,4 +828,10 @@
     }];
 }
 
+- (void)disconnect
+{
+    for (IRCClient *client in _connections) {
+        [client disconnect];
+    }
+}
 @end
