@@ -736,6 +736,9 @@
                 componentIndex++;
                 break;
                 
+            case 'b:':
+                break;
+                
             case 'k':
                 if (isGrantedMode) {
                     if ([channel.configuration.passwordReference length] == 0) {
@@ -758,9 +761,14 @@
                     index++;
                 }
                 componentIndex++;
-                break;
+                
                 
             default:
+                if (isGrantedMode) {
+                    [channel.channelModes addObject:[NSString stringWithFormat:@"%c", *modes]];
+                } else {
+                    [channel.channelModes removeObject:[NSString stringWithFormat:@"%c", *modes]];
+                }
                 break;
         }
         modes++;
