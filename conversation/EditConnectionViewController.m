@@ -130,6 +130,12 @@ static unsigned short EncodingTableSection = 4;
     IRCClient *client = [[IRCClient alloc] initWithConfiguration:_configuration];
     
     for (IRCChannelConfiguration *config in _configuration.channels) {
+        NSString *password = [SSKeychain passwordForService:@"conversation" account:config.passwordReference];
+        if (password.length == 0) {
+            NSString *identifier = [[NSUUID UUID] UUIDString];
+            [SSKeychain setPassword:config.passwordReference forService:@"conversation" account:identifier];
+            config.passwordReference = identifier;
+        }
         [client addChannel:[[IRCChannel alloc] initWithConfiguration:config withClient:client]];
     }
 
