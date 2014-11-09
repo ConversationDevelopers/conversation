@@ -642,6 +642,11 @@
 					DA1A4AB619E1770700565763 = {
 						CreatedOnToolsVersion = 6.0.1;
 						DevelopmentTeam = HK72QRLHU9;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					DA1A4AD219E1770700565763 = {
 						CreatedOnToolsVersion = 6.0.1;
