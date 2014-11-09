@@ -704,6 +704,7 @@
     [self.connection disableFloodControl];
     
     for (IRCChannel *channel in self.channels) {
+        channel.users = [[NSMutableArray alloc] init];
         channel.isJoinedByUser = NO;
     }
     
