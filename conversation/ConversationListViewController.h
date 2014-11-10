@@ -41,7 +41,6 @@
 @property (nonatomic, retain) NSMutableArray *connections;
 @property (nonatomic) ChatViewController *chatViewController;
 
-- (void)reloadData;
 - (void)reloadClient:(IRCClient *)client;
 - (NSString *)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client;
 - (void)selectConversationWithIdentifier:(NSString *)identifier;

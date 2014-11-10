@@ -736,7 +736,7 @@
                 componentIndex++;
                 break;
                 
-            case 'b:':
+            case 'b':
                 break;
                 
             case 'k':
