@@ -183,7 +183,7 @@ static unsigned short ModesTableSection = 1;
             PreferencesSwitchCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesSwitchCell class])];
             cell.switchAction = @selector(tChanged:);
             cell.switchControl.on = [_channel.channelModes containsObject:@"t"];
-            cell.textLabel.text = NSLocalizedString(@"Only operators can change topic (+t)", @"Only operators can change topic (+t)");
+            cell.textLabel.text = NSLocalizedString(@"Topic set by operators (+t)", @"Topic set by operators (+t)");
             return cell;
         } else if (indexPath.row == 4) {
             PreferencesSwitchCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesSwitchCell class])];
@@ -201,13 +201,13 @@ static unsigned short ModesTableSection = 1;
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textEditAction = @selector(kChanged:);
             cell.textField.placeholder = NSLocalizedString(@"Enter Password", @"Enter Password");
-            cell.textLabel.text = NSLocalizedString(@"Password (+k)", @"Password (+k)");
+            cell.textLabel.text = NSLocalizedString(@"Password Protection (+k)", @"Password Protection (+k)");
             return cell;
         } else if (indexPath.row == 7) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textEditAction = @selector(lChanged:);
             cell.textField.placeholder = NSLocalizedString(@"Enter Limit", @"Enter Limit");            
-            cell.textLabel.text = NSLocalizedString(@"Limit number of users (+l)", @"Limit number of users (+l)");
+            cell.textLabel.text = NSLocalizedString(@"User Limit (+l)", @"User Limit (+l)");
             return cell;
         }
         UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleDefault];

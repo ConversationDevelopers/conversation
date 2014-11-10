@@ -157,7 +157,7 @@ static unsigned short EncodingTableSection = 4;
         [client connect];
     }
     
-    [self.conversationsController reloadData];
+    [self.conversationsController.tableView reloadData];
     [[AppPreferences sharedPrefs] save];
     [self dismissViewControllerAnimated:YES completion:nil];
 }

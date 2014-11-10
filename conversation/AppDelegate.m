@@ -173,7 +173,7 @@
         }
     }
     
-    [self.conversationsController reloadData];
+    [self.conversationsController.tableView reloadData];
     [[AppPreferences sharedPrefs] save];
     
     /* Connect automatically if this is a new or disconnected connection */
