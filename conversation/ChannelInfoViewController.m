@@ -227,10 +227,10 @@ static unsigned short ModesTableSection = 1;
         [_modeString appendString:@"+s"];
     } else {
         NSRange range = [_modeString rangeOfString:@"+s"];
-        if (range.location != NSNotFound) {
+        if (range.location != NSNotFound)
             [_modeString replaceCharactersInRange:range withString:@""];
-        }
-        [_modeString appendString:@"-s"];
+        else
+            [_modeString appendString:@"-s"];
     }
 }
 
@@ -240,10 +240,10 @@ static unsigned short ModesTableSection = 1;
         [_modeString appendString:@"+p"];
     } else {
         NSRange range = [_modeString rangeOfString:@"+p"];
-        if (range.location != NSNotFound) {
+        if (range.location != NSNotFound)
             [_modeString replaceCharactersInRange:range withString:@""];
-        }
-        [_modeString appendString:@"-p"];
+        else
+            [_modeString appendString:@"-p"];
     }
 }
 
@@ -253,10 +253,10 @@ static unsigned short ModesTableSection = 1;
         [_modeString appendString:@"+n"];
     } else {
         NSRange range = [_modeString rangeOfString:@"+n"];
-        if (range.location != NSNotFound) {
+        if (range.location != NSNotFound)
             [_modeString replaceCharactersInRange:range withString:@""];
-        }
-        [_modeString appendString:@"-n"];
+        else
+            [_modeString appendString:@"-n"];
     }
 }
 
@@ -266,10 +266,10 @@ static unsigned short ModesTableSection = 1;
         [_modeString appendString:@"+t"];
     } else {
         NSRange range = [_modeString rangeOfString:@"+t"];
-        if (range.location != NSNotFound) {
+        if (range.location != NSNotFound)
             [_modeString replaceCharactersInRange:range withString:@""];
-        }
-        [_modeString appendString:@"-t"];
+        else
+            [_modeString appendString:@"-t"];
     }
 }
 
@@ -279,10 +279,10 @@ static unsigned short ModesTableSection = 1;
         [_modeString appendString:@"+i"];
     } else {
         NSRange range = [_modeString rangeOfString:@"+i"];
-        if (range.location != NSNotFound) {
+        if (range.location != NSNotFound)
             [_modeString replaceCharactersInRange:range withString:@""];
-        }
-        [_modeString appendString:@"-i"];
+        else
+            [_modeString appendString:@"-i"];
     }
 }
 
@@ -292,10 +292,10 @@ static unsigned short ModesTableSection = 1;
         [_modeString appendString:@"+m"];
     } else {
         NSRange range = [_modeString rangeOfString:@"+m"];
-        if (range.location != NSNotFound) {
+        if (range.location != NSNotFound)
             [_modeString replaceCharactersInRange:range withString:@""];
-        }
-        [_modeString appendString:@"-p"];
+        else
+            [_modeString appendString:@"-p"];
     }
 }
 
@@ -306,10 +306,10 @@ static unsigned short ModesTableSection = 1;
         _password = sender.textField.text;
     } else {
         NSRange range = [_modeString rangeOfString:@"+k"];
-        if (range.location != NSNotFound) {
+        if (range.location != NSNotFound)
             [_modeString replaceCharactersInRange:range withString:@""];
-        }
-        [_modeString appendString:@"-k"];
+        else
+            [_modeString appendString:@"-k"];
         _password = @"";
     }
 }
@@ -321,10 +321,10 @@ static unsigned short ModesTableSection = 1;
         _limit = sender.textField.text;
     } else {
         NSRange range = [_modeString rangeOfString:@"+l"];
-        if (range.location != NSNotFound) {
+        if (range.location != NSNotFound)
             [_modeString replaceCharactersInRange:range withString:@""];
-        }
-        [_modeString appendString:@"-l"];
+        else
+            [_modeString appendString:@"-l"];
         _limit = @"";
     }
 }
