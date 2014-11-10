@@ -32,7 +32,12 @@
 #import "IRCChannel.h"
 
 
-@interface ChannelInfoViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate>
+@interface ChannelInfoViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate> {
+    NSString *_topic;
+    NSMutableString *_modeString;
+    NSString *_password;
+    NSString *_limit;
+}
 
 @property (nonatomic) IRCChannel *channel;
 
