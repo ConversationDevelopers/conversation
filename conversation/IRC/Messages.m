@@ -480,6 +480,7 @@
     if ([[user nick] caseInsensitiveCompare:client.currentUserOnConnection.nick] == NSOrderedSame) {
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         [client.connection send:[NSString stringWithFormat:@"WHO %@", channelName]];
+        [client.connection send:[NSString stringWithFormat:@"MODE %@", channelName]];
         channel.isJoinedByUser = YES;
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -969,6 +970,18 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [controller displayPasswordEntryDialog:client];
     });
+}
+
++ (void)clientReceivedModesForChannel:(const char*)modes inChannel:(char *)rchannel onClient:(IRCClient *)client
+{
+    NSString *channelString = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
+    IRCChannel *channel = [IRCChannel fromString:channelString withClient:client];
+    channel.channelModes = [[NSMutableArray alloc] init];
+    
+    while (*modes != '\0' && *modes != ' ') {
+        NSString *mode = [NSString stringWithFormat:@"%c", *modes];
+        [channel.channelModes addObject:mode];
+    }
 }
 
 @end

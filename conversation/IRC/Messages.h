@@ -79,4 +79,6 @@
 
 + (void)clientReceivedServerPasswordMismatchError:(IRCClient *)client;
 
++ (void)clientReceivedModesForChannel:(const char*)modes inChannel:(char *)rchannel onClient:(IRCClient *)client;
+
 @end

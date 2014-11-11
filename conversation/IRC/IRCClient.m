@@ -467,10 +467,13 @@
             [self updateServerSupportedFeatures:line];
             break;
             
-        case RPL_ISON: {
+        case RPL_ISON:
             [Messages clientReceivedISONResponse:line onClient:self];
             break;
-        }
+            
+        case RPL_CHANNELMODEIS:
+            [Messages clientReceivedModesForChannel:line inChannel:recipient onClient:self];
+            break;
             
         case RPL_TOPIC:
             [Messages userReceivedTOPIC:line onChannel:recipient byUser:nil onClient:self withTags:tagsList];
