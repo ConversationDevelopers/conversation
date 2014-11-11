@@ -32,7 +32,7 @@
 #import "ILTranslucentView.h"
 #import "UITableView+Methods.m"
 #import "IRCUser.h"
-#import "UserStatusView.h"
+#import "UserListItemCell.h"
 
 @implementation UserListView
 
@@ -60,25 +60,12 @@
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
-    cell.backgroundColor = [UIColor clearColor];
+    
+    UserListItemCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UserListItemCell class])];
 
-    [cell.textLabel removeFromSuperview];
+    cell.user = _channel.users[indexPath.row];
+    cell.client = _channel.client;
     
-    IRCUser *user = _channel.users[indexPath.row];
-    UserStatusView *statusView = [[UserStatusView alloc] initWithFrame:CGRectMake(10, 0, 30, cell.bounds.size.height)];
-    statusView.backgroundColor = [UIColor clearColor];
-    statusView.client = _channel.client;
-    statusView.status = user.channelPrivilege;
-    
-    UILabel *nickLabel = [[UILabel alloc] initWithFrame:CGRectMake(45, 0, cell.bounds.size.width-200, cell.bounds.size.height)];
-    nickLabel.font = [UIFont systemFontOfSize:16.0];
-    nickLabel.text = user.nick;
-    
-    [cell.contentView addSubview:statusView];
-    [cell.contentView addSubview:nickLabel];
-    
-
     return cell;
     
 }

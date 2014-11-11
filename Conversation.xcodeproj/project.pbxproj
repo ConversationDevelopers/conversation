@@ -16,6 +16,7 @@
 		DA2F9A081A0726E60028B2BD /* AddStringItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2F9A071A0726E60028B2BD /* AddStringItemViewController.m */; };
 		DA379D4719FB35E80031E30B /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA379D4619FB35E80031E30B /* ChatViewController.m */; };
 		DA41794B19FAF9FF007784F0 /* ChatMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA41794A19FAF9FF007784F0 /* ChatMessageView.m */; };
+		DA656B361A12C97000C214BD /* UserListItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DA656B351A12C97000C214BD /* UserListItemCell.m */; };
 		DA6F61D719FD1A6600F22F78 /* ILTranslucentView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA6F61D619FD1A6600F22F78 /* ILTranslucentView.m */; };
 		DA6F61DA19FD1B2800F22F78 /* UserListView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA6F61D919FD1B2800F22F78 /* UserListView.m */; };
 		DA6F61DD19FD776400F22F78 /* UserStatusVIew.m in Sources */ = {isa = PBXBuildFile; fileRef = DA6F61DC19FD776400F22F78 /* UserStatusVIew.m */; };
@@ -93,6 +94,8 @@
 		DA379D4619FB35E80031E30B /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
 		DA41794919FAF9FF007784F0 /* ChatMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatMessageView.h; sourceTree = "<group>"; };
 		DA41794A19FAF9FF007784F0 /* ChatMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatMessageView.m; sourceTree = "<group>"; };
+		DA656B341A12C97000C214BD /* UserListItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserListItemCell.h; sourceTree = "<group>"; };
+		DA656B351A12C97000C214BD /* UserListItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserListItemCell.m; sourceTree = "<group>"; };
 		DA6F61D519FD1A6600F22F78 /* ILTranslucentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILTranslucentView.h; sourceTree = "<group>"; };
 		DA6F61D619FD1A6600F22F78 /* ILTranslucentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILTranslucentView.m; sourceTree = "<group>"; };
 		DA6F61D819FD1B2800F22F78 /* UserListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserListView.h; sourceTree = "<group>"; };
@@ -357,6 +360,8 @@
 				FAC0E50B1A018AC2001CFB48 /* CertificateItemRow.m */,
 				DA6F61DB19FD776400F22F78 /* UserStatusVIew.h */,
 				DA6F61DC19FD776400F22F78 /* UserStatusVIew.m */,
+				DA656B341A12C97000C214BD /* UserListItemCell.h */,
+				DA656B351A12C97000C214BD /* UserListItemCell.m */,
 				DA6F61D819FD1B2800F22F78 /* UserListView.h */,
 				DA6F61D919FD1B2800F22F78 /* UserListView.m */,
 				DA6F61D519FD1A6600F22F78 /* ILTranslucentView.h */,
@@ -715,6 +720,7 @@
 				DA6F61D719FD1A6600F22F78 /* ILTranslucentView.m in Sources */,
 				FAFF19A619FDC35300F8C071 /* IRCKickMessage.m in Sources */,
 				DA1A4ABD19E1770700565763 /* main.m in Sources */,
+				DA656B361A12C97000C214BD /* UserListItemCell.m in Sources */,
 				DAE830591A0F47E10022F512 /* DisclosureView.m in Sources */,
 				FA109B3719E419040068DC29 /* IRCConnectionConfiguration.m in Sources */,
 				DA79EA2C19E9237A0027A370 /* UITableView+Methods.m in Sources */,

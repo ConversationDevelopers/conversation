@@ -80,7 +80,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:@"receivedMessage"
+                                                    name:@"messageReceived"
                                                   object:nil];
 }
 
@@ -423,7 +423,16 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         
     }
     
-    if([message.conversation.configuration.uniqueIdentifier isEqualToString:_conversation.configuration.uniqueIdentifier]) {
+    if (_userlistIsVisible && (message.messageType == ET_JOIN ||
+        message.messageType == ET_PART ||
+        message.messageType == ET_NICK ||
+        message.messageType == ET_QUIT ||
+        message.messageType == ET_KICK)) {
+
+        [self.userListView.tableview reloadData];
+    }
+    
+    if ([message.conversation.configuration.uniqueIdentifier isEqualToString:_conversation.configuration.uniqueIdentifier]) {
         [self addMessage:message];
     }
 }
@@ -503,9 +512,10 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         CGRect frame = CGRectMake(_container.frame.size.width,
                                   30.0f,
                                   width,
-                                  _container.frame.size.height+30.0f);
+                                  _contentView.frame.size.height);
         
         _userListView = [[UserListView alloc] initWithFrame:frame];
+        _userListView.backgroundColor = [UIColor clearColor];
     }
     return _userListView;
 }

@@ -34,6 +34,7 @@
 
 @interface UserListView : UIView <UITableViewDataSource, UITableViewDelegate>
 
+@property (nonatomic) UITableView *tableview;
 @property (nonatomic) IRCChannel *channel;
 
 @end
