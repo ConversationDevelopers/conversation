@@ -365,6 +365,7 @@
     }
     
     conversation.isHighlighted = NO;
+    conversation.unreadCount = 0;
     _chatViewController.conversation = conversation;
     _currentConversation = conversation;
     
