@@ -82,6 +82,12 @@
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    NSArray *connections = [_conversationsController connections];
+    IRCClient *client;
+    for (int x=0; x<connections.count; x++) {
+        client = connections[x];
+        [[AppPreferences sharedPrefs] setConnectionConfiguration:client.configuration atIndex:x];
+    }
     [[AppPreferences sharedPrefs] save];
 }
 

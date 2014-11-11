@@ -763,13 +763,6 @@
                     }
                 }
                 
-                NSUInteger index = 0;
-                for (NSDictionary *config in [[AppPreferences sharedPrefs] getConnectionConfigurations]) {
-                    if ([config[@"uniqueIdentifier"] isEqualToString:client.configuration.uniqueIdentifier]) {
-                        [[AppPreferences sharedPrefs] setConnectionConfiguration:client.configuration atIndex:index];
-                    }
-                    index++;
-                }
                 componentIndex++;
                 
                 

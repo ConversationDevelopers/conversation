@@ -796,7 +796,6 @@
                         break;
                 }
                 [blockself.connections setObject:client atIndexedSubscript:i];
-                [[AppPreferences sharedPrefs] setConnectionConfiguration:client.configuration atIndex:i];
                 if ([client isConnected]) {
                     [IRCCommands sendServerPasswordForClient:client];
                 } else {

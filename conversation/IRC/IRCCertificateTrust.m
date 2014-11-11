@@ -124,13 +124,6 @@
     NSMutableArray *signatures = [[[self.client configuration] trustedSSLSignatures] mutableCopy];
     [signatures addObject:signature];
     self.client.configuration.trustedSSLSignatures = signatures;
-    NSUInteger index = 0;
-    for (NSDictionary *config in [[AppPreferences sharedPrefs] getConnectionConfigurations]) {
-        if ([config[@"uniqueIdentifier"] isEqualToString:self.client.configuration.uniqueIdentifier]) {
-            [[AppPreferences sharedPrefs] setConnectionConfiguration:self.client.configuration atIndex:index];
-        }
-        index++;
-    }
 }
 
 - (void)receivedTrustFromUser:(BOOL)trust
