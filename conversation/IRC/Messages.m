@@ -714,7 +714,7 @@
     
     NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
     
-    if ([channelName isEqualToString:[client currentUserOnConnection].nick])
+    if ([channelName isValidChannelName:client] == NO)
         return;
     
     IRCChannel *channel = [IRCChannel fromString:channelName withClient:client];
