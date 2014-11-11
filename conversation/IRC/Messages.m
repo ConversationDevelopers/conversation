@@ -315,7 +315,13 @@
         [channel addMessageToConversation:message];
     } else {
         IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-        IRCConversation *conversation = [IRCConversation getConversationOrCreate:sender.nick onClient:client];
+        
+        IRCConversation *conversation;
+        if (sender.nick == client.currentUserOnConnection.nick) {
+            conversation = [IRCConversation getConversationOrCreate:recipientString onClient:client];
+        } else {
+          conversation  = [IRCConversation getConversationOrCreate:sender.nick onClient:client];
+        }
         
         /* Create an IRCMessage object and add it to the chat buffer. */
         NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
