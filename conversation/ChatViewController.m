@@ -44,6 +44,9 @@
 @property (readonly, nonatomic) UIScrollView *contentView;
 @property (readonly, nonatomic) PHFComposeBarView *composeBarView;
 @property (readonly, nonatomic) UserListView *userListView;
+@property (readonly, nonatomic) UIBarButtonItem *backButton;
+@property (readonly, nonatomic) UIBarButtonItem *joinButton;
+@property (readonly, nonatomic) UIBarButtonItem *userlistButton;
 @end
 
 CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
@@ -59,6 +62,17 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                              selector:@selector(messageReceived:)
                                                  name:@"messageReceived"
                                                object:nil];
+    
+    _backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ChannelIcon_Light"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
+    
+    _joinButton = [[UIBarButtonItem alloc] initWithTitle:@"Join" style:UIBarButtonItemStylePlain target:self action:@selector(join:)];
+    
+    _userlistButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Userlist"]
+                                                       style:UIBarButtonItemStylePlain
+                                                      target:self
+                                                      action:@selector(showUserList:)];
+
+    self.navigationItem.leftBarButtonItem = _backButton;
     
     return self;
 }
@@ -83,17 +97,15 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)loadView
 {
-    
-    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ChannelIcon_Light"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
-    
-    self.navigationItem.leftBarButtonItem = backButton;
-    
+
     UIView *view = [[UIView alloc] initWithFrame:kInitialViewFrame];
     [view setBackgroundColor:[UIColor whiteColor]];
 
     UIView *container = [self container];
     [container addSubview:[self contentView]];
     [container addSubview:[self composeBarView]];
+    
+    self.navigationController.scrollNavigationBar.scrollView = _contentView;
     
     [view addSubview:container];
     self.view = view;
@@ -106,25 +118,17 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    UIBarButtonItem *joinButton = [[UIBarButtonItem alloc] initWithTitle:@"Join" style:UIBarButtonItemStylePlain target:self action:@selector(join:)];
+    [super viewWillAppear:animated];
     
-    UIBarButtonItem *userlistButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Userlist"]
-                                                                       style:UIBarButtonItemStylePlain
-                                                                      target:self
-                                                                      action:@selector(showUserList:)];
     if (_isChannel && [(IRCChannel*)_conversation isJoinedByUser])
-        self.navigationItem.rightBarButtonItem = userlistButton;
+        self.navigationItem.rightBarButtonItem = _userlistButton;
     else if (_isChannel == NO) {
         self.navigationItem.rightBarButtonItem = nil;
     } else {
-        self.navigationItem.rightBarButtonItem = joinButton;
+        self.navigationItem.rightBarButtonItem = _joinButton;
     }
     
     self.title = _conversation.name;
-    
-    [self clearContent];
-    
-    self.navigationController.scrollNavigationBar.scrollView = _contentView;
     
     // Add initial messages
     for (IRCMessage *message in _conversation.messages) {
@@ -159,6 +163,9 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
+    
+    [self clearContent];
     [self hideAccessories:nil];
     [self.navigationController.scrollNavigationBar resetToDefaultPositionWithAnimation:NO];
     
