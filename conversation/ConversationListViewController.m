@@ -366,6 +366,7 @@
     
     conversation.isHighlighted = NO;
     _chatViewController.conversation = conversation;
+    _currentConversation = conversation;
     
     [self.navigationController pushViewController:_chatViewController animated:YES];
     [self.tableView reloadData];
