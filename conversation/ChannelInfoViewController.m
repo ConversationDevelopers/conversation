@@ -102,11 +102,11 @@ static unsigned short ModesTableSection = 1;
 
     // Set Topic
     if (_topic.length)
-        [InputCommands performCommand:[NSString stringWithFormat:@"TOPIC %@ :%@", _channel.name, _topic] inConversation:_channel];
+        [InputCommands performCommand:[NSString stringWithFormat:@"TOPIC %@ %@", _channel.name, _topic] inConversation:_channel];
     
     // Set Modes
     if (_modeString.length)
-        [InputCommands performCommand:[NSString stringWithFormat:@"MODE %@ :%@", _channel.name, _modeString] inConversation:_channel];
+        [InputCommands performCommand:[NSString stringWithFormat:@"MODE %@ %@", _channel.name, _modeString] inConversation:_channel];
 
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
