@@ -405,7 +405,7 @@
             case CMD_UMODE:
                 if ([messageComponents count] > 1) {
                     NSString *modes = messageComponents[1];
-                    [conversation.client.connection send:[NSString stringWithFormat:@"UMODE %@", modes]];
+                    [IRCCommands setMode:modes onRecepient:conversation.client.currentUserOnConnection.nick onClient:conversation.client];
                 } else {
                     [InputCommands incompleteParametersError:command withParameters:@"<modes>"];
                 }
