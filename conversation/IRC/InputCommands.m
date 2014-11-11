@@ -403,6 +403,12 @@
                 break;
                 
             case CMD_UMODE:
+                if ([messageComponents count] > 1) {
+                    NSString *modes = messageComponents[1];
+                    [conversation.client.connection send:[NSString stringWithFormat:@"UMODE %@", modes]];
+                } else {
+                    [InputCommands incompleteParametersError:command withParameters:@"<modes>"];
+                }
                 break;
                 
             case CMD_UNBAN:
