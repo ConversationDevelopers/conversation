@@ -546,14 +546,14 @@ uint32_t FNV32(const char *s)
                            value:[UIFont systemFontOfSize:12.0]
                            range:NSMakeRange(status.length+user.nick.length+1, string.length-status.length-user.nick.length-1)];
 
-            
-            NSArray *mentions = [self getMentions:msg];
-            for (NSValue *range in mentions) {
-                [string addAttribute:NSFontAttributeName
-                               value:[UIFont boldSystemFontOfSize:12.0]
-                               range:NSMakeRange(range.rangeValue.location+status.length+user.nick.length+1, range.rangeValue.length)];
+            if (_chatViewController.isChannel) {
+                NSArray *mentions = [self getMentions:msg];
+                for (NSValue *range in mentions) {
+                    [string addAttribute:NSFontAttributeName
+                                   value:[UIFont boldSystemFontOfSize:12.0]
+                                   range:NSMakeRange(range.rangeValue.location+status.length+user.nick.length+1, range.rangeValue.length)];
+                }
             }
-
             break;
         }
         default: {

@@ -367,7 +367,7 @@
     _chatViewController.conversation = conversation;
     
     [self.navigationController pushViewController:_chatViewController animated:YES];
-    [self.tableView reloadData];    
+    [self.tableView reloadData];
 
 }
 
@@ -471,13 +471,14 @@
         IRCConversation *query = [client.getQueries objectAtIndex:index];
         cell.accessoryView = disclosure;
         cell.enabled = query.conversationPartnerIsOnline;
+        cell.name = query.name;
         cell.isChannel = NO;
         cell.previewMessages = query.previewMessages;
         cell.unreadCount = query.unreadCount;
         if (query.isHighlighted) {
-            cell.nameLabel.textColor = [UIColor colorWithRed:0 green:0.502 blue:0 alpha:1];
-            cell.unreadCountLabel.textColor = [UIColor colorWithRed:0 green:0.502 blue:0 alpha:1];
-            disclosure.color = [UIColor colorWithRed:0.502 green:0 blue:0 alpha:1];
+            cell.nameLabel.textColor = [UIColor colorWithRed:0.5 green:0 blue:0 alpha:1];
+            cell.unreadCountLabel.textColor = [UIColor colorWithRed:0.5 green:0 blue:0 alpha:1];
+            disclosure.color = [UIColor colorWithRed:0.5 green:0 blue:0 alpha:1];
         }
         
     } else {
@@ -621,8 +622,6 @@
 
 - (void)conversationAdded:(AddConversationViewController *)sender
 {
-
-    NSMutableArray *connections = [sender.connections mutableCopy];
     
     IRCClient *client;
     int i;
@@ -656,7 +655,6 @@
     }
     IRCConnectionConfiguration *config = [[IRCConnectionConfiguration alloc] initWithDictionary:[[[AppPreferences sharedPrefs] getConnectionConfigurations] objectAtIndex:i]];
     client.configuration = config;
-    _connections = connections;
     
     [self.tableView reloadData];
     [[AppPreferences sharedPrefs] save];
