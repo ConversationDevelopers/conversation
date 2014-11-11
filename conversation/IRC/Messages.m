@@ -713,6 +713,10 @@
     BOOL isGrantedMode = NO;
     
     NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
+    
+    if ([channelName isEqualToString:[client currentUserOnConnection].nick])
+        return;
+    
     IRCChannel *channel = [IRCChannel fromString:channelName withClient:client];
     
     while (*modes != ' ' && *modes != '\0') {
@@ -975,7 +979,12 @@
 + (void)clientReceivedModesForChannel:(const char*)modes inChannel:(char *)rchannel onClient:(IRCClient *)client
 {
     NSString *channelString = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
+    
+    if ([channelString isEqualToString:[client currentUserOnConnection].nick])
+        return;
+    
     IRCChannel *channel = [IRCChannel fromString:channelString withClient:client];
+    
     channel.channelModes = [[NSMutableArray alloc] init];
     
     while (*modes != '\0' && *modes != ' ') {
