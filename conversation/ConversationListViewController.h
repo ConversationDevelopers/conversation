@@ -39,7 +39,7 @@
     UIBackgroundTaskIdentifier _backgroundTask;
 }
 
-@property (nonatomic) IRCConversation *_currentConversation;
+@property (nonatomic) IRCConversation *currentConversation;
 @property (nonatomic, retain) NSMutableArray *connections;
 @property (nonatomic) ChatViewController *chatViewController;
 
