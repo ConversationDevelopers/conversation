@@ -61,7 +61,8 @@
         @"znc.in/server-time",
         @"znc.in/server-time-iso",
         @"sasl",
-        @"znc.in/playback"
+        @"znc.in/playback",
+        @"znc.in/self-message"
     ];
 }
 
