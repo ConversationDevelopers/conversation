@@ -733,10 +733,12 @@
     
     // Private Message
     if ([message.conversation isKindOfClass:[IRCChannel class]] == NO) {
-        message.conversation.isHighlighted = YES;
         [message.conversation addPreviewMessage:string];
         message.conversation.unreadCount++;
-        AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
+        if (message.conversation.isHighlighted == NO) {
+            message.conversation.isHighlighted = YES;
+            AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
+        }
     } else {
         
         // Check for highlight
@@ -747,8 +749,10 @@
         if (range.location != NSNotFound &&
             (range.location == 0 || [[msg substringWithRange:NSMakeRange(range.location-1, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound) &&
             (range.location+range.length+1 > msg.length || [[msg substringWithRange:NSMakeRange(range.location+range.length, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound)) {
-            message.conversation.isHighlighted = YES;
-            AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);            
+            if (message.conversation.isHighlighted == NO) {
+                message.conversation.isHighlighted = YES;
+                AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
+            }
         }
         
         [message.conversation addPreviewMessage:string];
