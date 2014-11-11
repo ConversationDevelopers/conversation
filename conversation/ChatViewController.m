@@ -112,10 +112,13 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                                                        style:UIBarButtonItemStylePlain
                                                                       target:self
                                                                       action:@selector(showUserList:)];
-    if (!_isChannel || [(IRCChannel*)_conversation isJoinedByUser])
+    if (_isChannel && [(IRCChannel*)_conversation isJoinedByUser])
         self.navigationItem.rightBarButtonItem = userlistButton;
-    else
+    else if (_isChannel == NO) {
+        self.navigationItem.rightBarButtonItem = nil;
+    } else {
         self.navigationItem.rightBarButtonItem = joinButton;
+    }
     
     self.title = _conversation.name;
     
