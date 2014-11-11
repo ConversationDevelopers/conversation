@@ -255,7 +255,7 @@
                         
                         partMessage = [messageComponents componentsJoinedByString:@" "];
                     }
-                    [IRCCommands leaveChannel:channel withMessage:message onClient:conversation.client];
+                    [IRCCommands leaveChannel:channel withMessage:partMessage onClient:conversation.client];
                 } else {
                     [IRCCommands leaveChannel:[conversation name] withMessage:nil onClient:conversation.client];
                 }
