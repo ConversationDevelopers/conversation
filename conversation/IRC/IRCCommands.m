@@ -118,6 +118,16 @@
     [channel.client.connection send:[NSString stringWithFormat:@"MODE %@ +b %@", channel.name, banMask]];
 }
 
++ (void)setTopic:(NSString *)topic onChannel:(NSString *)channel onClient:(IRCClient *)client
+{
+    [client.connection send:[NSString stringWithFormat:@"TOPIC %@ :%@", channel, topic]];
+}
+
++ (void)setMode:(NSString *)topic onRecepient:(NSString *)recepient onClient:(IRCClient *)client
+{
+    [client.connection send:[NSString stringWithFormat:@"MODE %@ :%@", recepient, topic]];
+}
+
 + (void)kickBanUser:(NSString *)nickname onChannel:(IRCChannel *)channel withMessage:(NSString *)message
 {
     [IRCCommands banUser:nickname onChannel:channel];

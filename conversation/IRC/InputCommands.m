@@ -272,6 +272,19 @@
                 break;
                 
             case CMD_MODE:
+                if ([messageComponents count] > 2) {
+                    NSString *recipient = messageComponents[1];
+                    
+                    NSRange range;
+                    range.location = 0;
+                    range.length = 2;
+                    [messageComponents removeObjectsInRange:range];
+                    
+                    NSString *message = [messageComponents componentsJoinedByString:@" "];
+                    [IRCCommands setMode:message onRecepient:recipient onClient:conversation.client];
+                } else {
+                    [InputCommands incompleteParametersError:command withParameters:@"<nick/channel> <modes>"];
+                }
                 break;
                 
             case CMD_MSG: {
@@ -374,6 +387,19 @@
                 break;
                 
             case CMD_TOPIC:
+                if ([messageComponents count] > 2) {
+                    NSString *recipient = messageComponents[1];
+                    
+                    NSRange range;
+                    range.location = 0;
+                    range.length = 2;
+                    [messageComponents removeObjectsInRange:range];
+                    
+                    NSString *message = [messageComponents componentsJoinedByString:@" "];
+                    [IRCCommands setTopic:message onChannel:recipient onClient:conversation.client];
+                } else {
+                    [InputCommands incompleteParametersError:command withParameters:@"<channel> <topic>"];
+                }
                 break;
                 
             case CMD_UMODE:
