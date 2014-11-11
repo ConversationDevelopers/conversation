@@ -433,7 +433,11 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         } else if (indexPath.row == 3) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"Password", @"Server password");
-            cell.textField.text = [SSKeychain passwordForService:@"conversation" account:_configuration.serverPasswordReference];
+            NSString *password = [SSKeychain passwordForService:@"conversation" account:_configuration.serverPasswordReference];
+            if(password.length)
+                cell.textField.text = password;
+            else
+                cell.textField.text = _configuration.serverPasswordReference;
             cell.textField.placeholder = NSLocalizedString(@"Optional", @"User input is optional");
 			cell.textField.secureTextEntry = YES;
             cell.textEditAction = @selector(passwordChanged:);
@@ -505,7 +509,11 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
         } else if (indexPath.row == 4) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
             cell.textLabel.text = NSLocalizedString(@"Nick Password", @"Nick authentication password");
-            cell.textField.text = [SSKeychain passwordForService:@"conversation" account:_configuration.authenticationPasswordReference];
+            NSString *password = [SSKeychain passwordForService:@"conversation" account:_configuration.authenticationPasswordReference];
+            if (password)
+                cell.textField.text = [SSKeychain passwordForService:@"conversation" account:_configuration.authenticationPasswordReference];
+            else
+                cell.textField.text = _configuration.authenticationPasswordReference;
             cell.textField.placeholder = NSLocalizedString(@"Optional", @"User input is optional");
 			cell.textField.secureTextEntry = YES;
             cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
