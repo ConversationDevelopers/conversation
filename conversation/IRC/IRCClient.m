@@ -878,6 +878,9 @@
     /* Remove the query from our list */
     NSUInteger indexOfObject = [self.queries indexOfObject:query];
     if (indexOfObject != NSNotFound) {
+        if ([self.ircv3CapabilitiesSupportedByServer indexOfObject:@"znc.in/playback"] != NSNotFound) {
+            [IRCCommands sendMessage:[NSString stringWithFormat:@"CLEAR %@", query.name] toRecipient:@"*PLAYBACK" onClient:self];
+        }
         [self.queries removeObjectAtIndex:indexOfObject];
         return YES;
     }
