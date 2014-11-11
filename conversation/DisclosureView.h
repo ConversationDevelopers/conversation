@@ -32,6 +32,6 @@
 
 @interface DisclosureView : UIView
 
-@property (assign) BOOL isHighlighted;
+@property (nonatomic) UIColor *color;
 
 @end

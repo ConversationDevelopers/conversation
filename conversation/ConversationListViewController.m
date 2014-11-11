@@ -110,7 +110,7 @@
         }
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedMessage:) name:@"messageReceived" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageReceived:) name:@"messageReceived" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateClientState:) name:@"clientDidConnect" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateClientState:) name:@"clientDidDisconnect" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clientWillConnect:) name:@"clientWillConnect" object:nil];
@@ -363,9 +363,11 @@
         _chatViewController.isChannel = YES;
     }
     
+    conversation.isHighlighted = NO;
     _chatViewController.conversation = conversation;
     
     [self.navigationController pushViewController:_chatViewController animated:YES];
+    [self.tableView reloadData];    
 
 }
 
@@ -458,6 +460,11 @@
     IRCClient *client = [_connections objectAtIndex:indexPath.section];
     NSArray *channels = client.getChannels;
     DisclosureView *disclosure = [[DisclosureView alloc] initWithFrame:CGRectMake(-5, -10, 15, 15)];
+    disclosure.color = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
+    
+    cell.nameLabel.textColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
+    cell.unreadCountLabel.textColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
+    
     if((int)indexPath.row > (int)channels.count-1) {
         NSInteger index;
         index = indexPath.row - client.getChannels.count;
@@ -467,6 +474,11 @@
         cell.isChannel = NO;
         cell.previewMessages = query.previewMessages;
         cell.unreadCount = query.unreadCount;
+        if (query.isHighlighted) {
+            cell.nameLabel.textColor = [UIColor colorWithRed:0 green:0.502 blue:0 alpha:1];
+            cell.unreadCountLabel.textColor = [UIColor colorWithRed:0 green:0.502 blue:0 alpha:1];
+            disclosure.color = [UIColor colorWithRed:0.502 green:0 blue:0 alpha:1];
+        }
         
     } else {
         IRCChannel *channel = [client.getChannels objectAtIndex:indexPath.row];
@@ -479,7 +491,7 @@
         if (channel.isHighlighted) {
             cell.nameLabel.textColor = [UIColor colorWithRed:0 green:0.502 blue:0 alpha:1];
             cell.unreadCountLabel.textColor = [UIColor colorWithRed:0 green:0.502 blue:0 alpha:1];
-            disclosure.isHighlighted = YES;
+            disclosure.color = [UIColor colorWithRed:0 green:0.502 blue:0 alpha:1];
         }
     }
 
@@ -701,7 +713,7 @@
     return configuration.uniqueIdentifier;
 }
 
-- (void) receivedMessage:(NSNotification *) notification
+- (void)messageReceived:(NSNotification *) notification
 {
     IRCMessage *message = notification.object;
     
@@ -718,20 +730,28 @@
         string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@", message.sender.nick, message.message]];
         [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, message.sender.nick.length+1)];
     }
-
-    // Check for highlight
-    NSString *msg = message.message;
-    NSString *nick = [[message.conversation.client currentUserOnConnection] nick];
-    NSCharacterSet *wordBoundries = [[NSCharacterSet letterCharacterSet] invertedSet];
-    NSRange range = [msg rangeOfString:nick];
-    if (range.location != NSNotFound &&
-        (range.location == 0 || [[msg substringWithRange:NSMakeRange(range.location-1, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound) &&
-        (range.location+range.length+1 > msg.length || [[msg substringWithRange:NSMakeRange(range.location+range.length, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound)) {
-        message.conversation.isHighlighted = YES;
-    }
     
-    [message.conversation addPreviewMessage:string];
-    message.conversation.unreadCount++;
+    // Private Message
+    if ([message.conversation isKindOfClass:[IRCChannel class]] == NO) {
+        message.conversation.isHighlighted = YES;
+        [message.conversation addPreviewMessage:string];
+        message.conversation.unreadCount++;
+    } else {
+        
+        // Check for highlight
+        NSString *msg = message.message;
+        NSString *nick = [[message.conversation.client currentUserOnConnection] nick];
+        NSCharacterSet *wordBoundries = [[NSCharacterSet letterCharacterSet] invertedSet];
+        NSRange range = [msg rangeOfString:nick];
+        if (range.location != NSNotFound &&
+            (range.location == 0 || [[msg substringWithRange:NSMakeRange(range.location-1, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound) &&
+            (range.location+range.length+1 > msg.length || [[msg substringWithRange:NSMakeRange(range.location+range.length, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound)) {
+            message.conversation.isHighlighted = YES;
+        }
+        
+        [message.conversation addPreviewMessage:string];
+        message.conversation.unreadCount++;
+    }
     [self.tableView reloadData];
 }
 

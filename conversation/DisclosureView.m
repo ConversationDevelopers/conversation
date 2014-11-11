@@ -53,12 +53,10 @@
     CGContextSetLineCap(ctxt, kCGLineCapSquare);
     CGContextSetLineJoin(ctxt, kCGLineJoinMiter);
     CGContextSetLineWidth(ctxt, 3);
-    // If the cell is highlighted (blue background) draw in white; otherwise gray
-    if (_isHighlighted) {
-        CGContextSetRGBStrokeColor(ctxt, 0, 0.502, 0, 1);
-    } else {
-        CGContextSetRGBStrokeColor(ctxt, 0.5, 0.5, 0.5, 1);
-    }
+
+    CGColorRef color = _color.CGColor;
+    CGContextSetStrokeColorWithColor(ctxt, color);
+
     CGContextStrokePath(ctxt);
 }
 
