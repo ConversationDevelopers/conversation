@@ -626,6 +626,10 @@
                    [client disconnect];
                 } else {
                     [client connect];
+                    if (client.configuration.showConsoleOnConnect) {
+                        client.showConsole = YES;
+                        client.console = [[ConsoleViewController alloc] init];
+                    }
                     [self.tableView reloadData];
                 }
                 break;
