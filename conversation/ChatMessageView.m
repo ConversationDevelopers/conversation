@@ -546,7 +546,7 @@ uint32_t FNV32(const char *s)
                            value:[UIFont systemFontOfSize:12.0]
                            range:NSMakeRange(status.length+user.nick.length+1, string.length-status.length-user.nick.length-1)];
 
-            if (_chatViewController.isChannel) {
+            if ([_conversation isKindOfClass:[IRCChannel class]]) {
                 NSArray *mentions = [self getMentions:msg];
                 for (NSValue *range in mentions) {
                     [string addAttribute:NSFontAttributeName

@@ -37,9 +37,9 @@
     CGFloat _messageEntryHeight;
 }
 
-@property (nonatomic) BOOL isChannel;
-@property (nonatomic) BOOL userlistIsVisible;
-@property (nonatomic) BOOL keyboardIsVisible;
+@property (assign) BOOL isChannel;
+@property (assign) BOOL userlistIsVisible;
+@property (assign) BOOL keyboardIsVisible;
 @property (nonatomic) IRCConversation *conversation;
 
 - (void)hideAccessories:(UIGestureRecognizer*)sender;
