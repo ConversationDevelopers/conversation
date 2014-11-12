@@ -148,6 +148,11 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidShow:)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
+    
     double delayInSeconds = 2.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -172,6 +177,10 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillHideNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardDidShowNotification
                                                   object:nil];
     
 }
@@ -258,10 +267,11 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     CGFloat widthChange  = (endFrame.origin.x - startFrame.origin.x) * signCorrection;
     CGFloat heightChange = (endFrame.origin.y - startFrame.origin.y) * signCorrection;
     
-    if (heightChange < 0)
+    if (heightChange < 0) {
         _keyboardIsVisible = YES;
-    else
+    } else {
         _keyboardIsVisible = NO;
+    }
     
     CGFloat sizeChange = UIInterfaceOrientationIsLandscape([self interfaceOrientation]) ? widthChange : heightChange;
     
@@ -275,6 +285,11 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                          [[self container] setFrame:newContainerFrame];
                      }
                      completion:NULL];
+}
+
+- (void)keyboardDidShow:(id)sender
+{
+    [self scrollToBottom:NO];
 }
 
 - (void)goBack:(id)sender
