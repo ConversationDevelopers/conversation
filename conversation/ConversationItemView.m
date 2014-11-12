@@ -63,6 +63,7 @@
     [self.contentView addSubview:_unreadCountLabel];
     
     _isChannel = YES;
+    _isConsole = NO;
     _enabled = NO;
     
     self.imageView.image = [UIImage imageNamed:@"ChannelIcon"];
@@ -75,7 +76,6 @@
 - (void) prepareForReuse
 {
     [super prepareForReuse];
-    
 }
 
 -(void)layoutSubviews
@@ -85,6 +85,8 @@
     
     if (!_isChannel)
         self.imageView.image = [UIImage imageNamed:@"QueryIcon"];
+    else if (_isConsole)
+        self.imageView.image = [UIImage imageNamed:@"Console"];
     else
         self.imageView.image = [UIImage imageNamed:@"ChannelIcon"];
     

@@ -30,6 +30,7 @@
 
 #import "ConversationListViewController.h"
 #import "ChatViewController.h"
+#import "ConsoleViewController.h"
 #import "EditConnectionViewController.h"
 #import "AddConversationViewController.h"
 #import "IRCConversation.h"
@@ -108,6 +109,11 @@
         [self.connections addObject:client];
         if (client.configuration.automaticallyConnect) {
             [client connect];
+            if (client.configuration.showConsoleOnConnect) {
+                client.console = [[ConsoleViewController alloc] init];
+                client.showConsole = YES;
+                [self.tableView reloadData];
+            }
         }
     }
     
@@ -352,14 +358,21 @@
 {
     IRCClient *client = [self.connections objectAtIndex:indexPath.section];
     
+    int offset = 0;
+    if (client.showConsole)
+        offset = 1;
+    
     IRCConversation *conversation;
-    if ((int)indexPath.row > (int)client.getChannels.count-1) {
-        NSInteger index = indexPath.row - client.getChannels.count;
+    if ((int)indexPath.row > (int)client.getChannels.count-1+offset) {
+        NSInteger index = indexPath.row - client.getChannels.count - offset;
         conversation = client.getQueries[index];
         conversation.unreadCount = 0;
         _chatViewController.isChannel = NO;
+    } else if (client.showConsole && indexPath.row == 0) {
+        [self.navigationController pushViewController:client.console animated:YES];
+        return;
     } else {
-        conversation = client.getChannels[indexPath.row];
+        conversation = client.getChannels[indexPath.row - offset];
         conversation.unreadCount = 0;
         _chatViewController.isChannel = YES;
     }
@@ -447,12 +460,14 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     IRCClient *client = [_connections objectAtIndex:section];
-    return client.getChannels.count + client.getQueries.count;
+    NSInteger number = client.getChannels.count + client.getQueries.count;
+    if (client.showConsole)
+        return number + 1;
+    return number;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     static NSString *CellIdentifier = @"cell";
     ConversationItemView *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -467,10 +482,15 @@
     
     cell.nameLabel.textColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
     cell.unreadCountLabel.textColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
+    cell.isConsole = NO;
     
-    if((int)indexPath.row > (int)channels.count-1) {
+    int offset = 0;
+    if (client.showConsole)
+        offset = 1;
+    
+    if ((int)indexPath.row > (int)channels.count-1+offset) {
         NSInteger index;
-        index = indexPath.row - client.getChannels.count;
+        index = indexPath.row - client.getChannels.count - offset;
         IRCConversation *query = [client.getQueries objectAtIndex:index];
         cell.accessoryView = disclosure;
         cell.enabled = query.conversationPartnerIsOnline;
@@ -483,9 +503,13 @@
             cell.unreadCountLabel.textColor = [UIColor colorWithRed:0.5 green:0 blue:0 alpha:1];
             disclosure.color = [UIColor colorWithRed:0.5 green:0 blue:0 alpha:1];
         }
-        
+    } else if (client.showConsole && indexPath.row == 0) {
+        cell.enabled = YES;
+        cell.name = NSLocalizedString(@"Console", @"Console");
+        cell.isConsole = YES;
+        cell.unreadCount = 0;
     } else {
-        IRCChannel *channel = [client.getChannels objectAtIndex:indexPath.row];
+        IRCChannel *channel = [client.getChannels objectAtIndex:(int)indexPath.row - offset];
         cell.accessoryView = disclosure;
         cell.enabled = channel.isJoinedByUser;
         cell.name = channel.name;
@@ -537,6 +561,12 @@
 
     UIActionSheet *sheet;
     
+    NSString *consoleButtonTitle;
+    if (client.showConsole)
+        consoleButtonTitle = NSLocalizedString(@"Hide Console", "Hide Console");
+    else
+        consoleButtonTitle = NSLocalizedString(@"Show Console", "Show Console");
+    
     if([client isConnected]) {
         sheet = [[UIActionSheet alloc] initWithTitle:client.configuration.connectionName
                                                        delegate:self
@@ -544,6 +574,7 @@
                                          destructiveButtonTitle:nil
                                               otherButtonTitles:NSLocalizedString(@"Disconnect", @"Disconnect server"),
                  NSLocalizedString(@"Sort Conversations", "Sort Conversations"),
+                 consoleButtonTitle,
                  NSLocalizedString(@"Edit", @"Edit Connection"), nil];
         [sheet setDestructiveButtonIndex:0];
     } else {
@@ -553,9 +584,10 @@
                           destructiveButtonTitle:nil
                                otherButtonTitles:NSLocalizedString(@"Connect", @"Connect server"),
                  NSLocalizedString(@"Sort Conversations", "Sort Conversations"),
+                 consoleButtonTitle,
                  NSLocalizedString(@"Edit", @"Edit Connection"),
                  NSLocalizedString(@"Delete", @"Delete connection"), nil];
-        [sheet setDestructiveButtonIndex:3];
+        [sheet setDestructiveButtonIndex:4];
     }
     
     [sheet setTag:sender.view.tag];
@@ -602,10 +634,21 @@
                 [self sortConversationsForClientAtIndex:actionSheet.tag];
                 break;
             case 2:
+                // Show Console
+                if (client.showConsole) {
+                    client.showConsole = NO;
+                    client.console = nil;
+                } else {
+                    client.showConsole = YES;
+                    client.console = [[ConsoleViewController alloc] init];
+                }
+                [self.tableView reloadData];
+                break;
+            case 3:
                 // Edit
                 [self editConnection:client.configuration];
                 break;
-            case 3:
+            case 4:
                 // Delete
                 if(!client.isConnected) {
                     alertView = [[UIAlertView alloc] initWithTitle:client.configuration.connectionName

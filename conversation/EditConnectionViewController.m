@@ -38,6 +38,7 @@
 #import "NSString+Methods.h"
 #import "UITableView+Methods.h"
 #import "SSKeychain.h"
+#import "ConsoleViewController.h"
 
 static unsigned short ServerTableSection = 0;
 static unsigned short IdentityTableSection = 1;
@@ -153,8 +154,12 @@ static unsigned short EncodingTableSection = 4;
         }
     } else {
         [self.conversationsController.connections addObject:client];
-        [[AppPreferences sharedPrefs] addConnectionConfiguration:_configuration];        
+        [[AppPreferences sharedPrefs] addConnectionConfiguration:_configuration];
         [client connect];
+        if (_configuration.showConsoleOnConnect) {
+            client.console = [[ConsoleViewController alloc] init];
+            client.showConsole = YES;
+        }
     }
     
     [self.conversationsController.tableView reloadData];

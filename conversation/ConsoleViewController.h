@@ -28,21 +28,9 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 #import <UIKit/UIKit.h>
 
-@interface ConversationItemView : UITableViewCell {
-    UILabel *_firstDetailLabel;
-    UILabel *_secondDetailLabel;
-}
-
-@property (nonatomic) BOOL isChannel;
-@property (nonatomic) BOOL isConsole;
-@property (nonatomic) BOOL enabled;
-@property (nonatomic) UIImage *image;
-@property (nonatomic) NSString *name;
-@property (nonatomic) NSMutableArray *previewMessages;
-@property (nonatomic) NSInteger unreadCount;
-@property (nonatomic) UILabel *nameLabel;
-@property (nonatomic) UILabel *unreadCountLabel;
+@interface ConsoleViewController : UIViewController <UITextViewDelegate>
 
 @end

@@ -40,6 +40,7 @@
 @class IRCUser;
 @class IRCConversation;
 @class ConversationListViewController;
+@class ConsoleViewController;
 
 @interface IRCClient : NSObject
 
@@ -52,7 +53,10 @@
 @property (nonatomic, assign) BOOL isAttemptingRegistration;
 @property (nonatomic, assign) BOOL isBNCConnection;
 @property (nonatomic, assign) BOOL isProcessingTermination;
+@property (nonatomic, assign) BOOL showConsole;
 @property (nonatomic, strong) IRCUser *currentUserOnConnection;
+
+@property (nonatomic) ConsoleViewController *console;
 
 @property (nonatomic, strong) NSMutableDictionary *featuresSupportedByServer;
 @property (nonatomic, strong) NSMutableArray *ircv3CapabilitiesSupportedByServer;

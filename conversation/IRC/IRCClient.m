@@ -86,6 +86,7 @@
         self.isAwaitingAuthenticationResponse = NO;
         self.isBNCConnection =                  NO;
         self.isProcessingTermination =          NO;
+        self.showConsole =                      NO;
         
         /* Initialise default usermode characters. All servers should send a PREFIX attribute with their initial
          RPL_ISUPPORT message, but in case some poorly designed server does not, we will attempt to use these. */
