@@ -84,7 +84,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                                   object:nil];
 }
 
-
 - (NSUInteger)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskAll;
@@ -164,10 +163,8 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    
     [self clearContent];
-    [self hideAccessories:nil];
-    [self.navigationController.scrollNavigationBar resetToDefaultPositionWithAnimation:NO];
+    [self hideAccessories:nil];    
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillShowNotification
@@ -548,6 +545,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     }
     return _contentView;
 }
+
 
 #pragma mark -
 #pragma mark UIImagePickerController Delegate Methods
