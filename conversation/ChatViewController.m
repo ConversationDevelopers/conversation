@@ -160,9 +160,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         //[self.navigationController performSegueWithIdentifier:@"modal" sender:nil];
     });
 
-    if (_contentView.contentSize.height > _contentView.bounds.size.height) {
-        [self scrollToBottom:NO];
-    }
+    [self scrollToBottom:NO];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -195,8 +193,10 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)scrollToBottom:(BOOL)animated
 {
-    CGPoint bottomOffset = CGPointMake(0, _contentView.contentSize.height - _contentView.bounds.size.height);
-    [_contentView setContentOffset:bottomOffset animated:animated];
+    if (_contentView.contentSize.height > _contentView.bounds.size.height) {
+        CGPoint bottomOffset = CGPointMake(0, _contentView.contentSize.height - _contentView.bounds.size.height);
+        [_contentView setContentOffset:bottomOffset animated:animated];
+    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -215,6 +215,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                                              conversation:_conversation];
     messageView.chatViewController = self;
     
+    BOOL oldOffset = _messageEntryHeight;
     if (message.messageType == ET_PRIVMSG)
         _messageEntryHeight += [messageView frameHeight] + 15.0;
     else
@@ -226,7 +227,8 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     
     // Scroll to bottom if content is bigger than view and user didnt scroll up
     if (_contentView.contentSize.height > _contentView.bounds.size.height &&
-        (_contentView.contentOffset.y == 0.0 || _contentView.contentOffset.y > _contentView.contentSize.height - _contentView.bounds.size.height - 65)) {
+        (_contentView.contentOffset.y == 0.0 ||
+         _contentView.contentOffset.y > _contentView.contentSize.height - _contentView.bounds.size.height - oldOffset - _messageEntryHeight)) {
         
         [self scrollToBottom:YES];
     }
