@@ -41,7 +41,6 @@
 
 @interface ChatViewController ()
 @property (readonly, nonatomic) UIView *container;
-@property (readonly, nonatomic) UIScrollView *contentView;
 @property (readonly, nonatomic) PHFComposeBarView *composeBarView;
 @property (readonly, nonatomic) UserListView *userListView;
 @property (readonly, nonatomic) UIBarButtonItem *backButton;
@@ -101,10 +100,9 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     [view setBackgroundColor:[UIColor whiteColor]];
 
     UIView *container = [self container];
-    [container addSubview:[self contentView]];
     [container addSubview:[self composeBarView]];
     
-    self.navigationController.scrollNavigationBar.scrollView = _contentView;
+    self.navigationController.scrollNavigationBar.scrollView = _conversation.contentView;
     
     [view addSubview:container];
     self.view = view;
@@ -129,9 +127,44 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     
     self.title = _conversation.name;
     
-    // Add initial messages
-    for (IRCMessage *message in _conversation.messages) {
-        [self addMessage:message];
+    if(!_conversation.contentView) {
+        
+        CGRect screenRect = [[UIScreen mainScreen] bounds];
+        
+        UIView *container = [self container];
+        
+        // Clear container
+        for (UIView *view in container.subviews) {
+            if ([NSStringFromClass(view.class) isEqualToString:@"UIScrollView"]) {
+                [view removeFromSuperview];
+            }
+        }
+        
+        CGRect frame = CGRectMake(0.0,
+                                  0.0,
+                                  screenRect.size.width,
+                                  kInitialViewFrame.size.height - PHFComposeBarViewInitialHeight);
+        
+        _conversation.contentView = [[UIScrollView alloc] initWithFrame:frame];
+        _conversation.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        _conversation.contentView.delegate = self;
+        
+        UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideAccessories:)];
+        [singleTapRecogniser setDelegate:self];
+        singleTapRecogniser.numberOfTouchesRequired = 1;
+        singleTapRecogniser.numberOfTapsRequired = 1;
+        [_conversation.contentView addGestureRecognizer:singleTapRecogniser];
+        
+        UIScreenEdgePanGestureRecognizer *swipeLeftRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
+        [swipeLeftRecognizer setEdges:UIRectEdgeRight];
+        [swipeLeftRecognizer setDelegate:self];
+        [_conversation.contentView addGestureRecognizer:swipeLeftRecognizer];
+
+        for (IRCMessage *message in _conversation.messages) {
+            [self addMessage:message];
+        }
+        
+        [container addSubview:_conversation.contentView];
     }
 }
 
@@ -166,7 +199,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self clearContent];
     [self hideAccessories:nil];    
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -183,19 +215,11 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     
 }
 
-- (void)clearContent
-{
-    for (UIView *view in _contentView.subviews) {
-        [view removeFromSuperview];
-    }
-    _messageEntryHeight = 0.0;
-}
-
 - (void)scrollToBottom:(BOOL)animated
 {
-    if (_contentView.contentSize.height > _contentView.bounds.size.height) {
-        CGPoint bottomOffset = CGPointMake(0, _contentView.contentSize.height - _contentView.bounds.size.height);
-        [_contentView setContentOffset:bottomOffset animated:animated];
+    if (_conversation.contentView.contentSize.height > _conversation.contentView.bounds.size.height) {
+        CGPoint bottomOffset = CGPointMake(0, _conversation.contentView.contentSize.height - _conversation.contentView.bounds.size.height);
+        [_conversation.contentView setContentOffset:bottomOffset animated:animated];
     }
 }
 
@@ -210,25 +234,36 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 - (void)addMessage:(IRCMessage *)message
 {
-    ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, _messageEntryHeight, _contentView.bounds.size.width, 15.0)
+    ChatMessageView *lastMsg;
+
+    // Get last message object
+    for (UIView *view in _conversation.contentView.subviews) {
+        if([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
+            lastMsg = (ChatMessageView *)view;
+        }
+    }
+    
+    CGFloat oldY = lastMsg.frame.origin.y;
+    CGFloat posY;
+    
+    if (message.messageType == ET_PRIVMSG)
+        posY = lastMsg.frame.origin.y + lastMsg.bounds.size.height + 5.0;
+    else
+        posY = lastMsg.frame.origin.y + lastMsg.bounds.size.height;
+    
+    ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, posY, _conversation.contentView.bounds.size.width, 15.0)
                                                                   message:message
                                                              conversation:_conversation];
     messageView.chatViewController = self;
     
-    BOOL oldOffset = _messageEntryHeight;
-    if (message.messageType == ET_PRIVMSG)
-        _messageEntryHeight += [messageView frameHeight] + 15.0;
-    else
-        _messageEntryHeight += [messageView frameHeight];
-    
     messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [_contentView addSubview:messageView];
-    _contentView.contentSize = CGSizeMake(_container.bounds.size.width, _messageEntryHeight);
+    [_conversation.contentView addSubview:messageView];
+    _conversation.contentView.contentSize = CGSizeMake(_container.bounds.size.width, posY);
     
     // Scroll to bottom if content is bigger than view and user didnt scroll up
-    if (_contentView.contentSize.height > _contentView.bounds.size.height &&
-        (_contentView.contentOffset.y == 0.0 ||
-         _contentView.contentOffset.y > _contentView.contentSize.height - _contentView.bounds.size.height - oldOffset - _messageEntryHeight)) {
+    if (_conversation.contentView.contentSize.height > _conversation.contentView.bounds.size.height &&
+        (_conversation.contentView.contentOffset.y == 0.0 ||
+         _conversation.contentView.contentOffset.y > _conversation.contentView.contentSize.height - _conversation.contentView.bounds.size.height - oldY - posY)) {
         
         [self scrollToBottom:YES];
     }
@@ -456,7 +491,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     
     UserListView *userlist = [self userListView];
     
-    CGFloat progress = [recognizer translationInView:_contentView].x;
+    CGFloat progress = [recognizer translationInView:_conversation.contentView].x;
 
     __block CGRect frame = userlist.frame;
     if (recognizer.state == UIGestureRecognizerStateBegan) {
@@ -526,41 +561,12 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         CGRect frame = CGRectMake(_container.frame.size.width,
                                   30.0f,
                                   width,
-                                  _contentView.frame.size.height);
+                                  _conversation.contentView.frame.size.height);
         
         _userListView = [[UserListView alloc] initWithFrame:frame];
         _userListView.backgroundColor = [UIColor clearColor];
     }
     return _userListView;
-}
-
-@synthesize contentView = _contentView;
-- (UIScrollView *)contentView {
-    
-    if(!_contentView) {
-        CGRect frame = CGRectMake(0.0,
-                                  0.0,
-                                  kInitialViewFrame.size.width,
-                                  kInitialViewFrame.size.height - PHFComposeBarViewInitialHeight);
-        
-        _contentView = [[UIScrollView alloc] initWithFrame:frame];
-        _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-        _contentView.delegate = self;
-        
-        UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideAccessories:)];
-        [singleTapRecogniser setDelegate:self];
-        singleTapRecogniser.numberOfTouchesRequired = 1;
-        singleTapRecogniser.numberOfTapsRequired = 1;
-        [_contentView addGestureRecognizer:singleTapRecogniser];
-        
-        UIScreenEdgePanGestureRecognizer *swipeLeftRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
-        [swipeLeftRecognizer setEdges:UIRectEdgeRight];
-        [swipeLeftRecognizer setDelegate:self];
-        [_contentView addGestureRecognizer:swipeLeftRecognizer];
-        
-        
-    }
-    return _contentView;
 }
 
 

@@ -28,7 +28,7 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @class IRCClient;
 @class IRCChannelConfiguration;
@@ -43,6 +43,7 @@
 @property (nonatomic) NSMutableArray *messages;
 @property (nonatomic) NSUInteger unreadCount;
 @property (assign) BOOL isHighlighted;
+@property (nonatomic) UIScrollView *contentView;
 
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;
 
