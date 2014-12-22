@@ -38,9 +38,7 @@
 #import <ImgurAnonymousAPIClient/ImgurAnonymousAPIClient.h>
 #import <GTScrollNavigationBar/GTScrollNavigationBar.h>
 
-
 @interface ChatViewController ()
-@property (readonly, nonatomic) UIView *container;
 @property (readonly, nonatomic) PHFComposeBarView *composeBarView;
 @property (readonly, nonatomic) UserListView *userListView;
 @property (readonly, nonatomic) UIBarButtonItem *backButton;
@@ -127,41 +125,41 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     
     self.title = _conversation.name;
     
-    if(!_conversation.contentView) {
+    // Cteate view if it doesn't exist
+    if (!_conversation.contentView) {
         
         CGRect screenRect = [[UIScreen mainScreen] bounds];
-        
-        UIView *container = [self container];
-        
-        // Clear container
-        for (UIView *view in container.subviews) {
-            if ([NSStringFromClass(view.class) isEqualToString:@"UIScrollView"]) {
-                [view removeFromSuperview];
-            }
-        }
         
         CGRect frame = CGRectMake(0.0,
                                   0.0,
                                   screenRect.size.width,
-                                  kInitialViewFrame.size.height - PHFComposeBarViewInitialHeight);
+                                  480 - PHFComposeBarViewInitialHeight);
         
         _conversation.contentView = [[UIScrollView alloc] initWithFrame:frame];
         _conversation.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _conversation.contentView.delegate = self;
-        
-        UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideAccessories:)];
-        [singleTapRecogniser setDelegate:self];
-        singleTapRecogniser.numberOfTouchesRequired = 1;
-        singleTapRecogniser.numberOfTapsRequired = 1;
-        [_conversation.contentView addGestureRecognizer:singleTapRecogniser];
-        
-        UIScreenEdgePanGestureRecognizer *swipeLeftRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
-        [swipeLeftRecognizer setEdges:UIRectEdgeRight];
-        [swipeLeftRecognizer setDelegate:self];
-        [_conversation.contentView addGestureRecognizer:swipeLeftRecognizer];
-        
-        [container addSubview:_conversation.contentView];
     }
+    
+    // Clear container
+    for (UIView *view in _container.subviews) {
+        if ([NSStringFromClass(view.class) isEqualToString:@"UIScrollView"]) {
+            [view removeFromSuperview];
+        }
+    }
+    
+    UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideAccessories:)];
+    [singleTapRecogniser setDelegate:self];
+    singleTapRecogniser.numberOfTouchesRequired = 1;
+    singleTapRecogniser.numberOfTapsRequired = 1;
+    [_conversation.contentView addGestureRecognizer:singleTapRecogniser];
+    
+    UIScreenEdgePanGestureRecognizer *swipeLeftRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
+    [swipeLeftRecognizer setEdges:UIRectEdgeRight];
+    [swipeLeftRecognizer setDelegate:self];
+    [_conversation.contentView addGestureRecognizer:swipeLeftRecognizer];
+    
+    [self.container addSubview:_conversation.contentView];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -209,6 +207,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                                     name:UIKeyboardDidShowNotification
                                                   object:nil];
     
+    
 }
 
 - (void)scrollToBottom:(BOOL)animated
@@ -226,43 +225,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     frame.origin.y = 0.0;
     frame.size.height += height;
     self.view.frame = frame;
-}
-
-- (void)addMessage:(IRCMessage *)message
-{
-    ChatMessageView *lastMsg;
-
-    // Get last message object
-    for (UIView *view in _conversation.contentView.subviews) {
-        if([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
-            lastMsg = (ChatMessageView *)view;
-        }
-    }
-    
-    CGFloat oldY = lastMsg.frame.origin.y;
-    CGFloat posY;
-    
-    if (message.messageType == ET_PRIVMSG)
-        posY = lastMsg.frame.origin.y + lastMsg.bounds.size.height + 5.0;
-    else
-        posY = lastMsg.frame.origin.y + lastMsg.bounds.size.height;
-    
-    ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, posY, _conversation.contentView.bounds.size.width, 15.0)
-                                                                  message:message
-                                                             conversation:_conversation];
-    messageView.chatViewController = self;
-    
-    messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [_conversation.contentView addSubview:messageView];
-    _conversation.contentView.contentSize = CGSizeMake(_container.bounds.size.width, posY);
-    
-    // Scroll to bottom if content is bigger than view and user didnt scroll up
-    if (_conversation.contentView.contentSize.height > _conversation.contentView.bounds.size.height &&
-        (_conversation.contentView.contentOffset.y == 0.0 ||
-         _conversation.contentView.contentOffset.y > _conversation.contentView.contentSize.height - _conversation.contentView.bounds.size.height - oldY - posY)) {
-        
-        [self scrollToBottom:YES];
-    }
 }
 
 - (void)join:(id)sender
@@ -409,7 +371,8 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                                   inConversation:_conversation
                                                         bySender:_conversation.client.currentUserOnConnection
                                                           atTime:[NSDate date]];
-        [self addMessage:ircmsg];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:ircmsg];
     }
     
     [_composeBarView setText:@"" animated:YES];
@@ -476,9 +439,14 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         [self.userListView.tableview reloadData];
     }
     
-    if ([message.conversation.configuration.uniqueIdentifier isEqualToString:_conversation.configuration.uniqueIdentifier]) {
-        [self addMessage:message];
-    }
+    // Scroll to bottom if content is bigger than view and user didnt scroll up
+    if (_conversation.contentView.contentSize.height > _conversation.contentView.bounds.size.height &&
+        (_conversation.contentView.contentOffset.y == 0.0 ||
+         _conversation.contentView.contentOffset.y > _conversation.contentView.contentSize.height - _conversation.contentView.bounds.size.height)) {
+            
+            [self scrollToBottom:YES];
+        }
+    
 }
 
 - (void)swipeLeft:(UIScreenEdgePanGestureRecognizer *)recognizer

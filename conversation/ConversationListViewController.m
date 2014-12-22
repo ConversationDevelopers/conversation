@@ -30,6 +30,7 @@
 
 #import "ConversationListViewController.h"
 #import "ChatViewController.h"
+#import "ChatMessageView.h"
 #import "ConsoleViewController.h"
 #import "EditConnectionViewController.h"
 #import "AddConversationViewController.h"
@@ -742,6 +743,7 @@
     [client addChannel:channel];
     
     [self.tableView reloadData];
+    
     [[AppPreferences sharedPrefs] addChannelConfiguration:configuration forConnectionConfiguration:client.configuration];
     [[AppPreferences sharedPrefs] save];
     return configuration.uniqueIdentifier;
@@ -755,6 +757,7 @@
     [client addQuery:query];
 
     [self.tableView reloadData];
+    
     [[AppPreferences sharedPrefs] addQueryConfiguration:configuration forConnectionConfiguration:client.configuration];
     [[AppPreferences sharedPrefs] save];
 
@@ -806,7 +809,53 @@
         [message.conversation addPreviewMessage:string];
         message.conversation.unreadCount++;
     }
+    
     [self.tableView reloadData];
+    
+    if (!message.conversation.contentView) {
+        
+        CGRect screenRect = [[UIScreen mainScreen] bounds];
+        
+        CGRect frame = CGRectMake(0.0,
+                                  0.0,
+                                  screenRect.size.width,
+                                  480 - PHFComposeBarViewInitialHeight);
+        
+        message.conversation.contentView = [[UIScrollView alloc] initWithFrame:frame];
+        message.conversation.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        message.conversation.contentView.delegate = self;
+    }
+
+    // Add message to chatviewcontroller
+    ChatMessageView *lastMsg;
+    
+    // Get last message object
+    for (UIView *view in message.conversation.contentView.subviews) {
+        if([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
+            lastMsg = (ChatMessageView *)view;
+        }
+    }
+    
+    CGFloat posY;
+
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    
+    if (message.messageType == ET_PRIVMSG)
+        posY = lastMsg.frame.origin.y + lastMsg.bounds.size.height + 5.0;
+    else
+        posY = lastMsg.frame.origin.y + lastMsg.bounds.size.height;
+    
+    ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, posY, message.conversation.contentView.bounds.size.width, 15.0)
+                                                                  message:message
+                                                             conversation:message.conversation];
+    messageView.chatViewController = self.chatViewController;
+    
+    messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [message.conversation.contentView addSubview:messageView];
+    
+    CGFloat height = message.conversation.contentView.contentSize.height;
+    message.conversation.contentView.contentSize = CGSizeMake(screenRect.size.width, height+posY);
+
 }
 
 - (void)displayPasswordEntryDialog:(IRCClient *)client

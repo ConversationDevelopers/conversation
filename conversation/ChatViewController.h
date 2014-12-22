@@ -40,7 +40,9 @@
 @property (assign) BOOL userlistIsVisible;
 @property (assign) BOOL keyboardIsVisible;
 @property (nonatomic) IRCConversation *conversation;
+@property (readonly, nonatomic) UIView *container;
 
 - (void)hideAccessories:(UIGestureRecognizer*)sender;
+- (void)swipeLeft:(UIScreenEdgePanGestureRecognizer *)recognizer;
 
 @end
