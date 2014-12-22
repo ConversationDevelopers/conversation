@@ -43,7 +43,6 @@
         self.client = client;
         self.conversationPartnerIsOnline = NO;
         self.configuration = config;
-        self.messages = [[NSMutableArray alloc] init];
         self.unreadCount = 0;        
         return self;
     }
@@ -114,19 +113,11 @@
         return;
     }
     
-    /* Add the message to the message list. */
-    [self.messages addObject:object];
-    
     /* Notify all parts of the application listening for messages that a new message has been added. */
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:object];
     });
     
-    /* We cannot store an unlimited amount of messages. To keep memory consumption down we will remove the
-     oldest messages if necessary. */
-    while ([self.messages count] > MAX_BUFFER_COUNT) {
-        [self.messages removeObjectAtIndex:0];
-    }
 }
 
 @end

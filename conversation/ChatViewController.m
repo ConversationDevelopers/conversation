@@ -159,10 +159,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         [swipeLeftRecognizer setEdges:UIRectEdgeRight];
         [swipeLeftRecognizer setDelegate:self];
         [_conversation.contentView addGestureRecognizer:swipeLeftRecognizer];
-
-        for (IRCMessage *message in _conversation.messages) {
-            [self addMessage:message];
-        }
         
         [container addSubview:_conversation.contentView];
     }
@@ -414,7 +410,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                                         bySender:_conversation.client.currentUserOnConnection
                                                           atTime:[NSDate date]];
         [self addMessage:ircmsg];
-        [_conversation.messages addObject:ircmsg];
     }
     
     [_composeBarView setText:@"" animated:YES];

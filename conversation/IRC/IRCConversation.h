@@ -40,7 +40,6 @@
 @property (nonatomic, assign) BOOL conversationPartnerIsOnline;
 @property (nonatomic, strong) IRCChannelConfiguration *configuration;
 @property (nonatomic) NSMutableArray *previewMessages;
-@property (nonatomic) NSMutableArray *messages;
 @property (nonatomic) NSUInteger unreadCount;
 @property (assign) BOOL isHighlighted;
 @property (nonatomic) UIScrollView *contentView;
