@@ -749,7 +749,7 @@
     return configuration.uniqueIdentifier;
 }
 
-- (NSString *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client
+- (IRCConversation *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client
 {
     IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
     configuration.name = name;
@@ -761,7 +761,7 @@
     [[AppPreferences sharedPrefs] addQueryConfiguration:configuration forConnectionConfiguration:client.configuration];
     [[AppPreferences sharedPrefs] save];
 
-    return configuration.uniqueIdentifier;
+    return query;
 }
 
 - (void)messageReceived:(NSNotification *) notification

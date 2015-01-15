@@ -238,22 +238,20 @@
         
     } else {
         IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-        IRCConversation *conversation;
-        if ([recipientString caseInsensitiveCompare:client.currentUserOnConnection.nick] != NSOrderedSame) {
-            conversation = [IRCConversation getConversationOrCreate:recipientString onClient:client];
-        } else {
-            conversation = [IRCConversation getConversationOrCreate:sender.nick onClient:client];
-        }
+        NSString *nameOfQuery = [recipientString caseInsensitiveCompare:client.currentUserOnConnection.nick] != NSOrderedSame ? recipientString : sender.nick;
         
-        /* Create an IRCMessage object and add it to the chat buffer */
-        NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
-        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                           OfType:ET_PRIVMSG
-                                                   inConversation:conversation
-                                                         bySender:sender
-                                                           atTime:now];
+        [IRCConversation getConversationOrCreate:nameOfQuery onClient:client withCompletionHandler:^(IRCConversation *conversation) {
+            /* Create an IRCMessage object and add it to the chat buffer */
+            NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
+            IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
+                                                               OfType:ET_PRIVMSG
+                                                       inConversation:conversation
+                                                             bySender:sender
+                                                               atTime:now];
+            
+            [conversation addMessageToConversation:message];
+        }];
         
-        [conversation addMessageToConversation:message];
     }
 }
 
@@ -320,17 +318,18 @@
         [channel addMessageToConversation:message];
     } else {
         IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-        IRCConversation *conversation = [IRCConversation getConversationOrCreate:sender.nick onClient:client];
+        [IRCConversation getConversationOrCreate:sender.nick onClient:client withCompletionHandler:^(IRCConversation *conversation) {
+            /* Create an IRCMessage object and add it to the chat buffer. */
+            NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
+            IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
+                                                               OfType:ET_CTCP
+                                                       inConversation:conversation
+                                                             bySender:sender
+                                                               atTime:now];
+            
+            [conversation addMessageToConversation:message];
+        }];
         
-        /* Create an IRCMessage object and add it to the chat buffer. */
-        NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
-        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                           OfType:ET_CTCP
-                                                   inConversation:conversation
-                                                         bySender:sender
-                                                           atTime:now];
-        
-        [conversation addMessageToConversation:message];
     }
     free(messageCopy);
 }
@@ -361,16 +360,16 @@
         [channel addMessageToConversation:message];
         
     } else {
-        IRCConversation *conversation = [IRCConversation getConversationOrCreate:recipientString onClient:client];
-        
-        /* Create an IRCMessage object and add it to the chat buffer. */
-        NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
-        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                           OfType:ET_ACTION
-                                                   inConversation:conversation
-                                                         bySender:sender
-                                                           atTime:now];
-        [conversation addMessageToConversation:message];
+        [IRCConversation getConversationOrCreate:recipientString onClient:client withCompletionHandler:^(IRCConversation *conversation) {
+            /* Create an IRCMessage object and add it to the chat buffer. */
+            NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
+            IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
+                                                               OfType:ET_ACTION
+                                                       inConversation:conversation
+                                                             bySender:sender
+                                                               atTime:now];
+            [conversation addMessageToConversation:message];
+        }];
     }
 }
 
@@ -413,23 +412,18 @@
         
     } else {
         IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-        IRCConversation *conversation = nil;
         if (messageType != ET_SERVERNOTICE) {
-            conversation = [IRCConversation getConversationOrCreate:sender.nick onClient:client];
-        }
-        
-        /* Create an IRCMessage object and add it to the chat buffer. */
-        NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
-        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                           OfType:messageType
-                                                   inConversation:conversation
-                                                         bySender:sender
-                                                           atTime:now];
-        
-        if (conversation != nil) {
-            [conversation addMessageToConversation:message];
-        } else {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+            [IRCConversation getConversationOrCreate:sender.nick onClient:client withCompletionHandler:^(IRCConversation *conversation) {
+                /* Create an IRCMessage object and add it to the chat buffer. */
+                NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
+                IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
+                                                                   OfType:messageType
+                                                           inConversation:conversation
+                                                                 bySender:sender
+                                                                   atTime:now];
+                
+                [conversation addMessageToConversation:message];
+            }];
         }
     }
 }
@@ -462,17 +456,17 @@
         [channel addMessageToConversation:message];
     } else {
         IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-        IRCConversation *conversation = [IRCConversation getConversationOrCreate:sender.nick onClient:client];
-        
-        /* Create an IRCMessage object and add it to the chat buffer. */
-        NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
-        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                           OfType:ET_CTCPREPLY
-                                                   inConversation:conversation
-                                                         bySender:sender
-                                                           atTime:now];
-        
-        [conversation addMessageToConversation:message];
+        [IRCConversation getConversationOrCreate:sender.nick onClient:client withCompletionHandler:^(IRCConversation *conversation) {
+            /* Create an IRCMessage object and add it to the chat buffer. */
+            NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
+            IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
+                                                               OfType:ET_CTCPREPLY
+                                                       inConversation:conversation
+                                                             bySender:sender
+                                                               atTime:now];
+            
+            [conversation addMessageToConversation:message];
+        }];
     }
 }
 

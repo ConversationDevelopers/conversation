@@ -49,17 +49,19 @@
     return nil;
 }
 
-+ (IRCConversation *) getConversationOrCreate:(NSString *)nickname onClient:(IRCClient *)client
++ (void) getConversationOrCreate:(NSString *)nickname onClient:(IRCClient *)client withCompletionHandler:(void (^)(IRCConversation *))completionHandler
 {
-    IRCConversation *conversation = [IRCConversation fromString:nickname withClient:client];
+    __block IRCConversation *conversation = [IRCConversation fromString:nickname withClient:client];
     if (conversation == nil) {
         dispatch_async(dispatch_get_main_queue(), ^{
             /* We don't have a query for this message, we need to create one */
             ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
-            [controller createConversationWithName:nickname onClient:client];
+            conversation = [controller createConversationWithName:nickname onClient:client];
+            completionHandler(conversation);
         });
+    } else {
+        completionHandler(conversation);
     }
-    return conversation;
 }
 
 + (id) fromString:(NSString *)name withClient:(IRCClient *)client
