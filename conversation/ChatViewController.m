@@ -290,6 +290,8 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (void)goBack:(id)sender
 {
     [self.navigationController popToRootViewControllerAnimated:YES];
+    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    controller.currentConversation = nil;
 }
 
 - (void)showUserList:(id)sender

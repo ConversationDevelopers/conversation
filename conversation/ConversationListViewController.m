@@ -80,6 +80,8 @@
     
     self.title = NSLocalizedString(@"Conversations", @"Conversations");
     
+    self.currentConversation = nil;
+    
     // Do any additional setup after loading the view, typically from a nib.
     UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Settings", @"Left navigation button in the conversation list")
                                                                        style:UIBarButtonItemStylePlain
