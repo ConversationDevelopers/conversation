@@ -35,6 +35,12 @@
 #import "NSString+Methods.h"
 #import "SSKeychain.h"
 
+#define IRC_CTCP        '\001'
+#define IRC_BOLD        '\002'
+#define IRC_COLOUR      '\003'
+#define IRC_ITALICS     '\029'
+#define IRC_UNDERLINE   '\031'
+
 @class IRCConnection;
 @class IRCChannel;
 @class IRCUser;
