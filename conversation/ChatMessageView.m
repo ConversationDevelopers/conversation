@@ -328,7 +328,7 @@ uint32_t FNV32(const char *s)
 - (NSString *)setEmoticons:(NSString *)string
 {
     NSDictionary *emoticons = [[AppPreferences sharedPrefs] getEmoticons];
-    NSCharacterSet *wordBoundries = [[NSCharacterSet letterCharacterSet] invertedSet];
+    NSCharacterSet *wordBoundries = [[NSCharacterSet alphanumericCharacterSet] invertedSet];
     for (NSString *key in emoticons.allKeys) {
         NSRange range = [string rangeOfString:key];
         if (range.location != NSNotFound &&
