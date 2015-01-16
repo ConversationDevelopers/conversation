@@ -69,6 +69,7 @@ typedef NS_ENUM(NSUInteger, InputCommand) {
     CMD_MODE,
     CMD_MSG,
     CMD_MUTE,
+    CMD_MYVERSION,
     CMD_NICK,
     CMD_OP,
     CMD_NOTICE,

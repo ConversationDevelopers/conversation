@@ -307,6 +307,14 @@
             case CMD_MUTE:
                 break;
                 
+            case CMD_MYVERSION:
+                [IRCCommands sendMessage:[NSString stringWithFormat:@"%cCurrent Version:%c Conversation %@ (https://github.com/ConversationDevelopers/conversation)",
+                                          IRC_BOLD,
+                                          IRC_BOLD,
+                                          [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]]
+                  toRecipient:[conversation name] onClient:[conversation client]];
+                break;
+                
             case CMD_NICK:
                 if ([messageComponents count] > 1) {
                     [messageComponents removeObjectAtIndex:0];
@@ -479,6 +487,7 @@
         @"MODE",
         @"MSG",
         @"MUTE",
+        @"MYVERSION",
         @"NICK",
         @"OP",
         @"NOTICE",
