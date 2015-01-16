@@ -853,7 +853,7 @@
                                                              conversation:message.conversation];
     messageView.chatViewController = self.chatViewController;
     
-    messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     [message.conversation.contentView addSubview:messageView];
     
     CGFloat height = message.conversation.contentView.contentSize.height;
