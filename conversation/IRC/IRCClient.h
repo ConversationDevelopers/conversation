@@ -60,13 +60,7 @@
 
 @property (nonatomic, strong) NSMutableDictionary *featuresSupportedByServer;
 @property (nonatomic, strong) NSMutableArray *ircv3CapabilitiesSupportedByServer;
-
-@property (nonatomic) char* ircopUserModeCharacter;
-@property (nonatomic) char* ownerUserModeCharacter;
-@property (nonatomic) char* adminUserModeCharacter;
-@property (nonatomic) char* operatorUserModeCharacter;
-@property (nonatomic) char* halfopUserModeCharacter;
-@property (nonatomic) char* voiceUserModeCharacter;
+@property (nonatomic, strong) NSMutableDictionary *userModeCharacters;
 
 + (NSArray *) IRCv3CapabilitiesSupportedByApplication;
 

@@ -90,12 +90,15 @@
         
         /* Initialise default usermode characters. All servers should send a PREFIX attribute with their initial
          RPL_ISUPPORT message, but in case some poorly designed server does not, we will attempt to use these. */
-        self.ircopUserModeCharacter    = "!";
-        self.ownerUserModeCharacter    = "~";
-        self.adminUserModeCharacter    = "&";
-        self.operatorUserModeCharacter = "@";
-        self.halfopUserModeCharacter   = "%";
-        self.voiceUserModeCharacter    = "+";
+        self.userModeCharacters = @{
+            @"y": @"!",
+            @"q": @"~",
+            @"a": @"&",
+            @"o": @"@",
+            @"h": @"%",
+            @"v": @"+"
+            
+        }.mutableCopy;
         
         self.alternativeNickNameAttempts = 0;
         self.channels = [[NSMutableArray alloc] init];
@@ -482,7 +485,7 @@
             break;
             
         case RPL_WHOREPLY:
-            [Messages clientReceivedWHOReply:line onClient:self];
+            [Messages clientReceivedWHOReply:[NSString stringWithCString:line usingEncodingPreference:self.configuration] onClient:self];
             break;
         
         case ERR_ERRONEUSNICKNAME:
@@ -598,56 +601,18 @@
 {
     NSString *prefixString = [[self featuresSupportedByServer] objectForKey:@"PREFIX"];
     if (prefixString) {
-        const char* prefixes = [prefixString UTF8String];
-        prefixes++;
+        NSInteger identifierStartPosition = [prefixString rangeOfString:@"("].location;
+        NSInteger identifierEndPosition = [prefixString rangeOfString:@")"].location;
         
-        /* The prefixes are sent to us in a manner that looks like: (yqaohv)!~&@%+
-         with the latter characters being example characters. Some servers may only be
-         using a few of the modes, for example "ohv" (Op, halfop, voice). */
-        const char* prefixIdentifier = prefixes;
-        while (*prefixes != ')' && *prefixes != '\0') {
-            prefixes++;
-        }
-        prefixes++;
+        NSLog(@"%ld %ld", identifierStartPosition, identifierEndPosition);
         
-        while (*prefixIdentifier != ')' && *prefixIdentifier != '\0') {
-            char* character = malloc(2);
-            strncpy(character, prefixes, 1);
-            character[1] = '\0';
-            
-            NSLog(@"%c => %c", *prefixIdentifier, *character);
-            switch (*prefixIdentifier) {
-                case 'y': {
-                    self.ircopUserModeCharacter = character;
-                }
-                    
-                case 'q': {
-                    self.ownerUserModeCharacter = character;
-                    break;
-                }
-                    
-                case 'a': {
-                    self.adminUserModeCharacter = character;
-                    break;
-                }
-                
-                case 'o': {
-                    self.operatorUserModeCharacter = character;
-                    break;
-                }
-                    
-                case 'h': {
-                    self.halfopUserModeCharacter = character;
-                    break;
-                }
-                    
-                case 'v': {
-                    self.voiceUserModeCharacter = character;
-                    break;
-                }
-            }
-            prefixIdentifier++;
-            prefixes++;
+        NSRange identifierRange = NSMakeRange(identifierStartPosition, identifierEndPosition - identifierStartPosition -1);
+        
+        NSString *identifiers = [prefixString substringWithRange:identifierRange];
+        NSString *characters = [prefixString substringFromIndex:identifierEndPosition +1];
+        
+        for (NSUInteger i = 0; i < [identifiers length]; i++) {
+            [self.userModeCharacters setObject:[characters substringWithRange:NSMakeRange(i, 1)] forKey:[identifiers substringWithRange:NSMakeRange(i, 1)]];
         }
     }
 }

@@ -279,29 +279,29 @@ uint32_t FNV32(const char *s)
     return colors;
 }
 
-- (char *)characterForStatus:(NSInteger)status
+- (NSString *)characterForStatus:(NSInteger)status
 {
     switch(status) {
         case VOICE:
-            return _conversation.client.voiceUserModeCharacter;
+            return [_conversation.client.userModeCharacters objectForKey:@"v"];
             break;
         case HALFOP:
-            return _conversation.client.halfopUserModeCharacter;
+            return [_conversation.client.userModeCharacters objectForKey:@"h"];
             break;
         case OPERATOR:
-            return _conversation.client.operatorUserModeCharacter;
+            return [_conversation.client.userModeCharacters objectForKey:@"o"];
             break;
         case ADMIN:
-            return _conversation.client.adminUserModeCharacter;
+            return [_conversation.client.userModeCharacters objectForKey:@"a"];
             break;
         case OWNER:
-            return _conversation.client.ownerUserModeCharacter;
+            return [_conversation.client.userModeCharacters objectForKey:@"o"];
             break;
         case IRCOP:
-            return _conversation.client.ircopUserModeCharacter;
+            return [_conversation.client.userModeCharacters objectForKey:@"y"];
             break;
     }
-    return "";
+    return @"";
 }
 
 - (UIColor *)colorForNick:(NSString *)nick
@@ -398,7 +398,7 @@ uint32_t FNV32(const char *s)
     NSString *msg = [self setEmoticons:_message.message];
 
     NSMutableAttributedString *string;
-    NSString *status = [NSString stringWithFormat:@"%s", [self characterForStatus:user.channelPrivilege]];
+    NSString *status = [self characterForStatus:user.channelPrivilege];
     
     switch(_message.messageType) {
         case ET_JOIN: {
@@ -770,7 +770,7 @@ uint32_t FNV32(const char *s)
 {
     if (buttonIndex == 0 && self.message.messageType == ET_PRIVMSG) {
         UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-        NSString *status = [NSString stringWithFormat:@"%s", [self characterForStatus:self.message.sender.channelPrivilege]];
+        NSString *status = [self characterForStatus:self.message.sender.channelPrivilege];
         NSString *pasteString = [NSString stringWithFormat:@"<%@%@> %@", status, self.message.sender.nick, self.message.message];
         [pasteboard setValue:pasteString forPasteboardType:@"public.plain-text"];
     }

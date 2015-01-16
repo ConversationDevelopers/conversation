@@ -865,99 +865,55 @@
     
 }
 
-+ (void)clientReceivedWHOReply:(const char *)line onClient:(IRCClient *)client
++ (void)clientReceivedWHOReply:(NSString *)line onClient:(IRCClient *)client
 {
-    const char* pointerBeforeIteration = line;
-    int lengthOfChannel = 0;
-    while (*line != ' ' && *line != '\0') {
-        lengthOfChannel++;
-        line++;
-    }
-    char* channel = malloc(lengthOfChannel + 1);
-    strncpy(channel, pointerBeforeIteration, lengthOfChannel);
-    channel[lengthOfChannel] = '\0';
+    NSArray *messageComponents = [line componentsSeparatedByString:@" "];
+    NSString *channel   = [messageComponents objectAtIndex:0];
+    NSString *username  = [messageComponents objectAtIndex:1];
+    NSString *hostname  = [messageComponents objectAtIndex:2];
+    NSString *nickname  = [messageComponents objectAtIndex:4];
+    NSString *modes     = [messageComponents objectAtIndex:5];
     
-    line++;
-    pointerBeforeIteration = line;
-    
-    int lengthOfUsername = 0;
-    while (*line != ' ' && *line != '\0') {
-        lengthOfUsername++;
-        line++;
-    }
-    char* username = malloc(lengthOfUsername + 1);
-    strncpy(username, pointerBeforeIteration, lengthOfUsername);
-    username[lengthOfUsername] = '\0';
-    
-    line++;
-    pointerBeforeIteration = line;
-    
-    int lengthOfHostname = 0;
-    while (*line != ' ' && *line != '\0') {
-        lengthOfHostname++;
-        line++;
-    }
-    char* hostname = malloc(lengthOfHostname + 1);
-    strncpy(hostname, pointerBeforeIteration, lengthOfHostname);
-    hostname[lengthOfHostname] = '\0';
-    
-    line++;
-    pointerBeforeIteration = line;
-    
-    while (*line != ' ' && *line != '\0') {
-        line++;
-        pointerBeforeIteration++;
-    }
-    
-    line++;
-    pointerBeforeIteration++;
-    
-    int lengthOfNickname = 0;
-    while (*line != ' ' && *line != '\0') {
-        lengthOfNickname++;
-        line++;
-    }
-    char* nickname = malloc(lengthOfNickname + 1);
-    strncpy(nickname, pointerBeforeIteration, lengthOfNickname);
-    nickname[lengthOfNickname] = '\0';
-    
-    line = line + 2;
-    
-    NSString *channelString = [NSString stringWithCString:channel usingEncodingPreference:client.configuration];
-    IRCChannel *ircChannel = [IRCChannel fromString:channelString withClient:client];
-    IRCUser *user = [IRCUser fromNickname:nickname onChannel:ircChannel];
-    NSString *nicknameString = [NSString stringWithCString:nickname usingEncodingPreference:client.configuration];
+    IRCChannel *ircChannel = [IRCChannel fromString:channel withClient:client];
+    IRCUser *user = [IRCUser fromNicknameString:nickname onChannel:ircChannel];
     if (user == nil) {
-        NSString *usernameString = [NSString stringWithCString:username usingEncodingPreference:client.configuration];
-        NSString *hostnameString = [NSString stringWithCString:hostname usingEncodingPreference:client.configuration];
-        user = [[IRCUser alloc] initWithNickname:nicknameString andUsername:usernameString andHostname:hostnameString onClient:client];
+        user = [[IRCUser alloc] initWithNickname:nickname andUsername:username andHostname:hostname onClient:client];
     }
     
-    while (*line != ' ' & *line != '\0') {
-        if (*line == *[client ircopUserModeCharacter]) {
+    if ([modes hasPrefix:@"G"]) {
+        //TODO: Away handling
+    }
+    
+    modes = [modes substringFromIndex:1];
+    
+    if ([modes hasPrefix:@"*"]) {
+        user.ircop = YES;
+        modes = [modes substringFromIndex:1];
+    }
+    
+    for (NSUInteger i = 0; i < [modes length]; i++) {
+        NSString *mode = [modes substringWithRange:NSMakeRange(i, 1)];
+        
+        #define matchesUserMode(x) ([mode isEqualToString:[[client userModeCharacters] objectForKey:(x)]])
+        
+        if (matchesUserMode(@"y")) {
             user.ircop = YES;
-        } else if (*line == *[client ownerUserModeCharacter]) {
+        } else if (matchesUserMode(@"q")) {
             user.owner = YES;
-        } else if (*line == *[client adminUserModeCharacter]) {
+        } else if (matchesUserMode(@"a")) {
             user.admin = YES;
-        } else if (*line == *[client operatorUserModeCharacter]) {
+        } else if (matchesUserMode(@"o")) {
             user.op = YES;
-        } else if (*line == *[client halfopUserModeCharacter]) {
+        } else if (matchesUserMode(@"h")) {
             user.halfop = YES;
-        } else if (*line == *[client voiceUserModeCharacter]) {
+        } else if (matchesUserMode(@"v")) {
             user.voice = YES;
         }
-        line++;
     }
     
-    [ircChannel removeUserByName:nicknameString];
+    [ircChannel removeUserByName:nickname];
     [[ircChannel users] addObject:user];
     [ircChannel sortUserlist];
-    
-    free(nickname);
-    free(username);
-    free(hostname);
-    free(channel);
 }
 
 + (void)clientReceivedServerPasswordMismatchError:(IRCClient *)client

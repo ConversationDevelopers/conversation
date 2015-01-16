@@ -53,29 +53,29 @@
     return [UIColor clearColor];
 }
 
-- (char *)characterForStatus:(NSInteger)status
+- (NSString *)characterForStatus:(NSInteger)status
 {
     switch(status) {
         case VOICE:
-            return _client.voiceUserModeCharacter;
+            return [_client.userModeCharacters objectForKey:@"v"];
             break;
         case HALFOP:
-            return _client.halfopUserModeCharacter;
+            return [_client.userModeCharacters objectForKey:@"h"];
             break;
         case OPERATOR:
-            return _client.operatorUserModeCharacter;
+            return [_client.userModeCharacters objectForKey:@"o"];
             break;
         case ADMIN:
-            return _client.adminUserModeCharacter;
+            return [_client.userModeCharacters objectForKey:@"a"];
             break;
         case OWNER:
-            return _client.ownerUserModeCharacter;
+            return [_client.userModeCharacters objectForKey:@"o"];
             break;
         case IRCOP:
-            return _client.ircopUserModeCharacter;
+            return [_client.userModeCharacters objectForKey:@"y"];
             break;
     }
-    return "";
+    return @"";
 }
 
 - (void)drawRect:(CGRect)rect
@@ -95,7 +95,7 @@
 
 - (void)layoutSubviews
 {
-    NSString *symbol = [NSString stringWithFormat:@"%s", [self characterForStatus:_status]];
+    NSString *symbol = [self characterForStatus:_status];
 
     UILabel *statusLabel = [[UILabel alloc] init];
     if ([symbol isEqualToString:@"@"])

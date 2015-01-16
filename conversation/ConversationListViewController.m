@@ -784,6 +784,7 @@
         [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, message.sender.nick.length+1)];
     }
     
+    
     // Private Message
     if ([message.conversation isKindOfClass:[IRCChannel class]] == NO) {
         [message.conversation addPreviewMessage:string];
