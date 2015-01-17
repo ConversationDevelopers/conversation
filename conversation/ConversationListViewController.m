@@ -770,9 +770,6 @@
 {
     IRCMessage *message = notification.object;
     
-    if (message.messageType != ET_PRIVMSG && message.messageType != ET_ACTION)
-        return;
-    
     // Make sender's nick bold
     NSMutableAttributedString *string;
     UIFont *font = [UIFont fontWithName:@"Helvetica-Bold" size:14];
@@ -783,37 +780,6 @@
         string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@", message.sender.nick, message.message]];
         [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, message.sender.nick.length+1)];
     }
-    
-    
-    // Private Message
-    if ([message.conversation isKindOfClass:[IRCChannel class]] == NO) {
-        [message.conversation addPreviewMessage:string];
-        message.conversation.unreadCount++;
-        if (message.conversation.isHighlighted == NO) {
-            message.conversation.isHighlighted = YES;
-            AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
-        }
-    } else {
-        
-        // Check for highlight
-        NSString *msg = message.message;
-        NSString *nick = [[message.conversation.client currentUserOnConnection] nick];
-        NSCharacterSet *wordBoundries = [[NSCharacterSet letterCharacterSet] invertedSet];
-        NSRange range = [msg rangeOfString:nick];
-        if (range.location != NSNotFound &&
-            (range.location == 0 || [[msg substringWithRange:NSMakeRange(range.location-1, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound) &&
-            (range.location+range.length+1 > msg.length || [[msg substringWithRange:NSMakeRange(range.location+range.length, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound)) {
-            if (message.conversation.isHighlighted == NO) {
-                message.conversation.isHighlighted = YES;
-                AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
-            }
-        }
-        
-        [message.conversation addPreviewMessage:string];
-        message.conversation.unreadCount++;
-    }
-    
-    [self.tableView reloadData];
     
     if (!message.conversation.contentView) {
         
@@ -858,6 +824,41 @@
     
     CGFloat height = message.conversation.contentView.contentSize.height;
     message.conversation.contentView.contentSize = CGSizeMake(screenRect.size.width, height+posY);
+    
+    
+    // The stuff below is only for the preview
+    if (message.messageType != ET_PRIVMSG && message.messageType != ET_ACTION)
+        return;
+    
+    // Private Message
+    if ([message.conversation isKindOfClass:[IRCChannel class]] == NO) {
+        [message.conversation addPreviewMessage:string];
+        message.conversation.unreadCount++;
+        if (message.conversation.isHighlighted == NO) {
+            message.conversation.isHighlighted = YES;
+            AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
+        }
+    } else {
+        
+        // Check for highlight
+        NSString *msg = message.message;
+        NSString *nick = [[message.conversation.client currentUserOnConnection] nick];
+        NSCharacterSet *wordBoundries = [[NSCharacterSet letterCharacterSet] invertedSet];
+        NSRange range = [msg rangeOfString:nick];
+        if (range.location != NSNotFound &&
+            (range.location == 0 || [[msg substringWithRange:NSMakeRange(range.location-1, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound) &&
+            (range.location+range.length+1 > msg.length || [[msg substringWithRange:NSMakeRange(range.location+range.length, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound)) {
+            if (message.conversation.isHighlighted == NO) {
+                message.conversation.isHighlighted = YES;
+                AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
+            }
+        }
+        
+        [message.conversation addPreviewMessage:string];
+        message.conversation.unreadCount++;
+    }
+    
+    [self.tableView reloadData];
 
 }
 
