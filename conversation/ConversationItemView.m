@@ -136,6 +136,14 @@
         // iOS 7
         subviews = [self.subviews[0] subviews];
     }
+    
+    NSString *value = [NSString stringWithFormat:@"%li", (long)_unreadCount];
+    
+    if(_unreadCount > 0)
+        _unreadCountLabel.text = value;
+    else
+        _unreadCountLabel.text = @"";
+    
     for (UIView *subview in subviews) {
         if([NSStringFromClass(subview.class) isEqualToString:@"DisclosureView"]) {
             // This subview should be the accessory view, change its frame
@@ -143,21 +151,9 @@
             frame.origin.y -= 15;
             subview.frame = frame;
             
-            if(_unreadCount > 0) {
-                
-                // Add unread count label
-                NSString *value = [NSString stringWithFormat:@"%li", (long)_unreadCount];
-
-                if(_unreadCount > 0)
-                    _unreadCountLabel.text = value;
-                else
-                    _unreadCountLabel.text = @"";
-                
                 // Calculate frame size
-                CGSize size = [value sizeWithAttributes:@{NSFontAttributeName: _unreadCountLabel.font }];
-                _unreadCountLabel.frame = CGRectMake(frame.origin.x-size.width-5, frame.origin.y-2, size.width, size.height);
-            
-            }
+            CGSize size = [value sizeWithAttributes:@{NSFontAttributeName: _unreadCountLabel.font }];
+            _unreadCountLabel.frame = CGRectMake(frame.origin.x-size.width-5, frame.origin.y-2, size.width, size.height);
             
             break;
         }

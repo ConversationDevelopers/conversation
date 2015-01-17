@@ -380,12 +380,14 @@
     
     conversation.isHighlighted = NO;
     conversation.unreadCount = 0;
-    _chatViewController.conversation = conversation;
-    _currentConversation = conversation;
 
     [self.tableView reloadData];
+    
+    _chatViewController.conversation = conversation;
     [self.navigationController pushViewController:_chatViewController animated:YES];
 
+    _currentConversation = conversation;
+    
 }
 
 
@@ -523,7 +525,7 @@
             disclosure.color = [UIColor colorWithRed:0 green:0.502 blue:0 alpha:1];
         }
     }
-
+    
     return cell;
 }
 
@@ -840,6 +842,9 @@
                 AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
             }
         } else {
+            
+            message.conversation.unreadCount++;
+            
             // Check for highlight
             NSString *msg = message.message;
             NSString *nick = [[message.conversation.client currentUserOnConnection] nick];
@@ -848,7 +853,6 @@
             if (range.location != NSNotFound &&
                 (range.location == 0 || [[msg substringWithRange:NSMakeRange(range.location-1, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound) &&
                 (range.location+range.length+1 > msg.length || [[msg substringWithRange:NSMakeRange(range.location+range.length, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound)) {
-                message.conversation.unreadCount++;
                 if (message.conversation.isHighlighted == NO) {
                     message.conversation.isHighlighted = YES;
                     AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
