@@ -604,9 +604,7 @@
         NSInteger identifierStartPosition = [prefixString rangeOfString:@"("].location;
         NSInteger identifierEndPosition = [prefixString rangeOfString:@")"].location;
         
-        NSLog(@"%ld %ld", identifierStartPosition, identifierEndPosition);
-        
-        NSRange identifierRange = NSMakeRange(identifierStartPosition, identifierEndPosition - identifierStartPosition -1);
+        NSRange identifierRange = NSMakeRange(identifierStartPosition + 1, identifierEndPosition - identifierStartPosition -1);
         
         NSString *identifiers = [prefixString substringWithRange:identifierRange];
         NSString *characters = [prefixString substringFromIndex:identifierEndPosition +1];
