@@ -42,17 +42,18 @@
         self.username = [NSString stringWithCString:senderDict[1] usingEncodingPreference:[client configuration]];
         self.hostname = [NSString stringWithCString:senderDict[2] usingEncodingPreference:[client configuration]];
         
-        return [self initWithNickname:self.nick andUsername:self.username andHostname:self.hostname onClient:client];
+        return [self initWithNickname:self.nick andUsername:self.username andHostname:self.hostname andRealname:nil onClient:client];
     }
     return nil;
 }
 
-- (instancetype) initWithNickname:(NSString *)nickname andUsername:(NSString *)username andHostname:(NSString *)hostname onClient:(IRCClient *)client
+- (instancetype) initWithNickname:(NSString *)nickname andUsername:(NSString *)username andHostname:(NSString *)hostname andRealname:(NSString *)realname onClient:(IRCClient *)client
 {
     if ((self = [super init])) {
         self.nick = nickname;
         self.username = username;
         self.hostname = hostname;
+        self.realname = realname;
         
         self.isAway = NO;
         

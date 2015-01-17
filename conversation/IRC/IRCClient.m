@@ -140,6 +140,7 @@
     self.currentUserOnConnection = [[IRCUser alloc] initWithNickname:self.configuration.primaryNickname
                                                          andUsername:self.configuration.usernameForRegistration
                                                          andHostname:@""
+                                                         andRealname:self.configuration.realNameForRegistration
                                                             onClient:self];
     
     /* Send server password if applicable */

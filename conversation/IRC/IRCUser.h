@@ -39,6 +39,7 @@
 @property (nonatomic) NSString *nick;
 @property (nonatomic) NSString *username;
 @property (nonatomic) NSString *hostname;
+@property (nonatomic) NSString *realname;
 @property (nonatomic, assign) BOOL isAway;
 
 @property (nonatomic) BOOL ircop;
@@ -49,7 +50,7 @@
 @property (nonatomic) BOOL voice;
 
 - (instancetype) initWithSenderDict:(const char **)senderDict onClient:(IRCClient *)client;
-- (instancetype) initWithNickname:(NSString *)nickname andUsername:(NSString *)username andHostname:(NSString *)hostname onClient:(IRCClient *)client;
+- (instancetype) initWithNickname:(NSString *)nickname andUsername:(NSString *)username andHostname:(NSString *)hostname andRealname:(NSString *)realname onClient:(IRCClient *)client;
 - (int) channelPrivilege;
 - (void)setPrivilegeMode:(const char *)mode granted:(BOOL)granted;
 

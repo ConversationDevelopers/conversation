@@ -661,7 +661,7 @@
     NSString *userString = [NSString stringWithCString:senderDict[1] usingEncodingPreference:client.configuration];
     NSString *hostString = [NSString stringWithCString:senderDict[2] usingEncodingPreference:client.configuration];
     NSString *quitMessage = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
-    IRCUser *user = [[IRCUser alloc] initWithNickname:nickString andUsername:userString andHostname:hostString onClient:client];
+    IRCUser *user = [[IRCUser alloc] initWithNickname:nickString andUsername:userString andHostname:hostString andRealname:nil onClient:client];
     
     NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
     
@@ -867,17 +867,20 @@
 
 + (void)clientReceivedWHOReply:(NSString *)line onClient:(IRCClient *)client
 {
-    NSArray *messageComponents = [line componentsSeparatedByString:@" "];
+    NSMutableArray *messageComponents = [[line componentsSeparatedByString:@" "] mutableCopy];
     NSString *channel   = [messageComponents objectAtIndex:0];
     NSString *username  = [messageComponents objectAtIndex:1];
     NSString *hostname  = [messageComponents objectAtIndex:2];
     NSString *nickname  = [messageComponents objectAtIndex:4];
     NSString *modes     = [messageComponents objectAtIndex:5];
     
+    [messageComponents removeObjectsInRange:NSMakeRange(0, 6)];
+    NSString *realname  = [messageComponents componentsJoinedByString:@" "];
+    
     IRCChannel *ircChannel = [IRCChannel fromString:channel withClient:client];
     IRCUser *user = [IRCUser fromNicknameString:nickname onChannel:ircChannel];
     if (user == nil) {
-        user = [[IRCUser alloc] initWithNickname:nickname andUsername:username andHostname:hostname onClient:client];
+        user = [[IRCUser alloc] initWithNickname:nickname andUsername:username andHostname:hostname andRealname:realname onClient:client];
     }
     
     if ([modes hasPrefix:@"G"]) {
