@@ -83,13 +83,13 @@
     /* Return an existing channel or query in this client */
     if ([name isValidChannelName:client]) {
         /* If this is a channel iterate through the list of channels and return one that matches */
-        for (IRCChannel *channel in [client getChannels]) {
+        for (IRCChannel *channel in [client channels]) {
             if ([channel.name caseInsensitiveCompare:name] == NSOrderedSame)
                 return channel;
         }
     } else if ([name isValidNickname:client]) {
         /* If this is a query, iterate through the list of queries and return one that matches*/
-        for (IRCConversation *query in [client getQueries]) {
+        for (IRCConversation *query in [client queries]) {
             if ([query.name caseInsensitiveCompare:name] == NSOrderedSame) {
                 return query;
             }

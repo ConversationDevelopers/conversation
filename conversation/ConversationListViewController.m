@@ -313,7 +313,7 @@
     if(client != nil) {
         [client sortChannelItems];
         [client sortQueryItems];
-        [[AppPreferences sharedPrefs] setChannels:client.getChannels andQueries:client.getQueries forConnectionConfiguration:client.configuration];
+        [[AppPreferences sharedPrefs] setChannels:client.channels andQueries:client.queries forConnectionConfiguration:client.configuration];
         [self.tableView reloadData];        
     }
 }
@@ -323,7 +323,7 @@
     IRCClient *client;
     IRCConversation *conversation;
     for (client in _connections) {
-        for (conversation in client.getQueries) {
+        for (conversation in client.queries) {
             if ([conversation.configuration.uniqueIdentifier isEqualToString:identifier]) {
                 _chatViewController.isChannel = NO;
                 _chatViewController.conversation = conversation;
@@ -331,7 +331,7 @@
             }
         }
         if (conversation == nil) {
-            for (conversation in client.getChannels) {
+            for (conversation in client.channels) {
                 if ([conversation.configuration.uniqueIdentifier isEqualToString:identifier]) {
                     _chatViewController.isChannel = YES;
                     _chatViewController.conversation = conversation;
@@ -370,15 +370,15 @@
         offset = 1;
     
     IRCConversation *conversation;
-    if ((int)indexPath.row > (int)client.getChannels.count-1+offset) {
-        NSInteger index = indexPath.row - client.getChannels.count - offset;
-        conversation = client.getQueries[index];
+    if ((int)indexPath.row > (int)client.channels.count-1+offset) {
+        NSInteger index = indexPath.row - client.channels.count - offset;
+        conversation = client.queries[index];
         _chatViewController.isChannel = NO;
     } else if (client.showConsole && indexPath.row == 0) {
         [self.navigationController pushViewController:client.console animated:YES];
         return;
     } else {
-        conversation = client.getChannels[indexPath.row - offset];
+        conversation = client.channels[indexPath.row - offset];
         _chatViewController.isChannel = YES;
     }
     
@@ -467,7 +467,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     IRCClient *client = [_connections objectAtIndex:section];
-    NSInteger number = client.getChannels.count + client.getQueries.count;
+    NSInteger number = client.channels.count + client.queries.count;
     if (client.showConsole)
         return number + 1;
     return number;
@@ -483,7 +483,7 @@
     
     
     IRCClient *client = [_connections objectAtIndex:indexPath.section];
-    NSArray *channels = client.getChannels;
+    NSArray *channels = client.channels;
     DisclosureView *disclosure = [[DisclosureView alloc] initWithFrame:CGRectMake(-5, -10, 15, 15)];
     disclosure.color = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
     
@@ -497,8 +497,8 @@
     
     if ((int)indexPath.row > (int)channels.count-1+offset) {
         NSInteger index;
-        index = indexPath.row - client.getChannels.count - offset;
-        IRCConversation *query = [client.getQueries objectAtIndex:index];
+        index = indexPath.row - client.channels.count - offset;
+        IRCConversation *query = [client.queries objectAtIndex:index];
         cell.accessoryView = disclosure;
         cell.enabled = query.conversationPartnerIsOnline;
         cell.name = query.name;
@@ -516,7 +516,7 @@
         cell.isConsole = YES;
         cell.unreadCount = 0;
     } else {
-        IRCChannel *channel = [client.getChannels objectAtIndex:(int)indexPath.row - offset];
+        IRCChannel *channel = [client.channels objectAtIndex:(int)indexPath.row - offset];
         cell.accessoryView = disclosure;
         cell.enabled = channel.isJoinedByUser;
         cell.name = channel.name;
@@ -543,15 +543,15 @@
 {
     IRCClient *client = _connections[indexPath.section];
     NSInteger index = indexPath.row;
-    if ((int)indexPath.row > (int)client.getChannels.count-1) {
-        index = indexPath.row - client.getChannels.count;
-        IRCConversation *query = client.getQueries[index];
+    if ((int)indexPath.row > (int)client.channels.count-1) {
+        index = indexPath.row - client.channels.count;
+        IRCConversation *query = client.queries[index];
         [client removeQuery:query];
         
         // Remove from prefs
         [[AppPreferences sharedPrefs] deleteQueryWithName:query.name forConnectionConfiguration:client.configuration];
     } else {
-        IRCChannel *channel = client.getChannels[index];
+        IRCChannel *channel = client.channels[index];
         [client removeChannel:channel];
         
         // Remove from prefs
@@ -750,7 +750,7 @@
 
 - (NSString *)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client
 {
-    for (IRCChannel *channel in client.getChannels) {
+    for (IRCChannel *channel in client.channels) {
         if ([channel.name.lowercaseString isEqualToString:name.lowercaseString]) {
             if (channel.isJoinedByUser == NO) {
                 [IRCCommands joinChannel:channel.name onClient:client];

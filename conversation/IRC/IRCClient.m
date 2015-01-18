@@ -45,8 +45,6 @@
 @interface IRCClient ()
 
 @property (nonatomic, assign) BOOL connectionIsBeingClosed;
-@property (nonatomic, retain) NSMutableArray *channels;
-@property (nonatomic, retain) NSMutableArray *queries;
 @property (nonatomic, assign) NSInteger alternativeNickNameAttempts;
 @property (nonatomic, assign) int connectionRetries;
 

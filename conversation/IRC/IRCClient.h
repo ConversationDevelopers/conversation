@@ -69,6 +69,8 @@
 @property (nonatomic, strong) NSMutableDictionary *featuresSupportedByServer;
 @property (nonatomic, strong) NSMutableArray *ircv3CapabilitiesSupportedByServer;
 @property (nonatomic, strong) NSMutableDictionary *userModeCharacters;
+@property (nonatomic, retain) NSMutableArray *channels;
+@property (nonatomic, retain) NSMutableArray *queries;
 
 + (NSArray *) IRCv3CapabilitiesSupportedByApplication;
 
@@ -90,9 +92,6 @@
 
 - (BOOL)addQuery:(IRCConversation *)query;
 - (BOOL)removeQuery:(IRCConversation *)query;
-
-- (NSMutableArray *)getChannels;
-- (NSMutableArray *)getQueries;
 
 - (NSMutableArray *)sortChannelItems;
 - (NSMutableArray *)sortQueryItems;

@@ -331,7 +331,7 @@
     
     message.messageType = ET_NICK;
     
-    for (IRCChannel *channel in [message.client getChannels]) {
+    for (IRCChannel *channel in [message.client channels]) {
         IRCUser *userOnChannel = [IRCUser fromNickname:message.sender.nick onChannel:channel];
         if (userOnChannel) {
             IRCMessage *nickMessage = [message copy];
@@ -346,15 +346,15 @@
         }
     }
     
-    for (IRCConversation *conversation in [message.client getQueries]) {
+    for (IRCConversation *conversation in [message.client queries]) {
         if ([[conversation name] caseInsensitiveCompare:[message.sender nick]] == NSOrderedSame) {
             IRCConversation *conversationWithChanges = conversation;
             conversationWithChanges.name = message.message;
             IRCMessage *nickMessage = [message copy];
             nickMessage.conversation = conversation;
             
-            [[message.client getQueries] removeObject:conversation];
-            [[message.client getQueries] addObject:conversationWithChanges];
+            [[message.client queries] removeObject:conversation];
+            [[message.client queries] addObject:conversationWithChanges];
             
             [nickMessage.conversation addMessageToConversation:nickMessage];
         }
@@ -404,7 +404,8 @@
 
 + (void)userReceivedQuitMessage:(IRCMessage *)message
 {
-    for (IRCChannel *channel in [message.client getChannels]) {
+    
+    for (IRCChannel *channel in [message.client channels]) {
         IRCUser *userOnChannel = [IRCUser fromNickname:message.sender.nick onChannel:channel];
         if (userOnChannel) {
             [channel removeUserByName:[userOnChannel nick]];
@@ -417,18 +418,13 @@
         }
     }
     
-    for (IRCConversation *conversation in [message.client getQueries]) {
+    for (IRCConversation *conversation in [message.client queries]) {
         if ([[conversation name] caseInsensitiveCompare:message.sender.nick] == NSOrderedSame) {
-            
-            IRCConversation *conversationWithChanges = conversation;
-            conversationWithChanges.conversationPartnerIsOnline = NO;
-            [[message.client getQueries] removeObject:conversation];
-            [[message.client getQueries] addObject:conversationWithChanges];
-            
+            conversation.conversationPartnerIsOnline = NO;
             IRCMessage *quitMessage = [message copy];
-            quitMessage.conversation = conversationWithChanges;
+            quitMessage.conversation = conversation;
             
-            [conversationWithChanges addMessageToConversation:quitMessage];
+            [conversation addMessageToConversation:quitMessage];
         }
     }
 }
@@ -518,7 +514,7 @@
     ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     
     int indexOfItem = 0;
-    for (IRCConversation *conversation in message.client.getQueries) {
+    for (IRCConversation *conversation in message.client.queries) {
         if ([users containsObject:conversation.name]) {
             conversation.conversationPartnerIsOnline = YES;
             
@@ -537,7 +533,7 @@
         indexOfItem++;
     }
     
-    if ([message.client.getQueries count] > 0) {
+    if ([message.client.queries count] > 0) {
         [NSTimer scheduledTimerWithTimeInterval:30.0
                                          target:message.client
                                        selector:@selector(validateQueryStatusOnAllItems)
