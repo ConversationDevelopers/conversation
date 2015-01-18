@@ -100,7 +100,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     UIView *container = [self container];
     [container addSubview:[self composeBarView]];
     
-    self.navigationController.scrollNavigationBar.scrollView = _conversation.contentView;
+//    self.navigationController.scrollNavigationBar.scrollView = _conversation.contentView;
     
     [view addSubview:container];
     self.view = view;
@@ -198,18 +198,18 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (void)scrollToBottom:(BOOL)animated
 {
     if (_conversation.contentView.contentSize.height > _conversation.contentView.bounds.size.height) {
-        CGPoint bottomOffset = CGPointMake(0, _conversation.contentView.contentSize.height - _conversation.contentView.bounds.size.height);
+        ChatMessageView *lastMsg;
+        
+        // Get last message object
+        for (UIView *view in _conversation.contentView.subviews) {
+            if([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
+                lastMsg = (ChatMessageView *)view;
+            }
+        }
+        
+        CGPoint bottomOffset = CGPointMake(0, _conversation.contentView.contentSize.height - _conversation.contentView.bounds.size.height + lastMsg.frame.size.height);
         [_conversation.contentView setContentOffset:bottomOffset animated:animated];
     }
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    CGRect frame = self.view.frame;
-    CGFloat height = frame.origin.y;
-    frame.origin.y = 0.0;
-    frame.size.height += height;
-    self.view.frame = frame;
 }
 
 - (void)join:(id)sender
@@ -427,9 +427,8 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     }
     
     // Scroll to bottom if content is bigger than view and user didnt scroll up
-    if (_conversation.contentView.contentSize.height > _conversation.contentView.bounds.size.height &&
-        (_conversation.contentView.contentOffset.y == 0.0 ||
-         _conversation.contentView.contentOffset.y > _conversation.contentView.contentSize.height - _conversation.contentView.bounds.size.height)) {
+    if (_conversation.contentView.contentOffset.y == 0.0 ||
+         _conversation.contentView.contentOffset.y + 5.0 >= _conversation.contentView.contentSize.height - _conversation.contentView.bounds.size.height) {
             
             [self scrollToBottom:YES];
         }

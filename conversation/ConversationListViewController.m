@@ -735,17 +735,18 @@
 
 - (void)createContentViewForConversation:(IRCConversation *)conversation
 {
+    
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     
     CGRect frame = CGRectMake(0.0,
-                              0.0,
-                              screenRect.size.width,
-                              480 - PHFComposeBarViewInitialHeight);
-    
+                       0.0,
+                       screenRect.size.width,
+                       480.0 - PHFComposeBarViewInitialHeight);
+
     conversation.contentView = [[UIScrollView alloc] initWithFrame:frame];
     conversation.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     conversation.contentView.delegate = self;
-    NSLog(@"YES!");
+
 }
 
 - (NSString *)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client
@@ -837,10 +838,17 @@
     messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     [message.conversation.contentView addSubview:messageView];
     [message.conversation.contentView layoutIfNeeded];
+
+    CGRect frame = CGRectMake(0.0,
+                              0.0,
+                              message.conversation.contentView.frame.size.width,
+                              _chatViewController.container.frame.size.height - PHFComposeBarViewInitialHeight);
+    message.conversation.contentView.frame = frame;
     
-    CGFloat height = message.conversation.contentView.contentSize.height;
-    message.conversation.contentView.contentSize = CGSizeMake(screenRect.size.width, height+posY);
-    
+    // Increase content size if needed
+    if (posY+messageView.frame.size.height > message.conversation.contentView.contentSize.height) {
+        message.conversation.contentView.contentSize = CGSizeMake(screenRect.size.width, posY+messageView.frame.size.height);
+    }
     
     // The stuff below is only for the preview
     if (message.messageType != ET_PRIVMSG && message.messageType != ET_ACTION)
