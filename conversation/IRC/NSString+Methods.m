@@ -121,12 +121,9 @@
 
 - (BOOL) isValidNickname:(IRCClient *)client
 {
-    int maxNickLength = 0;
+    int maxNickLength = 16;
     if (client) {
         maxNickLength = [[[client featuresSupportedByServer] objectForKey:@"NICKLEN"] intValue];
-    }
-    if (maxNickLength == 0) {
-        maxNickLength = 16;
     }
     
     // Check length
@@ -160,6 +157,15 @@
         }
         username++;
     }
+    return YES;
+}
+
+-(BOOL)isValidHostname
+{
+    if ([self length] < 1 || [self length] > 255) return NO;
+    NSCharacterSet *hostnameCharacterSet = ((AppDelegate *)[UIApplication sharedApplication].delegate).ircCharacterSets.hostnameCharacterSet;
+    if ([self rangeOfCharacterFromSet:hostnameCharacterSet].location != NSNotFound) return NO;
+    
     return YES;
 }
 
@@ -240,6 +246,26 @@
     }
     
     return truncatedString;
+}
+
+- (BOOL)getUserHostComponents:(NSString **)nickname username:(NSString **)username hostname:(NSString **)hostname onClient:(IRCClient *)client
+{
+    NSCharacterSet *hostmaskCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"!@"];
+    NSArray *components = [self componentsSeparatedByCharactersInSet:hostmaskCharacterSet];
+    
+    if ([components count] != 3) return NO;
+    
+    *nickname = [components objectAtIndex:0];
+    *username = [components objectAtIndex:1];
+    *hostname = [components objectAtIndex:2];
+    
+    #define AssertValidInput(x) if (x == NO) return NO
+    
+    AssertValidInput([*nickname isValidNickname:client]);
+    AssertValidInput([*username isValidUsername]);
+    AssertValidInput([*hostname isValidHostname]);
+    
+    return YES;
 }
 
 @end

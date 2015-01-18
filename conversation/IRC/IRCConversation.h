@@ -46,7 +46,7 @@
 
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;
 
-+ (void) getConversationOrCreate:(NSString *)nickname onClient:(IRCClient *)client withCompletionHandler:(void (^)(IRCConversation *))completionHandler;
++ (void) getConversationOrCreate:(NSString *)name onClient:(IRCClient *)client withCompletionHandler:(void (^)(IRCConversation *))completionHandler;
 + (id) fromString:(NSString *)name withClient:(IRCClient *)client;
 - (void)addPreviewMessage:(NSAttributedString *)message;
 - (void)addMessageToConversation:(id)object;

@@ -104,7 +104,7 @@
         /* The input seems to already be a hostmask. We will use it as it is. */
         banMask = nickname;
     } else {
-        IRCUser *bannedUser = [IRCUser fromNicknameString:nickname onChannel:channel];
+        IRCUser *bannedUser = [IRCUser fromNickname:nickname onChannel:channel];
         if (bannedUser != nil) {
             /* We found the user in the userlist, we will use their information to ban the hostname. */
             banMask = [NSString stringWithFormat:@"*!*@%@", bannedUser.hostname];

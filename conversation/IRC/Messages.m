@@ -38,123 +38,107 @@
 #import "znc-buffextras.h"
 #import "AppPreferences.h"
 
+#define AssertIsNotServerMessage(x) if ([x isServerMessage] == YES) return;
+
 @implementation Messages
 
-+ (void)clientReceivedAuthenticationMessage:(const char*)message onClient:(IRCClient *)client
++ (void)clientReceivedAuthenticationMessage:(IRCMessage *)message
 {
     /* This method is called when the client has received an authentication SASL request from the server under initial negotiation. */
-    if (client.isAwaitingAuthenticationResponse) {
-        if (client.configuration.authenticationPasswordReference) {
+    if (message.client.isAwaitingAuthenticationResponse) {
+        if (message.client.configuration.authenticationPasswordReference) {
             /* Retrieve the appropriate password from keychain using our identifier from the user's preferences */
-            NSString *password = [SSKeychain passwordForService:@"conversation" account:client.configuration.authenticationPasswordReference];
+            NSString *password = [SSKeychain passwordForService:@"conversation" account:message.client.configuration.authenticationPasswordReference];
             if (password != nil && [password length] > 0) {
                 /* Send authentication to the server. As of now we only support SASL PLAIN authentication. Which is username username password encoded
                  in base64 separated by an ASCII null termination character. */
                 NSData *authenticationStringAsBinaryData = [[NSString stringWithFormat:@"%@\0%@\0%@",
-                                                             client.configuration.usernameForRegistration,
-                                                             client.configuration.usernameForRegistration,
+                                                             message.client.configuration.usernameForRegistration,
+                                                             message.client.configuration.usernameForRegistration,
                                                              password]
                                                             dataUsingEncoding:NSUTF8StringEncoding];
                 
-                [client.connection send:[NSString stringWithFormat:@"AUTHENTICATE %@", [authenticationStringAsBinaryData base64EncodedStringWithOptions:0]]];
+                [message.client.connection send:[NSString stringWithFormat:@"AUTHENTICATE %@", [authenticationStringAsBinaryData base64EncodedStringWithOptions:0]]];
                 return;
             } else {
                 /* We had a reference to an item in keychain but the keychain item didn't exist for some reason.
                  We will act like there is no password saved and abort authentication. */
-                NSLog(@"An authentication password reference was found but no password: %@", client.configuration.authenticationPasswordReference);
+                NSLog(@"An authentication password reference was found but no password: %@", message.client.configuration.authenticationPasswordReference);
             }
         }
     }
     /* Authentication was unsuccessful somewhere earlier in the method so we will abort authentication.*/
-    [client.connection send:@"CAP END"];
+    [message.client.connection send:@"CAP END"];
 }
 
-+ (void)clientReceivedAuthenticationAccepted:(const char*)message onClient:(IRCClient *)client
++ (void)clientReceivedAuthenticationAccepted:(IRCMessage *)message
 {
     /* Our password has bene accepted by SASL and we can end the authentication process and continue registration */
-    client.isAwaitingAuthenticationResponse = NO;
-    [client.connection send:@"CAP END"];
+    message.client.isAwaitingAuthenticationResponse = NO;
+    [message.client.connection send:@"CAP END"];
 }
 
-+ (void)clientreceivedAuthenticationAborted:(const char *)message onClient:(IRCClient *)client
++ (void)clientreceivedAuthenticationAborted:(IRCMessage *)message
 {
     /* Authentication was aborted either by the servers actions or ours. We will continue registration as normal. */
-    client.isAwaitingAuthenticationResponse = NO;
+    message.client.isAwaitingAuthenticationResponse = NO;
 }
 
-+ (void)clientReceivedAuthenticationError:(const char*)message onClient:(IRCClient *)client
++ (void)clientReceivedAuthenticationError:(IRCMessage *)message
 {
     /* SASL has rejected our authentication attempt, the username, password, or authentication method is wrong.
     We will stop attempting authentication at this point and just try again with nickserv if possible at a later stage. */
-    [client.connection send:@"CAP END"];
+    [message.client.connection send:@"CAP END"];
 }
 
-+ (void)clientReceivedCAPMessage:(const char *)message onClient:(IRCClient *)client
++ (void)clientReceivedCAPMessage:(IRCMessage *)message
 {
     /* Client received An IRCv3 CAP message. We will parse the message and find out what command it is sending. */
-    const char* messageBeforeIteration = message;
-    int lengthOfCommand = 0;
+    NSMutableArray *messageComponents = [[[message message] componentsSeparatedByString:@" "] mutableCopy];
+    NSString *command = [messageComponents objectAtIndex:0];
     
-    /* Iterate until the next space and copy it to our command string. */
-    while (*message != ' ' && *message != '\0') {
-        lengthOfCommand++;
-        message++;
-    }
-    char* capCommand = malloc(lengthOfCommand + 1);
-    strncpy(capCommand, messageBeforeIteration, lengthOfCommand);
-    capCommand[lengthOfCommand] = '\0';
+    [messageComponents removeObjectAtIndex:0];
     
-    messageBeforeIteration = message;
+    /* The message may be a single word command, but in case it is not, we will get the remaining text */
+    NSString *parameters = [messageComponents componentsJoinedByString:@" "];
     
-    /* The message may be a single word command, but in case it is not, let's continue parsing past the next space. */
-    if (*message != '\0') {
-        message++;
-        messageBeforeIteration++;
-        
-        /* This next bit may be prefixed by an ':' let's consume it. */
-        if (*message == ':') {
-            message++;
-            messageBeforeIteration++;
-        }
+    /* This next bit may be prefixed by an ':' let's consume it. */
+    if ([parameters hasPrefix:@":"]) {
+        parameters = [parameters substringFromIndex:1];
     }
     
     /* Parse the command we retrived and call the appropriate method. */
-    NSString *capCommandString = [NSString stringWithCString:capCommand usingEncodingPreference:client.configuration];
-    CapMessageType capIndexValue = [IRCMessageIndex capIndexValueFromString:capCommandString];
+    CapMessageType capIndexValue = [IRCMessageIndex capIndexValueFromString:command];
     switch (capIndexValue) {
         case CAP_LS:
             /* The server has returned a list of capabilities. We will call the method to negotiate these with the server. */
-            [Messages clientReceivedListOfServerIRCv3Capabilities:message onClient:client];
+            [Messages clientReceivedListOfServerIRCv3Capabilities:parameters onClient:message.client];
             break;
             
         case CAP_ACK:
             /* The server has accepted our requested list of capabilities. */
-            [Messages clientReceivedAcknowledgedCapabilities:message onClient:client];
+            [Messages clientReceivedAcknowledgedCapabilities:parameters onClient:message.client];
             break;
             
         case CAP_NAK:
             /* The server has rejected our requested list of capabilities. It is not worth wasting time trying to negotiate why so let's just
              end negotiating and connect in IRCv2 mode. */
-            [client.connection send:@"CAP END"];
+            [message.client.connection send:@"CAP END"];
             break;
             
         case CAP_CLEAR:
             /* The server has asked us to clear our IRCv3 capabilities. Possibly in await for a new list of capabilities. */
-            client.ircv3CapabilitiesSupportedByServer = [[NSMutableArray alloc] init];
+            message.client.ircv3CapabilitiesSupportedByServer = [[NSMutableArray alloc] init];
             break;
             
         default:
             break;
     }
-    free(capCommand);
 }
 
-+ (void)clientReceivedListOfServerIRCv3Capabilities:(const char *)capabilities onClient:(IRCClient *)client
++ (void)clientReceivedListOfServerIRCv3Capabilities:(NSString *)capabilities onClient:(IRCClient *)client
 {
-    /* The server has sent us a list of capabilities, these capabilities are delimited by a space. We will seperate them into an array
-     and parse them accordingly. */
-    NSString *capabilitiesString = [NSString stringWithCString:capabilities usingEncodingPreference:client.configuration];
-    NSArray *capabilitiesList = [capabilitiesString componentsSeparatedByString:@" "];
+    NSArray *capabilitiesList = [capabilities componentsSeparatedByString:@" "];
     
     NSMutableArray *capabilitiesToNegotiate = [[NSMutableArray alloc] init];
     for (NSString *capability in capabilitiesList) {
@@ -174,12 +158,11 @@
     }
 }
 
-+ (void)clientReceivedAcknowledgedCapabilities:(const char*)capabilities onClient:(IRCClient *)client
++ (void)clientReceivedAcknowledgedCapabilities:(NSString *)capabilities onClient:(IRCClient *)client
 {
-    /* The server accepted our requested list of capabilities to enable. Let's add them to our list so other parts of 
+    /* The server accepted our requested list of capabilities to enable. Let's add them to our list so other parts of
      the application are aware of them being turned on. */
-    NSString *capabilitiesString = [NSString stringWithCString:capabilities usingEncodingPreference:client.configuration];
-    NSArray *capabilitiesList = [capabilitiesString componentsSeparatedByString:@" "];
+    NSArray *capabilitiesList = [capabilities componentsSeparatedByString:@" "];
     client.ircv3CapabilitiesSupportedByServer = [capabilitiesList mutableCopy];
     
     if ([client.ircv3CapabilitiesSupportedByServer indexOfObject:@"sasl"] != NSNotFound) {
@@ -195,669 +178,359 @@
     [client.connection send:@"CAP END"];
 }
 
-+ (void)userReceivedMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
++ (void)userReceivedMessage:(IRCMessage *)message
 {
-    /* Check if the message begins and ends with a 0x01 character, denoting this is a CTCP request. */
-    if (*message == '\001' && message[strlen(message) -1] == '\001') {
-        [self userReceivedCTCPMessage:message onRecepient:recepient byUser:senderDict onClient:client withTags:tags];
+    AssertIsNotServerMessage(message);
+    
+    if ([[message message] hasPrefix:@"\001"] && [[message message] hasSuffix:@"\001"]) {
+        [self userReceivedCTCPMessage:message];
         return;
     }
     
-    NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:[client configuration]];
+    message.messageType = ET_PRIVMSG;
     
-    /* Get the timestamp from the message or create one if it is not available. */
-    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
-    
-    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
-    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
-    
-    /* Check if this message is a channel message or a private message */
-    if ([recipientString isValidChannelName:client]) {
-        /* Get the channel object associated with this channel */
-        IRCChannel *channel = [IRCChannel getChannelOrCreate:recipientString onClient:client];
-        
-        IRCUser *sender = [IRCUser fromNickname:senderDict[0] onChannel:channel];
-        if (sender == nil) {
-            sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-        }
-        
-        /* This is a message by the ZNC buffextras module. We will send it off to be parsed and not show this message as a channel message */
-        if ([[sender nick] isEqualToString:@"*buffextras"]) {
-            [znc_buffextras messageWithBufferString:message onChannel:channel onClient:client withTags:tags];
-            return;
-        }
-        
-        /* Create an IRCMessage object and add it to the chat buffer. */
-        NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
-        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                           OfType:ET_PRIVMSG
-                                                   inConversation:channel
-                                                         bySender:sender
-                                                           atTime:now];
-        [channel addMessageToConversation:message];
-        
-    } else {
-        IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-        NSString *nameOfQuery = [recipientString caseInsensitiveCompare:client.currentUserOnConnection.nick] != NSOrderedSame ? recipientString : sender.nick;
-        
-        [IRCConversation getConversationOrCreate:nameOfQuery onClient:client withCompletionHandler:^(IRCConversation *conversation) {
-            /* Create an IRCMessage object and add it to the chat buffer */
-            NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
-            IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                               OfType:ET_PRIVMSG
-                                                       inConversation:conversation
-                                                             bySender:sender
-                                                               atTime:now];
-            
-            [conversation addMessageToConversation:message];
-        }];
-        
-    }
+    [IRCConversation getConversationOrCreate:[[message conversation] name] onClient:[message client] withCompletionHandler:^(IRCConversation *conversation) {
+        message.conversation = conversation;
+        [conversation addMessageToConversation:message];
+    }];
 }
 
-+ (void)userReceivedCTCPMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[4])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
++ (void)userReceivedCTCPMessage:(IRCMessage *)message
 {
-    
-    /* Consume the begining CTCP character (0x01) */
-    message++;
-    
-    /* Make a copy of the string */
-    char* messageCopy = malloc(strlen(message)+1);
-    strcpy(messageCopy, message);
-    
-    /* Iterate to the first space or the end of the message to get the "CTCP command" received. */
-    int commandLength = 1;
-    while (*message != ' ' && *message != '\0' && *message != '\001') {
-        commandLength++;
-        message++;
-    }
-    
-    /* Get past the next space (if there is one) */
-    message++;
-    
-    if (commandLength > 0) {
-        /* Get the CTCP command by copying the range we calculated earlier */
-        char* ctcpCommand = malloc(commandLength);
-        strlcpy(ctcpCommand, messageCopy, commandLength);
-        ctcpCommand[commandLength +1] = '\0';
+    /* Check that the message contains both CTCP characters and at least one other character */
+    if ([[message message] length] > 3) {
+        /* Consume the begining and ending CTCP character (0x01) */
+        message.message = [[message message] substringWithRange:NSMakeRange(1, [[message message] length] - 2)];
         
-        if (strcmp(ctcpCommand, "ACTION") == 0) {
-            /* This is a CTCP ACTION, also known as an action message or a /me. We will send this to it's own handler.  */
-            [self userReceivedACTIONMessage:message onRecepient:recepient byUser:senderDict onClient:client withTags:tags];
-            free(ctcpCommand);
-            free(messageCopy);
-            return;
-        } else if (strcmp(ctcpCommand, "VERSION") == 0) {
+        NSMutableArray *messageComponents = [[[message message] componentsSeparatedByString:@" "] mutableCopy];
+        
+        if ([[messageComponents objectAtIndex:0] isEqualToString:@"ACTION"]) {
+            [messageComponents removeObjectAtIndex:0];
+            message.message = [messageComponents componentsJoinedByString:@" "];
             
-        }
-        free(ctcpCommand);
-    }
-    NSString *messageString = [NSString stringWithCString:messageCopy usingEncodingPreference:client.configuration];
-    NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:client.configuration];
-    
-    /* Get the timestamp from the message or create one if it is not available. */
-    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
-    
-    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
-    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
-    
-    if ([recipientString isValidChannelName:client]) {
-        IRCChannel *channel = [IRCChannel getChannelOrCreate:recipientString onClient:client];
-        
-        IRCUser *sender = [IRCUser fromNickname:senderDict[0] onChannel:channel];
-        if (sender == nil) {
-            sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-        }
-        
-        /* Create an IRCMessage object and add it to the chat buffer. */
-        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                           OfType:ET_CTCP
-                                                   inConversation:channel
-                                                         bySender:sender
-                                                           atTime:now];
-        [channel addMessageToConversation:message];
-    } else {
-        IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-        [IRCConversation getConversationOrCreate:sender.nick onClient:client withCompletionHandler:^(IRCConversation *conversation) {
-            /* Create an IRCMessage object and add it to the chat buffer. */
-            NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
-            IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                               OfType:ET_CTCP
-                                                       inConversation:conversation
-                                                             bySender:sender
-                                                               atTime:now];
+            [self userReceivedACTIONMessage:message];
+        } else {
+            message.message = [messageComponents objectAtIndex:0];
+            message.messageType = ET_CTCP;
             
-            [conversation addMessageToConversation:message];
-        }];
-        
-    }
-    free(messageCopy);
-}
-
-+ (void)userReceivedACTIONMessage:(const char *)message onRecepient:(char *)recepient byUser:(const char *[3])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
-{
-    NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:[client configuration]];
-    IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-    
-    /* Get the timestamp from the message or create one if it is not available. */
-    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
-    
-    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
-    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
-    
-    /* Check if this message is a channel message or a private message */
-    if ([recipientString isValidChannelName:client]) {
-        /* Get the channel object associated with this channel */
-        IRCChannel *channel = [IRCChannel getChannelOrCreate:recipientString onClient:client];
-        
-        /* Create an IRCMessage object and add it to the chat buffer. */
-        NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
-        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                           OfType:ET_ACTION
-                                                   inConversation:channel
-                                                         bySender:sender
-                                                           atTime:now];
-        [channel addMessageToConversation:message];
-        
-    } else {
-        [IRCConversation getConversationOrCreate:recipientString onClient:client withCompletionHandler:^(IRCConversation *conversation) {
-            /* Create an IRCMessage object and add it to the chat buffer. */
-            NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
-            IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                               OfType:ET_ACTION
-                                                       inConversation:conversation
-                                                             bySender:sender
-                                                               atTime:now];
-            [conversation addMessageToConversation:message];
-        }];
-    }
-}
-
-+ (void)userReceivedNOTICE:(const char *)message onRecepient:(char *)recepient byUser:(const char *[3])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags isServerMessage:(BOOL)isServer;
-{
-    /* Check if the message begins and ends with a 0x01 character, denoting this is a CTCP reply. */
-    if (*message == '\001' && message[strlen(message) -1] == '\001') {
-        [self userReceivedCTCPReply:message onRecepient:recepient byUser:senderDict onClient:client withTags:tags];
-        return;
-    }
-    
-    NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:[client configuration]];
-    
-    /* Get the timestamp from the message or create one if it is not available. */
-    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
-    
-    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
-    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
-    
-    int messageType = isServer ? ET_SERVERNOTICE : ET_NOTICE;
-    
-    /* Check if this message is a channel message or a private message */
-    if ([recipientString isValidChannelName:client]) {
-        /* Get the channel object associated with this channel */
-        IRCChannel *channel = [IRCChannel getChannelOrCreate:recipientString onClient:client];
-        
-        IRCUser *sender = [IRCUser fromNickname:senderDict[0] onChannel:channel];
-        if (sender == nil) {
-            sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-        }
-        
-        /* Create an IRCMessage object and add it to the chat buffer. */
-        NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
-        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                           OfType:messageType
-                                                   inConversation:channel
-                                                         bySender:sender
-                                                           atTime:now];
-        [channel addMessageToConversation:message];
-        
-    } else {
-        IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-        if (messageType != ET_SERVERNOTICE) {
-            [IRCConversation getConversationOrCreate:sender.nick onClient:client withCompletionHandler:^(IRCConversation *conversation) {
-                /* Create an IRCMessage object and add it to the chat buffer. */
-                NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
-                IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                                   OfType:messageType
-                                                           inConversation:conversation
-                                                                 bySender:sender
-                                                                   atTime:now];
-                
+            [IRCConversation getConversationOrCreate:[[message conversation] name] onClient:[message client] withCompletionHandler:^(IRCConversation *conversation) {
+                message.conversation = conversation;
                 [conversation addMessageToConversation:message];
             }];
         }
     }
 }
-    
-+ (void)userReceivedCTCPReply:(const char *)message onRecepient:(char *)recepient byUser:(const char *[3])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
+
++ (void)userReceivedACTIONMessage:(IRCMessage *)message
 {
-    NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
-    NSString *recipientString = [NSString stringWithCString:recepient usingEncodingPreference:client.configuration];
+    message.messageType = ET_ACTION;
     
-    /* Get the timestamp from the message or create one if it is not available. */
-    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    [IRCConversation getConversationOrCreate:[[message conversation] name] onClient:[message client] withCompletionHandler:^(IRCConversation *conversation) {
+        message.conversation = conversation;
+        [conversation addMessageToConversation:message];
+    }];
+}
+
++ (void)userReceivedNotice:(IRCMessage *)message
+{
+    if ([[message message] hasPrefix:@"\001"] && [[message message] hasSuffix:@"\001"]) {
+        [self userReceivedCTCPReply:message];
+        return;
+    }
     
-    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
-    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
+    AssertIsNotServerMessage(message);
     
-    if ([recipientString isValidChannelName:client]) {
-        IRCChannel *channel = [IRCChannel getChannelOrCreate:recipientString onClient:client];
+    message.messageType = ET_NOTICE;
+    
+    [IRCConversation getConversationOrCreate:[[message conversation] name] onClient:[message client] withCompletionHandler:^(IRCConversation *conversation) {
+        message.conversation = conversation;
+        [conversation addMessageToConversation:message];
+    }];
+}
+
++ (void)userReceivedCTCPReply:(IRCMessage *)message
+{
+    AssertIsNotServerMessage(message);
+    
+    /* Check that the message contains both CTCP characters and at least one other character */
+    if ([[message message] length] > 3) {
+        message.message = [[message message] substringWithRange:NSMakeRange(1, [[message message] length] - 2)];
+        NSMutableArray *messageComponents = [[[message message] componentsSeparatedByString:@" "] mutableCopy];
         
-        IRCUser *sender = [IRCUser fromNickname:senderDict[0] onChannel:channel];
-        if (sender == nil) {
-            sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-        }
+        message.message = [messageComponents objectAtIndex:0];
+        message.messageType = ET_CTCPREPLY;
         
-        /* Create an IRCMessage object and add it to the chat buffer. */
-        IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                           OfType:ET_CTCPREPLY
-                                                   inConversation:channel
-                                                         bySender:sender
-                                                           atTime:now];
-        [channel addMessageToConversation:message];
-    } else {
-        IRCUser *sender = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-        [IRCConversation getConversationOrCreate:sender.nick onClient:client withCompletionHandler:^(IRCConversation *conversation) {
-            /* Create an IRCMessage object and add it to the chat buffer. */
-            NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
-            IRCMessage *message = [[IRCMessage alloc] initWithMessage:messageString
-                                                               OfType:ET_CTCPREPLY
-                                                       inConversation:conversation
-                                                             bySender:sender
-                                                               atTime:now];
-            
+        [IRCConversation getConversationOrCreate:[[message conversation] name] onClient:[message client] withCompletionHandler:^(IRCConversation *conversation) {
+            message.conversation = conversation;
             [conversation addMessageToConversation:message];
         }];
     }
 }
 
-+ (void)userReceivedJOIN:(const char *[3])senderDict onChannel:(const char *)rchannel onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
++ (void)userReceivedJoinOnChannel:(IRCMessage *)message
 {
-    /* Get the user that performed the JOIN */
-    IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-    NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
-    IRCChannel *channel =  [IRCChannel fromString:channelName withClient:client];
-    if ([[user nick] caseInsensitiveCompare:client.currentUserOnConnection.nick] == NSOrderedSame) {
+    IRCChannel *channel = (IRCChannel *)message.conversation;
+    if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
-        [client.connection send:[NSString stringWithFormat:@"WHO %@", channelName]];
-        [client.connection send:[NSString stringWithFormat:@"MODE %@", channelName]];
+        [message.client.connection send:[NSString stringWithFormat:@"WHO %@", message.conversation.name]];
+        [message.client.connection send:[NSString stringWithFormat:@"MODE %@", message.conversation.name]];
+        
         channel.isJoinedByUser = YES;
+        message.conversation = channel;
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [controller reloadClient:client];
+            [controller reloadClient:message.client];
         });
     }
     
-    /* Get the timestamp from the message or create one if it is not available. */
-    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    message.messageType = ET_JOIN;
+    [[channel users] addObject:[message sender]];
+    message.conversation = channel;
     
-    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
-    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
-    
-    /* Create an IRCMessage object and add it to the chat buffer. */
-    IRCMessage *message = [[IRCMessage alloc] initWithMessage:nil
-                                                       OfType:ET_JOIN
-                                               inConversation:channel
-                                                     bySender:user
-                                                       atTime:now];
-    [channel addMessageToConversation:message];
-    
-    [[channel users] addObject:user];
+    [[message conversation] addMessageToConversation:message];
 }
 
-+ (void)userReceivedPART:(const char *[3])senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client withMessage:(const char *)message withTags:(NSMutableDictionary *)tags
++ (void)userReceivedPartChannel:(IRCMessage *)message
 {
-    /* Get the user that performed the PART */
-    IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-    NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
-    IRCChannel *channel =  [IRCChannel fromString:channelName withClient:client];
-    if ([[user nick] caseInsensitiveCompare:client.currentUserOnConnection.nick] == NSOrderedSame) {
+    IRCChannel *channel = (IRCChannel *)message.conversation;
+    if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         
         /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
         if (channel != nil) {
             channel.isJoinedByUser = NO;
             dispatch_async(dispatch_get_main_queue(), ^{
-                [controller reloadClient:client];
+                [controller reloadClient:message.client];
             });
         }
     } else {
-        [channel removeUserByName:[user nick]];
+        [channel removeUserByName:[[message sender] nick]];
     }
     
-    /* Get the timestamp from the message or create one if it is not available. */
-    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
-    
-    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
-    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
-    
-    NSString *partMessage = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
-    
-    /* Create an IRCMessage object and add it to the chat buffer. */
-    IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:partMessage
-                                                       OfType:ET_PART
-                                               inConversation:channel
-                                                     bySender:user
-                                                       atTime:now];
-    [channel addMessageToConversation:messageObject];
+    message.messageType = ET_PART;
+    message.conversation = channel;
+    [[message conversation] addMessageToConversation:message];
 }
 
-+ (void)userReceivedNickchange:(const char *[3])senderDict toNick:(const char *)newNick onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
++ (void)userReceivedNickChange:(IRCMessage *)message
 {
-    IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-    if ([[user nick] caseInsensitiveCompare:client.currentUserOnConnection.nick] == NSOrderedSame) {
-        client.currentUserOnConnection.nick     =   [NSString stringWithCString:newNick usingEncodingPreference:client.configuration];
-        client.currentUserOnConnection.username =   [NSString stringWithCString:senderDict[1] usingEncodingPreference:client.configuration];
-        client.currentUserOnConnection.hostname =   [NSString stringWithCString:senderDict[2] usingEncodingPreference:client.configuration];
+    if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
+        message.client.currentUserOnConnection.nick     = message.message;
+        message.client.currentUserOnConnection.username = message.sender.username;
+        message.client.currentUserOnConnection.hostname = message.sender.hostname;
     }
     
-    /* Get the timestamp from the message or create one if it is not available. */
-    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
+    message.messageType = ET_NICK;
     
-    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
-    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
-    
-    NSString *newNickString = [NSString stringWithCString:newNick usingEncodingPreference:client.configuration];
-    
-    for (IRCChannel *channel in [client getChannels]) {
-        IRCUser *userOnChannel = [IRCUser fromNickname:senderDict[0] onChannel:channel];
+    for (IRCChannel *channel in [message.client getChannels]) {
+        IRCUser *userOnChannel = [IRCUser fromNickname:message.sender.nick onChannel:channel];
         if (userOnChannel) {
-            userOnChannel.nick = newNickString;
+            IRCMessage *nickMessage = [message copy];
+            nickMessage.conversation = channel;
+            
+            userOnChannel.nick = message.message;
             [channel removeUserByName:[userOnChannel nick]];
             [channel.users addObject:userOnChannel];
             [channel sortUserlist];
             
-            /* Create an IRCMessage object and add it to the chat buffer. */
-            IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:newNickString
-                                                                     OfType:ET_NICK
-                                                             inConversation:channel
-                                                                   bySender:user
-                                                                     atTime:now];
-            
-            [channel addMessageToConversation:messageObject];
+            [nickMessage.conversation addMessageToConversation:nickMessage];
         }
     }
     
-    for (IRCConversation *conversation in [client getQueries]) {
-        if ([[conversation name] caseInsensitiveCompare:[user nick]] == NSOrderedSame) {
+    for (IRCConversation *conversation in [message.client getQueries]) {
+        if ([[conversation name] caseInsensitiveCompare:[message.sender nick]] == NSOrderedSame) {
             IRCConversation *conversationWithChanges = conversation;
-            conversationWithChanges.name = newNickString;
+            conversationWithChanges.name = message.message;
+            IRCMessage *nickMessage = [message copy];
+            nickMessage.conversation = conversation;
             
-            [[client getQueries] removeObject:conversation];
-            [[client getQueries] addObject:conversationWithChanges];
+            [[message.client getQueries] removeObject:conversation];
+            [[message.client getQueries] addObject:conversationWithChanges];
             
-            /* Create an IRCMessage object and add it to the chat buffer. */
-            IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:newNickString
-                                                                     OfType:ET_NICK
-                                                             inConversation:conversation
-                                                                   bySender:user
-                                                                     atTime:now];
-            
-            [conversation addMessageToConversation:messageObject];
+            [nickMessage.conversation addMessageToConversation:nickMessage];
         }
     }
+    
 }
 
-+ (void)userReceivedKICK:(const char *[3])senderDict onChannel:(char *)rchannel onClient:(IRCClient *)client withMessage:(const char *)message withTags:(NSMutableDictionary *)tags
++ (void)userReceivedKickMessage:(IRCMessage *)message
 {
-    const char *pointerBeforeIteration = message;
-    int lengthOfKickedUser = 0;
-    while (*message != ' ' && *message != '\0') {
-        lengthOfKickedUser++;
-        message++;
-    }
-    char* kickedUserChar = malloc(lengthOfKickedUser + 1);
-    strncpy(kickedUserChar, pointerBeforeIteration, lengthOfKickedUser);
-    kickedUserChar[lengthOfKickedUser] = '\0';
+    NSMutableArray *messageComponents = [[[message message] componentsSeparatedByString:@" "] mutableCopy];
+    NSString *kickedUserNickname = [messageComponents objectAtIndex:0];
+    [messageComponents removeObjectAtIndex:0];
     
-    message++;
-    
-    if (*message == ':') {
-        message++;
+    NSString *kickMessage = [messageComponents componentsJoinedByString:@" "];
+    if ([kickMessage hasPrefix:@":"]) {
+        kickMessage = [kickMessage substringFromIndex:1];
     }
     
-    /* Get the user that performed the KICK  */
-    NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
-    IRCChannel *channel =  [IRCChannel fromString:channelName withClient:client];
-    IRCUser *user = [IRCUser fromNickname:senderDict[0] onChannel:channel];
+    IRCUser *kickedUser = [IRCUser fromNickname:kickedUserNickname onChannel:(IRCChannel *)message.conversation];
+    IRCChannel *channel = (IRCChannel *)message.conversation;
     
-    IRCUser *kickedUser = [IRCUser fromNickname:kickedUserChar onChannel:channel];
-    
-    if ([[kickedUser nick] caseInsensitiveCompare:client.currentUserOnConnection.nick] == NSOrderedSame) {
+    if ([[kickedUser nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         
         /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
         if (channel != nil) {
             channel.isJoinedByUser = NO;
             dispatch_async(dispatch_get_main_queue(), ^{
-                [controller reloadClient:client];
+                [controller reloadClient:message.client];
             });
         }
     } else {
         [[channel users] removeObject:channel];
     }
     
-    NSString *kickMessage = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
+    IRCKickMessage *kick = [[IRCKickMessage alloc] initWithMessage:kickMessage
+                                                    inConversation:channel
+                                                        kickedUser:kickedUser
+                                                          bySender:message.sender
+                                                            atTime:message.timestamp
+                                                          withTags:message.tags
+                                                   isServerMessage:NO
+                                                          onClient:message.client];
     
-    /* Get the timestamp from the message or create one if it is not available. */
-    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
-    
-    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
-    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
-    
-    /* Create an IRCMessage object and add it to the chat buffer. */
-    IRCKickMessage *messageObject = [[IRCKickMessage alloc] initWithMessage:kickMessage
-                                                             inConversation:channel
-                                                                 kickedUser:kickedUser
-                                                                   bySender:user
-                                                                     atTime:now];
-    
-    [channel addMessageToConversation:messageObject];
-    free(kickedUserChar);
+    [channel addMessageToConversation:kick];
 }
 
-+ (void)userReceivedQUIT:(const char*[3])senderDict onClient:(IRCClient *)client withMessage:(const char *)message withTags:(NSMutableDictionary *)tags
++ (void)userReceivedQuitMessage:(IRCMessage *)message
 {
-    NSString *nickString = [NSString stringWithCString:senderDict[0] usingEncodingPreference:client.configuration];
-    NSString *userString = [NSString stringWithCString:senderDict[1] usingEncodingPreference:client.configuration];
-    NSString *hostString = [NSString stringWithCString:senderDict[2] usingEncodingPreference:client.configuration];
-    NSString *quitMessage = [NSString stringWithCString:message usingEncodingPreference:client.configuration];
-    IRCUser *user = [[IRCUser alloc] initWithNickname:nickString andUsername:userString andHostname:hostString andRealname:nil onClient:client];
-    
-    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
-    
-    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
-    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
-    
-    for (IRCChannel *channel in [client getChannels]) {
-        IRCUser *userOnChannel = [IRCUser fromNickname:senderDict[0] onChannel:channel];
+    for (IRCChannel *channel in [message.client getChannels]) {
+        IRCUser *userOnChannel = [IRCUser fromNickname:message.sender.nick onChannel:channel];
         if (userOnChannel) {
             [channel removeUserByName:[userOnChannel nick]];
             
             /* Create an IRCMessage object and add it to the chat buffer. */
-            IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:quitMessage
-                                                                     OfType:ET_QUIT
-                                                             inConversation:channel
-                                                                   bySender:user
-                                                                     atTime:now];
+            IRCMessage *quitMessage = [message copy];
+            quitMessage.conversation = channel;
             
-            [channel addMessageToConversation:messageObject];
+            [channel addMessageToConversation:quitMessage];
         }
     }
     
-    for (IRCConversation *conversation in [client getQueries]) {
-        if ([[conversation name] caseInsensitiveCompare:nickString] == NSOrderedSame) {
+    for (IRCConversation *conversation in [message.client getQueries]) {
+        if ([[conversation name] caseInsensitiveCompare:message.sender.nick] == NSOrderedSame) {
             
             IRCConversation *conversationWithChanges = conversation;
             conversationWithChanges.conversationPartnerIsOnline = NO;
-            [[client getQueries] removeObject:conversation];
-            [[client getQueries] addObject:conversationWithChanges];
+            [[message.client getQueries] removeObject:conversation];
+            [[message.client getQueries] addObject:conversationWithChanges];
             
-            /* Create an IRCMessage object and add it to the chat buffer. */
-            IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:quitMessage
-                                                                         OfType:ET_QUIT
-                                                                 inConversation:conversation
-                                                                       bySender:user
-                                                                         atTime:now];
+            IRCMessage *quitMessage = [message copy];
+            quitMessage.conversation = conversationWithChanges;
             
-            [conversation addMessageToConversation:messageObject];
+            [conversationWithChanges addMessageToConversation:quitMessage];
         }
     }
 }
 
-+ (void)userReceivedModesOnChannel:(const char*)modes inChannel:(char *)rchannel byUser:(const char *[3])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
++ (void)userReceivedModesOnChannel:(IRCMessage *)message
 {
-    NSString *modeString = [NSString stringWithCString:modes usingEncodingPreference:client.configuration];
-    NSArray *modeComponents = [modeString componentsSeparatedByString:@" "];
-    int componentIndex = 1;
-    BOOL isGrantedMode = NO;
-    
-    NSString *channelName = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
-    
-    if ([channelName isValidChannelName:client] == NO)
-        return;
-    
-    IRCChannel *channel = [IRCChannel fromString:channelName withClient:client];
-    
-    while (*modes != ' ' && *modes != '\0') {
-        switch (*modes) {
-            case '+':
-                isGrantedMode = YES;
-                break;
-                
-            case '-':
-                isGrantedMode = NO;
-                break;
-                
-            case 'q': case 'a': case 'o': case 'h': case 'v':
-                if ([modeComponents count] >= componentIndex - 1) {
-                    NSString *nickname = [modeComponents objectAtIndex:componentIndex];
+    if ([[message conversation] isKindOfClass:[IRCChannel class]]) {
+        NSArray *modeComponents = [message.message componentsSeparatedByString:@" "];
+        BOOL isGrantedMode = NO;
+        int componentIndex = 1;
+        
+        IRCChannel *channel = (IRCChannel *)message.conversation;
+        
+        const char* modes = [[modeComponents objectAtIndex:0] UTF8String];
+        
+        while (*modes != ' ' && *modes != '\0') {
+            switch (*modes) {
+                case '+':
+                    isGrantedMode = YES;
+                    break;
                     
-                    IRCUser *user = [IRCUser fromNicknameString:nickname onChannel:channel];
-                    if (user != nil) {
-                        [user setPrivilegeMode:modes granted:isGrantedMode];
+                case '-':
+                    isGrantedMode = NO;
+                    break;
+                    
+                case 'q': case 'a': case 'o': case 'h': case 'v':
+                    if ([modeComponents count] >= componentIndex - 1) {
+                        NSString *nickname = [modeComponents objectAtIndex:componentIndex];
+                        
+                        IRCUser *user = [IRCUser fromNickname:nickname onChannel:channel];
+                        if (user != nil) {
+                            [user setPrivilegeMode:modes granted:isGrantedMode];
+                        }
                     }
-                }
-                componentIndex++;
-                break;
-                
-            case 'b':
-                break;
-                
-            case 'k':
-                if (isGrantedMode) {
-                    if ([channel.configuration.passwordReference length] == 0) {
-                        channel.configuration.passwordReference = [[NSUUID UUID] UUIDString];
+                    componentIndex++;
+                    break;
+                    
+                case 'b':
+                    break;
+                    
+                case 'k':
+                    if (isGrantedMode) {
+                        if ([message.conversation.configuration.passwordReference length] == 0) {
+                            message.conversation.configuration.passwordReference = [[NSUUID UUID] UUIDString];
+                        }
+                        
+                        [SSKeychain setPassword:[modeComponents objectAtIndex:componentIndex] forService:@"conversation" account:message.conversation.configuration.passwordReference];
+                    } else {
+                        if ([message.conversation.configuration.passwordReference length] > 0) {
+                            [SSKeychain deletePasswordForService:@"conversation" account:message.conversation.configuration.passwordReference];
+                            message.conversation.configuration.passwordReference = @"";
+                        }
                     }
                     
-                    [SSKeychain setPassword:[modeComponents objectAtIndex:componentIndex] forService:@"conversation" account:channel.configuration.passwordReference];
-                } else {
-                    if ([channel.configuration.passwordReference length] > 0) {
-                        [SSKeychain deletePasswordForService:@"conversation" account:channel.configuration.passwordReference];
-                        channel.configuration.passwordReference = @"";
+                    componentIndex++;
+                    
+                default:
+                    if (isGrantedMode) {
+                        [channel.channelModes addObject:[NSString stringWithFormat:@"%c", *modes]];
+                    } else {
+                        [channel.channelModes removeObject:[NSString stringWithFormat:@"%c", *modes]];
                     }
-                }
-                
-                componentIndex++;
-                
-                
-            default:
-                if (isGrantedMode) {
-                    [channel.channelModes addObject:[NSString stringWithFormat:@"%c", *modes]];
-                } else {
-                    [channel.channelModes removeObject:[NSString stringWithFormat:@"%c", *modes]];
-                }
-                break;
+                    break;
+            }
+            modes++;
         }
-        modes++;
+        
+        message.conversation = channel;
+        message.messageType = ET_MODE;
+        [message.conversation addMessageToConversation:message];
     }
-    IRCUser *user = [IRCUser fromNickname:senderDict[0] onChannel:channel];
-    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
-    
-    IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:modeString
-                                                             OfType:ET_MODE
-                                                     inConversation:channel
-                                                           bySender:user
-                                                             atTime:now];
-    
-    [channel addMessageToConversation:messageObject];
 }
 
-+ (void)userReceivedTOPIC:(const char *)topic onChannel:(char *)rchannel byUser:(const char *[3])senderDict onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
++ (void)userReceivedChannelTopic:(IRCMessage *)message
 {
-    NSString *topicString = [NSString stringWithCString:topic usingEncodingPreference:[client configuration]];
+    IRCChannel *channel = (IRCChannel *)[message conversation];
+    channel.topic = message.message;
+    message.conversation = channel;
     
-    /* If there is no sender this is a topic message sent as the user joins the channel. We must process it differently */
-    if (senderDict == nil) {
-        NSMutableArray *topicComponents = [[topicString componentsSeparatedByString:@" "] mutableCopy];
-        
-        /* Get the channel name from the first "word" */
-        NSString *channelString = topicComponents[0];
-        [topicComponents removeObjectAtIndex:0];
-        
-        /* Get the topic message by removing the first "word" and consuming the colon in front of it. */
-        topicString = [topicComponents componentsJoinedByString:@" "];
-        topicString = [topicString substringFromIndex:1];
-        
-        /* Update the channel topic */
-        IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:channelString withClient:client];
-        if (channel != nil) {
-            channel.topic = topicString;
-        }
-    } else {
-        /* A user has just set the topic, update the channel topic and send a topic message to the user interface. */
-        NSString *channelString = [NSString stringWithCString:rchannel usingEncodingPreference:[client configuration]];
-        IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:channelString withClient:client];
-        
-        if (channel != nil) {
-            channel.topic = topicString;
-            
-            IRCUser *user = [IRCUser fromNickname:senderDict[0] onChannel:channel];
-            NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
-            
-            IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:topicString
-                                                                     OfType:ET_TOPIC
-                                                             inConversation:channel
-                                                                   bySender:user
-                                                                     atTime:now];
-            
-            [channel addMessageToConversation:messageObject];
-        }
-    }
-    
+    [message.conversation addMessageToConversation:message];
 }
 
-+ (void)clientReceivedISONResponse:(const char *)message onClient:(IRCClient *)client;
++ (void)clientReceivedISONResponse:(IRCMessage *)message
 {
-    
-    NSString *messageString = [NSString stringWithCString:message usingEncodingPreference:[client configuration]];
-    NSArray *users = [messageString componentsSeparatedByString:@" "];
+    NSArray *users = [message.message componentsSeparatedByString:@" "];
     
     ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     
     int indexOfItem = 0;
-    for (IRCConversation *conversation in client.getQueries) {
-    
+    for (IRCConversation *conversation in message.client.getQueries) {
         if ([users containsObject:conversation.name]) {
             conversation.conversationPartnerIsOnline = YES;
             
             /* Set the conversation item in "enabled" mode. */
             dispatch_async(dispatch_get_main_queue(), ^{
-                [controller reloadClient:client];
+                [controller reloadClient:message.client];
             });
         } else {
             conversation.conversationPartnerIsOnline = NO;
             
             /* Set the conversation item in "disabled" mode */
             dispatch_async(dispatch_get_main_queue(), ^{
-                [controller reloadClient:client];
+                [controller reloadClient:message.client];
             });
         }
         indexOfItem++;
     }
     
-    if ([client.getQueries count] > 0) {
+    if ([message.client.getQueries count] > 0) {
         [NSTimer scheduledTimerWithTimeInterval:30.0
-                                         target:client
+                                         target:message.client
                                        selector:@selector(validateQueryStatusOnAllItems)
                                        userInfo:nil
                                         repeats:NO];
@@ -878,7 +551,7 @@
     NSString *realname  = [messageComponents componentsJoinedByString:@" "];
     
     IRCChannel *ircChannel = [IRCChannel fromString:channel withClient:client];
-    IRCUser *user = [IRCUser fromNicknameString:nickname onChannel:ircChannel];
+    IRCUser *user = [IRCUser fromNickname:nickname onChannel:ircChannel];
     if (user == nil) {
         user = [[IRCUser alloc] initWithNickname:nickname andUsername:username andHostname:hostname andRealname:realname onClient:client];
     }
@@ -927,21 +600,9 @@
     });
 }
 
-+ (void)clientReceivedModesForChannel:(const char*)modes inChannel:(char *)rchannel onClient:(IRCClient *)client
++ (void)clientReceivedModesForChannel:(IRCMessage *)message
 {
-    NSString *channelString = [NSString stringWithCString:rchannel usingEncodingPreference:client.configuration];
     
-    if ([channelString isEqualToString:[client currentUserOnConnection].nick])
-        return;
-    
-    IRCChannel *channel = [IRCChannel fromString:channelString withClient:client];
-    
-    channel.channelModes = [[NSMutableArray alloc] init];
-    
-    while (*modes != '\0' && *modes != ' ') {
-        NSString *mode = [NSString stringWithFormat:@"%c", *modes];
-        [channel.channelModes addObject:mode];
-    }
 }
 
 @end

@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2014, Tobias Pollmann, Alex Sørlie Glomsaas.
+ Copyright (c) 2015, Tobias Pollmann, Alex Sørlie Glomsaas.
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modification,
@@ -29,56 +29,9 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AppDelegate.h"
-#import "IRCChannel.h"
-#import "NSString+Methods.h"
 
-@class IRCClient;
-@class IRCUser;
-@class IRCMessage;
-@class IRCQuitMessage;
-@class ConversationListViewController;
+@interface IRCCharacterSets : NSObject
 
-@interface Messages : NSObject
-
-+ (void)clientReceivedAuthenticationMessage:(IRCMessage *)message;
-
-+ (void)clientReceivedAuthenticationAccepted:(IRCMessage *)message;
-
-+ (void)clientreceivedAuthenticationAborted:(IRCMessage *)message;
-
-+ (void)clientReceivedAuthenticationError:(IRCMessage *)message;
-
-+ (void)clientReceivedCAPMessage:(IRCMessage *)message;
-
-+ (void)userReceivedMessage:(IRCMessage *)message;
-
-+ (void)userReceivedCTCPMessage:(IRCMessage *)message;
-
-+ (void)userReceivedACTIONMessage:(IRCMessage *)message;
-
-+ (void)userReceivedNotice:(IRCMessage *)message;
-
-+ (void)userReceivedJoinOnChannel:(IRCMessage *)message;
-
-+ (void)userReceivedPartChannel:(IRCMessage *)message;
-
-+ (void)userReceivedNickChange:(IRCMessage *)message;
-
-+ (void)userReceivedQuitMessage:(IRCMessage *)message;
-
-+ (void)userReceivedKickMessage:(IRCMessage *)message;
-
-+ (void)userReceivedChannelTopic:(IRCMessage *)message;
-
-+ (void)userReceivedModesOnChannel:(IRCMessage *)message;
-
-+ (void)clientReceivedISONResponse:(IRCMessage *)message;
-
-+ (void)clientReceivedWHOReply:(NSString *)line onClient:(IRCClient *)client;
-
-+ (void)clientReceivedServerPasswordMismatchError:(IRCClient *)client;
-
-+ (void)clientReceivedModesForChannel:(IRCMessage *)message;
+@property (nonatomic) NSCharacterSet *hostnameCharacterSet;
 
 @end

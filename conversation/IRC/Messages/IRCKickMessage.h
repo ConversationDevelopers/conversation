@@ -34,6 +34,6 @@
 
 @property (nonatomic) IRCUser *kickedUser;
 
-- (instancetype) initWithMessage:(NSString *)message inConversation:(IRCConversation *)conversation kickedUser:(IRCUser *)user bySender:(IRCUser *)sender atTime:(NSDate *)timestamp;
+- (instancetype) initWithMessage:(NSString *)message inConversation:(IRCConversation *)conversation kickedUser:(IRCUser *)user bySender:(IRCUser *)sender atTime:(NSDate *)timestamp withTags:(NSDictionary *)tags isServerMessage:(BOOL)isServerMessage onClient:(IRCClient *)client;
 
 @end

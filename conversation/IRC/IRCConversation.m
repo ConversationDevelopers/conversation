@@ -49,18 +49,32 @@
     return nil;
 }
 
-+ (void) getConversationOrCreate:(NSString *)nickname onClient:(IRCClient *)client withCompletionHandler:(void (^)(IRCConversation *))completionHandler
++ (void) getConversationOrCreate:(NSString *)name onClient:(IRCClient *)client withCompletionHandler:(void (^)(IRCConversation *))completionHandler
 {
-    __block IRCConversation *conversation = [IRCConversation fromString:nickname withClient:client];
-    if (conversation == nil) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            /* We don't have a query for this message, we need to create one */
-            ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
-            conversation = [controller createConversationWithName:nickname onClient:client];
-            completionHandler(conversation);
-        });
+    if ([name isValidChannelName:client]) {
+        __block IRCChannel *channel = (IRCChannel *) [IRCChannel fromString:name withClient:client];
+        if (channel == nil) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                /* We don't have a query for this message, we need to create one */
+                ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+                [controller joinChannelWithName:name onClient:client];
+                completionHandler(channel);
+            });
+        } else {
+            completionHandler(channel);
+        }
     } else {
-        completionHandler(conversation);
+        __block IRCConversation *conversation = [IRCConversation fromString:name withClient:client];
+        if (conversation == nil) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                /* We don't have a query for this message, we need to create one */
+                ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+                conversation = [controller createConversationWithName:name onClient:client];
+                completionHandler(conversation);
+            });
+        } else {
+            completionHandler(conversation);
+        }
     }
 }
 

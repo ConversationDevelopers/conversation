@@ -116,14 +116,7 @@
     return NO;
 }
 
-+ (IRCUser *)fromNickname:(const char *)sender onChannel:(IRCChannel *)channel
-{
-    NSString *nickString = [NSString stringWithCString:sender usingEncodingPreference:[[channel client] configuration]];
-    
-    return [IRCUser fromNicknameString:nickString onChannel:channel];
-}
-
-+ (IRCUser *)fromNicknameString:(NSString *)sender onChannel:(IRCChannel *)channel
++ (IRCUser *)fromNickname:(NSString *)sender onChannel:(IRCChannel *)channel
 {
     /* Iterate through the userlist and return the first user with the same nickname as the sender. */
     IRCUser *userFromUserlist = nil;
@@ -160,11 +153,6 @@
             break;
     }
     NSLog(@"%d", self.channelPrivilege);
-}
-
-+ (int) channelPrivilege
-{
-    return NORMAL;
 }
 
 

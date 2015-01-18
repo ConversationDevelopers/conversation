@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2014, Tobias Pollmann, Alex Sørlie Glomsaas.
+ Copyright (c) 2015, Tobias Pollmann, Alex Sørlie Glomsaas.
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modification,
@@ -28,18 +28,19 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <UIKit/UIKit.h>
-#import "IRC/IRCClient.h"
-#import "IRC/IRCMessageIndex.h"
-#import "InputCommands.h"
 #import "IRCCharacterSets.h"
-#import "ConversationListViewController.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@implementation IRCCharacterSets
 
-@property (nonatomic) ConversationListViewController *conversationsController;
-@property (strong, nonatomic) UIWindow *window;
-@property (nonatomic) IRCCharacterSets *ircCharacterSets;
-
+- (instancetype)init
+{
+    if ((self = [super init])) {
+        NSMutableCharacterSet *hostnameCharacterSet = [[NSCharacterSet controlCharacterSet] mutableCopy];
+        [hostnameCharacterSet removeCharactersInString:@"\002\003\029\031"];
+        self.hostnameCharacterSet = hostnameCharacterSet;
+        
+        return self;
+    }
+    return nil;
+}
 @end
-

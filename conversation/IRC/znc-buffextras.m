@@ -134,7 +134,10 @@
                                                            OfType:ET_JOIN
                                                    inConversation:channel
                                                          bySender:user
-                                                           atTime:now];
+                                                           atTime:now
+                                                         withTags:tags
+                                                  isServerMessage:NO
+                                                         onClient:client];
         [channel addMessageToConversation:message];
     } else if ([type isEqualToString:@"parted"]) {
         // PART
@@ -151,11 +154,16 @@
             substrRange.length = [partMessage length] - 2;
             partMessage = [partMessage substringWithRange:substrRange];
         }
+        
         IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:partMessage
                                                                  OfType:ET_PART
                                                          inConversation:channel
                                                                bySender:user
-                                                                 atTime:now];
+                                                                 atTime:now
+                                                               withTags:tags
+                                                        isServerMessage:NO
+                                                               onClient:client];
+        
         [channel addMessageToConversation:messageObject];
     } else if ([type isEqualToString:@"is"]) {
         // NICK
@@ -164,7 +172,10 @@
                                                                  OfType:ET_NICK
                                                          inConversation:channel
                                                                bySender:user
-                                                                 atTime:now];
+                                                                 atTime:now
+                                                               withTags:tags
+                                                        isServerMessage:NO
+                                                               onClient:client];
         
         [channel addMessageToConversation:messageObject];
     } else if ([type isEqualToString:@"quit"]) {
@@ -184,7 +195,10 @@
                                                                  OfType:ET_QUIT
                                                          inConversation:channel
                                                                bySender:user
-                                                                 atTime:now];
+                                                                 atTime:now
+                                                               withTags:tags
+                                                        isServerMessage:NO
+                                                               onClient:client];
         
         [channel addMessageToConversation:messageObject];
     }

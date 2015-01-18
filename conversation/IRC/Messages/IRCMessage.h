@@ -36,13 +36,16 @@
 
 @interface IRCMessage : NSObject
 
+@property (nonatomic) IRCClient *client;
 @property (nonatomic) IRCUser *sender;
 @property (nonatomic) NSString *message;
 @property (nonatomic) NSDate *timestamp;
 @property (nonatomic) IRCConversation* conversation;
 @property (nonatomic) NSUInteger messageType;
+@property (nonatomic) NSDictionary *tags;
+@property (nonatomic) BOOL isServerMessage;
 
-- (instancetype) initWithMessage:(NSString *)message OfType:(NSUInteger)type inConversation:(IRCConversation *)conversation bySender:(IRCUser *)sender atTime:(NSDate *)timestamp;
+- (instancetype) initWithMessage:(NSString *)message OfType:(NSUInteger)type inConversation:(IRCConversation *)conversation bySender:(IRCUser *)sender atTime:(NSDate *)timestamp withTags:(NSDictionary *)tags isServerMessage:(BOOL)isServerMessage onClient:(IRCClient *)client;
 
 typedef NS_ENUM(NSUInteger, EventType) {
     ET_ACTION,

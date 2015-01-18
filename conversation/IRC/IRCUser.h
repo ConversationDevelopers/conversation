@@ -54,8 +54,7 @@
 - (int) channelPrivilege;
 - (void)setPrivilegeMode:(const char *)mode granted:(BOOL)granted;
 
-+ (IRCUser *)fromNickname:(const char *)sender onChannel:(IRCChannel *)channel;
-+ (IRCUser *)fromNicknameString:(NSString *)sender onChannel:(IRCChannel *)channel;
++ (IRCUser *)fromNickname:(NSString *)sender onChannel:(IRCChannel *)channel;
 + (NSString *)statusToModeSymbol:(int)status;
 - (NSString *)description;
 - (NSString *)fullhostmask;

@@ -32,7 +32,7 @@
 
 @implementation IRCMessage
 
-- (instancetype) initWithMessage:(NSString *)message OfType:(NSUInteger)type inConversation:(IRCConversation *)conversation bySender:(IRCUser *)sender atTime:(NSDate *)timestamp
+- (instancetype) initWithMessage:(NSString *)message OfType:(NSUInteger)type inConversation:(IRCConversation *)conversation bySender:(IRCUser *)sender atTime:(NSDate *)timestamp withTags:(NSDictionary *)tags isServerMessage:(BOOL)isServerMessage onClient:(IRCClient *)client
 {
     if ((self = [super init])) {
         self.message = message;
@@ -40,6 +40,9 @@
         self.conversation = conversation;
         self.sender = sender;
         self.timestamp = timestamp;
+        self.tags = tags;
+        self.isServerMessage = isServerMessage;
+        self.client = client;
         return self;
     }
     return nil;

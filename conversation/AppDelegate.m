@@ -51,6 +51,8 @@
     [[UITableView appearance] setTintColor:[UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0]];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    self.ircCharacterSets = [[IRCCharacterSets alloc] init];
 
     _conversationsController = [[ConversationListViewController alloc] init];
 

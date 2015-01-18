@@ -356,7 +356,10 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                                           OfType:ET_PRIVMSG
                                                   inConversation:_conversation
                                                         bySender:_conversation.client.currentUserOnConnection
-                                                          atTime:[NSDate date]];
+                                                          atTime:[NSDate date]
+                                                        withTags:[[NSMutableDictionary alloc] init]
+                                                 isServerMessage:NO
+                                                        onClient:_conversation.client];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:ircmsg];
     }

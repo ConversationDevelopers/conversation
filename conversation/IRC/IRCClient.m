@@ -62,7 +62,9 @@
         @"znc.in/server-time-iso",
         @"sasl",
         @"znc.in/playback",
-        @"znc.in/self-message"
+        @"znc.in/self-message",
+        @"extended-join",
+        @"multi-prefix"
     ];
 }
 
@@ -101,9 +103,10 @@
         }.mutableCopy;
         
         self.alternativeNickNameAttempts = 0;
-        self.channels = [[NSMutableArray alloc] init];
-        self.queries = [[NSMutableArray alloc] init];
-        self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
+        
+        self.channels                           = [[NSMutableArray alloc] init];
+        self.queries                            = [[NSMutableArray alloc] init];
+        self.featuresSupportedByServer          = [[NSMutableDictionary alloc] init];
         self.ircv3CapabilitiesSupportedByServer = [[NSMutableArray alloc] init];
         
         return self;
@@ -164,281 +167,172 @@
                     self.configuration.realNameForRegistration]];
 }
 
-- (void)clientDidReceiveData:(const char *)line
+- (void)clientDidReceiveData:(const char*)cline
 {
-    NSLog(@"<< %s", line);
+    NSString *line = [NSString stringWithCString:cline usingEncodingPreference:self.configuration];
+    NSLog(@"<< %@", line);
+    
     BOOL isServerMessage = NO;
     
-    const char* lineBeforeIteration;
-    char* sender;
-    char* nickname;
-    char* username;
-    char* hostname;
-    
-    /* Create raw IRC message to show in the raw log */
-    NSString *rawMessageString = [NSString stringWithCString:line usingEncodingPreference:self.configuration];
-    IRCMessage *rawMessage = [[IRCMessage alloc] initWithMessage:rawMessageString
-                                                       OfType:ET_RAW
-                                               inConversation:nil
-                                                     bySender:nil
-                                                       atTime:[NSDate date]];
-    
+    IRCMessage *rawMessage = [[IRCMessage alloc] initWithMessage:line
+                                                          OfType:ET_RAW
+                                                  inConversation:nil
+                                                        bySender:nil
+                                                          atTime:[NSDate date]
+                                                        withTags:nil
+                                                        isServerMessage:YES
+                                                        onClient:self];
     
     /* Notify the client of the message */
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:rawMessage];
     });
     
-    /* Make a copy of the full message string */
-    lineBeforeIteration = line;
+    NSMutableArray *lineComponents = [[line componentsSeparatedByString:@" "] mutableCopy];
     
     NSMutableDictionary *tagsList = [[NSMutableDictionary alloc] init];
-    if (*line == '@') {
+    if ([line hasPrefix:@"@"]) {
         /* This message starts with a message tag ( http://ircv3.atheme.org/specification/message-tags-3.2 ) */
+        NSArray *tags = [lineComponents objectAtIndex:0];
         
-        line++;
-        lineBeforeIteration++;
-        
-        int tagsLength = 0;
-        
-        /* Pass over the message until we reach a space. This will be our list of tags in this message. */
-        while (*line != ' ' && *line != '\0') {
-            line++;
-            tagsLength++;
-        }
-        
-        char* tags = malloc(tagsLength + 1);
-        strncpy(tags, lineBeforeIteration, tagsLength);
-        tags[tagsLength] = '\0';
-        
-        /* Tags are seperated by semi-colons (;) so we will parse them accordingly. Usually there is only one
-         tag per message, but NSString handles this for us. */
-        NSString *tagsString = [NSString stringWithCString:tags usingEncodingPreference:self.configuration];
-        NSArray *seperatedTags = [tagsString componentsSeparatedByString:@";"];
-        
-        for (NSString *tag in seperatedTags) {
+        for (NSString *tag in tags) {
             if ([tag containsString:@"="]) {
                 /* This tag has a value. We will save the key and value into the dictionary. */
                 NSArray *components = [tag componentsSeparatedByString:@"="];
                 [tagsList setObject:components[1] forKey:components[0]];
             } else {
-                /* This tag does not have a value, only a key. We will save it in the dictionary 
+                /* This tag does not have a value, only a key. We will save it in the dictionary
                  with a default value of "1" */
                 [tagsList setObject:@"1" forKey:tag];
             }
         }
         
-        line++;
-        lineBeforeIteration = line;
+        [lineComponents removeObjectAtIndex:0];
     }
     
-    if (*line == ':') {
-        /* Consume the : at the start of the message. */
-        line++;
-        lineBeforeIteration++;
+    NSString *sendermask = [lineComponents objectAtIndex:0];
+    NSString *nickname = @"";
+    NSString *username = @"";
+    NSString *hostname = @"";
+    
+    BOOL messageWithoutRecipient = NO;
+    
+    if ([sendermask hasPrefix:@":"]) {
+        sendermask = [sendermask substringFromIndex:1];
         
-        long senderLength   = 0;
-        long nicknameLength = 0;
-        long usernameLength = 0;
+        isServerMessage = ! [sendermask getUserHostComponents:&nickname username:&username hostname:&hostname onClient:self];
         
-        
-        /* Pass over the string until we either reach a space, end of message, or an exclamation mark (Part of a user's hostmask) */
-        while (*line != '\0' && *line != ' ' && *line != '!') {
-            nicknameLength++;
-            line++;
-            senderLength++;
-        }
-        /* If there was not an ! in this message and we have reached a space already, the sender was the server, which does not have a hostmask. */
-        if (*line != ' ') {
-            /* Pass over the string until we reach a space, end of message, or an @ sign (Part of the user's hostmask) */
-            while (*line != '\0' && *line != ' ' && *line != '@') {
-                usernameLength++;
-                line++;
-                senderLength++;
-            }
-            /* Pass over the rest of the string leading to a space, to get the position of the host address. */
-            while (*line != '\0' && *line != ' ') {
-                senderLength++;
-                line++;
-            }
-        } else {
-            isServerMessage = YES;
-        }
-        
-        /* Copy the characters of the entire sender */
-        if (senderLength > 0) {
-            sender = malloc(senderLength+1);
-            strncpy(sender, lineBeforeIteration, senderLength);
-            sender[senderLength] = '\0';
-        } else {
-            sender = "";
-        }
-        
-        /* Copy the characters of the nickname range we calculated earlier, and consume the same characters from the string as well as the following '!' */
-        if (nicknameLength > 0) {
-            nickname = malloc(nicknameLength+1);
-            strncpy(nickname, lineBeforeIteration, nicknameLength);
-            nickname[nicknameLength] = '\0';
-            lineBeforeIteration = lineBeforeIteration + nicknameLength + 1;
-        } else {
-            nickname = "";
-        }
-        
-        /* Copy the characters from the username range we calculated earlier, and consume the same characters from the string as well as the following '@' */
-        if (usernameLength > 0) {
-            username = malloc(usernameLength);
-            strncpy(username, lineBeforeIteration, usernameLength -1);
-            username[usernameLength - 1] = '\0';
-            lineBeforeIteration = lineBeforeIteration + usernameLength;
-        } else {
-            username = "";
-        }
-        
-        /* Copy the characters from the hostname range we calculated earlier */
-        long hostnameLength = (senderLength - usernameLength - nicknameLength - 1);
-        if (hostnameLength > 0) {
-            hostname = malloc(hostnameLength+1);
-            strncpy(hostname, lineBeforeIteration, hostnameLength);
-            hostname[hostnameLength] = '\0';
-        } else {
-            hostname = "";
-        }
-        
-        lineBeforeIteration = lineBeforeIteration + hostnameLength + 1;
-        
-        /* Consume the following space leading to the IRC command */
-        line++;
-        
-        free(sender);
-        
+        [lineComponents removeObjectAtIndex:0];
     } else {
-        username = "";
-        hostname = "";
-        nickname = "";
-        lineBeforeIteration = line;
-    }
-    const char *senderDict[] = {
-        nickname,
-        username,
-        hostname
-    };
-    
-        /* Pass over the string to the next space or end of the line to get the range of the IRC command */
-    int commandLength = 0;
-    while (*line != '\0' && *line != ' ') {
-        commandLength++;
-        line++;
-    }
-    
-    /* Copy the characters from the IRC command range we calculated earlier */
-    char* command = malloc(commandLength + 1);
-    strncpy(command, lineBeforeIteration, commandLength);
-    command[commandLength] = '\0';
-    lineBeforeIteration = lineBeforeIteration + commandLength;
-    
-    /* Consume the following space leading to the recepient */
-    line++;
-    lineBeforeIteration++;
-    
-    /* The message may start with a colon. We will trim this before continuing */
-    if (*line == ':') {
-        line++;
-        lineBeforeIteration++;
-    }
-    
-    char* recipient;
-    
-    /* Pass over the string to the next space or end of the line to get the range of the recipient. */
-    const char *lineBeforeRecipient;
-    lineBeforeRecipient = line;
-    
-    int recipientLength = 0;
-    while (*line != '\0' && *line != ' ') {
-        recipientLength++;
-        line++;
-    }
-    
-    /* Copy the characters from the recipient range we calculated earlier */
-    recipient = malloc(recipientLength + 1);
-    strncpy(recipient, lineBeforeIteration, recipientLength);
-    recipient[recipientLength] = '\0';
-    
-    if (*line != '\0') {
-        /* Consume the following space leading to the message */
-        line++;
-        
-        /* The message may start with a colon. We will trim this before continuing */
-        if (*line == ':') {
-            line++;
-        }
-    } else {
-        /* If we have reached the end of the message we will move the pointer back to before the "recipient"
-         so that it will still be useful to commands without a recipient */
-        if (*line == '\0') {
-            line = lineBeforeRecipient;
-        }
-    }
-    if (strlen(nickname) == 0) {
         isServerMessage = YES;
+        messageWithoutRecipient = YES;
     }
     
-    NSString *commandString = [NSString stringWithCString:command usingEncodingPreference:[self configuration]];
-    MessageType commandIndexValue = [IRCMessageIndex indexValueFromString:commandString];
+    NSString *command = [lineComponents objectAtIndex:0];
+    [lineComponents removeObjectAtIndex:0];
+    
+    NSString *recipient;
+    if ([lineComponents count] > 0 && messageWithoutRecipient == NO) {
+        recipient = [lineComponents objectAtIndex:0];
+        [lineComponents removeObjectAtIndex:0];
+    }
+    
+    NSString *message = [lineComponents componentsJoinedByString:@" "];
+    if ([message hasPrefix:@":"]) {
+        message = [message substringFromIndex:1];
+    }
+    
+    /* Get the timestamp from the message or create one if it is not available. */
+    NSDate* datetime = [IRCClient getTimestampFromMessageTags:tagsList];
+    
+    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
+    self.configuration.lastMessageTime = (long) [[NSDate date] timeIntervalSince1970];
+    
+    IRCConversation *conversation = [IRCConversation fromString:recipient withClient:self];
+    if (conversation == nil) {
+        if ([recipient isValidChannelName:self]) {
+            IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
+            configuration.name = recipient;
+            conversation = [[IRCChannel alloc] initWithConfiguration:configuration withClient:self];
+        } else {
+            IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
+            configuration.name = recipient;
+            conversation = [[IRCConversation alloc] initWithConfiguration:configuration withClient:self];
+        }
+    }
+    
+    
+    IRCUser *user = nil;
+    if ([conversation isKindOfClass:[IRCChannel class]]) {
+        user = [IRCUser fromNickname:nickname onChannel:(IRCChannel *)conversation];
+    }
+    
+    if (user == nil) {
+        user = [[IRCUser alloc] initWithNickname:nickname andUsername:username andHostname:hostname andRealname:nil onClient:self];
+    }
+    
+    
+    IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:message
+                                                             OfType:NSNotFound
+                                                     inConversation:conversation
+                                                           bySender:user
+                                                             atTime:datetime
+                                                           withTags:tagsList
+                                                            isServerMessage:isServerMessage
+                                                           onClient:self];
+    
+    MessageType commandIndexValue = [IRCMessageIndex indexValueFromString:command];
     switch (commandIndexValue) {
         case PING:
-            [self.connection send:[NSString stringWithFormat:@"PONG :%s", line]];
+            [self.connection send:[NSString stringWithFormat:@"PONG :%@", message]];
             break;
             
-        case ERROR: {
-            NSString *error = [NSString stringWithCString:line usingEncodingPreference:self.configuration];
-            [self clientDidDisconnectWithError:error];
+        case ERROR:
+            [self clientDidDisconnectWithError:message];
             break;
-        }
             
         case AUTHENTICATE:
-            [Messages clientReceivedAuthenticationMessage:line onClient:self];
+            [Messages clientReceivedAuthenticationMessage:messageObject];
             break;
             
         case CAP:
-            [Messages clientReceivedCAPMessage:line onClient:self];
+            [Messages clientReceivedCAPMessage:messageObject];
             break;
             
         case PRIVMSG:
-            if (nickname) {
-                [Messages userReceivedMessage:line onRecepient:recipient byUser:senderDict onClient:self withTags:tagsList];
-            }
+            [Messages userReceivedMessage:messageObject];
             break;
             
         case NOTICE:
-            [Messages userReceivedNOTICE:line onRecepient:recipient byUser:senderDict onClient:self withTags:tagsList isServerMessage:isServerMessage];
+            [Messages userReceivedNotice:messageObject];
             break;
             
         case JOIN:
-            [Messages userReceivedJOIN:senderDict onChannel:recipient onClient:self withTags:tagsList];
+            [Messages userReceivedJoinOnChannel:messageObject];
             break;
             
         case PART:
-            [Messages userReceivedPART:senderDict onChannel:recipient onClient:self withMessage:line withTags:tagsList];
+            [Messages userReceivedPartChannel:messageObject];
             break;
             
         case QUIT:
-            [Messages userReceivedQUIT:senderDict onClient:self withMessage:line withTags:tagsList];
+            [Messages userReceivedQuitMessage:messageObject];
             break;
             
         case TOPIC:
-            [Messages userReceivedTOPIC:line onChannel:recipient byUser:senderDict onClient:self withTags:tagsList];
+            [Messages userReceivedChannelTopic:messageObject];
             break;
             
         case KICK:
-            [Messages userReceivedKICK:senderDict onChannel:recipient onClient:self withMessage:line withTags:tagsList];
+            [Messages userReceivedKickMessage:messageObject];
             break;
             
         case MODE:
-            [Messages userReceivedModesOnChannel:line inChannel:recipient byUser:senderDict onClient:self withTags:tagsList];
+            [Messages userReceivedModesOnChannel:messageObject];
             break;
             
         case NICK:
-            [Messages userReceivedNickchange:senderDict toNick:line onClient:self withTags:tagsList];
+            [Messages userReceivedNickChange:messageObject];
             break;
             
         case RPL_WELCOME:
@@ -453,7 +347,7 @@
             
             /* This server supports the ZNC advanced playback module. We will request all messages since the
              last time we received a message. Or from the start of the ZNC logs if we don't have a time on record. */
-            if ([self.ircv3CapabilitiesSupportedByServer indexOfObject:@"znc.in/playback"] != NSNotFound) {
+            if (IRCv3CapabilityEnabled(@"znc.in/playback")) {
                 [IRCCommands sendMessage:[NSString stringWithFormat:@"PLAY * %ld", self.configuration.lastMessageTime] toRecipient:@"*playback" onClient:self];
             }
             
@@ -470,25 +364,25 @@
             break;
             
         case RPL_ISUPPORT:
-            [self updateServerSupportedFeatures:line];
+            [self updateServerSupportedFeatures:message];
             break;
             
         case RPL_ISON:
-            [Messages clientReceivedISONResponse:line onClient:self];
+            [Messages clientReceivedISONResponse:messageObject];
             break;
             
         case RPL_CHANNELMODEIS:
-            [Messages clientReceivedModesForChannel:line inChannel:recipient onClient:self];
+            //
             break;
             
         case RPL_TOPIC:
-            [Messages userReceivedTOPIC:line onChannel:recipient byUser:nil onClient:self withTags:tagsList];
+            //
             break;
             
         case RPL_WHOREPLY:
-            [Messages clientReceivedWHOReply:[NSString stringWithCString:line usingEncodingPreference:self.configuration] onClient:self];
+            [Messages clientReceivedWHOReply:message onClient:self];
             break;
-        
+            
         case ERR_ERRONEUSNICKNAME:
         case ERR_UNAVAILRESOURCE:
         case ERR_NICKNAMEINUSE:
@@ -515,87 +409,44 @@
             break;
             
         case RPL_SASLSUCCESS:
-            [Messages clientReceivedAuthenticationAccepted:line onClient:self];
+            [Messages clientReceivedAuthenticationAccepted:messageObject];
             break;
             
         case ERR_SASLABORTED:
-            [Messages clientreceivedAuthenticationAborted:line onClient:self];
+            [Messages clientreceivedAuthenticationAborted:messageObject];
             break;
             
         case ERR_NICKLOCKED:
         case ERR_SASLFAIL:
         case ERR_SASLTOOLONG:
-            [Messages clientReceivedAuthenticationError:line onClient:self];
+            [Messages clientReceivedAuthenticationError:messageObject];
             break;
             
         default:
             break;
     }
-    
-    free(command);
-    free(recipient);
 }
 
-- (void)updateServerSupportedFeatures:(const char*)data
+- (void)updateServerSupportedFeatures:(NSString *)data
 {
-    /* Create a mutable copy of the data */
-    char* mline = malloc(strlen(data) + 1);
-    strcpy(mline, data);
-    
     /* Split the string by spaces and iterate over the result. This will give us key value pairs seperated by '=' or
      just simply keys which we will translate to booleans */
-    const char delimeter[2] = " ";
-    char *token;
-    token = strtok(mline, delimeter);
+    NSArray *features = [data componentsSeparatedByString:@" "];
     
-    /* Iterate over the key-value pair */
-    while(token != NULL) {
-        /* This is the end of the key-value list, we will break here.  */
-        if (*token == ':') {
+    for (NSString *feature in features) {
+        if ([feature hasPrefix:@":"]) {
+             /* This is the end of the key-value list, we will break here.  */
             break;
         }
         
-        /* Make a pointer to the key-value pair that we will use to retrieve the key. */
-        char* tokenBeforeIteration = token;
-        char* keySearchToken = token;
-        
-        /* Iterate over the string until we reach either the end, or a '=' */
-        long keyLength = 0;
-        while (*keySearchToken != '\0' && *keySearchToken != '=' && *keySearchToken != ' ') {
-            keyLength++;
-            keySearchToken++;
-        }
-        
-        /* Set the key to the result of our previous iteration */
-        char* key;
-        if (keyLength > 0) {
-            key = malloc(keyLength);
-            strncpy(key, tokenBeforeIteration, keyLength);
-            key[keyLength] = '\0';
-            
-            NSString *keyString = [NSString stringWithCString:key usingEncodingPreference:[self configuration]];
-            
-            /* If the next character is an '=', this is a key-value pair, and we will continue iterating to get the value.
-             If not, we will interpret it as a positive boolean. */
-            if (*keySearchToken == '=') {
-                keySearchToken++;
-                NSString *valueString = [NSString stringWithCString:keySearchToken usingEncodingPreference:[self configuration]];
-                
-                /* Save key value pair to dictionary */
-                [self.featuresSupportedByServer setObject:valueString forKey:keyString];
-            } else {
-                /* Save boolean to dictionary */
-                [self.featuresSupportedByServer setObject:@YES forKey:keyString];
-            }
+        if ([feature containsString:@"="]) {
+            NSArray *components = [feature componentsSeparatedByString:@"="];
+            [self.featuresSupportedByServer setObject:[components objectAtIndex:1] forKey:[components objectAtIndex:0]];
         } else {
-            key = NULL;
+            [self.featuresSupportedByServer setObject:@YES forKey:feature];
         }
-        free(key);
-        token = strtok(NULL, delimeter);
     }
     [self setUsermodePrefixes];
-    
-    free(mline);
 }
 
 - (void)setUsermodePrefixes

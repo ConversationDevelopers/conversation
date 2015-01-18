@@ -43,8 +43,6 @@
 @property (nonatomic) NSMutableArray *channelModes;
 @property (nonatomic, assign) BOOL isJoinedByUser;
 
-+ (IRCChannel *) getChannelOrCreate:(NSString *)channelName onClient:(IRCClient *)client;
-
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;
 - (void)setTopic:(NSString *)topic;
 - (void)removeUserByName:(NSString *)nickname;
