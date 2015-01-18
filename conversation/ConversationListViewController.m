@@ -102,12 +102,18 @@
         IRCClient *client = [[IRCClient alloc] initWithConfiguration:configuration];
         
         // Load channels
-        for (IRCChannelConfiguration *config in configuration.channels)
-            [client addChannel:[[IRCChannel alloc] initWithConfiguration:config withClient:client]];
+        for (IRCChannelConfiguration *config in configuration.channels) {
+            IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:config withClient:client];
+            [client addChannel:channel];
+            [self createContentViewForConversation:(IRCConversation *)channel];
+        }
         
         // Load queries
-        for (IRCChannelConfiguration *config in configuration.queries)
-            [client addQuery:[[IRCConversation alloc] initWithConfiguration:config withClient:client]];
+        for (IRCChannelConfiguration *config in configuration.queries) {
+            IRCConversation *query = [[IRCConversation alloc] initWithConfiguration:config withClient:client];
+            [client addQuery:query];
+            [self createContentViewForConversation:query];
+        }
              
         [self.connections addObject:client];
         if (client.configuration.automaticallyConnect) {
@@ -727,6 +733,21 @@
     }
 }
 
+- (void)createContentViewForConversation:(IRCConversation *)conversation
+{
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    
+    CGRect frame = CGRectMake(0.0,
+                              0.0,
+                              screenRect.size.width,
+                              480 - PHFComposeBarViewInitialHeight);
+    
+    conversation.contentView = [[UIScrollView alloc] initWithFrame:frame];
+    conversation.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    conversation.contentView.delegate = self;
+    NSLog(@"YES!");
+}
+
 - (NSString *)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client
 {
     for (IRCChannel *channel in client.getChannels) {
@@ -744,6 +765,8 @@
     
     [client addChannel:channel];
     
+    [self createContentViewForConversation:(IRCConversation*)channel];
+    
     [self.tableView reloadData];
     
     [[AppPreferences sharedPrefs] addChannelConfiguration:configuration forConnectionConfiguration:client.configuration];
@@ -758,6 +781,8 @@
     IRCConversation *query = [[IRCConversation alloc] initWithConfiguration:configuration withClient:client];
     [client addQuery:query];
 
+    [self createContentViewForConversation:query];
+    
     [self.tableView reloadData];
     
     [[AppPreferences sharedPrefs] addQueryConfiguration:configuration forConnectionConfiguration:client.configuration];
@@ -783,20 +808,6 @@
     } else {
         string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@", message.sender.nick, message.message]];
         [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, message.sender.nick.length+1)];
-    }
-    
-    if (!message.conversation.contentView) {
-        
-        CGRect screenRect = [[UIScreen mainScreen] bounds];
-        
-        CGRect frame = CGRectMake(0.0,
-                                  0.0,
-                                  screenRect.size.width,
-                                  480 - PHFComposeBarViewInitialHeight);
-        
-        message.conversation.contentView = [[UIScrollView alloc] initWithFrame:frame];
-        message.conversation.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-        message.conversation.contentView.delegate = self;
     }
 
     // Add message to chatviewcontroller

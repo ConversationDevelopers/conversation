@@ -125,21 +125,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     
     self.title = _conversation.name;
     
-    // Cteate view if it doesn't exist
-    if (!_conversation.contentView) {
-        
-        CGRect screenRect = [[UIScreen mainScreen] bounds];
-        
-        CGRect frame = CGRectMake(0.0,
-                                  0.0,
-                                  screenRect.size.width,
-                                  480 - PHFComposeBarViewInitialHeight);
-        
-        _conversation.contentView = [[UIScrollView alloc] initWithFrame:frame];
-        _conversation.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-        _conversation.contentView.delegate = self;
-    }
-    
     // Clear container
     for (UIView *view in _container.subviews) {
         if ([NSStringFromClass(view.class) isEqualToString:@"UIScrollView"]) {
