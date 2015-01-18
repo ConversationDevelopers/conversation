@@ -173,7 +173,11 @@
         
         _timeLayer.string = timestamp;
         _timeLayer.frame = CGRectMake(self.bounds.size.width-timestamp.size.width-5, 5, timestamp.size.width, timestamp.size.height);
-        self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
+
+        // Set background color if not already set because of highlight
+        if ([self.backgroundColor isEqual:[UIColor clearColor]])
+            self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
+        
     } else {
         _messageLayer.frame = CGRectMake(10, 0, self.bounds.size.width-20, _size.height);
         self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, _size.height);
@@ -321,6 +325,14 @@ uint32_t FNV32(const char *s)
             (range.location+range.length+1 > string.length || [[string substringWithRange:NSMakeRange(range.location+range.length, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound)) {
             [ranges addObject:[NSValue valueWithRange:range]];
         }
+    }
+    
+    // Highlight?
+    NSRange range = [string rangeOfString:_conversation.client.currentUserOnConnection.nick];
+    NSLog(@"NICK: %@", _conversation.client.currentUserOnConnection.nick);
+    if (range.location != NSNotFound) {
+        NSLog(@"YO HIGHLIGHT");
+        self.backgroundColor = [UIColor colorWithRed:0.714 green:0.882 blue:0.675 alpha:1];
     }
     return ranges;
 }
