@@ -31,7 +31,6 @@
 #import "AppDelegate.h"
 #import "ChatViewController.h"
 #import "AppPreferences.h"
-#import <GTScrollNavigationBar/GTScrollNavigationBar.h>
 
 @interface AppDelegate () <UISplitViewControllerDelegate>
 
@@ -54,8 +53,8 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
     _conversationsController = [[ConversationListViewController alloc] init];
-//    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_conversationsController];
-    UINavigationController *nav = [[UINavigationController alloc] initWithNavigationBarClass:[GTScrollNavigationBar class] toolbarClass:nil];
+
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_conversationsController];
     
     [nav setViewControllers:@[_conversationsController] animated:NO];
     

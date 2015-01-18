@@ -11,7 +11,6 @@ target 'conversation' do
 	pod 'ImgurAnonymousAPIClient', :git => 'https://github.com/nolanw/ImgurAnonymousAPIClient.git', :tag => 'v0.2'
 	pod 'SHTransitionBlocks' 
 	pod 'SHNavigationControllerBlocks'
-	pod 'GTScrollNavigationBar'
 end
 
 target 'conversationTests' do

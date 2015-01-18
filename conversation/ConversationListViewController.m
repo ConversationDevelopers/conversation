@@ -54,7 +54,6 @@
 #import <SHTransitionBlocks.h>
 #import <UIViewController+SHTransitionBlocks.h>
 #import <SHNavigationControllerBlocks.h>
-#import <GTScrollNavigationBar/GTScrollNavigationBar.h>
 #import <AudioToolbox/AudioToolbox.h>
 
 @implementation ConversationListViewController
@@ -161,7 +160,6 @@
             
             
         } completion:^(BOOL finished) {
-            [self.navigationController.scrollNavigationBar resetToDefaultPositionWithAnimation:NO];            
             toVC.view.layer.affineTransform = CGAffineTransformIdentity;
             fromVC.view.layer.affineTransform = CGAffineTransformIdentity;
             transitionDidComplete();

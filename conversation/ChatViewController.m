@@ -36,7 +36,6 @@
 #import "ChannelInfoViewController.h"
 #import <UIActionSheet+Blocks/UIActionSheet+Blocks.h>
 #import <ImgurAnonymousAPIClient/ImgurAnonymousAPIClient.h>
-#import <GTScrollNavigationBar/GTScrollNavigationBar.h>
 
 @interface ChatViewController ()
 @property (readonly, nonatomic) PHFComposeBarView *composeBarView;
