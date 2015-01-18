@@ -34,7 +34,7 @@
 
 @class IRCUser;
 
-@interface IRCMessage : NSObject
+@interface IRCMessage : NSObject <NSCopying>
 
 @property (nonatomic) IRCClient *client;
 @property (nonatomic) IRCUser *sender;

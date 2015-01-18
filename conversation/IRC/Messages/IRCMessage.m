@@ -48,4 +48,19 @@
     return nil;
 }
 
+
+-(id)copyWithZone:(NSZone *)zone
+{
+    IRCMessage *copy = [[IRCMessage alloc] initWithMessage:self.message
+                                                    OfType:self.messageType
+                                            inConversation:self.conversation
+                                                  bySender:self.sender
+                                                    atTime:self.timestamp
+                                                  withTags:self.tags
+                                           isServerMessage:self.isServerMessage
+                                                  onClient:self.client];
+    
+    return copy;
+}
+
 @end
