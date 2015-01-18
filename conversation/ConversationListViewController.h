@@ -47,6 +47,12 @@
 - (NSString *)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client;
 - (void)selectConversationWithIdentifier:(NSString *)identifier;
 - (IRCConversation *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client;
+- (void)presentAlertViewWithTitle:(NSString *)title
+                          message:(NSString *)message
+                cancelButtonTitle:(NSString *)cancelButtonTitle
+                otherButtonTitles:(NSArray *)otherButtonTitles
+                cancelButtonIndex:(NSInteger)cancelButtonIndex
+                  completionBlock:(void (^)(UIAlertView *alertView, NSInteger buttonIndex))completionBlock;
 - (void)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest;
 - (void)displayPasswordEntryDialog:(IRCClient *)client;
 - (void)disconnect;
