@@ -770,6 +770,10 @@
 {
     IRCMessage *message = notification.object;
     
+    // Don't handle raw messages
+    if (message.messageType == ET_RAW)
+        return;
+
     // Make sender's nick bold
     NSMutableAttributedString *string;
     UIFont *font = [UIFont fontWithName:@"Helvetica-Bold" size:14];
@@ -821,6 +825,7 @@
     
     messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     [message.conversation.contentView addSubview:messageView];
+    [message.conversation.contentView layoutIfNeeded];
     
     CGFloat height = message.conversation.contentView.contentSize.height;
     message.conversation.contentView.contentSize = CGSizeMake(screenRect.size.width, height+posY);
