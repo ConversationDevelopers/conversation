@@ -733,17 +733,18 @@
 
 - (void)createContentViewForConversation:(IRCConversation *)conversation
 {
-    
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    
-    CGRect frame = CGRectMake(0.0,
-                       0.0,
-                       screenRect.size.width,
-                       480.0 - PHFComposeBarViewInitialHeight);
+    if (!conversation.contentView) {
+        CGRect screenRect = [[UIScreen mainScreen] bounds];
 
-    conversation.contentView = [[UIScrollView alloc] initWithFrame:frame];
-    conversation.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    conversation.contentView.delegate = self;
+        CGRect frame = CGRectMake(0.0,
+                           0.0,
+                           screenRect.size.width,
+                           480.0 - PHFComposeBarViewInitialHeight);
+
+        conversation.contentView = [[UIScrollView alloc] initWithFrame:frame];
+        conversation.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        conversation.contentView.delegate = self;
+    }
 
 }
 
