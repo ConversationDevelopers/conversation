@@ -41,7 +41,7 @@
 #define IRC_ITALICS     '\029'
 #define IRC_UNDERLINE   '\031'
 
-#define IRCv3CapabilityEnabled(x) [self.ircv3CapabilitiesSupportedByServer indexOfObject:(x)] != NSNotFound
+#define IRCv3CapabilityEnabled(x, y) [[x ircv3CapabilitiesSupportedByServer] indexOfObject:(y)] != NSNotFound
 
 @class IRCConnection;
 @class IRCChannel;

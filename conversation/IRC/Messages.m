@@ -283,9 +283,18 @@
         });
     }
     
+    if (IRCv3CapabilityEnabled(message.client, @"extended-join") && [[message message] length] > 0) {
+        NSString *realname = [message message];
+        if ([realname hasPrefix:@":"]) {
+            realname = [realname substringFromIndex:1];
+        }
+        message.sender.realname = realname;
+    }
+    
     message.messageType = ET_JOIN;
     [[channel users] addObject:[message sender]];
     message.conversation = channel;
+    
     
     [[message conversation] addMessageToConversation:message];
 }

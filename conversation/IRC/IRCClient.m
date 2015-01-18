@@ -347,7 +347,7 @@
             
             /* This server supports the ZNC advanced playback module. We will request all messages since the
              last time we received a message. Or from the start of the ZNC logs if we don't have a time on record. */
-            if (IRCv3CapabilityEnabled(@"znc.in/playback")) {
+            if (IRCv3CapabilityEnabled(self, @"znc.in/playback")) {
                 [IRCCommands sendMessage:[NSString stringWithFormat:@"PLAY * %ld", self.configuration.lastMessageTime] toRecipient:@"*playback" onClient:self];
             }
             
