@@ -37,6 +37,7 @@
 #import "ConversationListViewController.h"
 #import "znc-buffextras.h"
 #import "AppPreferences.h"
+#import "IRCCommands.h"
 
 #define AssertIsNotServerMessage(x) if ([x isServerMessage] == YES) return;
 
@@ -204,7 +205,10 @@
         
         NSMutableArray *messageComponents = [[[message message] componentsSeparatedByString:@" "] mutableCopy];
         
-        if ([[messageComponents objectAtIndex:0] isEqualToString:@"ACTION"]) {
+        
+        #define isCTCPCommand(x) [[message message] caseInsensitiveCompare:x] == NSOrderedSame
+        
+        if (isCTCPCommand(@"ACTION")) {
             [messageComponents removeObjectAtIndex:0];
             message.message = [messageComponents componentsJoinedByString:@" "];
             
@@ -212,6 +216,33 @@
         } else {
             message.message = [messageComponents objectAtIndex:0];
             message.messageType = ET_CTCP;
+            
+            if (isCTCPCommand(@"VERSION")) {
+                [IRCCommands sendCTCPReply:[NSString stringWithFormat:@"VERSION Conversation %@ (https://github.com/ConversationDevelopers/conversation)",
+                                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]]
+                               toRecipient:[[message sender] nick] onClient:[message client]];
+            } else if (isCTCPCommand(@"TIME")) {
+                NSDate* now = [NSDate date];
+                NSDateFormatter* df = [[NSDateFormatter alloc] init];
+                [df setDateStyle:NSDateFormatterFullStyle];
+                [df setTimeStyle:NSDateFormatterFullStyle];
+                [IRCCommands sendCTCPReply:[NSString stringWithFormat:@"TIME %@",
+                                            [df stringFromDate:now]]
+                               toRecipient:[[message sender] nick]
+                                  onClient:[message client]];
+            } else if (isCTCPCommand(@"SOURCE")) {
+                [IRCCommands sendCTCPReply:@"https://github.com/ConversationDevelopers/conversation"
+                               toRecipient:[[message sender] nick]
+                                  onClient:[message client]];
+            } else if (isCTCPCommand(@"CLIENTINFO")) {
+                [IRCCommands sendCTCPReply:@"CLIENTINFO VERSION TIME SOURCE PING CLIENTINFO"
+                               toRecipient:[[message sender] nick]
+                                  onClient:[message client]];
+            } else if (isCTCPCommand(@"PING")) {
+                [IRCCommands sendCTCPReply:[NSString stringWithFormat:@"PING %f",
+                                            [[NSDate date] timeIntervalSince1970]]
+                               toRecipient:[[message sender] nick] onClient:[message client]];
+            }
             
             [IRCConversation getConversationOrCreate:[[message conversation] name] onClient:[message client] withCompletionHandler:^(IRCConversation *conversation) {
                 message.conversation = conversation;
