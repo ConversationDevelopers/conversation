@@ -41,6 +41,7 @@
 @property (nonatomic) NSString *topic;
 @property (nonatomic) NSMutableArray *users;
 @property (nonatomic) NSMutableArray *channelModes;
+@property (nonatomic, assign) BOOL isJoinedByUser;
 
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;
 - (void)setTopic:(NSString *)topic;
