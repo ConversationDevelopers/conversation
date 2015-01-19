@@ -58,6 +58,11 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
                                              selector:@selector(messageReceived:)
                                                  name:@"messageReceived"
                                                object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(awayReceived:)
+                                                 name:@"away"
+                                               object:nil];
     
     _backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ChannelIcon_Light"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
     
@@ -77,6 +82,10 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"messageReceived"
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"away"
                                                   object:nil];
 }
 
@@ -98,8 +107,6 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
     UIView *container = [self container];
     [container addSubview:[self composeBarView]];
-    
-//    self.navigationController.scrollNavigationBar.scrollView = _conversation.contentView;
     
     [view addSubview:container];
     self.view = view;
@@ -143,6 +150,9 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     [_conversation.contentView addGestureRecognizer:swipeLeftRecognizer];
     
     [self.container addSubview:_conversation.contentView];
+    
+    // Update userlist
+    [_userListView.tableview reloadData];
     
 }
 
@@ -400,6 +410,11 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     if ([self hideUserList])
         return;
     [_composeBarView resignFirstResponder];
+}
+
+- (void)awayReceived:(NSNotification *)notification
+{
+    [_userListView.tableview reloadData];
 }
 
 - (void)messageReceived:(NSNotification *)notification

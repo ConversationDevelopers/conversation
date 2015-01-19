@@ -76,6 +76,11 @@
 
     _nickLabel.text = _user.nick;
     
+    if (_user.isAway)
+        _nickLabel.textColor = [UIColor colorWithRed:0.753 green:0.753 blue:0.753 alpha:1];
+    else
+        _nickLabel.textColor = [UIColor blackColor];
+    
     CGRect frame =
     [_nickLabel.text boundingRectWithSize:_nickLabel.frame.size
                                   options:NSStringDrawingUsesLineFragmentOrigin
