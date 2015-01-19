@@ -60,6 +60,12 @@
 #define COCOAPODS_VERSION_MINOR_ImgurAnonymousAPIClient 2
 #define COCOAPODS_VERSION_PATCH_ImgurAnonymousAPIClient 0
 
+// MCNotificationManager
+#define COCOAPODS_POD_AVAILABLE_MCNotificationManager
+#define COCOAPODS_VERSION_MAJOR_MCNotificationManager 0
+#define COCOAPODS_VERSION_MINOR_MCNotificationManager 1
+#define COCOAPODS_VERSION_PATCH_MCNotificationManager 2
+
 // PHFComposeBarView
 #define COCOAPODS_POD_AVAILABLE_PHFComposeBarView
 #define COCOAPODS_VERSION_MAJOR_PHFComposeBarView 2
