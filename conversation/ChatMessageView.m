@@ -178,6 +178,8 @@
         if ([self.backgroundColor isEqual:[UIColor clearColor]])
             self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
         
+    } else if (_message.messageType == ET_ERROR) {
+        self.backgroundColor = [UIColor colorWithRed:0.941 green:0.796 blue:0.796 alpha:1]; /*#f0cbcb*/
     } else {
         _messageLayer.frame = CGRectMake(10, 0, self.bounds.size.width-20, _size.height);
         self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, _size.height);
@@ -565,6 +567,19 @@ uint32_t FNV32(const char *s)
                 }
             }
             break;
+        }
+        case ET_ERROR: {
+            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"⚠ %@", msg]];
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            [string addAttribute:NSParagraphStyleAttributeName
+                           value:paragraphStyle
+                           range:NSMakeRange(0, string.length)];
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont systemFontOfSize:12.0]
+                           range:NSMakeRange(0, string.length)];
+            break;
+            
         }
         default: {
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"Message not handled yet"]];
