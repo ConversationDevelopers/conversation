@@ -182,6 +182,8 @@
                                                         isServerMessage:YES
                                                         onClient:self];
     
+    line = [line removeIRCFormatting];
+    
     /* Notify the client of the message */
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:rawMessage];

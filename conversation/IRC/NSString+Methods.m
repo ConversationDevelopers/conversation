@@ -268,4 +268,161 @@
     return YES;
 }
 
+/* 
+ Copyright (c) 2010 - 2015 Codeux Software, LLC & respective contributors.
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 
+ * Redistributions of source code must retain the above copyright
+ notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
+ * Neither the name of Textual and/or "Codeux Software, LLC", nor the
+ names of its contributors may be used to endorse or promote products
+ derived from this software without specific prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.
+ */
+
+- (NSString *)removeIRCFormatting
+{
+    if ([self length] == 0) return @"";
+    
+    NSInteger pos = 0;
+    NSInteger len = [self length];
+    
+    NSInteger buflen = (len * sizeof(UniChar));
+    
+    UniChar *src = alloca(buflen);
+    UniChar *buf = alloca(buflen);
+    
+    [self getCharacters:src range:NSMakeRange(0, len)];
+    
+    for (NSInteger i = 0; i < len; ++i) {
+        unichar c = src[i];
+        
+        if (c < 0x20) {
+            switch (c) {
+                case 0x2:
+                case 0xf:
+                case 0x16:
+                case 0x1d:
+                case 0x1f:
+                {
+                    break;
+                }
+                case 0x3:
+                {
+                    /* ============================================= */
+                    /* Begin color stripping.						 */
+                    /* ============================================= */
+                    
+                    if ((i + 1) >= len) {
+                        continue;
+                    }
+                    
+                    UniChar d = src[(i + 1)];
+                    
+                    if ('0' <= (d) && (d) <= '9' == NO) {
+                        continue;
+                    }
+                    
+                    i++;
+                    
+                    // ---- //
+                    
+                    if ((i + 1) >= len) {
+                        continue;
+                    }
+                    
+                    UniChar e = src[(i + 1)];
+                    
+                    if ('0' <= (e) && (e) <= '9' == NO && (e) != (',')) {
+                        continue;
+                    }
+                    
+                    i++;
+                    
+                    // ---- //
+                    
+                    if ((e == ',') == NO) {
+                        if ((i + 1) >= len) {
+                            continue;
+                        }
+                        
+                        UniChar f = src[(i + 1)];
+                        
+                        if ((f) != (',')) {
+                            continue;
+                        }
+                        
+                        i++;
+                    }
+                    
+                    // ---- //
+                    
+                    if ((i + 1) >= len) {
+                        continue;
+                    }
+                    
+                    UniChar g = src[(i + 1)];
+                    
+                    if ('0' <= (g) && (g) <= '9' == NO) {
+                        i--;
+                        
+                        continue;
+                    }
+                    
+                    i++;
+                    
+                    // ---- //
+                    
+                    if ((i + 1) >= len) {
+                        continue;
+                    }
+                    
+                    UniChar h = src[(i + 1)];
+                    
+                    if ('0' <= (h) && (h) <= '9' == NO) {
+                        continue;
+                    }
+                    
+                    i++;
+                    
+                    // ---- //
+                    
+                    break;
+                    
+                    /* ============================================= */
+                    /* End color stripping.							 */
+                    /* ============================================= */
+                }
+                default:
+                {
+                    buf[pos++] = c;
+                    
+                    break;
+                }
+            }
+        } else {
+            buf[pos++] = c;
+        }
+    }
+    
+    return [NSString stringWithCharacters:buf length:pos];
+}
+
 @end
