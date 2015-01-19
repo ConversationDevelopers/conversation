@@ -934,30 +934,6 @@
     }];
 }
 
-- (void)presentAlertViewWithTitle:(NSString *)title
-                          message:(NSString *)message
-                cancelButtonTitle:(NSString *)cancelButtonTitle
-                otherButtonTitles:(NSArray *)otherButtonTitles
-                cancelButtonIndex:(NSInteger)cancelButtonIndex
-                  completionBlock:(void (^)(UIAlertView *alertView, NSInteger buttonIndex))completionBlock
-{
-    #define NSArrayObjectMaybeNil(__ARRAY__, __INDEX__) ((__INDEX__ >= [__ARRAY__ count]) ? nil : [__ARRAY__ objectAtIndex:__INDEX__])
-    #define NSArrayToVariableArgumentsList(__ARRAYNAME__)\
-    NSArrayObjectMaybeNil(__ARRAYNAME__, 0),\
-    NSArrayObjectMaybeNil(__ARRAYNAME__, 1),\
-    NSArrayObjectMaybeNil(__ARRAYNAME__, 2),\
-    nil
-    
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
-                                                        message:message
-                                                       delegate:self
-                                              cancelButtonTitle:cancelButtonTitle
-                                              otherButtonTitles:NSArrayToVariableArgumentsList(otherButtonTitles)];
-    [alertView setCancelButtonIndex:cancelButtonIndex];
-    [alertView showWithCompletion:[completionBlock copy]];
-
-}
-
 - (void)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest
 {
     CertificateItemRow *commonName =  [trustRequest.issuerInformation objectAtIndex:5];
