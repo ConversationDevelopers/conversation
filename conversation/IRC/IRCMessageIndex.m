@@ -75,6 +75,7 @@ static NSArray *IRCMessageIndexReference = nil;
         @"MODE",
         @"NICK",
         @"SQUIT",
+        @"AWAY",
         @"001",
         @"002",
         @"003",

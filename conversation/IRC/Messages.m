@@ -561,8 +561,8 @@
         user = [[IRCUser alloc] initWithNickname:nickname andUsername:username andHostname:hostname andRealname:realname onClient:client];
     }
     
-    if ([modes hasPrefix:@"G"]) {
-        //TODO: Away handling
+    if (IRCv3CapabilityEnabled(client, @"away-notify")) {
+        user.isAway = ([modes hasPrefix:@"G"]);
     }
     
     modes = [modes substringFromIndex:1];
@@ -607,6 +607,22 @@
 
 + (void)clientReceivedModesForChannel:(IRCMessage *)message
 {
+    
+}
+
++ (void)clientReceivedAwayNotification:(IRCMessage *)message
+{
+    BOOL userIsAway = ([[message message] length] > 0);
+    
+    for (IRCChannel *channel in [message.client channels]) {
+        IRCUser *userOnChannel = [IRCUser fromNickname:message.sender.nick onChannel:channel];
+        if (userOnChannel) {
+            userOnChannel.isAway = userIsAway;
+            [channel removeUserByName:[userOnChannel nick]];
+            [channel.users addObject:userOnChannel];
+            [channel sortUserlist];
+        }
+    }
     
 }
 

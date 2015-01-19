@@ -81,4 +81,6 @@
 
 + (void)clientReceivedModesForChannel:(IRCMessage *)message;
 
++ (void)clientReceivedAwayNotification:(IRCMessage *)message;
+
 @end

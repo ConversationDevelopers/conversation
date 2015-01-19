@@ -62,7 +62,8 @@
         @"znc.in/playback",
         @"znc.in/self-message",
         @"extended-join",
-        @"multi-prefix"
+        @"multi-prefix",
+        @"away-notify"
     ];
 }
 
@@ -334,6 +335,10 @@
             
         case NICK:
             [Messages userReceivedNickChange:messageObject];
+            break;
+            
+        case AWAY:
+            [Messages clientReceivedAwayNotification:messageObject];
             break;
             
         case RPL_WELCOME:
