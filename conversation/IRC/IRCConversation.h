@@ -43,6 +43,7 @@
 @property (nonatomic) NSUInteger unreadCount;
 @property (assign) BOOL isHighlighted;
 @property (nonatomic) UIScrollView *contentView;
+@property (nonatomic, assign) BOOL isJoinedByUser;
 
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;
 
