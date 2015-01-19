@@ -329,9 +329,7 @@ uint32_t FNV32(const char *s)
     
     // Highlight?
     NSRange range = [string rangeOfString:_conversation.client.currentUserOnConnection.nick];
-    NSLog(@"NICK: %@", _conversation.client.currentUserOnConnection.nick);
     if (range.location != NSNotFound) {
-        NSLog(@"YO HIGHLIGHT");
         self.backgroundColor = [UIColor colorWithRed:0.714 green:0.882 blue:0.675 alpha:1];
     }
     return ranges;
