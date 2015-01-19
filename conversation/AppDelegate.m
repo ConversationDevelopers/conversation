@@ -89,6 +89,11 @@
         client = connections[x];
         [[AppPreferences sharedPrefs] setConnectionConfiguration:client.configuration atIndex:x];
     }
+    
+    if (_conversationsController.currentConversation)
+        [[AppPreferences sharedPrefs] setLastConversation:_conversationsController.currentConversation.configuration.uniqueIdentifier];
+    else
+        [[AppPreferences sharedPrefs] deleteLastConversation];
     [[AppPreferences sharedPrefs] save];
 }
 

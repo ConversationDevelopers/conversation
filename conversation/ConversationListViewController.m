@@ -206,6 +206,12 @@
     [self.navigationController SH_setInteractiveControllerBlock:^id<UIViewControllerInteractiveTransitioning>(UINavigationController *navigationController, id<UIViewControllerAnimatedTransitioning> animationController) {
         return navigationController.SH_interactiveTransition;
     }];
+    
+    // Select last used conversation
+    NSString *lastConversationId = [[AppPreferences sharedPrefs] getLastConversation];
+    if (lastConversationId) {
+        [self selectConversationWithIdentifier:lastConversationId];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated

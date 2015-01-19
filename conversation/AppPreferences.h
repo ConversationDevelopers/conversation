@@ -57,6 +57,10 @@
 - (NSArray *)getConnectionConfigurations;
 - (NSDictionary *)getEmoticons;
 
+- (NSString *)getLastConversation;
+- (void)setLastConversation:(NSString *)identifier;
+- (void)deleteLastConversation;
+
 - (void)save;
 
 @property (nonatomic, retain) NSDictionary *preferences;

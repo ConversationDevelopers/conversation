@@ -244,6 +244,25 @@
     self.preferences = [dict copy];
 }
 
+- (NSString *)getLastConversation
+{
+    return [self.preferences objectForKey:@"lastConversation"];
+}
+
+- (void)setLastConversation:(NSString *)identifier
+{
+    NSMutableDictionary *dict = [self.preferences mutableCopy];
+    dict[@"lastConversation"] = identifier;
+    self.preferences = [dict copy];
+}
+
+- (void)deleteLastConversation
+{
+    NSMutableDictionary *dict = [self.preferences mutableCopy];
+    [dict removeObjectForKey:@"lastConversation"];
+    self.preferences = [dict copy];
+}
+
 - (void)save
 {
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
