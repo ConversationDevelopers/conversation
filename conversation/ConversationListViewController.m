@@ -212,6 +212,7 @@
     if (lastConversationId) {
         [self selectConversationWithIdentifier:lastConversationId];
     }
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -938,6 +939,36 @@
             }
         }
     }];
+}
+
+- (void)showGotInvitationAlertForChannel:(NSString *)channelName sender:(NSString *)nickname onClient:(IRCClient *)client
+{
+    NSString *message = [NSString stringWithFormat:NSLocalizedString(@"got invitation", nil), nickname, channelName];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Channel Invite", nil)
+                                                        message:message
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"NO", nil)
+                                              otherButtonTitles:NSLocalizedString(@"YES", nil), nil];
+    [alertView setCancelButtonIndex:0];
+    [alertView showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
+        if (buttonIndex == 1) {
+            [self joinChannelWithName:channelName onClient:client];
+        }
+    }];
+}
+
+- (void)showInivitationRequiredAlertForChannel:(NSString *)channelName
+{
+    
+    NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Channel requires invitation", nil), channelName];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Invite required", nil)
+                                                        message:message
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"OK", nil)
+                                              otherButtonTitles:nil];
+    [alertView setCancelButtonIndex:0];
+    [alertView show];
+    
 }
 
 - (void)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest

@@ -47,6 +47,8 @@
 - (NSString *)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client;
 - (void)selectConversationWithIdentifier:(NSString *)identifier;
 - (IRCConversation *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client;
+- (void)showGotInvitationAlertForChannel:(NSString *)channelName sender:(NSString *)nickname onClient:(IRCClient *)client;
+- (void)showInivitationRequiredAlertForChannel:(NSString *)channelName;
 - (void)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest;
 - (void)displayPasswordEntryDialog:(IRCClient *)client;
 - (void)disconnect;
