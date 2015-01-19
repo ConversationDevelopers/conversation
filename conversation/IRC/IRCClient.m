@@ -232,6 +232,9 @@
     NSString *recipient;
     if ([lineComponents count] > 0 && messageWithoutRecipient == NO) {
         recipient = [lineComponents objectAtIndex:0];
+        if ([recipient hasPrefix:@":"]) {
+            recipient = [recipient substringFromIndex:1];
+        }
         [lineComponents removeObjectAtIndex:0];
     }
     
