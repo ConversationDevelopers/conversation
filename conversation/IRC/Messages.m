@@ -652,6 +652,10 @@
             [channel removeUserByName:[userOnChannel nick]];
             [channel.users addObject:userOnChannel];
             [channel sortUserlist];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"away" object:message];
+            });
         }
     }
     
