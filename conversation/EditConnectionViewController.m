@@ -402,6 +402,9 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
                 cell.textField.text = @"";
                 cell.textField.placeholder = _configuration.connectionName;
             }
+            if (_edit)
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textEditAction = @selector(descriptionChanged:);
@@ -416,10 +419,14 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
                 cell.textField.text = @"";
                 cell.textField.placeholder = _configuration.serverAddress;
             }
+            if (_edit)
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            else
+                cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+            
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textField.keyboardType = UIKeyboardTypeURL;
-            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
             cell.textEditAction = @selector(serverChanged:);
             return cell;
         } else if (indexPath.row == 2) {
@@ -432,6 +439,10 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
                 cell.textField.text = @"";
                 cell.textField.placeholder = [NSString stringWithFormat:@"%i", (int)_configuration.connectionPort];
             }
+            
+            if (_edit)
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            
             cell.textField.keyboardType = UIKeyboardTypeNumberPad;
             cell.textEditAction = @selector(portChanged:);
             return cell;
@@ -443,6 +454,10 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
                 cell.textField.text = password;
             else
                 cell.textField.text = _configuration.serverPasswordReference;
+            
+            if (_edit && [cell.textField.text isEqualToString:@""] == NO)
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            
             cell.textField.placeholder = NSLocalizedString(@"Optional", @"User input is optional");
 			cell.textField.secureTextEntry = YES;
             cell.textEditAction = @selector(passwordChanged:);
@@ -465,6 +480,10 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
                 cell.textField.text = @"";
                 cell.textField.placeholder = _configuration.primaryNickname;
             }
+            
+            if (_edit)
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
 			cell.textEditAction = @selector(nicknameChanged:);
@@ -479,6 +498,10 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
                 cell.textField.text = @"";
                 cell.textField.placeholder = _configuration.secondaryNickname;
             }
+            
+            if (_edit)
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
             cell.textEditAction = @selector(altnickChanged:);
@@ -493,6 +516,10 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
                 cell.textField.text = @"";
                 cell.textField.placeholder = _configuration.usernameForRegistration;
             }
+            
+            if (_edit)
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
             cell.textEditAction = @selector(usernameChanged:);
@@ -507,6 +534,10 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
                 cell.textField.text = @"";
                 cell.textField.placeholder = _configuration.realNameForRegistration;
             }
+            
+            if (_edit)
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
             cell.textEditAction = @selector(realnameChanged:);
@@ -519,6 +550,10 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
                 cell.textField.text = [SSKeychain passwordForService:@"conversation" account:_configuration.authenticationPasswordReference];
             else
                 cell.textField.text = _configuration.authenticationPasswordReference;
+            
+            if (_edit && [cell.textField.text isEqualToString:@""] == NO)
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            
             cell.textField.placeholder = NSLocalizedString(@"Optional", @"User input is optional");
 			cell.textField.secureTextEntry = YES;
             cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
@@ -622,6 +657,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
     
     if(sender.textField.text.length == 0) {
         _configuration.serverAddress = _connection.serverAddress;
+        sender.accessoryType = UITableViewCellAccessoryDetailButton;
         badInput = NO;
     }
     
