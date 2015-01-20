@@ -365,7 +365,13 @@
                 break;
                 
             case CMD_QUIT:
-                [conversation.client disconnect];
+                if ([messageComponents count] > 1) {
+                    [messageComponents removeObjectAtIndex:0];
+                    NSString *quitMessage = [messageComponents componentsJoinedByString:@" "];
+                    [conversation.client disconnectWithMessage:quitMessage];
+                } else {
+                    [conversation.client disconnect];
+                }
                 break;
                 
             case CMD_QUOTE:

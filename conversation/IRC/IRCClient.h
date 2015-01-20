@@ -85,6 +85,7 @@
 + (NSString *)getChannelPrefixCharacters:(IRCClient *)client;
 - (void)validateQueryStatusOnAllItems;
 - (void)disconnect;
+- (void)disconnectWithMessage:(NSString *)message;
 - (void)autojoin;
 
 - (BOOL)addChannel:(IRCChannel *)channel;

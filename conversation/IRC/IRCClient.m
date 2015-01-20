@@ -488,6 +488,15 @@
     }
 }
 
+- (void)disconnectWithMessage:(NSString *)message
+{
+    if (self.isConnected) {
+        self.isProcessingTermination = YES;
+        [self.connection send:[NSString stringWithFormat:@"QUIT :%@", message]];
+        [self.connection close];
+    }
+}
+
 - (void)clientDidDisconnect {
     NSLog(@"Disconnected");
     [self clearStatus];
