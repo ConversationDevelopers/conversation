@@ -823,6 +823,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited) ";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -867,6 +868,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited) ";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -890,6 +892,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Applications/Xcode-Beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
@@ -906,16 +909,7 @@
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-Wi,-no_implicit_dylibs",
-					"-l\"Pods-conversation-AFNetworking\"",
-					"-l\"Pods-conversation-DLImageLoader\"",
-					"-l\"Pods-conversation-GTScrollNavigationBar\"",
-					"-l\"Pods-conversation-ImgurAnonymousAPIClient\"",
-					"-l\"Pods-conversation-PHFComposeBarView\"",
-					"-l\"Pods-conversation-PHFDelegateChain\"",
-					"-l\"Pods-conversation-SHNavigationControllerBlocks\"",
-					"-l\"Pods-conversation-SHTransitionBlocks\"",
-					"-l\"Pods-conversation-UIActionSheet+Blocks\"",
-					"-l\"Pods-conversation-YLGIFImage\"",
+					"$(inherited)",
 					"-framework",
 					"\"AssetsLibrary\"",
 					"-framework",
@@ -946,6 +940,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Applications/Xcode-Beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
@@ -962,16 +957,7 @@
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-Wi,-no_implicit_dylibs",
-					"-l\"Pods-conversation-AFNetworking\"",
-					"-l\"Pods-conversation-DLImageLoader\"",
-					"-l\"Pods-conversation-GTScrollNavigationBar\"",
-					"-l\"Pods-conversation-ImgurAnonymousAPIClient\"",
-					"-l\"Pods-conversation-PHFComposeBarView\"",
-					"-l\"Pods-conversation-PHFDelegateChain\"",
-					"-l\"Pods-conversation-SHNavigationControllerBlocks\"",
-					"-l\"Pods-conversation-SHTransitionBlocks\"",
-					"-l\"Pods-conversation-UIActionSheet+Blocks\"",
-					"-l\"Pods-conversation-YLGIFImage\"",
+					"$(inherited)",
 					"-framework",
 					"\"AssetsLibrary\"",
 					"-framework",

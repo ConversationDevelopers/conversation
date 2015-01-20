@@ -55,6 +55,7 @@
 #import <UIViewController+SHTransitionBlocks.h>
 #import <SHNavigationControllerBlocks.h>
 #import <AudioToolbox/AudioToolbox.h>
+#import <MCNotificationManager/MCNotificationManager.h>
 
 @implementation ConversationListViewController
 
@@ -805,7 +806,7 @@
     // Don't handle raw messages
     if (message.messageType == ET_RAW)
         return;
-
+    
     // Make sender's nick bold
     NSMutableAttributedString *string;
     UIFont *font = [UIFont fontWithName:@"Helvetica-Bold" size:14];
@@ -816,7 +817,7 @@
         string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@", message.sender.nick, message.message]];
         [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, message.sender.nick.length+1)];
     }
-
+    
     // Add message to chatviewcontroller
     ChatMessageView *lastMsg;
     
@@ -828,7 +829,7 @@
     }
     
     CGFloat posY;
-
+    
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     
     if (message.messageType == ET_PRIVMSG)
@@ -844,7 +845,7 @@
     messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     [message.conversation.contentView addSubview:messageView];
     [message.conversation.contentView layoutIfNeeded];
-
+    
     CGRect frame = CGRectMake(0.0,
                               0.0,
                               message.conversation.contentView.frame.size.width,
@@ -864,6 +865,14 @@
     
     // Dont set highlight if source conversation is currently visible
     if ([message.conversation isEqual:_currentConversation] == NO) {
+        
+        // Prepare notification view
+        MCNotification *notification = [MCNotification notification];
+        notification.backgroundColor = [UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0];
+        notification.tintColor = [UIColor whiteColor];
+        notification.text = message.sender.nick;
+        notification.detailText = message.message;
+        
         // Private Message
         if ([message.conversation isKindOfClass:[IRCChannel class]] == NO) {
             message.conversation.unreadCount++;
@@ -871,6 +880,8 @@
                 message.conversation.isHighlighted = YES;
                 AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
             }
+            notification.image = [UIImage imageNamed:@"Userlist"];
+            
         } else {
             
             message.conversation.unreadCount++;
@@ -887,13 +898,16 @@
                     message.conversation.isHighlighted = YES;
                     AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
                 }
+                notification.image = [UIImage imageNamed:@"ChannelIcon_Light"];
             }
-
+            
         }
+        
+        [[MCNotificationManager sharedInstance] showNotification:notification];
     }
     
     [self.tableView reloadData];
-
+    
 }
 
 - (void)displayPasswordEntryDialog:(IRCClient *)client
