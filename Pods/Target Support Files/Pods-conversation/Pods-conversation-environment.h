@@ -60,6 +60,12 @@
 #define COCOAPODS_VERSION_MINOR_ImgurAnonymousAPIClient 2
 #define COCOAPODS_VERSION_PATCH_ImgurAnonymousAPIClient 0
 
+// InAppSettingsKit
+#define COCOAPODS_POD_AVAILABLE_InAppSettingsKit
+#define COCOAPODS_VERSION_MAJOR_InAppSettingsKit 2
+#define COCOAPODS_VERSION_MINOR_InAppSettingsKit 3
+#define COCOAPODS_VERSION_PATCH_InAppSettingsKit 3
+
 // MCNotificationManager
 #define COCOAPODS_POD_AVAILABLE_MCNotificationManager
 #define COCOAPODS_VERSION_MAJOR_MCNotificationManager 0

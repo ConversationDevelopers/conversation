@@ -253,7 +253,15 @@
 
 - (void)showSettings:(id)sender
 {
-    NSLog(@"Show Settings");
+    IASKAppSettingsViewController *settingsController = [[IASKAppSettingsViewController alloc] init];
+    settingsController.showCreditsFooter = NO;
+    settingsController.delegate = self;
+    
+    UINavigationController *navigationController = [[UINavigationController alloc]
+                                                    
+                                                    initWithRootViewController:settingsController];
+    
+    [self presentViewController:navigationController animated:YES completion:nil];
 }
 
 - (void)addConversation:(id)sender
@@ -1064,5 +1072,10 @@
     for (IRCClient *client in _connections) {
         [client disconnect];
     }
+}
+
+- (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController *)sender
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 @end

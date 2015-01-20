@@ -23,6 +23,7 @@ PODS:
   - DLImageLoader (2.0.0)
   - ImgurAnonymousAPIClient (0.2):
     - AFNetworking (>= 2.3.1)
+  - InAppSettingsKit (2.3.3)
   - MCNotificationManager (0.1.2)
   - PHFComposeBarView (2.0.1):
     - PHFDelegateChain (~> 1.0)
@@ -35,6 +36,7 @@ PODS:
 DEPENDENCIES:
   - DLImageLoader (from `https://github.com/AndreyLunevich/DLImageLoader-iOS.git`)
   - ImgurAnonymousAPIClient (from `https://github.com/nolanw/ImgurAnonymousAPIClient.git`, tag `v0.2`)
+  - InAppSettingsKit
   - MCNotificationManager
   - PHFComposeBarView (~> 2.0.1)
   - SHNavigationControllerBlocks
@@ -55,6 +57,7 @@ SPEC CHECKSUMS:
   AFNetworking: 0f54cb5d16ce38c1b76948faffb8d5fb705021c7
   DLImageLoader: ed4a058375bcef56e2493769d375612715189659
   ImgurAnonymousAPIClient: 34d68a1f5549b3dbe64028a44b8074bf44da2e82
+  InAppSettingsKit: c870cb6095a85656ff4df42845af5c26eede4c8d
   MCNotificationManager: 0be8eb1535c914b5f5b8b8c0ffc1d1a7fb6be90b
   PHFComposeBarView: 0fa52137ecb23725d219dc90cf77c4c95aa29d05
   PHFDelegateChain: f4d5a2847960b3dd16fc2f2196833f3a66704745

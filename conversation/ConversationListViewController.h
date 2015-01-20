@@ -29,13 +29,14 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <InAppSettingsKit/IASKAppSettingsViewController.h>
 
 @class ChatViewController;
 @class IRCClient;
 @class IRCConversation;
 @class IRCCertificateTrust;
 
-@interface ConversationListViewController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate> {
+@interface ConversationListViewController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, IASKSettingsDelegate> {
     UIBackgroundTaskIdentifier _backgroundTask;
 }
 

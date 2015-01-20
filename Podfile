@@ -12,6 +12,7 @@ target 'conversation' do
 	pod 'SHTransitionBlocks' 
 	pod 'SHNavigationControllerBlocks'
 	pod 'MCNotificationManager'
+	pod 'InAppSettingsKit'
 end
 
 target 'conversationTests' do
