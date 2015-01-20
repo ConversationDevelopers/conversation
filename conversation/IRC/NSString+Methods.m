@@ -129,16 +129,7 @@
     // Check length
     if (self.length < 2 || self.length > maxNickLength)
         return NO;
-    
-    // Check for invalid characters
-    NSCharacterSet *chars = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_-\[]|{}^`"] invertedSet];
-    if([self rangeOfCharacterFromSet:chars].location != NSNotFound)
-        return NO;
-    
-    // Check if first character is a digit
-    NSCharacterSet *number = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
-    if([self rangeOfCharacterFromSet:number].location == 0)
-        return NO;
+
     return YES;
 }
 
