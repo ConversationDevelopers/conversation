@@ -16,6 +16,7 @@
 		DA2F9A081A0726E60028B2BD /* AddStringItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2F9A071A0726E60028B2BD /* AddStringItemViewController.m */; };
 		DA379D4719FB35E80031E30B /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA379D4619FB35E80031E30B /* ChatViewController.m */; };
 		DA41794B19FAF9FF007784F0 /* ChatMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA41794A19FAF9FF007784F0 /* ChatMessageView.m */; };
+		DA5FB8F81A6EF577004CA1C8 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DA5FB8F71A6EF577004CA1C8 /* Settings.bundle */; };
 		DA656B361A12C97000C214BD /* UserListItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DA656B351A12C97000C214BD /* UserListItemCell.m */; };
 		DA656B391A13866500C214BD /* ConsoleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA656B381A13866500C214BD /* ConsoleViewController.m */; };
 		DA6F61D719FD1A6600F22F78 /* ILTranslucentView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA6F61D619FD1A6600F22F78 /* ILTranslucentView.m */; };
@@ -96,6 +97,7 @@
 		DA379D4619FB35E80031E30B /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
 		DA41794919FAF9FF007784F0 /* ChatMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatMessageView.h; sourceTree = "<group>"; };
 		DA41794A19FAF9FF007784F0 /* ChatMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatMessageView.m; sourceTree = "<group>"; };
+		DA5FB8F71A6EF577004CA1C8 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = conversation/Resources/Settings.bundle; sourceTree = "<group>"; };
 		DA656B341A12C97000C214BD /* UserListItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserListItemCell.h; sourceTree = "<group>"; };
 		DA656B351A12C97000C214BD /* UserListItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserListItemCell.m; sourceTree = "<group>"; };
 		DA656B371A13866500C214BD /* ConsoleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleViewController.h; sourceTree = "<group>"; };
@@ -431,6 +433,7 @@
 		DAC65A3519EAA24300E00A73 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				DA5FB8F71A6EF577004CA1C8 /* Settings.bundle */,
 				DAC65A3A19EAA2ED00E00A73 /* Base.lproj */,
 				DAC65A4219EAA2ED00E00A73 /* Images.xcassets */,
 			);
@@ -697,6 +700,7 @@
 				DA96223F19EDE217008D42EB /* networks.plist in Resources */,
 				DAF9002C1A0DA60900488896 /* emoticons.plist in Resources */,
 				DAC65A4819EAA2ED00E00A73 /* Images.xcassets in Resources */,
+				DA5FB8F81A6EF577004CA1C8 /* Settings.bundle in Resources */,
 				DAC65A4519EAA2ED00E00A73 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
