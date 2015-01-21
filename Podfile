@@ -13,6 +13,7 @@ target 'conversation' do
 	pod 'SHNavigationControllerBlocks'
 	pod 'MCNotificationManager'
 	pod 'InAppSettingsKit'
+	pod 'FCModel'
 end
 
 target 'conversationTests' do
