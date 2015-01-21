@@ -477,8 +477,9 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             
             // Display default values as placeholder
             if(!_edit && [_connection.primaryNickname isEqualToString:_configuration.primaryNickname]) {
+                NSString *defaultName = [[NSUserDefaults standardUserDefaults] stringForKey:@"nickname_preference"];
                 cell.textField.text = @"";
-                cell.textField.placeholder = _configuration.primaryNickname;
+                cell.textField.placeholder = defaultName ? defaultName : _configuration.primaryNickname;
             }
             
             if (_edit)
@@ -513,8 +514,9 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             
             // Display default values as placeholder
             if(!_edit && [_connection.usernameForRegistration isEqualToString:_configuration.usernameForRegistration]) {
+                NSString *defaultName = [[NSUserDefaults standardUserDefaults] stringForKey:@"username_preference"];
                 cell.textField.text = @"";
-                cell.textField.placeholder = _configuration.usernameForRegistration;
+                cell.textField.placeholder = defaultName ? defaultName : _configuration.usernameForRegistration;
             }
             
             if (_edit)
@@ -531,8 +533,9 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             
             // Display default values as placeholder
             if(!_edit && [_connection.realNameForRegistration isEqualToString:_configuration.realNameForRegistration]) {
+                NSString *defaultName = [[NSUserDefaults standardUserDefaults] stringForKey:@"realname_preference"];
                 cell.textField.text = @"";
-                cell.textField.placeholder = _configuration.realNameForRegistration;
+                cell.textField.placeholder = defaultName ? defaultName : _configuration.realNameForRegistration;
             }
             
             if (_edit)

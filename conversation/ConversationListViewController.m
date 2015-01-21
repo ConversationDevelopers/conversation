@@ -646,7 +646,8 @@
             case 0:
                 // Connect or disconnect
                 if(client.isConnected) {
-                   [client disconnect];
+                    NSString *quitMsg = [[NSUserDefaults standardUserDefaults] stringForKey:@"quitmsg_preference"];
+                    [client disconnectWithMessage:quitMsg];
                 } else {
                     [client connect];
                     if (client.configuration.showConsoleOnConnect) {
@@ -1070,7 +1071,8 @@
 - (void)disconnect
 {
     for (IRCClient *client in _connections) {
-        [client disconnect];
+        NSString *quitMsg = [[NSUserDefaults standardUserDefaults] stringForKey:@"quitmsg_preference"];
+        [client disconnectWithMessage:quitMsg];
     }
 }
 

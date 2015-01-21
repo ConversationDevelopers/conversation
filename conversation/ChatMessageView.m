@@ -371,7 +371,8 @@ uint32_t FNV32(const char *s)
         [offsets addObject:[NSNumber numberWithInteger:urlString.length-replace.length]];
         [links addObject:match.URL];
 
-        if ([self isImageLink:match.URL])
+        BOOL enableImages = [[NSUserDefaults standardUserDefaults] boolForKey:@"inline_preference"];
+        if (enableImages && [self isImageLink:match.URL])
             [_images addObject:[self getImageLink:match.URL]];
     }
 
@@ -407,7 +408,13 @@ uint32_t FNV32(const char *s)
 {
 
     IRCUser *user = _message.sender;
-    NSString *msg = [self setEmoticons:_message.message];
+    
+    NSString *msg;
+    BOOL enableEmoji = [[NSUserDefaults standardUserDefaults] boolForKey:@"emoji_preference"];
+    if (enableEmoji)
+        msg = [self setEmoticons:_message.message];
+    else
+        msg = _message.message;
 
     NSMutableAttributedString *string;
     NSString *status = [self characterForStatus:user.channelPrivilege];
