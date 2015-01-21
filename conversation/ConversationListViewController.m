@@ -37,6 +37,7 @@
 #import "IRCConversation.h"
 #import "IRCChannel.h"
 #import "IRCClient.h"
+#import "IRCConnection.h"
 #import "IRCUser.h"
 #import "IRCMessage.h"
 #import "AppPreferences.h"
@@ -1066,6 +1067,30 @@
 - (void) _backgroundTaskExpired {
     [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
     _backgroundTask = UIBackgroundTaskInvalid;
+}
+
+- (void)setAway
+{
+    BOOL autoaway = [[NSUserDefaults standardUserDefaults] boolForKey:@"autoaway_preference"];
+    if (!autoaway)
+        return;
+    
+    NSString *awaymsg = [[NSUserDefaults standardUserDefaults] stringForKey:@"awaymsg_preferenc"];
+    for (IRCClient *client in self.connections) {
+        [client.connection send:[NSString stringWithFormat:@"AWAY :%@", awaymsg]];
+    }
+    
+}
+
+- (void)setBack
+{
+    BOOL autoaway = [[NSUserDefaults standardUserDefaults] boolForKey:@"autoaway_preference"];
+    if (!autoaway)
+        return;
+    
+    for (IRCClient *client in self.connections) {
+        [client.connection send:@"AWAY"];
+    }
 }
 
 - (void)disconnect

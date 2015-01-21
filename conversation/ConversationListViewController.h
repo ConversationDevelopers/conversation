@@ -52,6 +52,8 @@
 - (void)showInivitationRequiredAlertForChannel:(NSString *)channelName;
 - (void)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest;
 - (void)displayPasswordEntryDialog:(IRCClient *)client;
+- (void)setAway;
+- (void)setBack;
 - (void)disconnect;
 
 @end
