@@ -30,10 +30,11 @@
 
 #import <UIKit/UIKit.h>
 #import <PHFComposeBarView/PHFComposeBarView.h>
+#import <MenuPopOverView/MenuPopOverView.h>
 
 @class IRCConversation;
 
-@interface ChatViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, PHFComposeBarViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate> {
+@interface ChatViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, PHFComposeBarViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, MenuPopOverViewDelegate> {
 }
 
 @property (assign) BOOL isChannel;

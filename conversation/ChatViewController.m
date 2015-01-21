@@ -43,9 +43,13 @@
 @property (readonly, nonatomic) UIBarButtonItem *backButton;
 @property (readonly, nonatomic) UIBarButtonItem *joinButton;
 @property (readonly, nonatomic) UIBarButtonItem *userlistButton;
+@property (nonatomic) NSMutableArray *suggestions;
+@property (nonatomic) MenuPopOverView *popOver;
+
 @end
 
 CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
+BOOL popoverDidDismiss = NO;
 
 @implementation ChatViewController
 
@@ -378,8 +382,69 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 
 }
 
+- (void)textViewDidChange:(UITextView *)textView
+{
+    if ([[textView.text substringFromIndex:textView.text.length-1] isEqualToString:@" "])
+        // Last character was a space so reset popover state
+        popoverDidDismiss = NO;
+    
+    if (popoverDidDismiss)
+        return;
+        
+    if (!_popOver) {
+        _popOver = [[MenuPopOverView alloc] init];
+        _popOver.delegate = self;
+    }
+    
+    if (textView.text.length == 0) {
+        [_popOver removeFromSuperview];
+        _popOver = nil;
+        return;
+    }
+    
+    // Initialise suggestions array
+    _suggestions = [[NSMutableArray alloc] init];
+    
+    
+    // Commands
+    if ([[textView.text substringToIndex:1] isEqualToString:@"/"] && [textView.text containsString:@" "] == NO) {
+        NSString *searchString = [textView.text substringFromIndex:1];
+        for (NSString *command in [InputCommands inputCommandReference]) {
+            if ([[command lowercaseString] hasPrefix:[searchString lowercaseString]]) {
+                [_suggestions addObject:[command lowercaseString]];
+            }
+        }
+    }
+    
+    NSArray *args = [textView.text componentsSeparatedByString:@" "];
+    NSString *string = args[args.count-1];
+    
+    if (string.length > 0) {
+        // Channels
+        if ([[string substringToIndex:1] isEqualToString:@"#"]) {
+            IRCClient *client = _conversation.client;
+            for (IRCChannel *channel in client.channels)
+                if([[channel.name lowercaseString] hasPrefix:[string lowercaseString]])
+                    [_suggestions addObject:channel.name];
+            
+        } else {
+            // Users
+            if (_isChannel) {
+                IRCChannel *channel = (IRCChannel *)_conversation;
+                for (IRCUser *user in channel.users)
+                    if([[user.nick lowercaseString] hasPrefix:[string lowercaseString]])
+                        [_suggestions addObject:user.nick];
+            }
+        }
+    }
+    
+    [_popOver removeFromSuperview];
+    [_popOver presentPopoverFromRect:CGRectMake(15.0, 15.0, 0.0, 0.0) inView:textView withStrings:_suggestions];
+
+}
 
 - (BOOL) textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    
     if([text isEqualToString:@"\n"]){
         [self sendMessage:textView.text];
         return NO;
@@ -579,6 +644,32 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+}
+
+- (void)popoverView:(MenuPopOverView *)popoverView didSelectItemAtIndex:(NSInteger)index
+{
+    
+    UITextView *textView = _composeBarView.textView;
+    NSArray *args = [textView.text componentsSeparatedByString:@" "];
+    NSString *string = args[args.count-1];
+    NSString *replace = _suggestions[index];
+    
+    if (args.count == 1) {
+        if ([[string substringToIndex:1] isEqualToString:@"/"])
+            replace = [NSString stringWithFormat:@"/%@", replace];
+        else if ([[string substringToIndex:1] isEqualToString:@"#"] == NO)
+            replace = [NSString stringWithFormat:@"%@:", replace];
+
+    }
+    
+    textView.text = [textView.text stringByReplacingOccurrencesOfString:args[args.count-1] withString:[replace stringByAppendingString:@" "]];
+    _popOver = nil;
+}
+
+- (void)popoverViewDidDismiss:(MenuPopOverView *)popoverView
+{
+    popoverDidDismiss = YES;
+    _popOver = nil;
 }
 
 @end

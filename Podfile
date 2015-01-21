@@ -14,6 +14,7 @@ target 'conversation' do
 	pod 'MCNotificationManager'
 	pod 'InAppSettingsKit'
 	pod 'FCModel'
+	pod 'MenuPopOverView'
 end
 
 target 'conversationTests' do

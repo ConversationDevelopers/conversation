@@ -41,6 +41,8 @@
 
 + (void)sendMessage:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client;
 
++ (NSArray *)inputCommandReference;
+
 typedef NS_ENUM(NSUInteger, InputCommand) {
     CMD_ADMIN,
     CMD_BAN,
