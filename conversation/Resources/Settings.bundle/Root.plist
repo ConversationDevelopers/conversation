@@ -16,7 +16,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string></string>
+			<string>Guest</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -34,7 +34,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string></string>
+			<string>user</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -52,7 +52,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string></string>
+			<string>A Conversation IRC User</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -76,7 +76,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string></string>
+			<string>Conversation for iOS - https://github.com/ConversationDevelopers/conversation</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -94,7 +94,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string></string>
+			<string>Conversation: IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
