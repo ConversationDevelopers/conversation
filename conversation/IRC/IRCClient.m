@@ -194,7 +194,8 @@
     NSMutableDictionary *tagsList = [[NSMutableDictionary alloc] init];
     if ([line hasPrefix:@"@"]) {
         /* This message starts with a message tag ( http://ircv3.atheme.org/specification/message-tags-3.2 ) */
-        NSArray *tags = [lineComponents objectAtIndex:0];
+        NSString *tagString = [[lineComponents objectAtIndex:0] substringFromIndex:1];
+        NSArray *tags = [tagString componentsSeparatedByString:@";"];
         
         for (NSString *tag in tags) {
             if ([tag containsString:@"="]) {
