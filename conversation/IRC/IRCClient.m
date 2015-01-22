@@ -343,6 +343,10 @@
             [Messages clientReceivedAwayNotification:messageObject];
             break;
             
+        case INVITE:
+            [Messages userReceivedInviteToChannel:messageObject];
+            break;
+            
         case RPL_WELCOME:
             self.isAttemptingRegistration = NO;
             

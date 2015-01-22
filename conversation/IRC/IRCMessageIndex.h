@@ -55,6 +55,7 @@ typedef NS_ENUM(NSUInteger, MessageType) {
     NICK,
     SQUIT,
     AWAY,
+    INVITE,
     RPL_WELCOME,            /* 001 */
     RPL_YOURHOST,           /* 002 */
     RPL_CREATED,            /* 003 */

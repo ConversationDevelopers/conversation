@@ -658,7 +658,15 @@
             });
         }
     }
+}
+
++ (void)userReceivedInviteToChannel:(IRCMessage *)message
+{
+    message.messageType = ET_INVITE;
     
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+    });
 }
 
 @end
