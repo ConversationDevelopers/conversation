@@ -576,6 +576,7 @@
     }
     [[AppPreferences sharedPrefs] save];
     [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    [tableView reloadData];
 }
 
 - (void)headerViewSelected:(UIGestureRecognizer *)sender
