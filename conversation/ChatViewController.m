@@ -82,10 +82,6 @@ BOOL popoverDidDismiss = NO;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"messageReceived"
                                                   object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:@"away"
-                                                  object:nil];
 }
 
 - (NSUInteger)supportedInterfaceOrientations
@@ -472,11 +468,6 @@ BOOL popoverDidDismiss = NO;
     [_composeBarView resignFirstResponder];
 }
 
-- (void)awayReceived:(NSNotification *)notification
-{
-    [_userListView.tableview reloadData];
-}
-
 - (void)messageReceived:(NSNotification *)notification
 {
     IRCMessage *message = notification.object;
@@ -495,13 +486,17 @@ BOOL popoverDidDismiss = NO;
     }
     
     if (_userlistIsVisible && (message.messageType == ET_JOIN ||
-        message.messageType == ET_PART ||
-        message.messageType == ET_NICK ||
-        message.messageType == ET_QUIT ||
-        message.messageType == ET_KICK)) {
+                               message.messageType == ET_PART ||
+                               message.messageType == ET_NICK ||
+                               message.messageType == ET_QUIT ||
+                               message.messageType == ET_KICK ||
+                               message.messageType == ET_KICK)) {
 
         [self.userListView.tableview reloadData];
     }
+    
+    if (message.messageType == ET_AWAY)
+        [self.userListView.tableview reloadData];
     
     // Scroll to bottom if content is bigger than view and user didnt scroll up
     if (_conversation.contentView.contentOffset.y == 0.0 ||
