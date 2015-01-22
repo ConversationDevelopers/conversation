@@ -83,4 +83,6 @@
 
 + (void)clientReceivedAwayNotification:(IRCMessage *)message;
 
++ (void)userReceivedInviteToChannel:(IRCMessage *)message;
+
 @end
