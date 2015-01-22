@@ -17,7 +17,6 @@ target 'conversation' do
 	pod 'MenuPopOverView'
 end
 
-target 'conversationTests' do
-
+post_install do |installer_representation|
+	`sh "update-acknowledgements.sh"`
 end
-
