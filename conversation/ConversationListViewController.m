@@ -819,9 +819,20 @@
     
     if (message.messageType == ET_INVITE) {
         if ([[NSUserDefaults standardUserDefaults] integerForKey:@"invite_preference"] == 1) {
-            [self joinChannelWithName:message.conversation.name onClient:message.conversation.client];
+            [self joinChannelWithName:message.message onClient:message.conversation.client];
         } else if ([[NSUserDefaults standardUserDefaults] integerForKey:@"invite_preference"] == 2) {
-            [self showGotInvitationAlertForChannel:message.conversation.name sender:message.sender.nick onClient:message.conversation.client];
+            NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"got invitation", nil), message.sender.nick, message.message];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Channel Invite", nil)
+                                                                message:msg
+                                                               delegate:self
+                                                      cancelButtonTitle:NSLocalizedString(@"NO", nil)
+                                                      otherButtonTitles:NSLocalizedString(@"YES", nil), nil];
+            [alertView setCancelButtonIndex:0];
+            [alertView showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                if (buttonIndex == 1) {
+                    [self joinChannelWithName:message.message onClient:message.conversation.client];
+                }
+            }];
         }
         return;
     }
@@ -970,22 +981,6 @@
                     [client connect];
                 }
             }
-        }
-    }];
-}
-
-- (void)showGotInvitationAlertForChannel:(NSString *)channelName sender:(NSString *)nickname onClient:(IRCClient *)client
-{
-    NSString *message = [NSString stringWithFormat:NSLocalizedString(@"got invitation", nil), nickname, channelName];
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Channel Invite", nil)
-                                                        message:message
-                                                       delegate:self
-                                              cancelButtonTitle:NSLocalizedString(@"NO", nil)
-                                              otherButtonTitles:NSLocalizedString(@"YES", nil), nil];
-    [alertView setCancelButtonIndex:0];
-    [alertView showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
-        if (buttonIndex == 1) {
-            [self joinChannelWithName:channelName onClient:client];
         }
     }];
 }
