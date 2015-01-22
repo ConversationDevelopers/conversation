@@ -671,6 +671,13 @@
     });
 }
 
++ (void)clientReceivedInviteOnlyChannelError:(IRCMessage *)message
+{
+    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    
+    [controller showInivitationRequiredAlertForChannel:message.conversation.name];
+}
+
 + (void)clientReceivedRecoverableErrorFromServer:(IRCMessage *)message
 {
     message.messageType = ET_ERROR;

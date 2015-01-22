@@ -85,6 +85,8 @@
 
 + (void)userReceivedInviteToChannel:(IRCMessage *)message;
 
++ (void)clientReceivedInviteOnlyChannelError:(IRCMessage *)message;
+
 + (void)clientReceivedRecoverableErrorFromServer:(IRCMessage *)message;
 
 @end

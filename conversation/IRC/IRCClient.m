@@ -425,6 +425,10 @@
             }
             break;
             
+        case ERR_INVITEONLYCHAN:
+            [Messages clientReceivedInviteOnlyChannelError:messageObject];
+            break;
+            
         case RPL_SASLSUCCESS:
             [Messages clientReceivedAuthenticationAccepted:messageObject];
             break;
