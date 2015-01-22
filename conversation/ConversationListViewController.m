@@ -912,6 +912,7 @@
                 AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
             }
             notification.image = [UIImage imageNamed:@"Userlist"];
+            [[MCNotificationManager sharedInstance] showNotification:notification];
             
         } else {
             
@@ -930,11 +931,11 @@
                     AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
                 }
                 notification.image = [UIImage imageNamed:@"ChannelIcon_Light"];
+                [[MCNotificationManager sharedInstance] showNotification:notification];                
             }
             
         }
         
-        [[MCNotificationManager sharedInstance] showNotification:notification];
     }
     
     [self.tableView reloadData];
