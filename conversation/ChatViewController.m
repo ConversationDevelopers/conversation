@@ -375,6 +375,12 @@ BOOL popoverDidDismiss = NO;
 
 - (void)textViewDidChange:(UITextView *)textView
 {
+    if (textView.text.length == 0) {
+        [_popOver removeFromSuperview];
+        _popOver = nil;
+        return;
+    }
+    
     if ([[textView.text substringFromIndex:textView.text.length-1] isEqualToString:@" "])
         // Last character was a space so reset popover state
         popoverDidDismiss = NO;
@@ -385,12 +391,6 @@ BOOL popoverDidDismiss = NO;
     if (!_popOver) {
         _popOver = [[MenuPopOverView alloc] init];
         _popOver.delegate = self;
-    }
-    
-    if (textView.text.length == 0) {
-        [_popOver removeFromSuperview];
-        _popOver = nil;
-        return;
     }
     
     // Initialise suggestions array
