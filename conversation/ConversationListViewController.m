@@ -830,7 +830,7 @@
             [alertView setCancelButtonIndex:0];
             [alertView showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
                 if (buttonIndex == 1) {
-                    NSString *identifier = [self joinChannelWithName:message.message onClient:message.conversation.client];
+                    NSString *identifier = [self joinChannelWithName:message.conversation.name onClient:message.conversation.client];
                     [self selectConversationWithIdentifier:identifier];
                 }
             }];
@@ -931,7 +931,7 @@
                     AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
                 }
                 notification.image = [UIImage imageNamed:@"ChannelIcon_Light"];
-                [[MCNotificationManager sharedInstance] showNotification:notification];                
+                [[MCNotificationManager sharedInstance] showNotification:notification];
             }
             
         }
