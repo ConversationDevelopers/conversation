@@ -574,25 +574,24 @@
     
 }
 
-+ (void)clientReceivedWHOReply:(NSString *)line onClient:(IRCClient *)client
++ (void)clientReceivedWHOReply:(IRCMessage *)message
 {
-    NSMutableArray *messageComponents = [[line componentsSeparatedByString:@" "] mutableCopy];
-    NSString *channel   = [messageComponents objectAtIndex:0];
-    NSString *username  = [messageComponents objectAtIndex:1];
-    NSString *hostname  = [messageComponents objectAtIndex:2];
-    NSString *nickname  = [messageComponents objectAtIndex:4];
-    NSString *modes     = [messageComponents objectAtIndex:5];
+    NSMutableArray *messageComponents = [[message.message componentsSeparatedByString:@" "] mutableCopy];
+    NSString *username  = [messageComponents objectAtIndex:0];
+    NSString *hostname  = [messageComponents objectAtIndex:1];
+    NSString *nickname  = [messageComponents objectAtIndex:3];
+    NSString *modes     = [messageComponents objectAtIndex:4];
     
-    [messageComponents removeObjectsInRange:NSMakeRange(0, 6)];
+    [messageComponents removeObjectsInRange:NSMakeRange(0, 5)];
     NSString *realname  = [messageComponents componentsJoinedByString:@" "];
     
-    IRCChannel *ircChannel = [IRCChannel fromString:channel withClient:client];
+    IRCChannel *ircChannel = [IRCChannel fromString:message.conversation.name withClient:message.client];
     IRCUser *user = [IRCUser fromNickname:nickname onChannel:ircChannel];
     if (user == nil) {
-        user = [[IRCUser alloc] initWithNickname:nickname andUsername:username andHostname:hostname andRealname:realname onClient:client];
+        user = [[IRCUser alloc] initWithNickname:nickname andUsername:username andHostname:hostname andRealname:realname onClient:message.client];
     }
     
-    if (IRCv3CapabilityEnabled(client, @"away-notify")) {
+    if (IRCv3CapabilityEnabled(message.client, @"away-notify")) {
         user.isAway = ([modes hasPrefix:@"G"]);
     }
     
@@ -606,19 +605,19 @@
     for (NSUInteger i = 0; i < [modes length]; i++) {
         NSString *mode = [modes substringWithRange:NSMakeRange(i, 1)];
         
-        #define matchesUserMode(x) ([mode isEqualToString:[[client userModeCharacters] objectForKey:(x)]])
+        #define matchesUserMode(x, y) ([mode isEqualToString:[[x userModeCharacters] objectForKey:(y)]])
         
-        if (matchesUserMode(@"y")) {
+        if (matchesUserMode(message.client, @"y")) {
             user.ircop = YES;
-        } else if (matchesUserMode(@"q")) {
+        } else if (matchesUserMode(message.client, @"q")) {
             user.owner = YES;
-        } else if (matchesUserMode(@"a")) {
+        } else if (matchesUserMode(message.client, @"a")) {
             user.admin = YES;
-        } else if (matchesUserMode(@"o")) {
+        } else if (matchesUserMode(message.client, @"o")) {
             user.op = YES;
-        } else if (matchesUserMode(@"h")) {
+        } else if (matchesUserMode(message.client, @"h")) {
             user.halfop = YES;
-        } else if (matchesUserMode(@"v")) {
+        } else if (matchesUserMode(message.client, @"v")) {
             user.voice = YES;
         }
     }

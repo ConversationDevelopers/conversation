@@ -75,7 +75,7 @@
 
 + (void)clientReceivedISONResponse:(IRCMessage *)message;
 
-+ (void)clientReceivedWHOReply:(NSString *)line onClient:(IRCClient *)client;
++ (void)clientReceivedWHOReply:(IRCMessage *)message;
 
 + (void)clientReceivedServerPasswordMismatchError:(IRCClient *)client;
 

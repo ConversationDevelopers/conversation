@@ -398,7 +398,7 @@
             break;
             
         case RPL_WHOREPLY:
-            [Messages clientReceivedWHOReply:message onClient:self];
+            [Messages clientReceivedWHOReply:messageObject];
             break;
             
         case ERR_ERRONEUSNICKNAME:
