@@ -437,6 +437,11 @@
         default:
             break;
     }
+    
+    NSInteger numericReplyAsNumber = [command integerValue];
+    if (numericReplyAsNumber >= 400 && numericReplyAsNumber < 600) {
+        [Messages clientReceivedRecoverableErrorFromServer:messageObject];
+    }
 }
 
 - (void)updateServerSupportedFeatures:(NSString *)data

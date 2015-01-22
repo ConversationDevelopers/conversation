@@ -671,4 +671,11 @@
     });
 }
 
++ (void)clientReceivedRecoverableErrorFromServer:(IRCMessage *)message
+{
+    message.messageType = ET_ERROR;
+    
+    [message.conversation addMessageToConversation:message];
+}
+
 @end
