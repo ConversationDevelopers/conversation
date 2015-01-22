@@ -645,6 +645,8 @@
 {
     BOOL userIsAway = ([[message message] length] > 0);
     
+    message.messageType = ET_AWAY;
+    
     for (IRCChannel *channel in [message.client channels]) {
         IRCUser *userOnChannel = [IRCUser fromNickname:message.sender.nick onChannel:channel];
         if (userOnChannel) {
@@ -654,7 +656,7 @@
             [channel sortUserlist];
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"away" object:message];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
             });
         }
     }

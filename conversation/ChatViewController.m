@@ -62,11 +62,6 @@ BOOL popoverDidDismiss = NO;
                                              selector:@selector(messageReceived:)
                                                  name:@"messageReceived"
                                                object:nil];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(awayReceived:)
-                                                 name:@"away"
-                                               object:nil];
     
     _backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ChannelIcon_Light"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
     
