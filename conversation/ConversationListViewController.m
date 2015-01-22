@@ -552,7 +552,11 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Return NO if you do not want the specified item to be editable.
+    // We have the menu item to remove the console, so don't make it editable
+    IRCClient *client = [_connections objectAtIndex:indexPath.section];    
+    if (client.showConsole && indexPath.row == 0)
+        return NO;
+    
     return YES;
 }
 
