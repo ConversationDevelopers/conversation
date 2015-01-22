@@ -817,6 +817,15 @@
     if (message.messageType == ET_RAW)
         return;
     
+    if (message.messageType == ET_INVITE) {
+        if ([[NSUserDefaults standardUserDefaults] integerForKey:@"invite_preference"] == 1) {
+            [self joinChannelWithName:message.conversation.name onClient:message.conversation.client];
+        } else if ([[NSUserDefaults standardUserDefaults] integerForKey:@"invite_preference"] == 2) {
+            [self showGotInvitationAlertForChannel:message.conversation.name sender:message.sender.nick onClient:message.conversation.client];
+        }
+        return;
+    }
+        
     // Make sender's nick bold
     NSMutableAttributedString *string;
     UIFont *font = [UIFont fontWithName:@"Helvetica-Bold" size:14];

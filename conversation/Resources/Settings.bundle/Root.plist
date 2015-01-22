@@ -158,7 +158,7 @@
 			<key>Title</key>
 			<string>Invite Action</string>
 			<key>Key</key>
-			<string>invite_preferences</string>
+			<string>invite_preference</string>
 			<key>DefaultValue</key>
 			<integer>2</integer>
 			<key>Titles</key>
