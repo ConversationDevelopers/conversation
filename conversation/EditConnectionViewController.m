@@ -139,14 +139,13 @@ static unsigned short EncodingTableSection = 4;
         }
         [client addChannel:[[IRCChannel alloc] initWithConfiguration:config withClient:client]];
     }
-
+    
     // Does the connection already exist?
     if ([[AppPreferences sharedPrefs] hasConnectionWithIdentifier:_configuration.uniqueIdentifier]) {
         int x=0;
         NSArray *connections = self.conversationsController.connections;
         for (IRCClient *cl in connections) {
             if([cl.configuration.uniqueIdentifier isEqualToString:client.configuration.uniqueIdentifier]) {
-                [self.conversationsController.connections setObject:client atIndexedSubscript:x];
                 [[AppPreferences sharedPrefs] setConnectionConfiguration:_configuration atIndex:x];
                 break;
             }
