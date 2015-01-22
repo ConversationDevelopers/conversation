@@ -231,6 +231,11 @@
     
     NSString *command = [lineComponents objectAtIndex:0];
     [lineComponents removeObjectAtIndex:0];
+    NSInteger numericReplyAsNumber = [command integerValue];
+    
+    if (numericReplyAsNumber != 0) {
+        [lineComponents removeObjectAtIndex:0];
+    }
     
     NSString *recipient;
     if ([lineComponents count] > 0 && messageWithoutRecipient == NO) {
@@ -438,7 +443,6 @@
             break;
     }
     
-    NSInteger numericReplyAsNumber = [command integerValue];
     if (numericReplyAsNumber >= 400 && numericReplyAsNumber < 600) {
         [Messages clientReceivedRecoverableErrorFromServer:messageObject];
     }
