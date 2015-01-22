@@ -553,7 +553,7 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // We have the menu item to remove the console, so don't make it editable
-    IRCClient *client = [_connections objectAtIndex:indexPath.section];    
+    IRCClient *client = [_connections objectAtIndex:indexPath.section];
     if (client.showConsole && indexPath.row == 0)
         return NO;
     
@@ -563,16 +563,22 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     IRCClient *client = _connections[indexPath.section];
-    NSInteger index = indexPath.row;
-    if ((int)indexPath.row > (int)client.channels.count-1) {
-        index = indexPath.row - client.channels.count;
-        IRCConversation *query = client.queries[index];
+
+    int offset = 0;
+    if (client.showConsole)
+        offset = 1;
+    
+    int index = (int)indexPath.row;
+    
+    if ((int)indexPath.row > (int)client.channels.count-1 + offset) {
+        index = index - (int)client.channels.count;
+        IRCConversation *query = client.queries[index - offset];
         [client removeQuery:query];
         
         // Remove from prefs
         [[AppPreferences sharedPrefs] deleteQueryWithName:query.name forConnectionConfiguration:client.configuration];
     } else {
-        IRCChannel *channel = client.channels[index];
+        IRCChannel *channel = client.channels[index - offset];
         [client removeChannel:channel];
         
         // Remove from prefs
