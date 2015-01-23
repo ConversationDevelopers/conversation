@@ -581,7 +581,7 @@
         IRCChannel *channel = client.channels[index - offset];
 
         if (channel.isJoinedByUser) {
-            [IRCCommands leaveChannel:channel.name withMessage:@"" onClient:client];
+            [IRCCommands leaveChannel:channel.name withMessage:[[NSUserDefaults standardUserDefaults] stringForKey:@"partmsg_preference"] onClient:client];
             [tableView reloadData];
             return;
         } else {

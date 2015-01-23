@@ -76,7 +76,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string>Conversation for iOS - https://github.com/ConversationDevelopers/conversation</string>
+			<string>Conversation: IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -84,7 +84,25 @@
 			<key>KeyboardType</key>
 			<string>Alphabet</string>
 			<key>Title</key>
-			<string>Away Message</string>
+			<string>Away</string>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+		</dict>
+		<dict>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+			<key>DefaultValue</key>
+			<string>Conversation: IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>Key</key>
+			<string>partmsg_preference</string>
+			<key>KeyboardType</key>
+			<string>Alphabet</string>
+			<key>Title</key>
+			<string>Part</string>
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 		</dict>
@@ -102,7 +120,7 @@
 			<key>KeyboardType</key>
 			<string>Alphabet</string>
 			<key>Title</key>
-			<string>Quit Message</string>
+			<string>Quit</string>
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 		</dict>
