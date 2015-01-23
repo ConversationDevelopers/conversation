@@ -512,6 +512,10 @@ uint32_t FNV32(const char *s)
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:10.0]
+                           range:NSMakeRange(0, msg.length)];
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont boldSystemFontOfSize:10.0]
                            range:NSMakeRange(string.length-msg.length, msg.length)];
             break;
         }
