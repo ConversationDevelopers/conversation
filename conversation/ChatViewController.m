@@ -128,7 +128,7 @@ BOOL popoverDidDismiss = NO;
     
     // Clear container
     for (UIView *view in _container.subviews) {
-        if ([NSStringFromClass(view.class) isEqualToString:@"UIScrollView"]) {
+        if ([NSStringFromClass(view.class) isEqualToString:@"ConversationContentView"]) {
             [view removeFromSuperview];
         }
     }

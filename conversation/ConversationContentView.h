@@ -29,27 +29,11 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "ConversationContentView.h"
 
-@class IRCClient;
-@class IRCChannelConfiguration;
+@class ChatMessageView;
 
-@interface IRCConversation : NSObject 
+@interface ConversationContentView : UIScrollView
 
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, assign) IRCClient *client;
-@property (nonatomic, assign) BOOL conversationPartnerIsOnline;
-@property (nonatomic, strong) IRCChannelConfiguration *configuration;
-@property (nonatomic) NSMutableArray *previewMessages;
-@property (nonatomic) NSUInteger unreadCount;
-@property (assign) BOOL isHighlighted;
-@property (nonatomic) ConversationContentView *contentView;
-
-- (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;
-
-+ (void) getConversationOrCreate:(NSString *)name onClient:(IRCClient *)client withCompletionHandler:(void (^)(IRCConversation *))completionHandler;
-+ (id) fromString:(NSString *)name withClient:(IRCClient *)client;
-- (void)addPreviewMessage:(NSAttributedString *)message;
-- (void)addMessageToConversation:(id)object;
+- (void)addMessageView:(ChatMessageView *)messageView;
 
 @end

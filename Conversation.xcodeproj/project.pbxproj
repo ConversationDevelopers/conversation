@@ -40,6 +40,7 @@
 		DAC65A4819EAA2ED00E00A73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A4219EAA2ED00E00A73 /* Images.xcassets */; };
 		DADA8AC61A0D3AC20085A130 /* ChannelInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DADA8AC51A0D3AC20085A130 /* ChannelInfoViewController.m */; };
 		DAE1BFB01A71DAB000A66276 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = DAE1BFAF1A71DAB000A66276 /* Defaults.plist */; };
+		DAE1BFB31A722FFA00A66276 /* ConversationContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE1BFB21A722FFA00A66276 /* ConversationContentView.m */; };
 		DAE830591A0F47E10022F512 /* DisclosureView.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE830581A0F47E10022F512 /* DisclosureView.m */; };
 		DAF9002C1A0DA60900488896 /* emoticons.plist in Resources */ = {isa = PBXBuildFile; fileRef = DAF9002B1A0DA60900488896 /* emoticons.plist */; };
 		FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A38319E5A69F00E7B4D7 /* IRCMessageIndex.m */; };
@@ -143,6 +144,8 @@
 		DADA8AC41A0D3AC20085A130 /* ChannelInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelInfoViewController.h; sourceTree = "<group>"; };
 		DADA8AC51A0D3AC20085A130 /* ChannelInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelInfoViewController.m; sourceTree = "<group>"; };
 		DAE1BFAF1A71DAB000A66276 /* Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Defaults.plist; path = conversation/Resources/Defaults.plist; sourceTree = "<group>"; };
+		DAE1BFB11A722FFA00A66276 /* ConversationContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationContentView.h; sourceTree = "<group>"; };
+		DAE1BFB21A722FFA00A66276 /* ConversationContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationContentView.m; sourceTree = "<group>"; };
 		DAE830571A0F47E10022F512 /* DisclosureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisclosureView.h; sourceTree = "<group>"; };
 		DAE830581A0F47E10022F512 /* DisclosureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisclosureView.m; sourceTree = "<group>"; };
 		DAF9002B1A0DA60900488896 /* emoticons.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = emoticons.plist; path = Resources/emoticons.plist; sourceTree = "<group>"; };
@@ -354,6 +357,8 @@
 				DA79EA2519E909CD0027A370 /* AddConversationViewController.m */,
 				DA1A4AC119E1770700565763 /* ConversationListViewController.h */,
 				DA1A4AC219E1770700565763 /* ConversationListViewController.m */,
+				DAE1BFB11A722FFA00A66276 /* ConversationContentView.h */,
+				DAE1BFB21A722FFA00A66276 /* ConversationContentView.m */,
 				DA79EA3119EA6C810027A370 /* ConversationItemView.h */,
 				DA79EA3219EA6C810027A370 /* ConversationItemView.m */,
 				DAE830571A0F47E10022F512 /* DisclosureView.h */,
@@ -760,6 +765,7 @@
 				DA2F9A081A0726E60028B2BD /* AddStringItemViewController.m in Sources */,
 				FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */,
 				DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */,
+				DAE1BFB31A722FFA00A66276 /* ConversationContentView.m in Sources */,
 				FAC0E50C1A018AC2001CFB48 /* CertificateItemRow.m in Sources */,
 				FAEE1E6019EBEA040041439F /* Messages.m in Sources */,
 				FAEE1E6319EBFBA20041439F /* IRCConversation.m in Sources */,

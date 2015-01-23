@@ -797,7 +797,7 @@
                            screenRect.size.width,
                            480.0 - PHFComposeBarViewInitialHeight);
 
-        conversation.contentView = [[UIScrollView alloc] initWithFrame:frame];
+        conversation.contentView = [[ConversationContentView alloc] initWithFrame:frame];
         conversation.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         conversation.contentView.delegate = self;
     }
@@ -887,44 +887,18 @@
         [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, message.sender.nick.length+1)];
     }
     
-    // Add message to chatviewcontroller
-    ChatMessageView *lastMsg;
-    
-    // Get last message object
-    for (UIView *view in message.conversation.contentView.subviews) {
-        if([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
-            lastMsg = (ChatMessageView *)view;
-        }
-    }
-    
-    CGFloat posY;
-    
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    
-    if (message.messageType == ET_PRIVMSG)
-        posY = lastMsg.frame.origin.y + lastMsg.bounds.size.height + 5.0;
-    else
-        posY = lastMsg.frame.origin.y + lastMsg.bounds.size.height;
-    
-    ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, posY, message.conversation.contentView.bounds.size.width, 15.0)
+    ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, 0, message.conversation.contentView.frame.size.width, 15.0)
                                                                   message:message
                                                              conversation:message.conversation];
     messageView.chatViewController = self.chatViewController;
-    
-    messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    [message.conversation.contentView addSubview:messageView];
-    [message.conversation.contentView layoutIfNeeded];
+    [message.conversation.contentView addMessageView:messageView];
     
     CGRect frame = CGRectMake(0.0,
                               0.0,
                               message.conversation.contentView.frame.size.width,
                               _chatViewController.container.frame.size.height - PHFComposeBarViewInitialHeight);
     message.conversation.contentView.frame = frame;
-    
-    // Increase content size if needed
-    if (posY+messageView.frame.size.height > message.conversation.contentView.contentSize.height) {
-        message.conversation.contentView.contentSize = CGSizeMake(screenRect.size.width, posY+messageView.frame.size.height);
-    }
+
     
     // The stuff below is only for the preview
     if (message.messageType != ET_PRIVMSG && message.messageType != ET_ACTION)

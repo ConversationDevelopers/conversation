@@ -28,28 +28,40 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <UIKit/UIKit.h>
 #import "ConversationContentView.h"
+#import "ChatMessageView.h"
 
-@class IRCClient;
-@class IRCChannelConfiguration;
+@interface ConversationContentView()
+@property (assign) CGFloat posY;
+@end
 
-@interface IRCConversation : NSObject 
 
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, assign) IRCClient *client;
-@property (nonatomic, assign) BOOL conversationPartnerIsOnline;
-@property (nonatomic, strong) IRCChannelConfiguration *configuration;
-@property (nonatomic) NSMutableArray *previewMessages;
-@property (nonatomic) NSUInteger unreadCount;
-@property (assign) BOOL isHighlighted;
-@property (nonatomic) ConversationContentView *contentView;
+@implementation ConversationContentView
 
-- (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;
+- (void)addMessageView:(ChatMessageView *)messageView
+{
+    
+    if(!_posY)
+        _posY = 0.0;
+    
+    messageView.frame = CGRectMake(0.0, _posY, messageView.frame.size.width, messageView.frame.size.height);
+    messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    
+    [self addSubview:messageView];
+    [self layoutIfNeeded];
+    
+    // Increase content size if needed
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    if (_posY > self.contentSize.height) {
+        self.contentSize = CGSizeMake(screenRect.size.width, _posY+messageView.frame.size.height);
+    }
+    
+    if (messageView.message.messageType != ET_PRIVMSG && messageView.message.messageType != ET_ERROR)
+        _posY += messageView.frame.size.height;
+    else
+        _posY += messageView.frame.size.height + 5.0;
+    
+}
 
-+ (void) getConversationOrCreate:(NSString *)name onClient:(IRCClient *)client withCompletionHandler:(void (^)(IRCConversation *))completionHandler;
-+ (id) fromString:(NSString *)name withClient:(IRCClient *)client;
-- (void)addPreviewMessage:(NSAttributedString *)message;
-- (void)addMessageToConversation:(id)object;
 
 @end
