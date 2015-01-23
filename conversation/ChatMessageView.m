@@ -419,20 +419,19 @@ uint32_t FNV32(const char *s)
     
     switch(_message.messageType) {
         case ET_JOIN: {
-            msg = [NSString stringWithFormat:@"%@ (%@@%@) %@",
-                   user.nick,
-                   user.username,
-                   user.hostname,
-                   NSLocalizedString(@"joined the channel", @"joined the channel")];
 
-            string = [[NSMutableAttributedString alloc] initWithString:msg];
+            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@@%@) %@",
+                                                                        user.nick,
+                                                                        user.username,
+                                                                        user.hostname,
+                                                                        NSLocalizedString(@"joined the channel", @"joined the channel")]];
             
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont systemFontOfSize:10.0]
-                           range:NSMakeRange(0, msg.length)];
+                           range:NSMakeRange(0, string.length)];
 
             [string addAttribute:NSParagraphStyleAttributeName
                            value:paragraphStyle
@@ -444,6 +443,7 @@ uint32_t FNV32(const char *s)
             break;
         }
         case ET_PART: {
+            
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@@%@) %@ (%@)",
                                                                         user.nick,
                                                                         user.username,
@@ -456,7 +456,7 @@ uint32_t FNV32(const char *s)
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont systemFontOfSize:10.0]
-                           range:NSMakeRange(0, msg.length)];
+                           range:NSMakeRange(0, string.length)];
 
             [string addAttribute:NSParagraphStyleAttributeName
                            value:paragraphStyle
@@ -468,6 +468,7 @@ uint32_t FNV32(const char *s)
             break;
         }
         case ET_QUIT: {
+            
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@@%@) %@ (%@)",
                                                                         user.nick,
                                                                         user.username,
@@ -480,7 +481,7 @@ uint32_t FNV32(const char *s)
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont systemFontOfSize:10.0]
-                           range:NSMakeRange(0, msg.length)];
+                           range:NSMakeRange(0, string.length)];
 
             [string addAttribute:NSParagraphStyleAttributeName
                            value:paragraphStyle
@@ -502,7 +503,7 @@ uint32_t FNV32(const char *s)
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont systemFontOfSize:10.0]
-                           range:NSMakeRange(0, msg.length)];
+                           range:NSMakeRange(0, string.length)];
             
             [string addAttribute:NSParagraphStyleAttributeName
                            value:paragraphStyle
