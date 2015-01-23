@@ -44,7 +44,6 @@
 
 - (NSData *)dataUsingEncodingFromConfiguration:(IRCConnectionConfiguration *)configuration;
 
-- (NSString*)stringByInsertingNewlineToFitInWidth:(CGFloat)width widthAttributes:(NSDictionary *)attributes;
 - (NSString*)stringByTruncatingToWidth:(CGFloat)width withAttributes:(NSDictionary *)attributes;
 - (BOOL)getUserHostComponents:(NSString **)nickname username:(NSString **)username hostname:(NSString **)hostname onClient:(IRCClient *)client;
 

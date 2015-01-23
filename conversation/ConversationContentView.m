@@ -46,7 +46,6 @@
     
     CGFloat height = messageView.frameHeight;
     messageView.frame = CGRectMake(0.0, _posY, messageView.frame.size.width, height);
-    messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     
     [self addSubview:messageView];
     [self layoutIfNeeded];

@@ -199,21 +199,6 @@
     return [self dataUsingEncoding:encoding allowLossyConversion:NO];
 }
 
-- (NSString*)stringByInsertingNewlineToFitInWidth:(CGFloat)width widthAttributes:(NSDictionary *)attributes
-{
-    NSString *string = self;
-    NSMutableString *mutableString = [self mutableCopy];
-    if ([self sizeWithAttributes:attributes].width > width) {
-        NSRange range = {mutableString.length-1, 1};
-        while ([mutableString sizeWithAttributes:attributes].width > width) {
-            [mutableString deleteCharactersInRange:range];
-            range.location--;
-        }
-        string = [string stringByReplacingCharactersInRange:NSMakeRange(range.location-1, range.length) withString:@"\n"];
-    }
-    return string;
-}
-
 - (NSString*)stringByTruncatingToWidth:(CGFloat)width withAttributes:(NSDictionary *)attributes
 {
     NSString *ellipsis = @"…";

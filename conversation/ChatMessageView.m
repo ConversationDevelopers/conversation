@@ -182,10 +182,8 @@
         self.backgroundColor = [UIColor colorWithRed:0.941 green:0.796 blue:0.796 alpha:1]; /*#f0cbcb*/
     } else {
         _messageLayer.frame = CGRectMake(10, 0, self.bounds.size.width-20, _size.height);
-        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, _size.height);
+        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, _size.height - 5.0);
     }
-    
-
     
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)_attributedString);
     
@@ -421,23 +419,28 @@ uint32_t FNV32(const char *s)
     
     switch(_message.messageType) {
         case ET_JOIN: {
-            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@@%@) %@",
-                                                                        user.nick,
-                                                                        user.username,
-                                                                        user.hostname,
-                                                                        NSLocalizedString(@"joined the channel", @"joined the channel")]];
+            msg = [NSString stringWithFormat:@"%@ (%@@%@) %@",
+                   user.nick,
+                   user.username,
+                   user.hostname,
+                   NSLocalizedString(@"joined the channel", @"joined the channel")];
+
+            string = [[NSMutableAttributedString alloc] initWithString:msg];
             
-            msg = [msg stringByInsertingNewlineToFitInWidth:self.frame.size.width widthAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12.0]}];
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont systemFontOfSize:10.0]
+                           range:NSMakeRange(0, msg.length)];
+
             [string addAttribute:NSParagraphStyleAttributeName
                            value:paragraphStyle
                            range:NSMakeRange(0, string.length)];
-            
-            [string addAttribute:NSFontAttributeName
-                           value:[UIFont boldSystemFontOfSize:12.0]
-                           range:NSMakeRange(0, user.nick.length)];
 
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont boldSystemFontOfSize:10.0]
+                           range:NSMakeRange(0, user.nick.length)];
             break;
         }
         case ET_PART: {
@@ -447,17 +450,20 @@ uint32_t FNV32(const char *s)
                                                                         user.hostname,
                                                                         NSLocalizedString(@"left the channel", @"left the channel"),
                                                                         msg]];
-            
-            msg = [msg stringByInsertingNewlineToFitInWidth:self.frame.size.width widthAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12.0]}];
 
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont systemFontOfSize:10.0]
+                           range:NSMakeRange(0, msg.length)];
+
             [string addAttribute:NSParagraphStyleAttributeName
                            value:paragraphStyle
                            range:NSMakeRange(0, string.length)];
             
             [string addAttribute:NSFontAttributeName
-                           value:[UIFont boldSystemFontOfSize:12.0]
+                           value:[UIFont boldSystemFontOfSize:10.0]
                            range:NSMakeRange(0, user.nick.length)];
             break;
         }
@@ -469,16 +475,19 @@ uint32_t FNV32(const char *s)
                                                                         NSLocalizedString(@"left IRC", @"left IRC"),
                                                                         msg]];
             
-            msg = [msg stringByInsertingNewlineToFitInWidth:self.frame.size.width widthAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12.0]}];
-            
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont systemFontOfSize:10.0]
+                           range:NSMakeRange(0, msg.length)];
+
             [string addAttribute:NSParagraphStyleAttributeName
                            value:paragraphStyle
                            range:NSMakeRange(0, string.length)];
             
             [string addAttribute:NSFontAttributeName
-                           value:[UIFont boldSystemFontOfSize:12.0]
+                           value:[UIFont boldSystemFontOfSize:10.0]
                            range:NSMakeRange(0, user.nick.length)];
             break;
         }
@@ -488,15 +497,19 @@ uint32_t FNV32(const char *s)
                                                                         NSLocalizedString(@"is now known as", @"is now known as"),
                                                                         msg]];
             
-            msg = [msg stringByInsertingNewlineToFitInWidth:self.frame.size.width widthAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12.0]}];            
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont systemFontOfSize:10.0]
+                           range:NSMakeRange(0, msg.length)];
+            
             [string addAttribute:NSParagraphStyleAttributeName
                            value:paragraphStyle
                            range:NSMakeRange(0, string.length)];
             
             [string addAttribute:NSFontAttributeName
-                           value:[UIFont boldSystemFontOfSize:12.0]
+                           value:[UIFont boldSystemFontOfSize:10.0]
                            range:NSMakeRange(string.length-msg.length, msg.length)];
             break;
         }
@@ -504,7 +517,6 @@ uint32_t FNV32(const char *s)
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"*%@ %@",
                                                                         user.nick,
                                                                         msg]];
-            msg = [msg stringByInsertingNewlineToFitInWidth:self.frame.size.width widthAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12.0]}];
 
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
@@ -519,7 +531,6 @@ uint32_t FNV32(const char *s)
         }
         case ET_NOTICE: {
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", user.nick, msg]];
-            msg = [msg stringByInsertingNewlineToFitInWidth:self.frame.size.width widthAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12.0]}];
 
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
@@ -544,7 +555,6 @@ uint32_t FNV32(const char *s)
             
             string = [[NSMutableAttributedString alloc] initWithAttributedString:[self setLinks:[[NSString alloc] initWithFormat:@"%@%@\n%@", status, user.nick, msg]]];
             msg = [string.string substringFromIndex:status.length+user.nick.length+1];
-            msg = [msg stringByInsertingNewlineToFitInWidth:self.frame.size.width widthAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12.0]}];
             
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
@@ -592,11 +602,16 @@ uint32_t FNV32(const char *s)
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"Message not handled yet"]];
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont systemFontOfSize:10.0]
+                           range:NSMakeRange(0, msg.length)];
+
             [string addAttribute:NSParagraphStyleAttributeName
                            value:paragraphStyle
                            range:NSMakeRange(0, string.length)];
             [string addAttribute:NSFontAttributeName
-                           value:[UIFont systemFontOfSize:12.0]
+                           value:[UIFont systemFontOfSize:10.0]
                            range:NSMakeRange(0, string.length)];
             break;
         }
@@ -608,7 +623,8 @@ uint32_t FNV32(const char *s)
 - (CGSize)frameSize
 {
     CTTypesetterRef typesetter = CTTypesetterCreateWithAttributedString((CFAttributedStringRef)_attributedString);
-    CGFloat width = self.bounds.size.width;
+    
+    CGFloat width = self.bounds.size.width - 20.0;
     
     CFIndex offset = 0, length;
     CGFloat y = 0;
@@ -632,7 +648,7 @@ uint32_t FNV32(const char *s)
 
 - (CGFloat)frameHeight
 {
-    return _size.height;
+    return [self frameSize].height;
 }
 
 - (void)adjustAnchorPointForGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer {
