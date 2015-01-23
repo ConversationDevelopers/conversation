@@ -121,9 +121,9 @@
 
 - (BOOL) isValidNickname:(IRCClient *)client
 {
-    int maxNickLength = 16;
-    if (client) {
-        maxNickLength = [[[client featuresSupportedByServer] objectForKey:@"NICKLEN"] intValue];
+    int maxNickLength = [[[client featuresSupportedByServer] objectForKey:@"NICKLEN"] intValue];
+    if (maxNickLength == 0) {
+        maxNickLength = 16;
     }
     
     // Check length
