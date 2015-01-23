@@ -302,16 +302,20 @@
 {
     IRCChannel *channel = (IRCChannel *)message.conversation;
     if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
-        ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
-        [message.client.connection send:[NSString stringWithFormat:@"WHO %@", message.conversation.name]];
-        [message.client.connection send:[NSString stringWithFormat:@"MODE %@", message.conversation.name]];
-        
-        channel.isJoinedByUser = YES;
-        message.conversation = channel;
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [controller reloadClient:message.client];
-        });
+        [IRCConversation getConversationOrCreate:[[message conversation] name] onClient:[message client] withCompletionHandler:^(IRCConversation *conversation) {
+            message.conversation = conversation;
+            
+            ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+            [message.client.connection send:[NSString stringWithFormat:@"WHO %@", message.conversation.name]];
+            [message.client.connection send:[NSString stringWithFormat:@"MODE %@", message.conversation.name]];
+            
+            channel.isJoinedByUser = YES;
+            message.conversation = channel;
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [controller reloadClient:message.client];
+            });
+        }];
     }
     
     if (IRCv3CapabilityEnabled(message.client, @"extended-join") && [[message message] length] > 0) {
@@ -355,7 +359,7 @@
 + (void)userReceivedNickChange:(IRCMessage *)message
 {
     if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
-        message.client.currentUserOnConnection.nick     = message.message;
+        message.client.currentUserOnConnection.nick     = message.conversation.name;
         message.client.currentUserOnConnection.username = message.sender.username;
         message.client.currentUserOnConnection.hostname = message.sender.hostname;
     }
