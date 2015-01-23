@@ -421,7 +421,7 @@ uint32_t FNV32(const char *s)
     switch(_message.messageType) {
         case ET_JOIN: {
 
-            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@@%@) %@",
+            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"→ %@ (%@@%@) %@",
                                                                         user.nick,
                                                                         user.username,
                                                                         user.hostname,
@@ -440,12 +440,12 @@ uint32_t FNV32(const char *s)
 
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:10.0]
-                           range:NSMakeRange(0, user.nick.length)];
+                           range:NSMakeRange(0, user.nick.length + 2)];
             break;
         }
         case ET_PART: {
             
-            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@@%@) %@ (%@)",
+            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"← %@ (%@@%@) %@ (%@)",
                                                                         user.nick,
                                                                         user.username,
                                                                         user.hostname,
@@ -465,12 +465,12 @@ uint32_t FNV32(const char *s)
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:10.0]
-                           range:NSMakeRange(0, user.nick.length)];
+                           range:NSMakeRange(0, user.nick.length + 2)];
             break;
         }
         case ET_QUIT: {
             
-            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@@%@) %@ (%@)",
+            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"← %@ (%@@%@) %@ (%@)",
                                                                         user.nick,
                                                                         user.username,
                                                                         user.hostname,
@@ -490,7 +490,7 @@ uint32_t FNV32(const char *s)
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:10.0]
-                           range:NSMakeRange(0, user.nick.length)];
+                           range:NSMakeRange(0, user.nick.length + 2)];
             break;
         }
         case ET_NICK: {
@@ -854,19 +854,23 @@ uint32_t FNV32(const char *s)
 
 - (void)handleTap:(UITapGestureRecognizer *)recognizer
 {
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Message", @"Message")
-                                                       delegate:self
-                                              cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
-                                         destructiveButtonTitle:nil
-                                              otherButtonTitles:NSLocalizedString(@"Copy", @"Copy"), nil];
-    [sheet setTag:-1];
-    [sheet showInView:self];
+    if (self.message.messageType == ET_PRIVMSG || self.message.messageType == ET_NOTICE) {
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Message", @"Message")
+                                                           delegate:self
+                                                  cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                                             destructiveButtonTitle:nil
+                                                  otherButtonTitles:NSLocalizedString(@"Copy", @"Copy"), nil];
+        [sheet setTag:-1];
+        [sheet showInView:self];
+    }
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    UIView *view = [[[event touchesForView:self] allObjects][0] view];
-    view.backgroundColor = [UIColor lightGrayColor];
+    if (self.message.messageType == ET_PRIVMSG || self.message.messageType == ET_NOTICE) {
+        UIView *view = [[[event touchesForView:self] allObjects][0] view];
+        view.backgroundColor = [UIColor lightGrayColor];
+    }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
