@@ -365,6 +365,7 @@
     }
     
     message.messageType = ET_NICK;
+    message.message = message.conversation.name;
     
     for (IRCChannel *channel in [message.client channels]) {
         IRCUser *userOnChannel = [IRCUser fromNickname:message.sender.nick onChannel:channel];
