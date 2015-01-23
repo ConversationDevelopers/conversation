@@ -144,6 +144,11 @@ BOOL popoverDidDismiss = NO;
     [swipeLeftRecognizer setDelegate:self];
     [_conversation.contentView addGestureRecognizer:swipeLeftRecognizer];
     
+    CGRect frame = self.container.frame;
+    frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height - _composeBarView.frame.size.height);
+    _conversation.contentView.frame = frame;
+    
+    
     [self.container addSubview:_conversation.contentView];
     
     // Update userlist
@@ -182,7 +187,8 @@ BOOL popoverDidDismiss = NO;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self hideAccessories:nil];    
+    [self hideAccessories:nil];
+    [_conversation.contentView setContentOffset:CGPointMake(0.0, 0.0) animated:NO];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillShowNotification
