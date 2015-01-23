@@ -40,17 +40,17 @@
         /* Initialise default values for the configuration */
         self.uniqueIdentifier = [[NSUUID UUID] UUIDString];
         self.connectionName = @"Untitled Connection";
-        self.realNameForRegistration = @"A Conversation IRC User";
-        self.usernameForRegistration = @"user";
-        self.primaryNickname = @"Guest";
+        self.realNameForRegistration = [[NSUserDefaults standardUserDefaults] stringForKey:@"realname_preference"];
+        self.usernameForRegistration = [[NSUserDefaults standardUserDefaults] stringForKey:@"username_preference"];
+        self.primaryNickname = [[NSUserDefaults standardUserDefaults] stringForKey:@"nickname_preference"];
         self.secondaryNickname = @"Guest_";
         self.serverAddress = @"irc.example.net";
         self.connectionPort = 6667;
         self.serverPasswordReference = @"";
         self.socketEncodingType = NSUTF8StringEncoding;
         
-        self.disconnectMessage = @"Conversation: IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)";
-        self.channelDepartMessage = [self.disconnectMessage copy];
+        self.disconnectMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"quitmsg_preference"];
+        self.channelDepartMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"partmsg_preference"];
         
         self.automaticallyConnect =             NO;
         self.connectUsingSecureLayer =          NO;
