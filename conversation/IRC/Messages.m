@@ -439,6 +439,7 @@
 
 + (void)userReceivedQuitMessage:(IRCMessage *)message
 {
+    message.messageType = ET_QUIT;
     
     for (IRCChannel *channel in [message.client channels]) {
         IRCUser *userOnChannel = [IRCUser fromNickname:message.sender.nick onChannel:channel];
