@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>nickname_preference</key>
+	<string>Guest</string>
+	<key>username_preference</key>
+	<string>user</string>
+	<key>realname_preference</key>
+	<string>A Conversation IRC User</string>
+	<key>awaymsg_preference</key>
+	<string>Conversation: IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)</string>
+	<key>partmsg_preference</key>
+	<string>Conversation: IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)</string>
+	<key>quitmsg_preference</key>
+	<string>Conversation: IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)</string>
+	<key>rejoin_preference</key>
+	<true/>
+	<key>autoaway_preferemce</key>
+	<true/>
+	<key>inline_preference</key>
+	<true/>
+	<key>emoji_preference</key>
+	<true/>
+	<key>invite_preferemce</key>
+	<integer>2</integer>
+</dict>
+</plist>
