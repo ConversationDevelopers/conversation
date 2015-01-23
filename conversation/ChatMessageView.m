@@ -182,6 +182,7 @@
     } else if (_message.messageType == ET_ERROR) {
         self.backgroundColor = [UIColor colorWithRed:0.941 green:0.796 blue:0.796 alpha:1]; /*#f0cbcb*/
     } else {
+        self.backgroundColor = [UIColor clearColor];
         _messageLayer.frame = CGRectMake(10, 0, self.bounds.size.width-20, _size.height);
         self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, _size.height - 5.0);
     }
