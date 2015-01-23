@@ -607,7 +607,7 @@ uint32_t FNV32(const char *s)
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont systemFontOfSize:10.0]
-                           range:NSMakeRange(0, msg.length)];
+                           range:NSMakeRange(0, string.length)];
 
             [string addAttribute:NSParagraphStyleAttributeName
                            value:paragraphStyle
