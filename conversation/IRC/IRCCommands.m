@@ -75,7 +75,7 @@
     if (message == nil || [message length] == 0) {
         message = client.configuration.channelDepartMessage;
     }
-    [client.connection send:[NSString stringWithFormat:@"PART %@ %@", channel, message]];
+    [client.connection send:[NSString stringWithFormat:@"PART %@ :%@", channel, message]];
 }
 
 + (void)joinChannel:(NSString *)channel onClient:(IRCClient *)client

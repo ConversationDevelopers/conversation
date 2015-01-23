@@ -579,14 +579,41 @@
         [[AppPreferences sharedPrefs] deleteQueryWithName:query.name forConnectionConfiguration:client.configuration];
     } else {
         IRCChannel *channel = client.channels[index - offset];
-        [client removeChannel:channel];
-        
+
+        if (channel.isJoinedByUser) {
+            [IRCCommands leaveChannel:channel.name withMessage:@"" onClient:client];
+            [tableView reloadData];
+            return;
+        } else {
+            [client removeChannel:channel];
+        }
         // Remove from prefs
         [[AppPreferences sharedPrefs] deleteChannelWithName:channel.name forConnectionConfiguration:client.configuration];
     }
     [[AppPreferences sharedPrefs] save];
     [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     [tableView reloadData];
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    IRCClient *client = _connections[indexPath.section];
+    
+    int offset = 0;
+    if (client.showConsole)
+        offset = 1;
+    
+    int index = (int)indexPath.row;
+    
+    if ((int)indexPath.row > (int)client.channels.count-1 + offset) {
+        return @"Close";
+    } else {
+        IRCChannel *channel = client.channels[index - offset];
+        if (channel.isJoinedByUser)
+            return @"Leave";
+        else
+            return @"Close";
+    }
 }
 
 - (void)headerViewSelected:(UIGestureRecognizer *)sender
