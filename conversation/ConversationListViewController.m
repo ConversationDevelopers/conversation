@@ -604,16 +604,14 @@
         offset = 1;
     
     int index = (int)indexPath.row;
-    
-    if ((int)indexPath.row > (int)client.channels.count-1 + offset) {
-        return @"Close";
-    } else {
+    if ((int)indexPath.row <= (int)client.channels.count-1 + offset) {
         IRCChannel *channel = client.channels[index - offset];
         if (channel.isJoinedByUser)
             return @"Leave";
-        else
-            return @"Close";
+
     }
+    
+    return @"Close";
 }
 
 - (void)headerViewSelected:(UIGestureRecognizer *)sender
