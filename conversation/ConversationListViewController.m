@@ -875,7 +875,23 @@
         }
         return;
     }
-        
+    
+    ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, 0, message.conversation.contentView.frame.size.width, 15.0)
+                                                                  message:message
+                                                             conversation:message.conversation];
+    messageView.chatViewController = self.chatViewController;
+    [message.conversation.contentView addMessageView:messageView];
+
+    CGRect frame = CGRectMake(0.0,
+                              0.0,
+                              message.conversation.contentView.frame.size.width,
+                              _chatViewController.container.frame.size.height - PHFComposeBarViewInitialHeight);
+    message.conversation.contentView.frame = frame;
+    
+    // The stuff below is only for the preview
+    if (message.messageType != ET_PRIVMSG && message.messageType != ET_ACTION)
+        return;
+    
     // Make sender's nick bold
     NSMutableAttributedString *string;
     UIFont *font = [UIFont fontWithName:@"Helvetica-Bold" size:14];
@@ -886,23 +902,6 @@
         string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@", message.sender.nick, message.message]];
         [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, message.sender.nick.length+1)];
     }
-    
-    ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, 0, message.conversation.contentView.frame.size.width, 15.0)
-                                                                  message:message
-                                                             conversation:message.conversation];
-    messageView.chatViewController = self.chatViewController;
-    [message.conversation.contentView addMessageView:messageView];
-    
-    CGRect frame = CGRectMake(0.0,
-                              0.0,
-                              message.conversation.contentView.frame.size.width,
-                              _chatViewController.container.frame.size.height - PHFComposeBarViewInitialHeight);
-    message.conversation.contentView.frame = frame;
-
-    
-    // The stuff below is only for the preview
-    if (message.messageType != ET_PRIVMSG && message.messageType != ET_ACTION)
-        return;
     
     [message.conversation addPreviewMessage:string];
     

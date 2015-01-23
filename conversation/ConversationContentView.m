@@ -31,11 +31,6 @@
 #import "ConversationContentView.h"
 #import "ChatMessageView.h"
 
-@interface ConversationContentView()
-@property (assign) CGFloat posY;
-@end
-
-
 @implementation ConversationContentView
 
 - (void)addMessageView:(ChatMessageView *)messageView
@@ -50,16 +45,15 @@
     [self addSubview:messageView];
     [self layoutIfNeeded];
     
-    // Increase content size if needed
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    if (_posY > self.contentSize.height) {
-        self.contentSize = CGSizeMake(screenRect.size.width, _posY+height);
-    }
-    
     if (messageView.message.messageType != ET_PRIVMSG && messageView.message.messageType != ET_ERROR)
         _posY += height + 5.0;
     else
         _posY += height + 15.0;
+    
+    // Increase content size if needed
+    if (_posY > self.contentSize.height) {
+        self.contentSize = CGSizeMake(self.frame.size.width, _posY);
+    }
     
 }
 

@@ -144,11 +144,6 @@ BOOL popoverDidDismiss = NO;
     [swipeLeftRecognizer setDelegate:self];
     [_conversation.contentView addGestureRecognizer:swipeLeftRecognizer];
     
-    CGRect frame = self.container.frame;
-    frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height - _composeBarView.frame.size.height);
-    _conversation.contentView.frame = frame;
-    
-    
     [self.container addSubview:_conversation.contentView];
     
     // Update userlist
@@ -208,16 +203,7 @@ BOOL popoverDidDismiss = NO;
 - (void)scrollToBottom:(BOOL)animated
 {
     if (_conversation.contentView.contentSize.height > _conversation.contentView.bounds.size.height) {
-        ChatMessageView *lastMsg;
-        
-        // Get last message object
-        for (UIView *view in _conversation.contentView.subviews) {
-            if([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
-                lastMsg = (ChatMessageView *)view;
-            }
-        }
-        
-        CGPoint bottomOffset = CGPointMake(0, _conversation.contentView.contentSize.height - _conversation.contentView.bounds.size.height + lastMsg.frame.size.height);
+        CGPoint bottomOffset = CGPointMake(0, _conversation.contentView.posY - _conversation.contentView.frame.size.height);
         [_conversation.contentView setContentOffset:bottomOffset animated:animated];
     }
 }
@@ -275,11 +261,12 @@ BOOL popoverDidDismiss = NO;
                          [[self container] setFrame:newContainerFrame];
                      }
                      completion:NULL];
+    [self scrollToBottom:NO];
 }
 
 - (void)keyboardDidShow:(id)sender
 {
-    [self scrollToBottom:NO];
+//    [self scrollToBottom:NO];
 }
 
 - (void)goBack:(id)sender
@@ -504,10 +491,9 @@ BOOL popoverDidDismiss = NO;
     if (message.messageType == ET_AWAY)
         [self.userListView.tableview reloadData];
     
-    // Scroll to bottom if content is bigger than view and user didnt scroll up
+    // Scroll to bottom if content is bigger than view and user didnt scroll up    
     if (_conversation.contentView.contentOffset.y == 0.0 ||
-         _conversation.contentView.contentOffset.y + 5.0 >= _conversation.contentView.contentSize.height - _conversation.contentView.bounds.size.height) {
-            
+         _conversation.contentView.contentOffset.y + 50.0 > _conversation.contentView.contentSize.height - _conversation.contentView.bounds.size.height) {
             [self scrollToBottom:YES];
         }
     
