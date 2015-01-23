@@ -752,6 +752,7 @@
                 [SSKeychain setPassword:sender.configuration.passwordReference forService:@"conversation" account:identifier];
                 sender.configuration.passwordReference = identifier;
             }
+            [self createContentViewForConversation:channel];
             [[AppPreferences sharedPrefs] addChannelConfiguration:sender.configuration forConnectionConfiguration:sender.client.configuration];
             
         } else {
@@ -759,6 +760,7 @@
             [client addQuery:query];
             
             // Save config
+            [self createContentViewForConversation:query];
             [[AppPreferences sharedPrefs] addQueryConfiguration:sender.configuration forConnectionConfiguration:sender.client.configuration];
             
         }
