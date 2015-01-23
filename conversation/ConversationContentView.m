@@ -44,7 +44,8 @@
     if(!_posY)
         _posY = 0.0;
     
-    messageView.frame = CGRectMake(0.0, _posY, messageView.frame.size.width, messageView.frame.size.height);
+    CGFloat height = messageView.frameHeight;
+    messageView.frame = CGRectMake(0.0, _posY, messageView.frame.size.width, height);
     messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     
     [self addSubview:messageView];
@@ -53,13 +54,13 @@
     // Increase content size if needed
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     if (_posY > self.contentSize.height) {
-        self.contentSize = CGSizeMake(screenRect.size.width, _posY+messageView.frame.size.height);
+        self.contentSize = CGSizeMake(screenRect.size.width, _posY+height);
     }
     
     if (messageView.message.messageType != ET_PRIVMSG && messageView.message.messageType != ET_ERROR)
-        _posY += messageView.frame.size.height;
+        _posY += height + 5.0;
     else
-        _posY += messageView.frame.size.height + 5.0;
+        _posY += height + 15.0;
     
 }
 
