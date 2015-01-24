@@ -430,7 +430,7 @@
         
         // Set image
         UIImage *image = [UIImage imageNamed:@"NetworkIcon"];
-        CGSize size = CGSizeMake(30.0, 30.0);
+        CGSize size = CGSizeMake(25.0, 25.0);
         UIGraphicsBeginImageContext(size);
         [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
         UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
