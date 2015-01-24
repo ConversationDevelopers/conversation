@@ -909,7 +909,7 @@
     if ([message.conversation isEqual:_currentConversation] == NO) {
         
         // Prepare notification view
-        MCNotification *notification = [MCNotification notification];
+        MCNotification *notification;
         notification.backgroundColor = [UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0];
         notification.tintColor = [UIColor whiteColor];
         notification.text = message.sender.nick;
@@ -921,9 +921,17 @@
             if (message.conversation.isHighlighted == NO) {
                 message.conversation.isHighlighted = YES;
                 AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
+                
+                // Show notification
+                MCNotification *notification = [MCNotification notification];
+                notification.backgroundColor = [UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0];
+                notification.tintColor = [UIColor whiteColor];
+                notification.text = message.sender.nick;
+                notification.detailText = message.message;
+                notification.image = [UIImage imageNamed:@"Userlist"];
+                [[MCNotificationManager sharedInstance] showNotification:notification];
+                
             }
-            notification.image = [UIImage imageNamed:@"Userlist"];
-            [[MCNotificationManager sharedInstance] showNotification:notification];
             
         } else {
             
@@ -940,9 +948,16 @@
                 if (message.conversation.isHighlighted == NO) {
                     message.conversation.isHighlighted = YES;
                     AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
+                    
+                    // Show notification
+                    MCNotification *notification = [MCNotification notification];
+                    notification.backgroundColor = [UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0];
+                    notification.tintColor = [UIColor whiteColor];
+                    notification.text = message.sender.nick;
+                    notification.detailText = message.message;
+                    notification.image = [UIImage imageNamed:@"ChannelIcon_Light"];
+                    [[MCNotificationManager sharedInstance] showNotification:notification];
                 }
-                notification.image = [UIImage imageNamed:@"ChannelIcon_Light"];
-                [[MCNotificationManager sharedInstance] showNotification:notification];
             }
             
         }
