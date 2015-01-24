@@ -521,9 +521,8 @@ uint32_t FNV32(const char *s)
             break;
         }
         case ET_ACTION: {
-            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"· %@ %@",
-                                                                        user.nick,
-                                                                        msg]];
+            
+            string = [[NSMutableAttributedString alloc] initWithAttributedString:[self setLinks:[[NSString alloc] initWithFormat:@"· %@ %@", user.nick, msg]]];
 
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
@@ -542,7 +541,8 @@ uint32_t FNV32(const char *s)
             break;
         }
         case ET_NOTICE: {
-            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@", user.nick, msg]];
+            
+            string = [[NSMutableAttributedString alloc] initWithAttributedString:[self setLinks:[[NSString alloc] initWithFormat:@"%@\n%@", user.nick, msg]]];
 
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
@@ -626,6 +626,7 @@ uint32_t FNV32(const char *s)
                            value:[UIFont systemFontOfSize:10.0]
                            range:NSMakeRange(0, string.length)];
             
+            NSLog(@"MESSAGE NOT HANDLED: %i", (int)_message.messageType);
             break;
         }
     }
