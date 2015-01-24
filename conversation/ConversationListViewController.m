@@ -411,18 +411,31 @@
     
 }
 
-
-- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
+- (UITableViewCell *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    if(self.connections.count > 0) {
-        UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+    static NSString *CellIdentifier = @"header";
+    UITableViewCell *header = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (header == nil) {
+        header = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+    }
     
+    if(self.connections.count > 0) {
+        
         // Remove old stuff
         for (UIView *v in header.contentView.subviews) {
             if ([v isKindOfClass:[UIButton class]] || [v isKindOfClass:[UIActivityIndicatorView class]]) {
                 [v removeFromSuperview];
             }
         }
+        
+        // Set image
+        UIImage *image = [UIImage imageNamed:@"NetworkIcon"];
+        CGSize size = CGSizeMake(30.0, 30.0);
+        UIGraphicsBeginImageContext(size);
+        [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+        UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        header.imageView.image = scaledImage;
 
         // Set colors
         [header.textLabel setTextColor:[UIColor darkGrayColor]];
@@ -435,7 +448,7 @@
         
         if (client.isAttemptingConnection || client.isAttemptingRegistration) {
             UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-            spinner.frame = CGRectMake(header.bounds.size.width-40, 0, header.bounds.size.height, header.bounds.size.height);
+            spinner.frame = CGRectMake(header.bounds.size.width-10, 0, header.bounds.size.height, header.bounds.size.height);
             [header.contentView addSubview:spinner];
             [spinner startAnimating];
         }
@@ -447,7 +460,7 @@
             unichar *code = malloc(sizeof(unichar) * 1);
             code[0] = (unichar)0x2713;
             
-            checkmark.frame = CGRectMake(header.bounds.size.width-40, 0, header.bounds.size.height, header.bounds.size.height);
+            checkmark.frame = CGRectMake(header.bounds.size.width-10, 0, header.bounds.size.height, header.bounds.size.height);
             checkmark.titleLabel.font = [UIFont fontWithName:@"Symbola" size:16.0];
             [checkmark setTitle:[NSString stringWithCharacters:code length:1] forState:UIControlStateNormal];
             [checkmark setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -462,12 +475,13 @@
         singleTapRecogniser.numberOfTapsRequired = 1;
         [header addGestureRecognizer:singleTapRecogniser];
     }
+    return header;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     
-    return 30.0;
+    return 35.0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
