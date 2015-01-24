@@ -206,7 +206,7 @@
         NSMutableArray *messageComponents = [[[message message] componentsSeparatedByString:@" "] mutableCopy];
         
         
-        #define isCTCPCommand(x) [[message message] caseInsensitiveCompare:x] == NSOrderedSame
+        #define isCTCPCommand(x) [[[message message] lowercaseString] hasPrefix:[x lowercaseString]]
         
         if (isCTCPCommand(@"ACTION")) {
             [messageComponents removeObjectAtIndex:0];
