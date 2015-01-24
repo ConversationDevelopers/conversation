@@ -384,15 +384,9 @@
     
     for (IRCConversation *conversation in [message.client queries]) {
         if ([[conversation name] caseInsensitiveCompare:[message.sender nick]] == NSOrderedSame) {
-            IRCConversation *conversationWithChanges = conversation;
-            conversationWithChanges.name = message.message;
-            IRCMessage *nickMessage = [message copy];
-            nickMessage.conversation = conversation;
+            conversation.name = message.message;
             
-            [[message.client queries] removeObject:conversation];
-            [[message.client queries] addObject:conversationWithChanges];
-            
-            [nickMessage.conversation addMessageToConversation:nickMessage];
+            [message.conversation addMessageToConversation:message];
         }
     }
     
