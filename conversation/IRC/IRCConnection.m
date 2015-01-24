@@ -267,26 +267,29 @@
 {
     /* There are no messages in the queue, we have nothing to do. So we will let the queue handler know
      the flood gates are open. */
-    if ([self.messageQueue count] == 0) {
-        return NO;
-    }
-    
-    if (self.floodControlEnabled) {
-        /* We have reached the message limit, messages are now backloged until the next flood control tick. 
-         We wil llet the queue handler know it must stop attempting a send until the next tick. */
-        if (self.messagesSentSinceLastTick > floodControlMessageLimit) {
+    @synchronized(self) {
+        
+        if ([self.messageQueue count] == 0) {
             return NO;
         }
         
-        self.messagesSentSinceLastTick++;
+        if (self.floodControlEnabled) {
+            /* We have reached the message limit, messages are now backloged until the next flood control tick.
+             We wil llet the queue handler know it must stop attempting a send until the next tick. */
+            if (self.messagesSentSinceLastTick > floodControlMessageLimit) {
+                return NO;
+            }
+            
+            self.messagesSentSinceLastTick++;
+        }
+        
+        /* We are under the message limit and are free to send the message to the server.
+         We will send it to the socket and clear it from the queue immediately. */
+        NSString *queueItemToSend = [self.messageQueue objectAtIndex:0];
+        [self sendData:queueItemToSend];
+        [self.messageQueue removeObjectAtIndex:0];
+        return YES;
     }
-    
-    /* We are under the message limit and are free to send the message to the server.
-     We will send it to the socket and clear it from the queue immediately. */
-    NSString *queueItemToSend = [self.messageQueue objectAtIndex:0];
-    [self sendData:queueItemToSend];
-    [self.messageQueue removeObjectAtIndex:0];
-    return YES;
 }
 
 @end
