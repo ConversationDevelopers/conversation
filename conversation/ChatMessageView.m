@@ -521,7 +521,7 @@ uint32_t FNV32(const char *s)
             break;
         }
         case ET_ACTION: {
-            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"*%@ %@",
+            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"· %@ %@",
                                                                         user.nick,
                                                                         msg]];
 
@@ -533,7 +533,12 @@ uint32_t FNV32(const char *s)
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:12.0]
-                           range:NSMakeRange(0, user.nick.length+2+msg.length)];
+                           range:NSMakeRange(0, string.length)];
+            
+            [string addAttribute:NSForegroundColorAttributeName
+                           value:[self colorForNick:user.nick]
+                           range:NSMakeRange(0, string.length)];
+            
             break;
         }
         case ET_NOTICE: {
