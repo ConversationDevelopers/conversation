@@ -372,7 +372,7 @@ uint32_t FNV32(const char *s)
         [links addObject:match.URL];
 
         BOOL enableImages = [[NSUserDefaults standardUserDefaults] boolForKey:@"inline_preference"];
-        if (enableImages && [self isImageLink:match.URL])
+        if (enableImages && _message.messageType == ET_PRIVMSG && [self isImageLink:match.URL])
             [_images addObject:[self getImageLink:match.URL]];
     }
 
@@ -662,7 +662,7 @@ uint32_t FNV32(const char *s)
 
 - (CGFloat)frameHeight
 {
-    return [self frameSize].height;
+    return _size.height;
 }
 
 - (void)adjustAnchorPointForGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer {
