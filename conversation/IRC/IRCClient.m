@@ -240,9 +240,13 @@
     
     NSString *recipient = nil;
     if ([lineComponents count] > 0 && messageWithoutRecipient == NO) {
-        if ([recipient hasPrefix:@":"] == NO) {
+        if ([[lineComponents objectAtIndex:0] hasPrefix:@":"]) {
+            if ([command isEqualToString:@"JOIN"]) {
+                recipient = [[lineComponents objectAtIndex:0] substringFromIndex:1];
+                [lineComponents removeObjectAtIndex:0];
+            }
+        } else {
             recipient = [lineComponents objectAtIndex:0];
-            recipient = [recipient substringFromIndex:1];
             [lineComponents removeObjectAtIndex:0];
         }
     }
@@ -258,19 +262,21 @@
     /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
     self.configuration.lastMessageTime = (long) [[NSDate date] timeIntervalSince1970];
     
-    IRCConversation *conversation = [IRCConversation fromString:recipient withClient:self];
-    if (conversation == nil) {
-        if ([recipient isValidChannelName:self]) {
-            IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
-            configuration.name = recipient;
-            conversation = [[IRCChannel alloc] initWithConfiguration:configuration withClient:self];
-        } else {
-            IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
-            configuration.name = recipient;
-            conversation = [[IRCConversation alloc] initWithConfiguration:configuration withClient:self];
+    IRCConversation *conversation = nil;
+    if (recipient != nil) {
+        conversation = [IRCConversation fromString:recipient withClient:self];
+        if (conversation == nil) {
+            if ([recipient isValidChannelName:self]) {
+                IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
+                configuration.name = recipient;
+                conversation = [[IRCChannel alloc] initWithConfiguration:configuration withClient:self];
+            } else {
+                IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
+                configuration.name = recipient;
+                conversation = [[IRCConversation alloc] initWithConfiguration:configuration withClient:self];
+            }
         }
     }
-    
     
     IRCUser *user = nil;
     if ([conversation isKindOfClass:[IRCChannel class]]) {
