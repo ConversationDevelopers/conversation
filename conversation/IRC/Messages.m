@@ -424,6 +424,10 @@
                 [controller reloadClient:message.client];
             });
         }
+        
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"rejoin_preference"] == YES) {
+            [IRCCommands joinChannel:message.conversation.name onClient:message.client];
+        }
     } else {
         [[channel users] removeObject:channel];
     }
