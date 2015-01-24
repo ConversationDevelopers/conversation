@@ -10,6 +10,12 @@
 	</dict>
 	<dict>
 		<key>Name</key>
+		<string>AllNetwork</string>
+		<key>Address</key>
+		<string>irc.allnetwork.org</string>
+	</dict>
+	<dict>
+		<key>Name</key>
 		<string>DALnet</string>
 		<key>Address</key>
 		<string>irc.dal.net</string>
@@ -22,15 +28,45 @@
 	</dict>
 	<dict>
 		<key>Name</key>
+		<string>EsperNet</string>
+		<key>Address</key>
+		<string>irc.esper.net</string>
+	</dict>
+	<dict>
+		<key>Name</key>
 		<string>Freenode</string>
 		<key>Address</key>
 		<string>chat.freenode.com</string>
 	</dict>
 	<dict>
 		<key>Name</key>
+		<string>GameSurge</string>
+		<key>Address</key>
+		<string>irc.gamesurge.net</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>GeekShed</string>
+		<key>Address</key>
+		<string>irc.geekshed.net</string>
+	</dict>
+	<dict>
+		<key>Name</key>
 		<string>IRCNet</string>
 		<key>Address</key>
 		<string>irc.ircnet.com</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>ICQ</string>
+		<key>Address</key>
+		<string>irc.icq.com</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>OFTC</string>
+		<key>Address</key>
+		<string>irc.oftc.net</string>
 	</dict>
 	<dict>
 		<key>Name</key>
@@ -49,6 +85,12 @@
 		<string>SnooNet</string>
 		<key>Address</key>
 		<string>irc.snoonet.org</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>SwiftIRC</string>
+		<key>Address</key>
+		<string>irc.swiftirc.net</string>
 	</dict>
 	<dict>
 		<key>Name</key>
