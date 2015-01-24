@@ -908,13 +908,6 @@
     // Dont set highlight if source conversation is currently visible
     if ([message.conversation isEqual:_currentConversation] == NO) {
         
-        // Prepare notification view
-        MCNotification *notification;
-        notification.backgroundColor = [UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0];
-        notification.tintColor = [UIColor whiteColor];
-        notification.text = message.sender.nick;
-        notification.detailText = message.message;
-        
         // Private Message
         if ([message.conversation isKindOfClass:[IRCChannel class]] == NO) {
             message.conversation.unreadCount++;
