@@ -206,6 +206,14 @@
 			<key>File</key>
 			<string>Acknowledgements</string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string></string>
+			<key>FooterText</key>
+			<string>Copyright © 2015 Tobias Pollmann, Alex Sørlie Glomsaas</string>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>
