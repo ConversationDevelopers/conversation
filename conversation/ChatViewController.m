@@ -346,31 +346,7 @@ BOOL popoverDidDismiss = NO;
 - (void)sendMessage:(NSString *)message
 {
     if ([message hasPrefix:@"/"]) {
-        NSString *command = [[[message substringFromIndex:1] lowercaseString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        if ([command isEqualToString:@"clear"]) {
-            for (UIView *view in _conversation.contentView.subviews) {
-                if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"])
-                    [view removeFromSuperview];
-            }
-            _conversation.contentView.posY = 0.0;
-        } else if ([command isEqualToString:@"clearall"]) {
-            for (IRCChannel *channel in _conversation.client.channels) {
-                for (UIView *view in channel.contentView.subviews) {
-                    if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"])
-                        [view removeFromSuperview];
-                }
-                channel.contentView.posY = 0.0;
-            }
-            for (IRCChannel *query in _conversation.client.queries) {
-                for (UIView *view in query.contentView.subviews) {
-                    if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"])
-                        [view removeFromSuperview];
-                }
-                query.contentView.posY = 0.0;
-            }
-        } else {
-            [InputCommands performCommand:[message substringFromIndex:1] inConversation:_conversation];
-        }
+        [InputCommands performCommand:[message substringFromIndex:1] inConversation:_conversation];
     } else {
         [InputCommands sendMessage:message toRecipient:_conversation.name onClient:_conversation.client];
         
