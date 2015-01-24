@@ -183,6 +183,9 @@
 {
     AssertIsNotServerMessage(message);
     
+    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
+    message.client.configuration.lastMessageTime = (long) [[NSDate date] timeIntervalSince1970];
+    
     if ([[message message] hasPrefix:@"\001"] && [[message message] hasSuffix:@"\001"]) {
         [self userReceivedCTCPMessage:message];
         return;

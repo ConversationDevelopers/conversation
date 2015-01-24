@@ -259,9 +259,6 @@
     /* Get the timestamp from the message or create one if it is not available. */
     NSDate* datetime = [IRCClient getTimestampFromMessageTags:tagsList];
     
-    /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
-    self.configuration.lastMessageTime = (long) [[NSDate date] timeIntervalSince1970];
-    
     IRCConversation *conversation = nil;
     if (recipient != nil) {
         conversation = [IRCConversation fromString:recipient withClient:self];
