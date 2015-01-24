@@ -61,7 +61,11 @@
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    UserListItemCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UserListItemCell class])];
+    NSString *identifier = NSStringFromClass([UserListItemCell class]);
+    UserListItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (cell == nil) {
+        cell = [[UserListItemCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
+    }
 
     cell.user = _channel.users[indexPath.row];
     cell.client = _channel.client;
@@ -73,6 +77,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self removeFromSuperview];
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];    
     ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     IRCConversation *conversation = [controller createConversationWithName:[_channel.users[indexPath.row] nick] onClient:_channel.client];
     [controller.tableView reloadData];

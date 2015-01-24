@@ -34,7 +34,7 @@
 
 @implementation UserStatusView
 
-- (UIColor *)backgroundColor
+- (UIColor *)statusColor
 {
     switch(self.status) {
         case VOICE:
@@ -85,7 +85,7 @@
     point.x = self.bounds.origin.x + self.bounds.size.width/2;
     point.y = self.bounds.origin.y + self.bounds.size.height/2;
     CGContextSetLineWidth(context, 5.0);
-    [[self backgroundColor] setFill];
+    [[self statusColor] setFill];
     UIGraphicsPushContext(context);
     CGContextBeginPath(context);
     CGContextAddArc(context, point.x, point.y, 12, 0, 2*M_PI, YES);
@@ -111,7 +111,6 @@
     frame.origin.y = self.bounds.size.height / 2 - frame.size.height / 2;
     
     statusLabel.frame = frame;
-    
     
     [self addSubview:statusLabel];
 }
