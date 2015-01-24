@@ -57,7 +57,7 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 /* We don't have a query for this message, we need to create one */
                 ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
-                [controller joinChannelWithName:name onClient:client];
+                channel = [controller joinChannelWithName:name onClient:client];
                 completionHandler(channel);
             });
         } else {

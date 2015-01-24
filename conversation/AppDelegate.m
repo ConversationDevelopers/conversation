@@ -145,8 +145,8 @@
     if ([sourceApplication isEqualToString:[[NSBundle mainBundle] bundleIdentifier]]) {
         IRCClient *client = self.conversationsController.chatViewController.conversation.client;
         if (client && [url.resourceSpecifier isValidChannelName:client]) {
-            NSString *identifier = [self.conversationsController joinChannelWithName:url.resourceSpecifier onClient:client];
-            [self.conversationsController selectConversationWithIdentifier:identifier];
+            IRCChannel *channel = [self.conversationsController joinChannelWithName:url.resourceSpecifier onClient:client];
+            [self.conversationsController selectConversationWithIdentifier:channel.configuration.uniqueIdentifier];
             return YES;
         }
     }
@@ -203,8 +203,8 @@
         NSArray *channelStrings = [channelListString componentsSeparatedByString:@","];
         for (NSString *channelString in channelStrings) {
             if ([channelString isValidChannelName:client]) {
-                NSString *identifier = [self.conversationsController joinChannelWithName:channelString onClient:client];
-                [self.conversationsController selectConversationWithIdentifier:identifier];
+                IRCChannel *channel = [self.conversationsController joinChannelWithName:channelString onClient:client];
+                [self.conversationsController selectConversationWithIdentifier:channel.configuration.uniqueIdentifier];
             }
         }
     }

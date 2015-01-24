@@ -818,14 +818,14 @@
 
 }
 
-- (NSString *)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client
+- (IRCChannel *)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client
 {
-    for (IRCChannel *channel in client.channels) {
-        if ([channel.name.lowercaseString isEqualToString:name.lowercaseString]) {
-            if (channel.isJoinedByUser == NO) {
-                [IRCCommands joinChannel:channel.name onClient:client];
+    for (IRCChannel *ch in client.channels) {
+        if ([ch.name.lowercaseString isEqualToString:name.lowercaseString]) {
+            if (ch.isJoinedByUser == NO) {
+                [IRCCommands joinChannel:ch.name onClient:client];
             }
-            return channel.configuration.uniqueIdentifier;
+            return ch;
         }
     }
     
@@ -841,7 +841,7 @@
     
     [[AppPreferences sharedPrefs] addChannelConfiguration:configuration forConnectionConfiguration:client.configuration];
     [[AppPreferences sharedPrefs] save];
-    return configuration.uniqueIdentifier;
+    return channel;
 }
 
 - (IRCConversation *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client
@@ -887,8 +887,8 @@
             [alertView setCancelButtonIndex:0];
             [alertView showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
                 if (buttonIndex == 1) {
-                    NSString *identifier = [self joinChannelWithName:message.conversation.name onClient:message.conversation.client];
-                    [self selectConversationWithIdentifier:identifier];
+                    IRCChannel *channel = [self joinChannelWithName:message.conversation.name onClient:message.conversation.client];
+                    [self selectConversationWithIdentifier:channel.configuration.uniqueIdentifier];
                 }
             }];
         }

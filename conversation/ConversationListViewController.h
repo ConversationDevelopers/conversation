@@ -34,6 +34,7 @@
 @class ChatViewController;
 @class IRCClient;
 @class IRCConversation;
+@class IRCChannel;
 @class IRCCertificateTrust;
 
 @interface ConversationListViewController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, IASKSettingsDelegate> {
@@ -45,7 +46,7 @@
 @property (nonatomic) ChatViewController *chatViewController;
 
 - (void)reloadClient:(IRCClient *)client;
-- (NSString *)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client;
+- (IRCChannel *)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client;
 - (void)selectConversationWithIdentifier:(NSString *)identifier;
 - (IRCConversation *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client;
 - (void)showInivitationRequiredAlertForChannel:(NSString *)channelName;

@@ -258,7 +258,6 @@
     
     /* Get the timestamp from the message or create one if it is not available. */
     NSDate* datetime = [IRCClient getTimestampFromMessageTags:tagsList];
-    
     IRCConversation *conversation = nil;
     if (recipient != nil) {
         conversation = [IRCConversation fromString:recipient withClient:self];
@@ -293,7 +292,6 @@
                                                            withTags:tagsList
                                                             isServerMessage:isServerMessage
                                                            onClient:self];
-    
     MessageType commandIndexValue = [IRCMessageIndex indexValueFromString:command];
     switch (commandIndexValue) {
         case PING:

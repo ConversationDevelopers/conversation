@@ -316,9 +316,9 @@
             ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
             [message.client.connection send:[NSString stringWithFormat:@"WHO %@", message.conversation.name]];
             [message.client.connection send:[NSString stringWithFormat:@"MODE %@", message.conversation.name]];
-            
-            channel.isJoinedByUser = YES;
-            message.conversation = channel;
+            IRCChannel *ch = (IRCChannel *)conversation;
+            ch.isJoinedByUser = YES;
+            message.conversation = conversation;
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 [controller reloadClient:message.client];
