@@ -832,6 +832,11 @@
 
 - (IRCConversation *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client
 {
+    for (IRCConversation *query in client.queries) {
+        if ([query.name caseInsensitiveCompare:name] == NSOrderedSame) {
+            return query;
+        }
+    }
     IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
     configuration.name = name;
     IRCConversation *query = [[IRCConversation alloc] initWithConfiguration:configuration withClient:client];
