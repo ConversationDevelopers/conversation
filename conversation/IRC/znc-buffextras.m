@@ -35,117 +35,38 @@
 
 @implementation znc_buffextras
 
-+ (void)messageWithBufferString:(const char *)line onChannel:(IRCChannel *)channel onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags
++ (void)message:(IRCMessage *)message
 {
-    char* sender;
-    char* nickname;
-    char* username;
-    char* hostname;
+    NSMutableArray *messageComponents = [[message.message componentsSeparatedByString:@" "] mutableCopy];
     
-    long senderLength   = 0;
-    long nicknameLength = 0;
-    long usernameLength = 0;
+    NSString *nickname = @"";
+    NSString *username = @"";
+    NSString *hostname = @"";
+    [messageComponents[0] getUserHostComponents:&nickname username:&username hostname:&hostname onClient:message.client];
     
-    const char* lineBeforeIteration = line;
-    
-    
-    /* Pass over the string until we either reach a space, end of message, or an exclamation mark (Part of a user's hostmask) */
-    while (*line != '\0' && *line != ' ' && *line != '!') {
-        nicknameLength++;
-        line++;
-        senderLength++;
+    IRCUser *user = nil;
+    if ([message.conversation isKindOfClass:[IRCChannel class]]) {
+        user = [IRCUser fromNickname:nickname onChannel:(IRCChannel *)message.conversation];
     }
-    /* If there was not an ! in this message and we have reached a space already, the sender was the server, which does not have a hostmask. */
-    if (*line != ' ') {
-        /* Pass over the string until we reach a space, end of message, or an @ sign (Part of the user's hostmask) */
-        while (*line != '\0' && *line != ' ' && *line != '@') {
-            usernameLength++;
-            line++;
-            senderLength++;
-        }
-        /* Pass over the rest of the string leading to a space, to get the position of the host address. */
-        while (*line != '\0' && *line != ' ') {
-            senderLength++;
-            line++;
-        }
+    if (user == nil) {
+        user = [[IRCUser alloc] initWithNickname:nickname andUsername:username andHostname:hostname andRealname:nil onClient:message.client];
     }
+    message.sender = user;
     
-    /* Copy the characters of the entire sender */
-    if (senderLength > 0) {
-        sender = malloc(senderLength+1);
-        strncpy(sender, lineBeforeIteration, senderLength);
-        sender[senderLength] = '\0';
-    } else {
-        sender = malloc(1);
-    }
-    
-    /* Copy the characters of the nickname range we calculated earlier, and consume the same characters from the string as well as the following '!' */
-    if (nicknameLength > 0) {
-        nickname = malloc(nicknameLength+1);
-        strncpy(nickname, lineBeforeIteration, nicknameLength);
-        nickname[nicknameLength] = '\0';
-        lineBeforeIteration = lineBeforeIteration + nicknameLength + 1;
-    } else {
-        nickname = malloc(1);
-    }
-    
-    /* Copy the characters from the username range we calculated earlier, and consume the same characters from the string as well as the following '@' */
-    username = malloc(usernameLength + 1);
-    if (usernameLength > 0) {
-        strncpy(username, lineBeforeIteration, usernameLength -1);
-        username[usernameLength] = '\0';
-        lineBeforeIteration = lineBeforeIteration + usernameLength;
-    } else {
-        username = malloc(1);
-    }
-    
-    /* Copy the characters from the hostname range we calculated earlier */
-    long hostnameLength = (senderLength - usernameLength - nicknameLength);
-    if (hostnameLength > 0) {
-        hostname = malloc(hostnameLength+1);
-        strncpy(hostname, lineBeforeIteration, hostnameLength);
-        hostname[hostnameLength] = '\0';
-    } else {
-        hostname = malloc(1);
-    }
-    
-    const char* senderDict[] = {
-        nickname,
-        username,
-        hostname
-    };
-
-    line++;
-    
-    IRCUser *user = [[IRCUser alloc] initWithSenderDict:senderDict onClient:client];
-    NSDate* now = [IRCClient getTimestampFromMessageTags:tags];
-    client.configuration.lastMessageTime = (long) [now timeIntervalSince1970];
-    
-    NSString *message = [NSString stringWithCString:line usingEncodingPreference:client.configuration];
-    
-    NSMutableArray *messageComponents = [[message componentsSeparatedByString:@" "] mutableCopy];
-    NSString *type = messageComponents[0];
+    NSString *type = messageComponents[1];
     
     if ([type isEqualToString:@"set"]) {
         // MODE
     } else if ([type isEqualToString:@"joined"]) {
         // JOIN
-        IRCMessage *message = [[IRCMessage alloc] initWithMessage:nil
-                                                           OfType:ET_JOIN
-                                                   inConversation:channel
-                                                         bySender:user
-                                                           atTime:now
-                                                         withTags:tags
-                                                  isServerMessage:NO
-                                                         onClient:client];
-        [channel addMessageToConversation:message];
+        [Messages userReceivedJoinOnChannel:message];
     } else if ([type isEqualToString:@"parted"]) {
         // PART
         NSString *partMessage = @"";
         if ([messageComponents count] > 1) {
             NSRange range;
             range.location = 0;
-            range.length = 3;
+            range.length = 4;
             [messageComponents removeObjectsInRange:range];
             partMessage = [messageComponents componentsJoinedByString:@" "];
             
@@ -155,58 +76,31 @@
             partMessage = [partMessage substringWithRange:substrRange];
         }
         
-        IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:partMessage
-                                                                 OfType:ET_PART
-                                                         inConversation:channel
-                                                               bySender:user
-                                                                 atTime:now
-                                                               withTags:tags
-                                                        isServerMessage:NO
-                                                               onClient:client];
+        message.message = partMessage;
         
-        [channel addMessageToConversation:messageObject];
+        [Messages userReceivedPartChannel:message];
     } else if ([type isEqualToString:@"is"]) {
         // NICK
         NSString *newNick = messageComponents[4];
-        IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:newNick
-                                                                 OfType:ET_NICK
-                                                         inConversation:channel
-                                                               bySender:user
-                                                                 atTime:now
-                                                               withTags:tags
-                                                        isServerMessage:NO
-                                                               onClient:client];
+        message.message = newNick;
         
-        [channel addMessageToConversation:messageObject];
+        [Messages userReceivedNickChange:message];
     } else if ([type isEqualToString:@"quit"]) {
         // QUIT
         NSRange range;
-        range.location = 0;
+        range.location = 1;
         range.length = 3;
         [messageComponents removeObjectsInRange:range];
         NSString *quitMessage = [messageComponents componentsJoinedByString:@" "];
         
         NSRange substrRange;
-        substrRange.location = 1;
+        substrRange.location = 0;
         substrRange.length = [quitMessage length] - 2;
         quitMessage = [quitMessage substringWithRange:substrRange];
         
-        IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:quitMessage
-                                                                 OfType:ET_QUIT
-                                                         inConversation:channel
-                                                               bySender:user
-                                                                 atTime:now
-                                                               withTags:tags
-                                                        isServerMessage:NO
-                                                               onClient:client];
-        
-        [channel addMessageToConversation:messageObject];
+        message.message = quitMessage;
+        [Messages userReceivedQuitMessage:message];
     }
-    
-    free(sender);
-    free(nickname);
-    free(username);
-    free(hostname);
 }
 
 @end

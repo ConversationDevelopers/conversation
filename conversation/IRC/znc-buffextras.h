@@ -32,9 +32,10 @@
 
 @class IRCClient;
 @class IRCChannel;
+@class IRCMessage;
 
 @interface znc_buffextras : NSObject
 
-+ (void)messageWithBufferString:(const char *)line onChannel:(IRCChannel *)channel onClient:(IRCClient *)client withTags:(NSMutableDictionary *)tags;
++ (void)message:(IRCMessage *)message;
 
 @end

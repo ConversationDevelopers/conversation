@@ -183,6 +183,11 @@
 {
     AssertIsNotServerMessage(message);
     
+    if ([message.sender.nick isEqualToString:@"*buffextras"]) {
+        [znc_buffextras message:message];
+        return;
+    }
+    
     /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
     message.client.configuration.lastMessageTime = (long) [[NSDate date] timeIntervalSince1970];
     
