@@ -238,13 +238,13 @@
         [lineComponents removeObjectAtIndex:0];
     }
     
-    NSString *recipient;
+    NSString *recipient = nil;
     if ([lineComponents count] > 0 && messageWithoutRecipient == NO) {
-        recipient = [lineComponents objectAtIndex:0];
-        if ([recipient hasPrefix:@":"]) {
+        if ([recipient hasPrefix:@":"] == NO) {
+            recipient = [lineComponents objectAtIndex:0];
             recipient = [recipient substringFromIndex:1];
+            [lineComponents removeObjectAtIndex:0];
         }
-        [lineComponents removeObjectAtIndex:0];
     }
     
     NSString *message = [lineComponents componentsJoinedByString:@" "];
