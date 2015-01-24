@@ -64,26 +64,15 @@
                 break;
                 
             case CMD_CLEAR:
-                for (UIView *view in conversation.contentView.subviews) {
-                    if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"])
-                        [view removeFromSuperview];
-                }
+                [conversation.contentView clear];
                 break;
                 
             case CMD_CLEARALL:
                 for (IRCChannel *channel in conversation.client.channels) {
-                    for (UIView *view in channel.contentView.subviews) {
-                        if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"])
-                            [view removeFromSuperview];
-                    }
-                    channel.contentView.posY = 0.0;
+                    [channel.contentView clear];
                 }
                 for (IRCChannel *query in conversation.client.queries) {
-                    for (UIView *view in query.contentView.subviews) {
-                        if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"])
-                            [view removeFromSuperview];
-                    }
-                    query.contentView.posY = 0.0;
+                    [query.contentView clear];
                 }
                 break;
                 

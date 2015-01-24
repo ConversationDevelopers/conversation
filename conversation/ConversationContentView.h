@@ -34,8 +34,7 @@
 
 @interface ConversationContentView : UIScrollView
 
-@property (assign) CGFloat posY;
-
 - (void)addMessageView:(ChatMessageView *)messageView;
+- (void)clear;
 
 @end

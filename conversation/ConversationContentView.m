@@ -31,6 +31,10 @@
 #import "ConversationContentView.h"
 #import "ChatMessageView.h"
 
+@interface ConversationContentView ()
+@property (assign) CGFloat posY;
+@end
+
 @implementation ConversationContentView
 
 - (void)addMessageView:(ChatMessageView *)messageView
@@ -55,6 +59,15 @@
         self.contentSize = CGSizeMake(self.frame.size.width, _posY);
     }
     
+}
+
+- (void)clear
+{
+    for (UIView *view in self.subviews) {
+        if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"])
+            [view removeFromSuperview];
+    }
+    _posY = 0.0;
 }
 
 
