@@ -31,10 +31,6 @@
 #import "ConversationContentView.h"
 #import "ChatMessageView.h"
 
-@interface ConversationContentView ()
-@property (assign) CGFloat posY;
-@end
-
 @implementation ConversationContentView
 
 - (void)addMessageView:(ChatMessageView *)messageView
