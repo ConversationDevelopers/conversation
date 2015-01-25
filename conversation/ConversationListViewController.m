@@ -978,6 +978,9 @@
         
     }
     
+    if ([self.tableView isEditing])
+        return;
+    
     [self.tableView reloadData];
     
 }
