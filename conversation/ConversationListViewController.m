@@ -913,7 +913,8 @@
     }
     
     // The stuff below is only for the preview
-    if (message.messageType != ET_PRIVMSG && message.messageType != ET_ACTION)
+    if ((message.messageType != ET_PRIVMSG && message.messageType != ET_ACTION) ||
+        [message.sender.nick isEqualToString:message.client.currentUserOnConnection.nick])
         return;
     
     // Make sender's nick bold
