@@ -184,7 +184,7 @@
     } else {
         self.backgroundColor = [UIColor clearColor];
         _messageLayer.frame = CGRectMake(10, 0, self.bounds.size.width-20, _size.height);
-        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, _size.height - 5.0);
+        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, _size.height);
     }
     
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)_attributedString);
