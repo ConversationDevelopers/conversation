@@ -41,5 +41,5 @@
 
 @property (nonatomic) IRCClient *client;
 @property (nonatomic) IRCUser *user;
-
+- (void)prepareForReuse;
 @end

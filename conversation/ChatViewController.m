@@ -287,7 +287,8 @@ BOOL popoverDidDismiss = NO;
     UserListView *userlist = [self userListView];
     
     userlist.channel = (IRCChannel*)_conversation;
-
+    [userlist.tableview reloadData];
+    
     [self.navigationController.view addSubview:userlist];
 
     CGRect frame = userlist.frame;
@@ -509,6 +510,8 @@ BOOL popoverDidDismiss = NO;
 {
     
     UserListView *userlist = [self userListView];
+    userlist.channel = (IRCChannel*)_conversation;
+    [userlist.tableview reloadData];    
     
     CGFloat progress = [recognizer translationInView:_conversation.contentView].x;
 

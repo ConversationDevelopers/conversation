@@ -36,6 +36,7 @@
 
 @implementation UserListView
 
+
 - (void)drawRect:(CGRect)rect {
     ILTranslucentView *translucentView = [[ILTranslucentView alloc] initWithFrame:self.bounds];
     [self addSubview:translucentView]; //that's it :)
@@ -46,11 +47,13 @@
     translucentView.translucentTintColor = [UIColor whiteColor];
     translucentView.backgroundColor = [UIColor clearColor];
     
-    UITableView *tableView = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
-    tableView.backgroundColor = [UIColor clearColor];
-    tableView.delegate = self;
-    tableView.dataSource = self;
-    [translucentView addSubview:tableView];
+    if (!_tableview) {
+        _tableview = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
+        _tableview.backgroundColor = [UIColor clearColor];
+        _tableview.delegate = self;
+        _tableview.dataSource = self;
+        [translucentView addSubview:_tableview];
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -66,6 +69,8 @@
     if (cell == nil) {
         cell = [[UserListItemCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
     }
+    
+    [cell prepareForReuse];
 
     cell.user = _channel.users[indexPath.row];
     cell.client = _channel.client;
