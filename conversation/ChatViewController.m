@@ -469,11 +469,13 @@ BOOL popoverDidDismiss = NO;
 - (void)messageReceived:(NSNotification *)notification
 {
     IRCMessage *message = notification.object;
+    if ([message.conversation.configuration.uniqueIdentifier isEqualToString:_conversation.configuration.uniqueIdentifier] == NO)
+        return;
+    
     if (_isChannel &&
         [(IRCChannel*)_conversation isJoinedByUser] &&
         message.messageType == ET_JOIN &&
-        [message.sender.nick isEqualToString:_conversation.client.currentUserOnConnection.nick] &&
-        [message.conversation.configuration.uniqueIdentifier isEqualToString:_conversation.configuration.uniqueIdentifier]) {
+        [message.sender.nick isEqualToString:_conversation.client.currentUserOnConnection.nick]) {
         
         UIBarButtonItem *userlistButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Userlist"]
                                                                            style:UIBarButtonItemStylePlain
