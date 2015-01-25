@@ -198,7 +198,7 @@
         NSArray *tags = [tagString componentsSeparatedByString:@";"];
         
         for (NSString *tag in tags) {
-            if ([tag containsString:@"="]) {
+            if ([tag rangeOfString:@"="].location != NSNotFound) {
                 /* This tag has a value. We will save the key and value into the dictionary. */
                 NSArray *components = [tag componentsSeparatedByString:@"="];
                 [tagsList setObject:components[1] forKey:components[0]];
@@ -466,7 +466,7 @@
             break;
         }
         
-        if ([feature containsString:@"="]) {
+        if ([feature rangeOfString:@"="].location != NSNotFound) {
             NSArray *components = [feature componentsSeparatedByString:@"="];
             [self.featuresSupportedByServer setObject:[components objectAtIndex:1] forKey:[components objectAtIndex:0]];
         } else {

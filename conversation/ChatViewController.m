@@ -419,7 +419,7 @@ BOOL popoverDidDismiss = NO;
     
     
     // Commands
-    if ([[textView.text substringToIndex:1] isEqualToString:@"/"] && [textView.text containsString:@" "] == NO) {
+    if ([[textView.text substringToIndex:1] isEqualToString:@"/"] && [textView.text rangeOfString:@" "].location == NSNotFound) {
         NSString *searchString = [textView.text substringFromIndex:1];
         for (NSString *command in [InputCommands inputCommandReference]) {
             if ([[command lowercaseString] hasPrefix:[searchString lowercaseString]]) {

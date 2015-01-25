@@ -46,7 +46,7 @@
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0]];
     [[UINavigationBar appearance] setTintColor:[UIColor lightGrayColor]];
     [[UINavigationBar appearance] setBackgroundColor:[UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0]];
-    [[UINavigationBar appearance] setTranslucent:NO];
+//    [[UINavigationBar appearance] setTranslucent:NO];
     [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor lightGrayColor]} forState:UIControlStateNormal];
     [[UITableView appearance] setTintColor:[UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0]];
     
@@ -80,8 +80,13 @@
     UIUserNotificationSettings *mySettings =
     [UIUserNotificationSettings settingsForTypes:types categories:nil];
     
-    [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
-    [application registerForRemoteNotifications];
+    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]){
+        [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
+        [application registerForRemoteNotifications];
+    } else {
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+        (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+    }
     
     return YES;
 }

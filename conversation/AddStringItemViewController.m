@@ -118,7 +118,7 @@
 
 - (void)valueChanged:(PreferencesTextCell *)sender
 {
-    if ([self.title containsString:@"Ignore"]) {
+    if ([self.title rangeOfString:@"Ignore"].location != NSNotFound) {
         _badInput = YES;
         sender.accessoryType = UITableViewCellAccessoryNone;
         if ([sender.textField.text isValidWildcardIgnoreMask] || [sender.textField.text isValidNickname:nil]) {
