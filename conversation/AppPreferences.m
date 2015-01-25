@@ -179,40 +179,61 @@
 
 - (void)deleteChannelWithName:(NSString *)channelName forConnectionConfiguration:(IRCConnectionConfiguration *)connection
 {
-    NSMutableDictionary *dict = [self.preferences mutableCopy];
-    NSMutableArray *newChans = [[NSMutableArray alloc] init];
-
+    NSMutableDictionary *prefs = [self.preferences mutableCopy];
+    NSMutableArray *configurations;
+    if([self.preferences objectForKey:@"configurations"] != nil) {
+        configurations = [[self.preferences objectForKey:@"configurations"] mutableCopy];
+    } else {
+        configurations = [[NSMutableArray alloc] init];
+    }
+    
     int i=0;
-    for (NSDictionary *config in self.preferences[@"configurations"]) {
-        if ([config[@"uniqueIdentifier"] isEqualToString:connection.uniqueIdentifier]) {
-            for (NSDictionary *channel in config[@"channels"]) {
+    for (NSDictionary *d in configurations) {
+        if([d[@"uniqueIdentifier"] isEqualToString:connection.uniqueIdentifier]) {
+            NSMutableDictionary *dict = [d mutableCopy];
+            NSMutableArray *channels = [dict[@"channels"] mutableCopy];
+            for (NSDictionary *channel in dict[@"channels"]) {
                 if([channel[@"name"] isEqualToString:channelName] == NO)
-                    [newChans addObject:channel];
+                    [channels addObject:channel];
             }
-            dict[@"configurations"][i][@"channels"] = newChans;
+            dict[@"channels"] = channels;
+            configurations[i] = dict;
+            break;
         }
         i++;
     }
-    self.preferences = dict;
+    prefs[@"configurations"] = configurations;
+    self.preferences = prefs;
 }
 
 - (void)deleteQueryWithName:(NSString *)queryName forConnectionConfiguration:(IRCConnectionConfiguration *)connection
 {
-    NSMutableDictionary *dict = [self.preferences mutableCopy];
-    NSMutableArray *newChans = [[NSMutableArray alloc] init];
+    NSMutableDictionary *prefs = [self.preferences mutableCopy];
+    NSMutableArray *configurations;
+    if([self.preferences objectForKey:@"configurations"] != nil) {
+        configurations = [[self.preferences objectForKey:@"configurations"] mutableCopy];
+    } else {
+        configurations = [[NSMutableArray alloc] init];
+    }
     
     int i=0;
-    for (NSDictionary *config in self.preferences[@"configurations"]) {
-        if ([config[@"uniqueIdentifier"] isEqualToString:connection.uniqueIdentifier]) {
-            for (NSDictionary *channel in config[@"queries"]) {
+    for (NSDictionary *d in configurations) {
+        if([d[@"uniqueIdentifier"] isEqualToString:connection.uniqueIdentifier]) {
+            NSMutableDictionary *dict = [d mutableCopy];
+            NSMutableArray *channels = [dict[@"queries"] mutableCopy];
+            for (NSDictionary *channel in dict[@"queries"]) {
                 if([channel[@"name"] isEqualToString:queryName] == NO)
-                    [newChans addObject:channel];
+                    [channels addObject:channel];
             }
-            dict[@"configurations"][i][@"queries"] = newChans;
+            dict[@"queries"] = channels;
+            configurations[i] = dict;
+            break;
         }
         i++;
     }
-    self.preferences = dict;
+    prefs[@"configurations"] = configurations;
+    self.preferences = prefs;
+
 }
 
 - (void)addConnectionConfiguration:(IRCConnectionConfiguration *)configuration
