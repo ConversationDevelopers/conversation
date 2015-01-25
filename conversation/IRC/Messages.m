@@ -198,21 +198,11 @@
         message.conversation = [[IRCConversation alloc] initWithConfiguration:configuration withClient:message.client];
     }
     
-    if ([[message message] hasPrefix:@"\001"] && [[message message] hasSuffix:@"\001"]) {
+    if ([[message message] hasPrefix:@"\001"]) {
+        message.message = [message.message substringFromIndex:1];
         [self userReceivedCTCPMessage:message];
         return;
 
-    } else if ([message.message hasPrefix:@"\001"]) {
-    
-        /* Some clients send actions without concluding \001, so let's be more tolerant */
-        message.message = [[message message] substringWithRange:NSMakeRange(1, message.message.length - 1)];
-        NSMutableArray *messageComponents = [[[message message] componentsSeparatedByString:@" "] mutableCopy];
-        if ([[[message message] lowercaseString] hasPrefix:[@"ACTION" lowercaseString]]) {
-            [messageComponents removeObjectAtIndex:0];
-            message.message = [messageComponents componentsJoinedByString:@" "];
-            
-            [self userReceivedACTIONMessage:message];
-        }
     }
     
     message.messageType = ET_PRIVMSG;
@@ -225,13 +215,15 @@
 
 + (void)userReceivedCTCPMessage:(IRCMessage *)message
 {
-    /* Check that the message contains both CTCP characters and at least one other character */
-    if ([[message message] length] > 3) {
-        /* Consume the begining and ending CTCP character (0x01) */
+    if ([message.message hasSuffix:@"\001"]) {
         message.message = [[message message] substringWithRange:NSMakeRange(1, [[message message] length] - 2)];
-        
+    } else {
+        message.message = [message.message substringFromIndex:1];
+    }
+    
+    /* Check that the message contains at least one other character */
+    if ([[message message] length] > 0) {
         NSMutableArray *messageComponents = [[[message message] componentsSeparatedByString:@" "] mutableCopy];
-        
         
         #define isCTCPCommand(x) [[[message message] lowercaseString] hasPrefix:[x lowercaseString]]
         
