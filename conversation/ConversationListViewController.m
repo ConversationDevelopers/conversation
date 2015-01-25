@@ -420,14 +420,14 @@
     }
     
     if(self.connections.count > 0) {
-        
+
         // Remove old stuff
         for (UIView *v in header.contentView.subviews) {
             if ([v isKindOfClass:[UIButton class]] || [v isKindOfClass:[UIActivityIndicatorView class]]) {
                 [v removeFromSuperview];
             }
         }
-        
+ 
         // Set image
         UIImage *image = [UIImage imageNamed:@"NetworkIcon"];
         CGSize size = CGSizeMake(25.0, 25.0);
@@ -446,9 +446,10 @@
         header.textLabel.text = client.configuration.connectionName;
         header.tag = section;
         
+        CGRect screenRect = [[UIScreen mainScreen] bounds];
         if (client.isAttemptingConnection || client.isAttemptingRegistration) {
             UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-            spinner.frame = CGRectMake(header.bounds.size.width-10, 0, header.bounds.size.height, header.bounds.size.height);
+            spinner.frame = CGRectMake(screenRect.size.width-50.0, 0, header.frame.size.height, header.frame.size.height);
             [header.contentView addSubview:spinner];
             [spinner startAnimating];
         }
@@ -460,7 +461,7 @@
             unichar *code = malloc(sizeof(unichar) * 1);
             code[0] = (unichar)0x2713;
             
-            checkmark.frame = CGRectMake(header.bounds.size.width-10, 0, header.bounds.size.height, header.bounds.size.height);
+            checkmark.frame = CGRectMake(screenRect.size.width-50, 0, header.frame.size.height, header.frame.size.height);
             checkmark.titleLabel.font = [UIFont fontWithName:@"Symbola" size:16.0];
             [checkmark setTitle:[NSString stringWithCharacters:code length:1] forState:UIControlStateNormal];
             [checkmark setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
