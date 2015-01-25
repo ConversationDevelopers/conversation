@@ -360,13 +360,14 @@ uint32_t FNV32(const char *s)
     NSMutableArray *links = [[NSMutableArray alloc] init];
     NSDataDetector* detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
     NSArray *matches = [detector matchesInString:string options:0 range:NSMakeRange(0, [string length])];
+    NSString *newString = string;
     for (NSTextCheckingResult *match in matches) {
         NSRange matchRange = [match range];
         NSString *urlString = [string substringWithRange:matchRange];
         NSString *replace = [[NSString stringWithString:urlString] stringByTruncatingToWidth:250.0
                                                                                        withAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12.0]}];
         
-        string = [string stringByReplacingOccurrencesOfString:urlString withString:replace];
+        newString = [newString stringByReplacingOccurrencesOfString:urlString withString:replace];
         [ranges addObject:[NSValue valueWithRange:NSMakeRange(matchRange.location, replace.length)]];
         [offsets addObject:[NSNumber numberWithInteger:urlString.length-replace.length]];
         [links addObject:match.URL];
@@ -376,8 +377,7 @@ uint32_t FNV32(const char *s)
             [_images addObject:[self getImageLink:match.URL]];
     }
 
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
-
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:newString];
 
     int offset = 0;
     for (int i=0; i<ranges.count; i++) {
@@ -386,7 +386,6 @@ uint32_t FNV32(const char *s)
         [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(range.location-offset, range.length)];
         offset += [offsets[i] intValue];
     }
- 
     
     // Search for mentions of channel names
     NSError *error = NULL;
