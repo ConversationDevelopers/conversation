@@ -411,71 +411,62 @@
     
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    static NSString *CellIdentifier = @"header";
-    UITableViewCell *header = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (header == nil) {
-        header = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+    IRCClient *client = [self.connections objectAtIndex:section];
+    
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, screenRect.size.width, 35.0)];
+    header.tag = section;
+    header.backgroundColor = [UIColor whiteColor];
+    
+    // Set image
+    CGSize size = CGSizeMake(25.0, 25.0);
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, size.width, size.height)];
+    UIImage *image = [UIImage imageNamed:@"NetworkIcon"];
+    UIGraphicsBeginImageContext(size);
+    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    imageView.image = scaledImage;
+    [header addSubview:imageView];
+    
+    // Set Label
+    UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(55.0, 0.0, screenRect.size.width-60.0, 35.0)];
+    textLabel.font = [UIFont systemFontOfSize:18.0];
+    textLabel.textColor = [UIColor darkGrayColor];
+    textLabel.text = client.configuration.connectionName;
+    [header addSubview:textLabel];
+    
+    if (client.isAttemptingConnection || client.isAttemptingRegistration) {
+        UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        spinner.frame = CGRectMake(screenRect.size.width-50.0, 0, header.frame.size.height, header.frame.size.height);
+        [header addSubview:spinner];
+        [spinner startAnimating];
     }
     
-    if(self.connections.count > 0) {
-
-        // Remove old stuff
-        for (UIView *v in header.contentView.subviews) {
-            if ([v isKindOfClass:[UIButton class]] || [v isKindOfClass:[UIActivityIndicatorView class]]) {
-                [v removeFromSuperview];
-            }
-        }
- 
-        // Set image
-        UIImage *image = [UIImage imageNamed:@"NetworkIcon"];
-        CGSize size = CGSizeMake(25.0, 25.0);
-        UIGraphicsBeginImageContext(size);
-        [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
-        UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        header.imageView.image = scaledImage;
-
-        // Set colors
-        [header.textLabel setTextColor:[UIColor darkGrayColor]];
-        header.contentView.backgroundColor = [UIColor whiteColor];
+    if (client.isConnectedAndCompleted) {
+        UIButton *checkmark = [UIButton buttonWithType:UIButtonTypeCustom];
         
-        // Set Label
-        IRCClient *client = [self.connections objectAtIndex:section];
-        header.textLabel.text = client.configuration.connectionName;
-        header.tag = section;
+        // Define unicode character
+        unichar *code = malloc(sizeof(unichar) * 1);
+        code[0] = (unichar)0x2713;
         
-        CGRect screenRect = [[UIScreen mainScreen] bounds];
-        if (client.isAttemptingConnection || client.isAttemptingRegistration) {
-            UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-            spinner.frame = CGRectMake(screenRect.size.width-50.0, 0, header.frame.size.height, header.frame.size.height);
-            [header.contentView addSubview:spinner];
-            [spinner startAnimating];
-        }
-        
-        if (client.isConnectedAndCompleted) {
-            UIButton *checkmark = [UIButton buttonWithType:UIButtonTypeCustom];
-            
-            // Define unicode character
-            unichar *code = malloc(sizeof(unichar) * 1);
-            code[0] = (unichar)0x2713;
-            
-            checkmark.frame = CGRectMake(screenRect.size.width-50, 0, header.frame.size.height, header.frame.size.height);
-            checkmark.titleLabel.font = [UIFont fontWithName:@"Symbola" size:16.0];
-            [checkmark setTitle:[NSString stringWithCharacters:code length:1] forState:UIControlStateNormal];
-            [checkmark setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            [header.contentView addSubview:checkmark];
-            free(code);
-        }
-        
-        // Add Tap Event
-        UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(headerViewSelected:)];
-        [singleTapRecogniser setDelegate:self];
-        singleTapRecogniser.numberOfTouchesRequired = 1;
-        singleTapRecogniser.numberOfTapsRequired = 1;
-        [header addGestureRecognizer:singleTapRecogniser];
+        checkmark.frame = CGRectMake(screenRect.size.width-50, 0, header.frame.size.height, header.frame.size.height);
+        checkmark.titleLabel.font = [UIFont fontWithName:@"Symbola" size:16.0];
+        [checkmark setTitle:[NSString stringWithCharacters:code length:1] forState:UIControlStateNormal];
+        [checkmark setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [header addSubview:checkmark];
+        free(code);
     }
+    
+    // Add Tap Event
+    UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(headerViewSelected:)];
+    [singleTapRecogniser setDelegate:self];
+    singleTapRecogniser.numberOfTouchesRequired = 1;
+    singleTapRecogniser.numberOfTapsRequired = 1;
+    [header addGestureRecognizer:singleTapRecogniser];
+    
     return header;
 }
 
