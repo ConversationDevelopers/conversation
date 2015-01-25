@@ -34,6 +34,55 @@
 
 @implementation UserStatusView
 
+- (id)initWithFrame:(CGRect)frame
+{
+    if ((self = [super initWithFrame:frame])) {
+        _statusLabel = [[UILabel alloc] init];
+        _statusLabel.textColor = [UIColor whiteColor];
+        
+        [self addSubview:_statusLabel];
+    }
+    
+    return self;
+}
+
+- (void)drawRect:(CGRect)rect
+{
+    CGPoint point;
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    point.x = self.bounds.origin.x + self.bounds.size.width/2;
+    point.y = self.bounds.origin.y + self.bounds.size.height/2;
+    CGContextSetLineWidth(context, 5.0);
+    [[self statusColor] setFill];
+    UIGraphicsPushContext(context);
+    CGContextBeginPath(context);
+    CGContextAddArc(context, point.x, point.y, 12, 0, 2*M_PI, YES);
+    CGContextFillPath(context);
+    UIGraphicsPopContext();
+}
+
+- (void)layoutSubviews
+{
+
+    NSString *symbol = [self characterForStatus:_status];
+    
+    if ([symbol isEqualToString:@"@"])
+        _statusLabel.font = [UIFont fontWithName:@"Arial" size:16.0];
+    else
+        _statusLabel.font = [UIFont fontWithName:@"Arial" size:18.0];
+
+    _statusLabel.text = symbol;
+    
+    CGRect frame = _statusLabel.frame;
+    frame.origin.x = self.bounds.size.width / 2 - frame.size.width / 2;
+    frame.origin.y = self.bounds.size.height / 2 - frame.size.height / 2;
+    
+    _statusLabel.frame = frame;
+    
+    [_statusLabel sizeToFit];
+    
+}
+
 - (UIColor *)statusColor
 {
     switch(self.status) {
@@ -58,61 +107,18 @@
     switch(status) {
         case VOICE:
             return [_client.userModeCharacters objectForKey:@"v"];
-            break;
         case HALFOP:
             return [_client.userModeCharacters objectForKey:@"h"];
-            break;
         case OPERATOR:
             return [_client.userModeCharacters objectForKey:@"o"];
-            break;
         case ADMIN:
             return [_client.userModeCharacters objectForKey:@"a"];
-            break;
         case OWNER:
             return [_client.userModeCharacters objectForKey:@"o"];
-            break;
         case IRCOP:
             return [_client.userModeCharacters objectForKey:@"y"];
-            break;
     }
     return @"";
-}
-
-- (void)drawRect:(CGRect)rect
-{
-    CGPoint point;
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    point.x = self.bounds.origin.x + self.bounds.size.width/2;
-    point.y = self.bounds.origin.y + self.bounds.size.height/2;
-    CGContextSetLineWidth(context, 5.0);
-    [[self statusColor] setFill];
-    UIGraphicsPushContext(context);
-    CGContextBeginPath(context);
-    CGContextAddArc(context, point.x, point.y, 12, 0, 2*M_PI, YES);
-    CGContextFillPath(context);
-    UIGraphicsPopContext();
-}
-
-- (void)layoutSubviews
-{
-    NSString *symbol = [self characterForStatus:_status];
-
-    UILabel *statusLabel = [[UILabel alloc] init];
-    if ([symbol isEqualToString:@"@"])
-        statusLabel.font = [UIFont fontWithName:@"Arial" size:16.0];
-    else
-        statusLabel.font = [UIFont fontWithName:@"Arial" size:18.0];
-    statusLabel.textColor = [UIColor whiteColor];
-    statusLabel.text = symbol;
-    [statusLabel sizeToFit];
-
-    CGRect frame = statusLabel.frame;
-    frame.origin.x = self.bounds.size.width / 2 - frame.size.width / 2;
-    frame.origin.y = self.bounds.size.height / 2 - frame.size.height / 2;
-    
-    statusLabel.frame = frame;
-    
-    [self addSubview:statusLabel];
 }
 
 

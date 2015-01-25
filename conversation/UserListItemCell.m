@@ -49,7 +49,12 @@
     _nickLabel.backgroundColor = [UIColor clearColor];    
     _nickLabel.font = [UIFont systemFontOfSize:16.0];
     
+    _statusView = [[UserStatusView alloc] initWithFrame:CGRectZero];
+    _statusView.backgroundColor = [UIColor clearColor];
+
+    [self.contentView addSubview:_statusView];
     [self.contentView addSubview:_nickLabel];
+    
     return self;
 }
 
@@ -60,15 +65,11 @@
     _nickLabel.text = @"";
     _statusView.frame = CGRectZero;
     _nickLabel.frame = CGRectZero;
-    
-    [_statusView removeFromSuperview];
-    _statusView = nil;
+    _statusView.status = 0;
 }
 
 - (void)layoutSubviews
 {
-    _statusView = [[UserStatusView alloc] initWithFrame:CGRectZero];
-    _statusView.backgroundColor = [UIColor clearColor];
 
     _statusView.frame = CGRectMake(10, 0, 30, self.contentView.bounds.size.height);
     _statusView.client = _client;
@@ -87,8 +88,7 @@
                                attributes:@{ NSFontAttributeName:_nickLabel.font }
                                   context:nil];
     _nickLabel.frame = CGRectMake(45, 0, frame.size.width, self.contentView.bounds.size.height);
-    
-    [self.contentView addSubview:_statusView];
+
 }
 
 @end

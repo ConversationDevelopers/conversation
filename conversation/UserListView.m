@@ -78,13 +78,11 @@
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    NSString *identifier = NSStringFromClass([UserListItemCell class]);
+    NSString *identifier = [NSString stringWithFormat:@"%@%i", NSStringFromClass(UserListItemCell.class), (int)[_channel.users[indexPath.row] channelPrivilege]];
     UserListItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (cell == nil) {
         cell = [[UserListItemCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
     }
-    
-    [cell prepareForReuse];
 
     cell.user = _channel.users[indexPath.row];
     cell.client = _channel.client;

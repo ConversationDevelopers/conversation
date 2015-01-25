@@ -34,6 +34,9 @@
 
 @interface UserStatusView : UIView
 
+- (id)initWithFrame:(CGRect)frame;
+
+@property (nonatomic) UILabel *statusLabel;
 @property (nonatomic) IRCClient *client;
 @property (nonatomic) NSInteger status;
 
