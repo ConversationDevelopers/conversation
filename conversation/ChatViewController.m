@@ -363,7 +363,13 @@ BOOL popoverDidDismiss = NO;
                                                  isServerMessage:NO
                                                         onClient:_conversation.client];
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:ircmsg];
+        ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, 0, _conversation.contentView.frame.size.width, 15.0)
+                                                                      message:ircmsg
+                                                                 conversation:_conversation];
+        messageView.chatViewController = self;
+        messageView.message = ircmsg;
+        [_conversation.contentView addMessageView:messageView];
+        [self scrollToBottom:YES];
     }
     
     [_popOver removeFromSuperview];
