@@ -144,6 +144,10 @@ BOOL popoverDidDismiss = NO;
     [swipeLeftRecognizer setDelegate:self];
     [_conversation.contentView addGestureRecognizer:swipeLeftRecognizer];
     
+    // Not sure why but sometimes the view is higher as expected
+    CGRect frame = CGRectMake(self.container.frame.origin.x, self.container.frame.origin.y, self.container.frame.size.width, self.container.frame.size.height - PHFComposeBarViewInitialHeight);
+    _conversation.contentView.frame = frame;
+    
     [self.container addSubview:_conversation.contentView];
     
     // Update userlist
