@@ -583,7 +583,7 @@ BOOL popoverDidDismiss = NO;
         CGRect frame = CGRectMake(_container.frame.size.width,
                                   30.0f,
                                   width,
-                                  _conversation.contentView.frame.size.height);
+                                  _conversation.contentView.frame.size.height + 30.0);
         
         _userListView = [[UserListView alloc] initWithFrame:frame];
         _userListView.backgroundColor = [UIColor clearColor];
