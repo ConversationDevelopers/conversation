@@ -899,6 +899,7 @@
                               message.conversation.contentView.frame.size.width,
                               _chatViewController.container.frame.size.height - PHFComposeBarViewInitialHeight);
     message.conversation.contentView.frame = frame;
+    messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     // Scroll to bottom if content is bigger than view and user didnt scroll up
     if ([message.conversation isEqual:_currentConversation] &&

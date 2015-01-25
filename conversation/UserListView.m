@@ -34,26 +34,40 @@
 #import "IRCUser.h"
 #import "UserListItemCell.h"
 
+@interface UserListView ()
+@property (nonatomic) ILTranslucentView *translucentView;
+@end
+
 @implementation UserListView
 
-
-- (void)drawRect:(CGRect)rect {
-    ILTranslucentView *translucentView = [[ILTranslucentView alloc] initWithFrame:self.bounds];
-    [self addSubview:translucentView]; //that's it :)
-    
-    //optional:
-    translucentView.translucentAlpha = 0.8;
-    translucentView.translucentStyle = UIBarStyleDefault;
-    translucentView.translucentTintColor = [UIColor whiteColor];
-    translucentView.backgroundColor = [UIColor clearColor];
-    
-    if (!_tableview) {
+- (id)initWithFrame:(CGRect)frame
+{
+    if ((self = [super initWithFrame:frame])) {
+        _translucentView = [[ILTranslucentView alloc] initWithFrame:self.bounds];
+        _translucentView.translucentAlpha = 0.8;
+        _translucentView.translucentStyle = UIBarStyleDefault;
+        _translucentView.translucentTintColor = [UIColor whiteColor];
+        _translucentView.backgroundColor = [UIColor clearColor];
+        
         _tableview = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
         _tableview.backgroundColor = [UIColor clearColor];
         _tableview.delegate = self;
         _tableview.dataSource = self;
-        [translucentView addSubview:_tableview];
+        
+        [_translucentView addSubview:_tableview];
+        [self addSubview:_translucentView];
+        
     }
+    
+    return self;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    _translucentView.frame = self.bounds;
+    _tableview.frame = self.bounds;
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

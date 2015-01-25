@@ -34,6 +34,8 @@
 
 @interface UserListView : UIView <UITableViewDataSource, UITableViewDelegate>
 
+- (id)initWithFrame:(CGRect)frame;
+
 @property (nonatomic) UITableView *tableview;
 @property (nonatomic) IRCChannel *channel;
 

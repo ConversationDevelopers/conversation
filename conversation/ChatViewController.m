@@ -254,6 +254,10 @@ BOOL popoverDidDismiss = NO;
     
     CGFloat sizeChange = UIInterfaceOrientationIsLandscape([self interfaceOrientation]) ? widthChange : heightChange;
     
+    // iOS 8
+    if (sizeChange == 0.0)
+        sizeChange = heightChange;
+    
     CGRect newContainerFrame = [[self container] frame];
     newContainerFrame.size.height += sizeChange;
     
@@ -284,14 +288,27 @@ BOOL popoverDidDismiss = NO;
     _userlistIsVisible = YES;
     
     [_composeBarView resignFirstResponder];
-    UserListView *userlist = [self userListView];
     
-    userlist.channel = (IRCChannel*)_conversation;
-    [userlist.tableview reloadData];
+    _userListView = [self userListView];
     
-    [self.navigationController.view addSubview:userlist];
+    _userListView.channel = (IRCChannel*)_conversation;
+    [_userListView.tableview reloadData];
 
-    CGRect frame = userlist.frame;
+    CGRect frame = _userListView.frame;
+
+    if (UIInterfaceOrientationIsLandscape([self interfaceOrientation])) {
+        frame.size.height = self.view.bounds.size.height - 10.0;
+        frame.origin.y = 5.0;
+    } else {
+        frame.size.height = _conversation.contentView.frame.size.height + 30.0;
+        frame.origin.y = 30.0;
+    }
+
+    _userListView.frame = frame;
+
+    [self.navigationController.view addSubview:_userListView];
+
+    frame = _userListView.frame;
     frame.origin.x = _container.frame.size.width - 205.0f;
     
     [UIView animateWithDuration:0.5
@@ -299,7 +316,7 @@ BOOL popoverDidDismiss = NO;
          usingSpringWithDamping:0.5
           initialSpringVelocity:0.3
                         options:0 animations:^{
-                            userlist.frame = frame;
+                            _userListView.frame = frame;
                             //Animations
                         }
                      completion:nil];
@@ -661,6 +678,11 @@ BOOL popoverDidDismiss = NO;
 {
     popoverDidDismiss = YES;
     _popOver = nil;
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [self hideAccessories:nil];
 }
 
 @end
