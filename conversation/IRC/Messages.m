@@ -199,7 +199,6 @@
     }
     
     if ([[message message] hasPrefix:@"\001"]) {
-        message.message = [message.message substringFromIndex:1];
         [self userReceivedCTCPMessage:message];
         return;
 
