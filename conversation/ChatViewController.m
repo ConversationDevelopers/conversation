@@ -187,7 +187,6 @@ BOOL popoverDidDismiss = NO;
 {
     [super viewWillDisappear:animated];
     [self hideAccessories:nil];
-    [_conversation.contentView setContentOffset:CGPointMake(0.0, 0.0) animated:NO];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillShowNotification
