@@ -494,7 +494,7 @@ uint32_t FNV32(const char *s)
             break;
         }
         case ET_NICK: {
-            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@ %@",
+            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"· %@ %@ %@",
                                                                         user.nick,
                                                                         NSLocalizedString(@"is now known as", @"is now known as"),
                                                                         msg]];
@@ -512,13 +512,40 @@ uint32_t FNV32(const char *s)
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:10.0]
-                           range:NSMakeRange(0, msg.length)];
+                           range:NSMakeRange(0, user.nick.length + 2)];
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:10.0]
                            range:NSMakeRange(string.length-msg.length, msg.length)];
             break;
         }
+        case ET_MODE: {
+            string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"· %@ %@ %@",
+                                                                        user.nick,
+                                                                        NSLocalizedString(@"sets mode", @"sets mode"),
+                                                                        msg]];
+            
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont systemFontOfSize:10.0]
+                           range:NSMakeRange(0, string.length)];
+            
+            [string addAttribute:NSParagraphStyleAttributeName
+                           value:paragraphStyle
+                           range:NSMakeRange(0, string.length)];
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont boldSystemFontOfSize:10.0]
+                           range:NSMakeRange(0, user.nick.length + 2)];
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont boldSystemFontOfSize:10.0]
+                           range:NSMakeRange(string.length-msg.length, msg.length)];
+            break;
+        }
+            
         case ET_ACTION: {
             
             string = [[NSMutableAttributedString alloc] initWithAttributedString:[self setLinks:[[NSString alloc] initWithFormat:@"· %@ %@", user.nick, msg]]];
