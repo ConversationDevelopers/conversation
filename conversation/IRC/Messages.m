@@ -201,6 +201,18 @@
     if ([[message message] hasPrefix:@"\001"] && [[message message] hasSuffix:@"\001"]) {
         [self userReceivedCTCPMessage:message];
         return;
+
+    } else if ([message.message hasPrefix:@"\001"]) {
+    
+        /* Some clients send actions without concluding \001, so let's be more tolerant */
+        message.message = [[message message] substringWithRange:NSMakeRange(1, message.message.length - 1)];
+        NSMutableArray *messageComponents = [[[message message] componentsSeparatedByString:@" "] mutableCopy];
+        if ([[[message message] lowercaseString] hasPrefix:[@"ACTION" lowercaseString]]) {
+            [messageComponents removeObjectAtIndex:0];
+            message.message = [messageComponents componentsJoinedByString:@" "];
+            
+            [self userReceivedACTIONMessage:message];
+        }
     }
     
     message.messageType = ET_PRIVMSG;
