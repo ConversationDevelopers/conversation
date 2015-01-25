@@ -890,6 +890,7 @@
     ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, 0, message.conversation.contentView.frame.size.width, 15.0)
                                                                   message:message
                                                              conversation:message.conversation];
+
     messageView.chatViewController = self.chatViewController;
     [message.conversation.contentView addMessageView:messageView];
 
@@ -898,6 +899,15 @@
                               message.conversation.contentView.frame.size.width,
                               _chatViewController.container.frame.size.height - PHFComposeBarViewInitialHeight);
     message.conversation.contentView.frame = frame;
+    
+    // Scroll to bottom if content is bigger than view and user didnt scroll up
+    if ([message.conversation isEqual:_currentConversation]) {
+        CGFloat height = messageView.bounds.size.height;
+        if (message.conversation.contentView.contentOffset.y + height + 30.0 > message.conversation.contentView.contentSize.height - message.conversation.contentView.bounds.size.height) {
+            CGPoint bottomOffset = CGPointMake(0, message.conversation.contentView.posY - message.conversation.contentView.frame.size.height);
+            [message.conversation.contentView setContentOffset:bottomOffset animated:YES];
+        }
+    }
     
     // The stuff below is only for the preview
     if (message.messageType != ET_PRIVMSG && message.messageType != ET_ACTION)

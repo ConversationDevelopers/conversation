@@ -504,14 +504,6 @@ BOOL popoverDidDismiss = NO;
     if (message.messageType == ET_AWAY)
         [self.userListView.tableview reloadData];
     
-    // Scroll to bottom if content is bigger than view and user didnt scroll up
-    int count = (int)_conversation.contentView.subviews.count;
-    CGFloat height = [_conversation.contentView.subviews[count-1] frame].size.height + [_conversation.contentView.subviews[count-2] frame].size.height;
-    if (_conversation.contentView.contentOffset.y == 0.0 ||
-         _conversation.contentView.contentOffset.y + height + 40.0 > _conversation.contentView.contentSize.height - _conversation.contentView.bounds.size.height) {
-            [self scrollToBottom:YES];
-        }
-    
 }
 
 - (void)swipeLeft:(UIScreenEdgePanGestureRecognizer *)recognizer
