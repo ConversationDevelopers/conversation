@@ -145,7 +145,11 @@ BOOL popoverDidDismiss = NO;
     [_conversation.contentView addGestureRecognizer:swipeLeftRecognizer];
     
     // Not sure why but sometimes the view is higher as expected
-    CGRect frame = CGRectMake(self.container.frame.origin.x, self.container.frame.origin.y, self.container.frame.size.width, self.container.frame.size.height - PHFComposeBarViewInitialHeight);
+    CGRect frame = CGRectMake(self.container.frame.origin.x,
+                              self.container.frame.origin.y,
+                              self.container.frame.size.width,
+                              self.container.frame.size.height - _composeBarView.bounds.size.height);
+    
     _conversation.contentView.frame = frame;
     
     [self.container addSubview:_conversation.contentView];
@@ -609,8 +613,7 @@ BOOL popoverDidDismiss = NO;
 }
 
 
-#pragma mark -
-#pragma mark UIImagePickerController Delegate Methods
+#pragma mark - Delegate Methods
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
@@ -678,6 +681,16 @@ BOOL popoverDidDismiss = NO;
 {
     popoverDidDismiss = YES;
     _popOver = nil;
+}
+
+- (void)composeBarView:(PHFComposeBarView *)composeBarView didChangeFromFrame:(CGRect)startFrame toFrame:(CGRect)endFrame
+{
+    CGRect frame = CGRectMake(self.container.frame.origin.x,
+                              self.container.frame.origin.y,
+                              self.container.frame.size.width,
+                              self.container.frame.size.height - endFrame.size.height);
+    
+    _conversation.contentView.frame = frame;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
