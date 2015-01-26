@@ -555,6 +555,7 @@
 {
     IRCChannel *channel = (IRCChannel *)[message conversation];
     channel.topic = message.message;
+    message.messageType = ET_TOPIC;
     message.conversation = channel;
     
     [message.conversation addMessageToConversation:message];

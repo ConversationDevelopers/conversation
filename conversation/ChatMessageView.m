@@ -581,6 +581,29 @@ uint32_t FNV32(const char *s)
 
             break;
         }
+        case ET_TOPIC: {
+
+            string = [[NSMutableAttributedString alloc] initWithAttributedString:[self setLinks:[NSString stringWithFormat:@"%@ %@ %@",
+                                                                        user.nick,
+                                                                        NSLocalizedString(@"changed the topic to", @"changed the topic to"),
+                                                                        msg]]];
+            
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            [string addAttribute:NSParagraphStyleAttributeName
+                           value:paragraphStyle
+                           range:NSMakeRange(0, string.length)];
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont boldSystemFontOfSize:12.0]
+                           range:NSMakeRange(0, user.nick.length)];
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont boldSystemFontOfSize:12.0]
+                           range:NSMakeRange(string.length-msg.length, msg.length)];
+            
+            break;
+        }
         case ET_ACTION: {
             
             string = [[NSMutableAttributedString alloc] initWithAttributedString:[self setLinks:[[NSString alloc] initWithFormat:@"· %@ %@", user.nick, msg]]];
