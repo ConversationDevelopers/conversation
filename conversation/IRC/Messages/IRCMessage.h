@@ -44,6 +44,7 @@
 @property (nonatomic) NSUInteger messageType;
 @property (nonatomic) NSDictionary *tags;
 @property (nonatomic) BOOL isServerMessage;
+@property (nonatomic) BOOL isConversationHistory;
 
 - (instancetype) initWithMessage:(NSString *)message OfType:(NSUInteger)type inConversation:(IRCConversation *)conversation bySender:(IRCUser *)sender atTime:(NSDate *)timestamp withTags:(NSDictionary *)tags isServerMessage:(BOOL)isServerMessage onClient:(IRCClient *)client;
 

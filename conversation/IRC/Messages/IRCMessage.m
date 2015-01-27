@@ -43,6 +43,7 @@
         self.tags = tags;
         self.isServerMessage = isServerMessage;
         self.client = client;
+        self.isConversationHistory = NO;
         return self;
     }
     return nil;
