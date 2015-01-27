@@ -155,8 +155,10 @@ static unsigned short ModesTableSection = 1;
     if (indexPath.section == TopicTableSection) {
         UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleDefault];
         UITextView *textView = [[UITextView alloc] initWithFrame:cell.bounds];
-        if ([_channel.topic isEqualToString:@"(No Topic)"] == NO)
+        
+        if (_channel.topic != nil)
             textView.text = _channel.topic;
+        
         textView.delegate = self;
         [cell.contentView addSubview:textView];
         return cell;
