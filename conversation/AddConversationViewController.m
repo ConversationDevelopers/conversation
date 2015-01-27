@@ -168,7 +168,7 @@ static unsigned short ConversationTableSection = 1;
         connectionListViewController.items = [connections copy];
         connectionListViewController.itemImage = [UIImage imageNamed:@"NetworkIcon"];
         connectionListViewController.target = self;
-        connectionListViewController.action = @selector(connectionDidChanged:);
+        connectionListViewController.action = @selector(connectionDidChange:);
         
         [self.navigationController pushViewController:connectionListViewController animated:YES];
         
@@ -233,12 +233,14 @@ static unsigned short ConversationTableSection = 1;
     return nil;
 }
 
-- (void) connectionDidChanged:(PreferencesListViewController *)sender
+- (void) connectionDidChange:(PreferencesListViewController *)sender
 {
-    if ((int)sender.selectedItem > -1) {
-        _client = [_connections objectAtIndex:sender.selectedItem];
-        [self.tableView reloadData];
-    }
+    if (sender.selectedItem == NSNotFound)
+        return;
+
+    _client = [_connections objectAtIndex:sender.selectedItem];
+    [self.tableView reloadData];
+
     if(_client != nil && _configuration.name) {
         self.navigationItem.rightBarButtonItem.enabled = YES;
     }
