@@ -545,9 +545,11 @@
             modes++;
         }
         
-        message.conversation = channel;
-        message.messageType = ET_MODE;
-        [message.conversation addMessageToConversation:message];
+        if ([message isServerMessage] == NO) {
+            message.conversation = channel;
+            message.messageType = ET_MODE;
+            [message.conversation addMessageToConversation:message];
+        }
     }
 }
 

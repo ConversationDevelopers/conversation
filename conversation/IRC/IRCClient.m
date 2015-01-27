@@ -391,7 +391,7 @@
             break;
             
         case RPL_CHANNELMODEIS:
-            //
+            [Messages userReceivedModesOnChannel:messageObject];
             break;
             
         case RPL_TOPIC:
