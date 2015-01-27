@@ -108,6 +108,9 @@
     singleTapRecogniser.numberOfTapsRequired = 1;
     [self addGestureRecognizer:singleTapRecogniser];
     
+    if (_message.messageType != ET_PRIVMSG && _message.messageType != ET_NOTICE)
+        self.userInteractionEnabled = NO;
+    
     return self;
 }
 
@@ -938,7 +941,7 @@ uint32_t FNV32(const char *s)
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 0 && self.message.messageType == ET_PRIVMSG) {
+    if (buttonIndex == 0) {
         UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
         NSString *status = [self characterForStatus:self.message.sender.channelPrivilege];
         NSString *pasteString = [NSString stringWithFormat:@"<%@%@> %@", status, self.message.sender.nick, self.message.message];
@@ -970,23 +973,19 @@ uint32_t FNV32(const char *s)
 
 - (void)handleTap:(UITapGestureRecognizer *)recognizer
 {
-    if (self.message.messageType == ET_PRIVMSG || self.message.messageType == ET_NOTICE) {
-        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Message", @"Message")
-                                                           delegate:self
-                                                  cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
-                                             destructiveButtonTitle:nil
-                                                  otherButtonTitles:NSLocalizedString(@"Copy", @"Copy"), nil];
-        [sheet setTag:-1];
-        [sheet showInView:self];
-    }
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Message", @"Message")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                                         destructiveButtonTitle:nil
+                                              otherButtonTitles:NSLocalizedString(@"Copy", @"Copy"), nil];
+    [sheet setTag:-1];
+    [sheet showInView:self];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    if (self.message.messageType == ET_PRIVMSG || self.message.messageType == ET_NOTICE) {
-        UIView *view = [[[event touchesForView:self] allObjects][0] view];
-        view.backgroundColor = [UIColor lightGrayColor];
-    }
+    UIView *view = [[[event touchesForView:self] allObjects][0] view];
+    view.backgroundColor = [UIColor lightGrayColor];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
