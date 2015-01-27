@@ -114,7 +114,7 @@
         case ADMIN:
             return [_client.userModeCharacters objectForKey:@"a"];
         case OWNER:
-            return [_client.userModeCharacters objectForKey:@"o"];
+            return [_client.userModeCharacters objectForKey:@"q"];
         case IRCOP:
             return [_client.userModeCharacters objectForKey:@"y"];
     }
