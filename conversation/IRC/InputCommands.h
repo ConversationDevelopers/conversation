@@ -57,7 +57,6 @@ typedef NS_ENUM(NSUInteger, InputCommand) {
     CMD_DEOP,
     CMD_DEVOICE,
     CMD_DEOWNER,
-    CMD_ECHO,
     CMD_HALFOP,
     CMD_HOP,
     CMD_J,
@@ -70,7 +69,6 @@ typedef NS_ENUM(NSUInteger, InputCommand) {
     CMD_ME,
     CMD_MODE,
     CMD_MSG,
-    CMD_MUTE,
     CMD_MYVERSION,
     CMD_NICK,
     CMD_OP,
@@ -86,8 +84,7 @@ typedef NS_ENUM(NSUInteger, InputCommand) {
     CMD_TOPIC,
     CMD_VOICE,
     CMD_UMODE,
-    CMD_UNBAN,
-    CMD_UNMUTE
+    CMD_UNBAN
 };
 
 @end

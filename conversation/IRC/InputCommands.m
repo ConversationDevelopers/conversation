@@ -168,9 +168,6 @@
                 }
                 break;
                 
-            case CMD_ECHO:
-                break;
-                
             case CMD_HALFOP:
                 if ([messageComponents count] > 1) {
                     IRCChannel *channel = (IRCChannel *)conversation;
@@ -317,9 +314,6 @@
                 break;
             }
                 
-            case CMD_MUTE:
-                break;
-                
             case CMD_MYVERSION:
                 [IRCCommands sendMessage:[NSString stringWithFormat:@"%cCurrent Version:%c Conversation %@ (https://github.com/ConversationDevelopers/conversation)",
                                           IRC_BOLD,
@@ -441,9 +435,6 @@
             case CMD_UNBAN:
                 break;
                 
-            case CMD_UNMUTE:
-                break;
-                
             case CMD_VOICE:
                 if ([messageComponents count] > 1) {
                     IRCChannel *channel = (IRCChannel *)conversation;
@@ -492,7 +483,6 @@
         @"DEHOP",
         @"DEVOICE",
         @"DEOWNER",
-        @"ECHO",
         @"HALFOP",
         @"HOP",
         @"J",
@@ -505,7 +495,6 @@
         @"ME",
         @"MODE",
         @"MSG",
-        @"MUTE",
         @"MYVERSION",
         @"NICK",
         @"OP",
@@ -521,8 +510,7 @@
         @"TOPIC",
         @"VOICE",
         @"UMODE",
-        @"UNBAN",
-        @"UNMUTE"
+        @"UNBAN"
     ];
 }
 
