@@ -388,7 +388,7 @@ uint32_t FNV32(const char *s)
         // Tricky solution to avoid line breaks
         replace = [replace stringByReplacingOccurrencesOfString:@"/" withString:@"\u2060/\u2060"];
         replace = [replace stringByReplacingOccurrencesOfString:@"." withString:@"\u2060.\u2060"];
-        replace = [replace stringByReplacingOccurrencesOfString:@"…" withString:@"\u2060.\u2060"];
+        replace = [replace stringByReplacingOccurrencesOfString:@"…" withString:@"\u2060…\u2060"];
         
         newString = [newString stringByReplacingOccurrencesOfString:urlString withString:replace];
         [ranges addObject:[NSValue valueWithRange:NSMakeRange(matchRange.location, replace.length)]];
