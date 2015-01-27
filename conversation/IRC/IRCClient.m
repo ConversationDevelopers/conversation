@@ -398,6 +398,10 @@
             [Messages userReceivedChannelTopic:messageObject];
             break;
             
+        case RPL_NOTOPIC:
+            [Messages clientReceivedNoChannelTopicMessage:messageObject];
+            break;
+            
         case RPL_WHOREPLY:
             [Messages clientReceivedWHOReply:messageObject];
             break;

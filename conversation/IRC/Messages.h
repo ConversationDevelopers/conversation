@@ -71,6 +71,8 @@
 
 + (void)userReceivedChannelTopic:(IRCMessage *)message;
 
++ (void)clientReceivedNoChannelTopicMessage:(IRCMessage *)message;
+
 + (void)userReceivedModesOnChannel:(IRCMessage *)message;
 
 + (void)clientReceivedISONResponse:(IRCMessage *)message;

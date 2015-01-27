@@ -40,7 +40,7 @@
         /* Set the initial values for a channel before it receives necessary information from the server */
         self.name = config.name;
         self.client = client;
-        self.topic = @"(No Topic)";
+        self.topic = nil;
         self.users = [[NSMutableArray alloc] init];
         self.configuration = config;
         self.channelModes = [[NSMutableArray alloc] init];

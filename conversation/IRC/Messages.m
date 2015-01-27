@@ -565,6 +565,12 @@
     }
 }
 
++ (void)clientReceivedNoChannelTopicMessage:(IRCMessage *)message
+{
+    IRCChannel *channel = (IRCChannel *)[message conversation];
+    channel.topic = nil;
+}
+
 + (void)clientReceivedISONResponse:(IRCMessage *)message
 {
     NSArray *users = [message.message componentsSeparatedByString:@" "];
