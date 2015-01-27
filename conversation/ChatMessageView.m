@@ -325,13 +325,25 @@ uint32_t FNV32(const char *s)
     IRCChannel *channel = (IRCChannel*)_conversation;
     NSMutableArray *ranges = [[NSMutableArray alloc] init];
     NSCharacterSet *wordBoundries = [[NSCharacterSet letterCharacterSet] invertedSet];
+    NSError *error = NULL;
     for (IRCUser *user in channel.users) {
-        NSRange range = [string rangeOfString:user.nick];
-        if (range.location != NSNotFound &&
-            (range.location == 0 || [[string substringWithRange:NSMakeRange(range.location-1, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound) &&
-            (range.location+range.length+1 > string.length || [[string substringWithRange:NSMakeRange(range.location+range.length, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound)) {
-            [ranges addObject:[NSValue valueWithRange:range]];
+        
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:user.nick
+                                                  options:NSRegularExpressionCaseInsensitive
+                                                    error:&error];
+        
+        NSArray *matches = [regex matchesInString:string
+                                          options:0
+                                            range:NSMakeRange(0, string.length)];
+        
+        for (NSTextCheckingResult *match in matches) {
+            NSRange range = [match range];
+            if ((range.location == 0 || [[string substringWithRange:NSMakeRange(range.location-1, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound) &&
+                (range.location+range.length+1 > string.length || [[string substringWithRange:NSMakeRange(range.location+range.length, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound)) {
+                [ranges addObject:[NSValue valueWithRange:range]];
+            }
         }
+        
     }
     
     // Highlight?
@@ -370,7 +382,7 @@ uint32_t FNV32(const char *s)
     for (NSTextCheckingResult *match in matches) {
         NSRange matchRange = [match range];
         NSString *urlString = [string substringWithRange:matchRange];
-        NSString *replace = [[NSString stringWithString:urlString] stringByTruncatingToWidth:250.0
+        NSString *replace = [[NSString stringWithFormat:@"%@", urlString] stringByTruncatingToWidth:250.0
                                                                                        withAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12.0]}];
         
         // Tricky solution to avoid line breaks
@@ -634,6 +646,7 @@ uint32_t FNV32(const char *s)
             [string addAttribute:NSForegroundColorAttributeName
                            value:[self colorForNick:user.nick]
                            range:NSMakeRange(0, string.length)];
+            
             
             break;
         }
