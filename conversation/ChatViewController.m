@@ -532,7 +532,9 @@ BOOL popoverDidDismiss = NO;
     
     UserListView *userlist = [self userListView];
     userlist.channel = (IRCChannel*)_conversation;
-    [userlist.tableview reloadData];    
+    [userlist.tableview reloadData];
+    
+    [_composeBarView resignFirstResponder];
     
     CGFloat progress = [recognizer translationInView:_conversation.contentView].x;
 
