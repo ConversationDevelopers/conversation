@@ -234,14 +234,14 @@
     [lineComponents removeObjectAtIndex:0];
     NSInteger numericReplyAsNumber = [command integerValue];
     
-    if (numericReplyAsNumber != 0) {
+    if (numericReplyAsNumber != 0 && [[lineComponents objectAtIndex:1] hasPrefix:@":"] == NO) {
         [lineComponents removeObjectAtIndex:0];
     }
     
     NSString *recipient = nil;
     if ([lineComponents count] > 0 && messageWithoutRecipient == NO) {
         if ([[lineComponents objectAtIndex:0] hasPrefix:@":"]) {
-            if ([command isEqualToString:@"JOIN"]) {
+            if ([lineComponents count] == 1) {
                 recipient = [[lineComponents objectAtIndex:0] substringFromIndex:1];
                 [lineComponents removeObjectAtIndex:0];
             }
