@@ -180,21 +180,19 @@
 - (void)deleteChannelWithName:(NSString *)channelName forConnectionConfiguration:(IRCConnectionConfiguration *)connection
 {
     NSMutableDictionary *prefs = [self.preferences mutableCopy];
-    NSMutableArray *configurations;
-    if([self.preferences objectForKey:@"configurations"] != nil) {
-        configurations = [[self.preferences objectForKey:@"configurations"] mutableCopy];
-    } else {
-        configurations = [[NSMutableArray alloc] init];
-    }
+    NSMutableArray *configurations = [[self.preferences objectForKey:@"configurations"] mutableCopy];
     
     int i=0;
+    NSMutableDictionary *dict;
+    NSMutableArray *channels;
     for (NSDictionary *d in configurations) {
         if([d[@"uniqueIdentifier"] isEqualToString:connection.uniqueIdentifier]) {
-            NSMutableDictionary *dict = [d mutableCopy];
-            NSMutableArray *channels = [dict[@"channels"] mutableCopy];
-            for (NSDictionary *channel in dict[@"channels"]) {
-                if([channel[@"name"] isEqualToString:channelName] == NO)
+            dict = [d mutableCopy];
+            channels = [[NSMutableArray alloc] init];
+            for (NSDictionary *channel in d[@"channels"]) {
+                if([channel[@"name"] isEqualToString:channelName] == NO) {
                     [channels addObject:channel];
+                }
             }
             dict[@"channels"] = channels;
             configurations[i] = dict;
@@ -203,29 +201,28 @@
         i++;
     }
     prefs[@"configurations"] = configurations;
+    NSLog(@"PREFS: %@", prefs.description);
     self.preferences = prefs;
 }
 
 - (void)deleteQueryWithName:(NSString *)queryName forConnectionConfiguration:(IRCConnectionConfiguration *)connection
 {
     NSMutableDictionary *prefs = [self.preferences mutableCopy];
-    NSMutableArray *configurations;
-    if([self.preferences objectForKey:@"configurations"] != nil) {
-        configurations = [[self.preferences objectForKey:@"configurations"] mutableCopy];
-    } else {
-        configurations = [[NSMutableArray alloc] init];
-    }
+    NSMutableArray *configurations = [[self.preferences objectForKey:@"configurations"] mutableCopy];
     
     int i=0;
-    for (NSDictionary *d in configurations) {
+    NSMutableDictionary *dict;
+    NSMutableArray *queries;
+    for (NSDictionary *d in self.preferences[@"configurations"]) {
         if([d[@"uniqueIdentifier"] isEqualToString:connection.uniqueIdentifier]) {
-            NSMutableDictionary *dict = [d mutableCopy];
-            NSMutableArray *channels = [dict[@"queries"] mutableCopy];
-            for (NSDictionary *channel in dict[@"queries"]) {
-                if([channel[@"name"] isEqualToString:queryName] == NO)
-                    [channels addObject:channel];
+            dict = [d mutableCopy];
+            queries = [[NSMutableArray alloc] init];
+            for (NSDictionary *query in d[@"queries"]) {
+                if([query[@"name"] isEqualToString:queryName] == NO) {
+                    [queries addObject:query];
+                }
             }
-            dict[@"queries"] = channels;
+            dict[@"queries"] = queries;
             configurations[i] = dict;
             break;
         }
