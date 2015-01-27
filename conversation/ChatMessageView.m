@@ -108,7 +108,7 @@
     singleTapRecogniser.numberOfTapsRequired = 1;
     [self addGestureRecognizer:singleTapRecogniser];
     
-    if (_message.messageType != ET_PRIVMSG && _message.messageType != ET_NOTICE)
+    if (_message.messageType != ET_PRIVMSG && _message.messageType != ET_NOTICE && _message.messageType != ET_CTCP)
         self.userInteractionEnabled = NO;
     
     return self;
@@ -183,10 +183,7 @@
         if ([self.backgroundColor isEqual:[UIColor clearColor]])
             self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
         
-    } else if (_message.messageType == ET_ERROR) {
-        self.backgroundColor = [UIColor colorWithRed:0.941 green:0.796 blue:0.796 alpha:1]; /*#f0cbcb*/
     } else {
-        self.backgroundColor = [UIColor clearColor];
         _messageLayer.frame = CGRectMake(10, 0, self.bounds.size.width-20, _size.height);
         self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, _size.height);
     }
@@ -709,6 +706,41 @@ uint32_t FNV32(const char *s)
             }
             break;
         }
+        case ET_CTCP: {
+            
+            string = [[NSMutableAttributedString alloc] initWithAttributedString:[self setLinks:[[NSString alloc] initWithFormat:@"%@%@\n%@", status, user.nick, msg]]];
+            msg = [string.string substringFromIndex:status.length+user.nick.length+1];
+            
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            [string addAttribute:NSParagraphStyleAttributeName
+                           value:paragraphStyle
+                           range:NSMakeRange(0, string.length)];
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont boldSystemFontOfSize:16.0]
+                           range:NSMakeRange(0, status.length+user.nick.length)];
+            
+            [string addAttribute:NSForegroundColorAttributeName
+                           value:[self colorForNick:user.nick]
+                           range:NSMakeRange(0, status.length+user.nick.length)];
+            
+            [string addAttribute:NSFontAttributeName
+                           value:[UIFont boldSystemFontOfSize:12.0]
+                           range:NSMakeRange(status.length+user.nick.length+1, string.length-status.length-user.nick.length-1)];
+            
+            self.backgroundColor = [UIColor colorWithRed:0.7 green:0.7 blue:0.7 alpha:1];
+            
+            if ([_conversation isKindOfClass:[IRCChannel class]]) {
+                NSArray *mentions = [self getMentions:msg];
+                for (NSValue *range in mentions) {
+                    [string addAttribute:NSFontAttributeName
+                                   value:[UIFont boldSystemFontOfSize:12.0]
+                                   range:NSMakeRange(range.rangeValue.location+status.length+user.nick.length+1, range.rangeValue.length)];
+                }
+            }
+            break;
+        }
         case ET_ERROR: {
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"⚠ %@", msg]];
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
@@ -719,6 +751,9 @@ uint32_t FNV32(const char *s)
             [string addAttribute:NSFontAttributeName
                            value:[UIFont systemFontOfSize:12.0]
                            range:NSMakeRange(0, string.length)];
+            
+            self.backgroundColor = [UIColor colorWithRed:0.941 green:0.796 blue:0.796 alpha:1]; /*#f0cbcb*/
+            
             break;
             
         }
