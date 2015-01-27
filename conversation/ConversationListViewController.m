@@ -83,12 +83,11 @@
     
     self.currentConversation = nil;
     
-    // Do any additional setup after loading the view, typically from a nib.
-    UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Settings", @"Left navigation button in the conversation list")
+    UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Settings"]
                                                                        style:UIBarButtonItemStylePlain
                                                                       target:self
                                                                       action:@selector(showSettings:)];
-    [settingsButton setTintColor:[UIColor lightGrayColor]];
+    
     self.navigationItem.leftBarButtonItem = settingsButton;
     
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addConversation:)];
