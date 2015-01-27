@@ -46,6 +46,7 @@
 @property (nonatomic) ChatViewController *chatViewController;
 
 - (void)reloadClient:(IRCClient *)client;
+- (void)deleteConversationWithIdentifier:(NSString *)identifier;
 - (IRCChannel *)joinChannelWithName:(NSString *)name onClient:(IRCClient *)client;
 - (void)selectConversationWithIdentifier:(NSString *)identifier;
 - (IRCConversation *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client;

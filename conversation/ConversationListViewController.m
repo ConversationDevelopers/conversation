@@ -861,6 +861,32 @@
     return query;
 }
 
+- (void)deleteConversationWithIdentifier:(NSString *)identifier
+{
+    int i=0;
+    for (IRCClient *client in [_connections copy]) {
+        for (IRCConversation *conversation in client.queries) {
+            if ([conversation.configuration.uniqueIdentifier isEqualToString:identifier]) {
+                [[AppPreferences sharedPrefs] deleteQueryWithName:conversation.name forConnectionConfiguration:client.configuration];
+                [client removeQuery:conversation];
+            }
+        }
+        for (IRCChannel *channel in client.channels) {
+            if ([channel.configuration.uniqueIdentifier isEqualToString:identifier]) {
+                [[AppPreferences sharedPrefs] deleteChannelWithName:channel.name forConnectionConfiguration:client.configuration];
+                [client removeChannel:channel];
+            }
+        }
+        [_connections setObject:client atIndexedSubscript:i];
+        i++;
+    }
+    [[AppPreferences sharedPrefs] save];
+    [self.tableView reloadData];
+    
+    if ([_currentConversation.configuration.uniqueIdentifier isEqualToString:identifier])
+        [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
 - (void)messageReceived:(NSNotification *) notification
 {
     IRCMessage *message = notification.object;

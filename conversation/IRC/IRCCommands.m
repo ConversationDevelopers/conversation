@@ -31,6 +31,7 @@
 #import "IRCConnection.h"
 #import "IRCClient.h"
 #import "NSString+Methods.h"
+#import "ConversationListViewController.h"
 
 @implementation IRCCommands
 
@@ -149,11 +150,8 @@
 
 + (void)closeConversation:(id)conversation onClient:(IRCClient *)client
 {
-    if ([conversation isKindOfClass:[IRCChannel class]]) {
-        [client removeChannel:conversation];
-    } else {
-        [client removeQuery:conversation];
-    }
+    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    [controller deleteConversationWithIdentifier:[[(IRCConversation*)conversation configuration] uniqueIdentifier]];
 }
 
 + (void)onTimer:(float)seconds runCommand:(NSString *)command inConversation:(IRCConversation *)conversation
