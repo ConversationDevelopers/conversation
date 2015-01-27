@@ -558,7 +558,9 @@
     message.messageType = ET_TOPIC;
     message.conversation = channel;
     
-    [message.conversation addMessageToConversation:message];
+    if ([message isServerMessage] == NO) {
+        [message.conversation addMessageToConversation:message];
+    }
 }
 
 + (void)clientReceivedISONResponse:(IRCMessage *)message

@@ -395,7 +395,7 @@
             break;
             
         case RPL_TOPIC:
-            //
+            [Messages userReceivedChannelTopic:messageObject];
             break;
             
         case RPL_WHOREPLY:
