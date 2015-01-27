@@ -228,7 +228,11 @@
                 
                 // The bounds returned by the Core Text function are in the coordinate system used by Core Text.  Convert the values here into the coordinate system which our gesture recognizers will use.
                 runBounds.origin.x = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL) + 10.0;
-                runBounds.origin.y = self.frame.size.height - origins[idx].y - runBounds.size.height + 9.0;
+                
+                if (_message.messageType == ET_PRIVMSG || _message.messageType == ET_NOTICE)
+                    runBounds.origin.y = self.frame.size.height - origins[idx].y - runBounds.size.height + 9.0;
+                else
+                    runBounds.origin.y = self.frame.size.height - origins[idx].y - runBounds.size.height + 3.0;
                 
                 // Create a view which will open up the URL when the user taps on it
                 LinkTapView *linkTapView = [[LinkTapView alloc] initWithFrame:runBounds url:[attributes objectForKey:@"NSLink"]];
@@ -362,11 +366,17 @@ uint32_t FNV32(const char *s)
     NSDataDetector* detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
     NSArray *matches = [detector matchesInString:string options:0 range:NSMakeRange(0, [string length])];
     NSString *newString = string;
+
     for (NSTextCheckingResult *match in matches) {
         NSRange matchRange = [match range];
         NSString *urlString = [string substringWithRange:matchRange];
         NSString *replace = [[NSString stringWithString:urlString] stringByTruncatingToWidth:250.0
                                                                                        withAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12.0]}];
+        
+        // Tricky solution to avoid line breaks
+        replace = [replace stringByReplacingOccurrencesOfString:@"/" withString:@"\u2060/\u2060"];
+        replace = [replace stringByReplacingOccurrencesOfString:@"." withString:@"\u2060.\u2060"];
+        replace = [replace stringByReplacingOccurrencesOfString:@"…" withString:@"\u2060.\u2060"];
         
         newString = [newString stringByReplacingOccurrencesOfString:urlString withString:replace];
         [ranges addObject:[NSValue valueWithRange:NSMakeRange(matchRange.location, replace.length)]];
@@ -378,6 +388,7 @@ uint32_t FNV32(const char *s)
             [_images addObject:[self getImageLink:match.URL]];
     }
 
+
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:newString];
 
     int offset = 0;
@@ -385,6 +396,7 @@ uint32_t FNV32(const char *s)
         NSRange range = [ranges[i] rangeValue];
         [attributedString addAttribute:NSLinkAttributeName value:links[i] range:NSMakeRange(range.location-offset, range.length)];
         [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(range.location-offset, range.length)];
+        
         offset += [offsets[i] intValue];
     }
     
@@ -610,10 +622,11 @@ uint32_t FNV32(const char *s)
 
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+
             [string addAttribute:NSParagraphStyleAttributeName
                            value:paragraphStyle
                            range:NSMakeRange(0, string.length)];
-            
+ 
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:12.0]
                            range:NSMakeRange(0, string.length)];
@@ -662,7 +675,6 @@ uint32_t FNV32(const char *s)
                            value:[UIFont boldSystemFontOfSize:16.0]
                            range:NSMakeRange(0, status.length+user.nick.length)];
 
-            
             [string addAttribute:NSForegroundColorAttributeName
                            value:[self colorForNick:user.nick]
                            range:NSMakeRange(0, status.length+user.nick.length)];
@@ -710,7 +722,6 @@ uint32_t FNV32(const char *s)
                            value:[UIFont systemFontOfSize:10.0]
                            range:NSMakeRange(0, string.length)];
             
-            NSLog(@"MESSAGE NOT HANDLED: %i", (int)_message.messageType);
             break;
         }
     }
