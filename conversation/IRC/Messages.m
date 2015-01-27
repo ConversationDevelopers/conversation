@@ -377,7 +377,7 @@
 + (void)userReceivedNickChange:(IRCMessage *)message
 {
     if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
-        message.client.currentUserOnConnection.nick     = message.message;
+        message.client.currentUserOnConnection.nick     = message.conversation.name;
         message.client.currentUserOnConnection.username = message.sender.username;
         message.client.currentUserOnConnection.hostname = message.sender.hostname;
     }
