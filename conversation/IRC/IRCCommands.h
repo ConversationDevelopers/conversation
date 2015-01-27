@@ -51,5 +51,6 @@
 + (void)kickBanUser:(NSString *)nickname onChannel:(IRCChannel *)channel withMessage:(NSString *)message;
 + (void)setTopic:(NSString *)topic onChannel:(NSString *)channel onClient:(IRCClient *)client;
 + (void)setMode:(NSString *)topic onRecepient:(NSString *)recepient onClient:(IRCClient *)client;
++ (void)closeConversation:(id)conversation onClient:(IRCClient *)client;
 
 @end

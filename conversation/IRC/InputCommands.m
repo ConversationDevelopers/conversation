@@ -77,6 +77,12 @@
                 break;
                 
             case CMD_CLOSE:
+                if ([messageComponents count] > 1) {
+                    id conversationToClose = [IRCConversation fromString:[messageComponents objectAtIndex:1] withClient:conversation.client];
+                    [IRCCommands closeConversation:conversationToClose onClient:conversation.client];
+                } else {
+                    [IRCCommands closeConversation:conversation onClient:conversation.client];
+                }
                 break;
                 
             case CMD_CTCP:

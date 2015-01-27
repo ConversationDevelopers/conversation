@@ -147,6 +147,15 @@
     }
 }
 
++ (void)closeConversation:(id)conversation onClient:(IRCClient *)client
+{
+    if ([conversation isKindOfClass:[IRCChannel class]]) {
+        [client removeChannel:conversation];
+    } else {
+        [client removeQuery:conversation];
+    }
+}
+
 + (void)onTimer:(float)seconds runCommand:(NSString *)command inConversation:(IRCConversation *)conversation
 {
     /* Create the invocation for the command */
