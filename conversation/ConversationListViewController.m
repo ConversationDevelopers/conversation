@@ -904,7 +904,7 @@
         message.conversation.contentView.contentSize.height > message.conversation.contentView.bounds.size.height) {
         
         CGFloat height = messageView.bounds.size.height;
-        if (message.conversation.contentView.contentOffset.y + height + 30.0 > message.conversation.contentView.contentSize.height - message.conversation.contentView.bounds.size.height) {
+        if (message.conversation.contentView.contentOffset.y + height + 100.0 > message.conversation.contentView.contentSize.height - message.conversation.contentView.bounds.size.height) {
             CGPoint bottomOffset = CGPointMake(0, message.conversation.contentView.posY - message.conversation.contentView.frame.size.height);
             [message.conversation.contentView setContentOffset:bottomOffset animated:YES];
         }
