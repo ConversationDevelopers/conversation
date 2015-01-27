@@ -259,8 +259,11 @@
     settingsController.delegate = self;
     
     UINavigationController *navigationController = [[UINavigationController alloc]
-                                                    
                                                     initWithRootViewController:settingsController];
+    
+    navigationController.navigationBar.tintColor = [UIColor lightGrayColor];
+    navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
+    navigationController.navigationBar.translucent = NO;
     
     [self presentViewController:navigationController animated:YES completion:nil];
 }
@@ -1153,4 +1156,5 @@
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
 @end

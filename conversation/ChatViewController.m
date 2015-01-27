@@ -352,12 +352,14 @@ BOOL popoverDidDismiss = NO;
                      tapBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex) {
                          if (buttonIndex == 0) {
                              UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+                             imagePicker.navigationBar.translucent = NO;
                              [imagePicker.view setFrame:CGRectMake(0, 80, 320, 350)];
                              [imagePicker setSourceType:UIImagePickerControllerSourceTypeCamera];
                              [imagePicker setDelegate:(id)self];
                              [self presentViewController:imagePicker animated:YES completion:nil];
                          } else if(buttonIndex == 1) {
                              UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+                             imagePicker.navigationBar.translucent = NO;                             
                              [imagePicker.view setFrame:CGRectMake(0, 80, 320, 350)];
                              [imagePicker setSourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
                              [imagePicker setDelegate:(id)self];
