@@ -22,6 +22,8 @@
 	<true/>
 	<key>emoji_preference</key>
 	<true/>
+	<key>hideevents_preference</key>
+	<false/>
 	<key>invite_preferemce</key>
 	<integer>2</integer>
 </dict>

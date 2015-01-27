@@ -894,6 +894,12 @@
     if (message.messageType == ET_RAW)
         return;
     
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"hideevents_preference"] == YES &&
+        (message.messageType == ET_JOIN || message.messageType == ET_PART || message.messageType == ET_QUIT ||
+         message.messageType == ET_NICK || message.messageType == ET_KICK || message.messageType == ET_MODE)) {
+            return;
+        }
+    
     if (message.messageType == ET_INVITE) {
         if ([[NSUserDefaults standardUserDefaults] integerForKey:@"invite_preference"] == 1) {
             [self joinChannelWithName:message.conversation.name onClient:message.conversation.client];
