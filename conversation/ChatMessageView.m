@@ -1026,12 +1026,28 @@ uint32_t FNV32(const char *s)
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UIView *view = [[[event touchesForView:self] allObjects][0] view];
+    
+//    Highlight?
+    NSRange range = [_message.message rangeOfString:_conversation.client.currentUserOnConnection.nick];
+    if (range.location != NSNotFound) {
+        view.backgroundColor = [UIColor colorWithRed:0.714 green:0.882 blue:0.675 alpha:1];
+        return;
+    }
+    
     view.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UIView *view = [[[event touchesForView:self] allObjects][0] view];
+    
+//    Highlight?
+    NSRange range = [_message.message rangeOfString:_conversation.client.currentUserOnConnection.nick];
+    if (range.location != NSNotFound) {
+        view.backgroundColor = [UIColor colorWithRed:0.714 green:0.882 blue:0.675 alpha:1];
+        return;
+    }
+    
     view.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
 }
 @end
