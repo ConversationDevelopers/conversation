@@ -110,11 +110,18 @@
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 
     [self.conversationsController setAway];
+    NSArray *connections = [_conversationsController connections];
+    IRCClient *client;
+    for (int x=0; x<connections.count; x++) {
+            client = connections[x];
+            [[AppPreferences sharedPrefs] setConnectionConfiguration:client.configuration atIndex:x];
+    }
     
     if (_conversationsController.currentConversation)
         [[AppPreferences sharedPrefs] setLastConversation:_conversationsController.currentConversation.configuration.uniqueIdentifier];
     else
         [[AppPreferences sharedPrefs] deleteLastConversation];
+    
     [[AppPreferences sharedPrefs] save];
 }
 

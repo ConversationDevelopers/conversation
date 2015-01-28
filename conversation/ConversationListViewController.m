@@ -581,10 +581,7 @@
     if ((int)indexPath.row > (int)client.channels.count-1 + offset) {
         index = index - (int)client.channels.count;
         IRCConversation *query = client.queries[index - offset];
-        [client removeQuery:query];
-        
-        // Remove from prefs
-        [[AppPreferences sharedPrefs] deleteQueryWithName:query.name forConnectionConfiguration:client.configuration];
+        [self deleteConversationWithIdentifier:query.configuration.uniqueIdentifier];
     } else {
         IRCChannel *channel = client.channels[index - offset];
 
@@ -593,12 +590,10 @@
             [tableView reloadData];
             return;
         } else {
-            [client removeChannel:channel];
+            [self deleteConversationWithIdentifier:channel.configuration.uniqueIdentifier];
         }
-        // Remove from prefs
-        [[AppPreferences sharedPrefs] deleteChannelWithName:channel.name forConnectionConfiguration:client.configuration];
     }
-    [[AppPreferences sharedPrefs] save];
+    
     [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     [tableView reloadData];
 }
@@ -880,7 +875,6 @@
         i++;
     }
     [[AppPreferences sharedPrefs] save];
-    [self.tableView reloadData];
     
     if ([_currentConversation.configuration.uniqueIdentifier isEqualToString:identifier])
         [self.navigationController popToRootViewControllerAnimated:YES];
