@@ -1152,9 +1152,10 @@
     if (!autoaway)
         return;
     
-    NSString *awaymsg = [[NSUserDefaults standardUserDefaults] stringForKey:@"awaymsg_preferenc"];
+    NSString *awaymsg = [[NSUserDefaults standardUserDefaults] stringForKey:@"awaymsg_preference"];
     for (IRCClient *client in self.connections) {
-        [client.connection send:[NSString stringWithFormat:@"AWAY :%@", awaymsg]];
+        if (client.isConnected)
+            [client.connection send:[NSString stringWithFormat:@"AWAY :%@", awaymsg]];
     }
     
 }
@@ -1166,7 +1167,8 @@
         return;
     
     for (IRCClient *client in self.connections) {
-        [client.connection send:@"AWAY"];
+        if (client.isConnected)
+            [client.connection send:@"AWAY"];
     }
 }
 
