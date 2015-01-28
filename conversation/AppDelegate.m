@@ -97,8 +97,9 @@
     if (notify) {
         NSString *identifier = [notify.userInfo objectForKey:@"conversation"];
         [_conversationsController selectConversationWithIdentifier:identifier];
-        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     }
+    
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     
     return YES;
 }
