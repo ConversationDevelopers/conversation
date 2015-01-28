@@ -1005,6 +1005,8 @@
         
     }
     
+    [self showNotificationWithMessage:message];
+    
     if ([self.tableView isEditing])
         return;
     
@@ -1187,5 +1189,22 @@
         [self dismissViewControllerAnimated:YES completion:nil];        
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"irc://chat.freenode.com:6667/#conversation"]];
     }
+}
+
+- (void)showNotificationWithMessage:(IRCMessage *)message
+{
+    UILocalNotification *localNotif = [[UILocalNotification alloc] init];
+    if (localNotif == nil)
+        return;
+    
+    localNotif.alertBody = [NSString stringWithFormat:NSLocalizedString(@"<%@> %@", nil),
+                            message.sender.nick, message.message];
+    
+    localNotif.alertAction = NSLocalizedString(@"View Details", nil);
+    
+    localNotif.soundName = UILocalNotificationDefaultSoundName;
+    localNotif.applicationIconBadgeNumber = (int)[[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
+    
+    [[UIApplication sharedApplication] presentLocalNotificationNow:localNotif];
 }
 @end
