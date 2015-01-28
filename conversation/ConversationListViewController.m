@@ -360,6 +360,9 @@
         }
     }
 
+    conversation.isHighlighted = NO;
+    conversation.unreadCount = 0;
+    
     [self.navigationController popToRootViewControllerAnimated:YES];
     [self.navigationController pushViewController:_chatViewController animated:YES];
 }
