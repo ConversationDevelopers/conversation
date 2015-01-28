@@ -859,16 +859,16 @@
 {
     int i=0;
     for (IRCClient *client in [_connections copy]) {
-        for (IRCConversation *conversation in client.queries) {
+        for (IRCConversation *conversation in [client.queries copy]) {
             if ([conversation.configuration.uniqueIdentifier isEqualToString:identifier]) {
-                [[AppPreferences sharedPrefs] deleteQueryWithName:conversation.name forConnectionConfiguration:client.configuration];
                 [client removeQuery:conversation];
+                [[AppPreferences sharedPrefs] deleteQueryWithName:conversation.name forConnectionConfiguration:client.configuration];                
             }
         }
-        for (IRCChannel *channel in client.channels) {
+        for (IRCChannel *channel in [client.channels copy]) {
             if ([channel.configuration.uniqueIdentifier isEqualToString:identifier]) {
-                [[AppPreferences sharedPrefs] deleteChannelWithName:channel.name forConnectionConfiguration:client.configuration];
                 [client removeChannel:channel];
+                [[AppPreferences sharedPrefs] deleteChannelWithName:channel.name forConnectionConfiguration:client.configuration];
             }
         }
         [_connections setObject:client atIndexedSubscript:i];

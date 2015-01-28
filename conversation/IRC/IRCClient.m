@@ -702,8 +702,18 @@
             [self.connection send:[NSString stringWithFormat:@"PART %@ :%@", [channel name], [channel.client.configuration channelDepartMessage]]];
         }
         [self.channels removeObject:channelExists];
+        
+        /* Remove from configuration too */
+        NSMutableArray *channels = [[NSMutableArray alloc] init];
+        for (IRCChannelConfiguration *config in self.configuration.channels) {
+            if ([config.uniqueIdentifier isEqualToString:channel.configuration.uniqueIdentifier] == NO)
+                [channels addObject:config];
+        }
+        self.configuration.channels = channels;
+        
         return YES;
     }
+    
     return NO;
 }
 
@@ -738,6 +748,15 @@
             [IRCCommands sendMessage:[NSString stringWithFormat:@"CLEAR %@", query.name] toRecipient:@"*PLAYBACK" onClient:self];
         }
         [self.queries removeObjectAtIndex:indexOfObject];
+        
+        /* Remove from configuration too */
+        NSMutableArray *queries = [[NSMutableArray alloc] init];
+        for (IRCChannelConfiguration *config in self.configuration.queries) {
+            if ([config.uniqueIdentifier isEqualToString:query.configuration.uniqueIdentifier] == NO)
+                [queries addObject:config];
+        }
+        self.configuration.queries = queries;
+        
         return YES;
     }
     return NO;
