@@ -976,6 +976,7 @@
                 notification.image = [UIImage imageNamed:@"Userlist"];
                 [[MCNotificationManager sharedInstance] showNotification:notification];
                 
+                [self showNotificationWithMessage:message];
             }
             
         } else {
@@ -1002,14 +1003,14 @@
                     notification.detailText = message.message;
                     notification.image = [UIImage imageNamed:@"ChannelIcon_Light"];
                     [[MCNotificationManager sharedInstance] showNotification:notification];
+
+                    [self showNotificationWithMessage:message];
                 }
             }
             
         }
         
     }
-    
-    [self showNotificationWithMessage:message];
     
     if ([self.tableView isEditing])
         return;
