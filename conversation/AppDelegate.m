@@ -146,6 +146,7 @@
     else
         [[AppPreferences sharedPrefs] deleteLastConversation];
     
+    _conversationsController.currentConversation = nil;
     [[AppPreferences sharedPrefs] save];
 }
 
