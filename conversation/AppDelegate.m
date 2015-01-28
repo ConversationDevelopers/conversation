@@ -103,18 +103,23 @@
     return YES;
 }
 
-- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken
+{
     NSLog(@"DEVICE TOKEN: %@", devToken);
 }
 
-- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
+- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err
+{
     NSLog(@"Error in registration. Error: %@", err);
 }
 
-- (void)application:(UIApplication *)app didReceiveLocalNotification:(UILocalNotification *)notify {
-    NSString *identifier = [notify.userInfo objectForKey:@"conversation"];
-    [_conversationsController selectConversationWithIdentifier:identifier];
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+- (void)application:(UIApplication *)app didReceiveLocalNotification:(UILocalNotification *)notify
+{
+    if ([app applicationState] != UIApplicationStateActive) {
+        NSString *identifier = [notify.userInfo objectForKey:@"conversation"];
+        [_conversationsController selectConversationWithIdentifier:identifier];
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
