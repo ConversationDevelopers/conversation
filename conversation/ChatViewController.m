@@ -695,6 +695,7 @@ BOOL popoverDidDismiss = NO;
                               self.container.frame.size.height - endFrame.size.height);
     
     _conversation.contentView.frame = frame;
+    [self scrollToBottom:NO];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
