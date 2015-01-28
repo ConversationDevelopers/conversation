@@ -201,7 +201,6 @@
         i++;
     }
     prefs[@"configurations"] = configurations;
-    NSLog(@"PREFS: %@", prefs.description);
     self.preferences = prefs;
 }
 
