@@ -268,7 +268,7 @@
                 conversation = [[IRCChannel alloc] initWithConfiguration:configuration withClient:self];
             } else {
                 IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
-                configuration.name = nickname;
+                configuration.name = recipient;
                 conversation = [[IRCConversation alloc] initWithConfiguration:configuration withClient:self];
             }
         }
