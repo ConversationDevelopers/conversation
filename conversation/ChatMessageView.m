@@ -308,7 +308,7 @@ uint32_t FNV32(const char *s)
             return [_conversation.client.userModeCharacters objectForKey:@"a"];
             break;
         case OWNER:
-            return [_conversation.client.userModeCharacters objectForKey:@"o"];
+            return [_conversation.client.userModeCharacters objectForKey:@"q"];
             break;
         case IRCOP:
             return [_conversation.client.userModeCharacters objectForKey:@"y"];
