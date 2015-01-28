@@ -191,13 +191,6 @@
     /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
     message.client.configuration.lastMessageTime = (long) [[NSDate date] timeIntervalSince1970];
     
-    /* Incoming private message so the actual conversation name is sender's nick */
-    if ([message.conversation.name isEqualToString:message.client.currentUserOnConnection.nick]) {
-        IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
-        configuration.name = message.sender.nick;
-        message.conversation = [[IRCConversation alloc] initWithConfiguration:configuration withClient:message.client];
-    }
-    
     if ([[message message] hasPrefix:@"\001"]) {
         [self userReceivedCTCPMessage:message];
         return;
