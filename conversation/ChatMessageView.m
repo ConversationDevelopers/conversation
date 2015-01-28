@@ -43,6 +43,8 @@
 #define FNV_PRIME_32 16777619
 #define FNV_OFFSET_32 2166136261U
 
+#define hasHighlight() ([_message.message.lowercaseString rangeOfString:_conversation.client.currentUserOnConnection.nick.lowercaseString].location != NSNotFound)
+
 @implementation ChatMessageView
 
 - (id)initWithFrame:(CGRect)frame message:(IRCMessage *)message conversation:(IRCConversation *)conversation
@@ -347,8 +349,7 @@ uint32_t FNV32(const char *s)
     }
     
     // Highlight?
-    NSRange range = [string rangeOfString:_conversation.client.currentUserOnConnection.nick];
-    if (range.location != NSNotFound) {
+    if (hasHighlight()) {
         self.backgroundColor = [UIColor colorWithRed:0.714 green:0.882 blue:0.675 alpha:1];
     }
     return ranges;
@@ -1028,8 +1029,7 @@ uint32_t FNV32(const char *s)
     UIView *view = [[[event touchesForView:self] allObjects][0] view];
     
 //    Highlight?
-    NSRange range = [_message.message rangeOfString:_conversation.client.currentUserOnConnection.nick];
-    if (range.location != NSNotFound) {
+    if (hasHighlight()) {
         view.backgroundColor = [UIColor colorWithRed:0.714 green:0.882 blue:0.675 alpha:1];
         return;
     }
@@ -1042,8 +1042,7 @@ uint32_t FNV32(const char *s)
     UIView *view = [[[event touchesForView:self] allObjects][0] view];
     
 //    Highlight?
-    NSRange range = [_message.message rangeOfString:_conversation.client.currentUserOnConnection.nick];
-    if (range.location != NSNotFound) {
+    if (hasHighlight()) {
         view.backgroundColor = [UIColor colorWithRed:0.714 green:0.882 blue:0.675 alpha:1];
         return;
     }
