@@ -87,7 +87,18 @@
         (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     }
     
-    NSLog(@"OPTIONS: %@", launchOptions.description);
+    UILocalNotification *notify;
+    notify = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+
+    if (!notify)
+        notify = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    
+    
+    if (notify) {
+        NSString *identifier = [notify.userInfo objectForKey:@"conversation"];
+        [_conversationsController selectConversationWithIdentifier:identifier];
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    }
     
     return YES;
 }
@@ -98,6 +109,12 @@
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
     NSLog(@"Error in registration. Error: %@", err);
+}
+
+- (void)application:(UIApplication *)app didReceiveLocalNotification:(UILocalNotification *)notify {
+    NSString *identifier = [notify.userInfo objectForKey:@"conversation"];
+    [_conversationsController selectConversationWithIdentifier:identifier];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -136,7 +153,6 @@
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [self.conversationsController setBack];
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

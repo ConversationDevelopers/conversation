@@ -1207,6 +1207,9 @@
     localNotif.soundName = UILocalNotificationDefaultSoundName;
     localNotif.applicationIconBadgeNumber = (int)[[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
     
+    NSDictionary *infoDict = [NSDictionary dictionaryWithObject:message.conversation.configuration.uniqueIdentifier forKey:@"conversation"];
+    localNotif.userInfo = infoDict;
+    
     [[UIApplication sharedApplication] presentLocalNotificationNow:localNotif];
 }
 @end
