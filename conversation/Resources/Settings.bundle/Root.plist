@@ -224,6 +224,14 @@
 			<key>FooterText</key>
 			<string>Copyright © 2015 Tobias Pollmann, Alex Sørlie Glomsaas</string>
 		</dict>
+        <dict>
+			<key>Type</key>
+			<string>IASKButtonSpecifier</string>
+			<key>Title</key>
+			<string>Join support channel</string>
+			<key>Key</key>
+			<string>support_preference</string>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>

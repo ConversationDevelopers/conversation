@@ -1059,7 +1059,6 @@
 
 - (void)showInivitationRequiredAlertForChannel:(NSString *)channelName
 {
-    
     NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Channel requires invitation", nil), channelName];
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Invite required", nil)
                                                         message:message
@@ -1182,4 +1181,11 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)settingsViewController:(IASKAppSettingsViewController*)sender buttonTappedForSpecifier:(IASKSpecifier*)specifier
+{
+    if ([specifier.key isEqualToString:@"support_preference"]) {
+        [self dismissViewControllerAnimated:YES completion:nil];        
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"irc://chat.freenode.com:6667/#conversation"]];
+    }
+}
 @end
