@@ -1,0 +1,1 @@
+/Users/toby/Documents/Code/conversation/build/Debug-iphonesimulator/InAppSettingsKit.bundle
