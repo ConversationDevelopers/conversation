@@ -192,7 +192,7 @@
     message.client.configuration.lastMessageTime = (long) [[NSDate date] timeIntervalSince1970];
     
     /* Incoming private message so the actual conversation name is sender's nick */
-    if ([message.conversation.name isEqualToString:message.client.currentUserOnConnection.nick]) {
+    if ([message.conversation.name caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
         IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
         configuration.name = message.sender.nick;
         message.conversation = [[IRCConversation alloc] initWithConfiguration:configuration withClient:message.client];
@@ -282,12 +282,19 @@
 
 + (void)userReceivedNotice:(IRCMessage *)message
 {
+    AssertIsNotServerMessage(message);
+    
+    /* Incoming private message so the actual conversation name is sender's nick */
+    if ([message.conversation.name caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
+        IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
+        configuration.name = message.sender.nick;
+        message.conversation = [[IRCConversation alloc] initWithConfiguration:configuration withClient:message.client];
+    }
+    
     if ([[message message] hasPrefix:@"\001"] && [[message message] hasSuffix:@"\001"]) {
         [self userReceivedCTCPReply:message];
         return;
     }
-    
-    AssertIsNotServerMessage(message);
     
     message.messageType = ET_NOTICE;
     
