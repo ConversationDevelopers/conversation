@@ -45,7 +45,7 @@
     [self addSubview:messageView];
     [self layoutIfNeeded];
     
-    if (messageView.message.messageType != ET_PRIVMSG && messageView.message.messageType != ET_ERROR)
+    if (messageView.message.messageType != ET_PRIVMSG)
         _posY += height + 5.0;
     else
         _posY += height + 15.0;
