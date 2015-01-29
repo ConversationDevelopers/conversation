@@ -164,6 +164,10 @@
     [self.connection send:[NSString stringWithFormat:@"USER %@ 0 * :%@",
                     self.configuration.usernameForRegistration,
                     self.configuration.realNameForRegistration]];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"clientDidConnect" object:self];
+    });
 }
 
 - (void)clientDidReceiveData:(const char*)cline
@@ -523,6 +527,9 @@
 - (void)clientDidDisconnect {
     NSLog(@"Disconnected");
     [self clearStatus];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"clientDidDisonnect" object:self];
+    });
 }
 
 
@@ -542,6 +549,9 @@
                                             repeats:NO];
         }
     }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"clientDidDisonnect" object:self];
+    });
 }
 
 - (void)attemptClientReconnect
