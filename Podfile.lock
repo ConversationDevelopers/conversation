@@ -23,10 +23,10 @@ PODS:
   - DLImageLoader (2.0.0)
   - FCModel (0.9.0):
     - FMDB (~> 2.1)
-  - FMDB (2.4):
+  - FMDB (2.5):
     - FMDB/standard
-  - FMDB/common (2.4)
-  - FMDB/standard (2.4):
+  - FMDB/common (2.5)
+  - FMDB/standard (2.5):
     - FMDB/common
   - ImgurAnonymousAPIClient (0.2):
     - AFNetworking (>= 2.3.1)
@@ -67,7 +67,7 @@ SPEC CHECKSUMS:
   AFNetworking: 0f54cb5d16ce38c1b76948faffb8d5fb705021c7
   DLImageLoader: ed4a058375bcef56e2493769d375612715189659
   FCModel: 1f01fdcb5b469d3ab3c307ee90cb1b743cc3adfd
-  FMDB: 0b2fa25e5264ef177973c0cb8c02c711107979aa
+  FMDB: 0efa188cf0dd1ce82c27a478cd5f5fa245308677
   ImgurAnonymousAPIClient: 34d68a1f5549b3dbe64028a44b8074bf44da2e82
   InAppSettingsKit: c870cb6095a85656ff4df42845af5c26eede4c8d
   MCNotificationManager: 0be8eb1535c914b5f5b8b8c0ffc1d1a7fb6be90b

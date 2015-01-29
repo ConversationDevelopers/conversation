@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		48CC709806D99585ADE2BFFF /* libPods-conversation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EEA8F8B0175E9E177B77D68 /* libPods-conversation.a */; };
+		8A77459115F453D01B81D4A2 /* libPods-conversationTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 08CC30B4EFEDC50F9732A25D /* libPods-conversationTests.a */; };
 		DA1A4ABD19E1770700565763 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4ABC19E1770700565763 /* main.m */; };
 		DA1A4AC019E1770700565763 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4ABF19E1770700565763 /* AppDelegate.m */; };
 		DA1A4AC319E1770700565763 /* ConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1A4AC219E1770700565763 /* ConversationListViewController.m */; };
@@ -79,9 +80,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		08CC30B4EFEDC50F9732A25D /* libPods-conversationTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-conversationTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		28FD59C84826F3FD6BC6A3A1 /* Pods-conversationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-conversationTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-conversationTests/Pods-conversationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		757C28852635DC9E63B424F3 /* Pods-conversation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-conversation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-conversation/Pods-conversation.debug.xcconfig"; sourceTree = "<group>"; };
 		8EEA8F8B0175E9E177B77D68 /* libPods-conversation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-conversation.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		94C6A0557DA69F82CB06DBB4 /* Pods-conversation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-conversation.release.xcconfig"; path = "Pods/Target Support Files/Pods-conversation/Pods-conversation.release.xcconfig"; sourceTree = "<group>"; };
+		CE445CD2044E341BEEFF1328 /* Pods-conversationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-conversationTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-conversationTests/Pods-conversationTests.release.xcconfig"; sourceTree = "<group>"; };
 		DA1A4AB719E1770700565763 /* conversation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = conversation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA1A4ABB19E1770700565763 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DA1A4ABC19E1770700565763 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -286,6 +290,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A77459115F453D01B81D4A2 /* libPods-conversationTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,6 +302,8 @@
 			children = (
 				757C28852635DC9E63B424F3 /* Pods-conversation.debug.xcconfig */,
 				94C6A0557DA69F82CB06DBB4 /* Pods-conversation.release.xcconfig */,
+				28FD59C84826F3FD6BC6A3A1 /* Pods-conversationTests.debug.xcconfig */,
+				CE445CD2044E341BEEFF1328 /* Pods-conversationTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -308,6 +315,7 @@
 				DA7B68A11A02BE6900D82B4C /* libPods-conversation-DLImageLoader.a */,
 				DA7B689F1A02BE0100D82B4C /* libPods-conversation-DLImageLoader.a */,
 				8EEA8F8B0175E9E177B77D68 /* libPods-conversation.a */,
+				08CC30B4EFEDC50F9732A25D /* libPods-conversationTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -642,6 +650,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DA1A4AE019E1770700565763 /* Build configuration list for PBXNativeTarget "conversationTests" */;
 			buildPhases = (
+				BF0BEDD0FD9CFB10090D0A9D /* Check Pods Manifest.lock */,
 				DA1A4ACF19E1770700565763 /* Sources */,
 				DA1A4AD019E1770700565763 /* Frameworks */,
 				DA1A4AD119E1770700565763 /* Resources */,
@@ -722,6 +731,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		BF0BEDD0FD9CFB10090D0A9D /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		DA1A4AB319E1770700565763 /* Sources */ = {
@@ -996,6 +1023,7 @@
 		};
 		DA1A4AE119E1770700565763 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 28FD59C84826F3FD6BC6A3A1 /* Pods-conversationTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1008,6 +1036,12 @@
 				);
 				INFOPLIST_FILE = conversationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/conversation/lib",
+					"$(PROJECT_DIR)/Pods/build/Debug-iphonesimulator",
+					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/conversation.app/conversation";
 			};
@@ -1015,6 +1049,7 @@
 		};
 		DA1A4AE219E1770700565763 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE445CD2044E341BEEFF1328 /* Pods-conversationTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1023,6 +1058,12 @@
 				);
 				INFOPLIST_FILE = conversationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/conversation/lib",
+					"$(PROJECT_DIR)/Pods/build/Debug-iphonesimulator",
+					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/conversation.app/conversation";
 			};
