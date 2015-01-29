@@ -33,6 +33,7 @@
 @interface ConversationItemView : UITableViewCell {
     UILabel *_firstDetailLabel;
     UILabel *_secondDetailLabel;
+    UIView *_overlayView;
 }
 
 @property (nonatomic) BOOL isChannel;

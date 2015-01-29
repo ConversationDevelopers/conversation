@@ -57,10 +57,14 @@
     _unreadCountLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
     _unreadCountLabel.textColor = [UIColor lightGrayColor];
     
+    _overlayView = [[UIView alloc] initWithFrame:CGRectZero];
+    _overlayView.backgroundColor = self.backgroundColor;
+    
     [self.contentView addSubview:_nameLabel];
     [self.contentView addSubview:_firstDetailLabel];
     [self.contentView addSubview:_secondDetailLabel];
     [self.contentView addSubview:_unreadCountLabel];
+    [self.contentView addSubview:_overlayView];
     
     _isChannel = YES;
     _isConsole = NO;
@@ -90,8 +94,15 @@
     else
         self.imageView.image = [UIImage imageNamed:@"ChannelIcon"];
     
-    if (!_enabled)
-        self.alpha = 0.5;
+    _overlayView.frame = self.contentView.frame;
+    
+    if (!_enabled) {
+        _overlayView.alpha = 0.5;
+        self.imageView.alpha = 0.5;
+    } else {
+        _overlayView.alpha = 0.0;
+        self.imageView.alpha = 1.0;
+    }
 
     CGSize size = [_name sizeWithAttributes:@{NSFontAttributeName: _nameLabel.font}];
     
