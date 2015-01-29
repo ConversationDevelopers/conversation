@@ -110,7 +110,11 @@
     singleTapRecogniser.numberOfTapsRequired = 1;
     [self addGestureRecognizer:singleTapRecogniser];
     
-    if (_message.messageType != ET_PRIVMSG && _message.messageType != ET_NOTICE && _message.messageType != ET_CTCP)
+    if (_message.messageType != ET_PRIVMSG &&
+        _message.messageType != ET_NOTICE &&
+        _message.messageType != ET_CTCP &&
+        _message.messageType != ET_ACTION)
+        
         self.userInteractionEnabled = NO;
     
     return self;
@@ -980,7 +984,13 @@ uint32_t FNV32(const char *s)
     if (buttonIndex == 0) {
         UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
         NSString *status = [self characterForStatus:self.message.sender.channelPrivilege];
-        NSString *pasteString = [NSString stringWithFormat:@"<%@%@> %@", status, self.message.sender.nick, self.message.message];
+        NSString *pasteString;
+
+        if (_message.messageType == ET_PRIVMSG)
+            pasteString = [NSString stringWithFormat:@"<%@%@> %@", status, self.message.sender.nick, self.message.message];
+        else
+            pasteString = [NSString stringWithFormat:@"· %@ %@", self.message.sender.nick, self.message.message];
+        
         [pasteboard setValue:pasteString forPasteboardType:@"public.plain-text"];
     }
 }
@@ -1034,6 +1044,11 @@ uint32_t FNV32(const char *s)
         return;
     }
     
+    if (_message.messageType == ET_ACTION) {
+        view.backgroundColor = [UIColor clearColor];
+        return;
+    }
+    
     view.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
 }
 
@@ -1044,6 +1059,11 @@ uint32_t FNV32(const char *s)
 //    Highlight?
     if (hasHighlight()) {
         view.backgroundColor = [UIColor colorWithRed:0.714 green:0.882 blue:0.675 alpha:1];
+        return;
+    }
+    
+    if (_message.messageType == ET_ACTION) {
+        view.backgroundColor = [UIColor clearColor];
         return;
     }
     
