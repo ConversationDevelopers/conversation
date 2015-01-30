@@ -366,7 +366,7 @@
             /* This server supports the ZNC advanced playback module. We will request all messages since the
              last time we received a message. Or from the start of the ZNC logs if we don't have a time on record. */
             if (IRCv3CapabilityEnabled(self, @"znc.in/playback")) {
-                [IRCCommands sendMessage:[NSString stringWithFormat:@"PLAY * %ld", self.configuration.lastMessageTime] toRecipient:@"*playback" onClient:self];
+                [self.connection send:[NSString stringWithFormat:@"PRIVMSG *playback :PLAY * %ld", self.configuration.lastMessageTime]];
             }
             
             /* We can enable autojoin at this point as long as the user does not wish us to authenticate with nickserv.
