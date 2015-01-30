@@ -76,6 +76,17 @@
         self.contentSize = CGSizeMake(self.frame.size.width, _posY);
     }
     
+    // Scroll to bottom if content is bigger than view and user didnt scroll up
+    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    if ([messageView.message.conversation isEqual:controller.currentConversation] &&
+        self.contentSize.height > self.bounds.size.height) {
+        
+        CGFloat height = messageView.bounds.size.height;
+        if (self.contentOffset.y + height + 100.0 > self.contentSize.height - self.bounds.size.height) {
+            CGPoint bottomOffset = CGPointMake(0, _posY - self.frame.size.height);
+            [self setContentOffset:bottomOffset animated:YES];
+        }
+    }
 }
 
 - (void)clear

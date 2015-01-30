@@ -928,17 +928,6 @@
     
     messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
-    // Scroll to bottom if content is bigger than view and user didnt scroll up
-    if ([message.conversation isEqual:_currentConversation] &&
-        message.conversation.contentView.contentSize.height > message.conversation.contentView.bounds.size.height) {
-        
-        CGFloat height = messageView.bounds.size.height;
-        if (message.conversation.contentView.contentOffset.y + height + 100.0 > message.conversation.contentView.contentSize.height - message.conversation.contentView.bounds.size.height) {
-            CGPoint bottomOffset = CGPointMake(0, message.conversation.contentView.posY - message.conversation.contentView.frame.size.height);
-            [message.conversation.contentView setContentOffset:bottomOffset animated:YES];
-        }
-    }
-    
     // The stuff below is only for the preview
     if ((message.messageType != ET_PRIVMSG && message.messageType != ET_ACTION) ||
         [message.sender.nick isEqualToString:message.client.currentUserOnConnection.nick])
