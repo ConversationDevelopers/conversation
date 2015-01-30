@@ -325,38 +325,37 @@
 
 + (void)userReceivedJoinOnChannel:(IRCMessage *)message
 {
-    IRCChannel *channel = (IRCChannel *)message.conversation;
-    if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
-        [IRCConversation getConversationOrCreate:[[message conversation] name] onClient:[message client] withCompletionHandler:^(IRCConversation *conversation) {
-            message.conversation = conversation;
-            
-            ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    NSString *channelName;
+    if (IRCv3CapabilityEnabled(message.client, @"extended-join") && [[message message] length] > 0) {
+        channelName = message.conversation.name;
+        NSString *realname = [message message];
+        realname = [message.message substringFromIndex:3];
+        message.sender.realname = realname;
+    } else {
+        channelName = message.message;
+    }
+    
+    [IRCConversation getConversationOrCreate:channelName onClient:[message client] withCompletionHandler:^(IRCConversation *conversation) {
+        ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+        
+        IRCChannel *channel = (IRCChannel *)conversation;
+        if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
             [message.client.connection send:[NSString stringWithFormat:@"WHO %@", message.conversation.name]];
             [message.client.connection send:[NSString stringWithFormat:@"MODE %@", message.conversation.name]];
-            IRCChannel *ch = (IRCChannel *)conversation;
-            ch.isJoinedByUser = YES;
+            channel.isJoinedByUser = YES;
             message.conversation = conversation;
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 [controller reloadClient:message.client];
             });
-        }];
-    }
-    
-    if (IRCv3CapabilityEnabled(message.client, @"extended-join") && [[message message] length] > 0) {
-        NSString *realname = [message message];
-        if ([realname hasPrefix:@":"]) {
-            realname = [realname substringFromIndex:1];
         }
-        message.sender.realname = realname;
-    }
-    
-    message.messageType = ET_JOIN;
-    [[channel users] addObject:[message sender]];
-    message.conversation = channel;
-    
-    
-    [[message conversation] addMessageToConversation:message];
+        
+        message.messageType = ET_JOIN;
+        [[channel users] addObject:[message sender]];
+        message.conversation = channel;
+        
+        [[message conversation] addMessageToConversation:message];
+    }];
 }
 
 + (void)userReceivedPartChannel:(IRCMessage *)message
@@ -384,13 +383,13 @@
 + (void)userReceivedNickChange:(IRCMessage *)message
 {
     if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
-        message.client.currentUserOnConnection.nick     = message.conversation.name;
+        message.client.currentUserOnConnection.nick     = message.message;
         message.client.currentUserOnConnection.username = message.sender.username;
         message.client.currentUserOnConnection.hostname = message.sender.hostname;
     }
     
     message.messageType = ET_NICK;
-    message.message = message.conversation.name;
+    message.message = message.message;
     
     for (IRCChannel *channel in [message.client channels]) {
         IRCUser *userOnChannel = [IRCUser fromNickname:message.sender.nick onChannel:channel];

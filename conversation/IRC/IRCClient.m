@@ -243,13 +243,8 @@
     }
     
     NSString *recipient = nil;
-    if ([lineComponents count] > 0 && messageWithoutRecipient == NO) {
-        if ([[lineComponents objectAtIndex:0] hasPrefix:@":"]) {
-            if ([lineComponents count] == 1) {
-                recipient = [[lineComponents objectAtIndex:0] substringFromIndex:1];
-                [lineComponents removeObjectAtIndex:0];
-            }
-        } else {
+    if ([lineComponents count] > 1 && messageWithoutRecipient == NO) {
+        if ([[lineComponents objectAtIndex:0] hasPrefix:@":"] == NO) {
             recipient = [lineComponents objectAtIndex:0];
             [lineComponents removeObjectAtIndex:0];
         }
