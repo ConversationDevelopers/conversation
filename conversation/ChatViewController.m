@@ -377,6 +377,15 @@ BOOL popoverDidDismiss = NO;
     } else {
         [InputCommands sendMessage:message toRecipient:_conversation.name onClient:_conversation.client];
         
+        // Workaround to set channel status mode of local user
+        if ([_conversation isKindOfClass:[IRCChannel class]]) {
+            IRCChannel *channel = (IRCChannel*)_conversation;
+            for (IRCUser *user in channel.users) {
+                if ([user.nick isEqualToString:_conversation.client.currentUserOnConnection.nick])
+                    _conversation.client.currentUserOnConnection = user;
+            }
+        }
+        
         IRCMessage *ircmsg = [[IRCMessage alloc] initWithMessage:message
                                                           OfType:ET_PRIVMSG
                                                   inConversation:_conversation
@@ -386,13 +395,7 @@ BOOL popoverDidDismiss = NO;
                                                  isServerMessage:NO
                                                         onClient:_conversation.client];
         
-        ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, 0, _conversation.contentView.frame.size.width, 15.0)
-                                                                      message:ircmsg
-                                                                 conversation:_conversation];
-        messageView.chatViewController = self;
-        messageView.message = ircmsg;
-        [_conversation.contentView addMessageView:messageView];
-        [self scrollToBottom:YES];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:ircmsg];
     }
     
     [_popOver removeFromSuperview];
