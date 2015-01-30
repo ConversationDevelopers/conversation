@@ -36,6 +36,7 @@
 #import "ChannelInfoViewController.h"
 #import <UIActionSheet+Blocks/UIActionSheet+Blocks.h>
 #import <ImgurAnonymousAPIClient/ImgurAnonymousAPIClient.h>
+#import <DLImageLoader/DLImageView.h>
 
 @interface ChatViewController ()
 @property (readonly, nonatomic) PHFComposeBarView *composeBarView;
@@ -155,6 +156,25 @@ BOOL popoverDidDismiss = NO;
     
     [self scrollToBottom:NO];
     
+    // Load images
+    int i=0;
+    ChatMessageView *messageView;
+    DLImageView *imageView;
+    for (UIView *view in _conversation.contentView.subviews) {
+        if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
+            messageView = (ChatMessageView*)view;
+            i=0;
+            for (UIView *view2 in messageView.subviews) {
+                if ([NSStringFromClass(view2.class) isEqualToString:@"DLImageView"]) {
+                    imageView = (DLImageView*)view2;
+                    [imageView displayImageFromUrl:[messageView.images[i] absoluteString]];
+                    i++;
+                }
+            }
+        }
+    }
+    
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -181,6 +201,7 @@ BOOL popoverDidDismiss = NO;
         
         //[self.navigationController performSegueWithIdentifier:@"modal" sender:nil];
     });
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -200,7 +221,28 @@ BOOL popoverDidDismiss = NO;
                                                     name:UIKeyboardDidShowNotification
                                                   object:nil];
     
-    
+
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    // Unload images
+    int i=0;
+    ChatMessageView *messageView;
+    DLImageView *imageView;
+    for (UIView *view in _conversation.contentView.subviews) {
+        if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
+            messageView = (ChatMessageView*)view;
+            i=0;
+            for (UIView *view2 in messageView.subviews) {
+                if ([NSStringFromClass(view2.class) isEqualToString:@"DLImageView"]) {
+                    imageView = (DLImageView*)view2;
+                    imageView.image = nil;
+                    i++;
+                }
+            }
+        }
+    }
 }
 
 - (void)scrollToBottom:(BOOL)animated

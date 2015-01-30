@@ -37,7 +37,6 @@
 @interface ChatMessageView : UIView <UIActionSheetDelegate, UIGestureRecognizerDelegate> {
     UIView *_containerView;
     NSAttributedString *_attributedString;
-    NSMutableArray *_images;
     CGSize _size;    
     CATextLayer *_messageLayer;
     CATextLayer *_timeLayer;
@@ -46,6 +45,7 @@
 - (id)initWithFrame:(CGRect)frame message:(IRCMessage *)message conversation:(IRCConversation *)conversation;
 - (CGFloat)frameHeight;
 
+@property (nonatomic) NSMutableArray *images;
 @property (nonatomic) ChatViewController *chatViewController;
 @property (nonatomic) IRCConversation *conversation;
 @property (nonatomic) IRCMessage *message;
