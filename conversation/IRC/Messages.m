@@ -340,8 +340,8 @@
         
         IRCChannel *channel = (IRCChannel *)conversation;
         if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
-            [message.client.connection send:[NSString stringWithFormat:@"WHO %@", message.conversation.name]];
-            [message.client.connection send:[NSString stringWithFormat:@"MODE %@", message.conversation.name]];
+            [message.client.connection send:[NSString stringWithFormat:@"WHO %@", conversation.name]];
+            [message.client.connection send:[NSString stringWithFormat:@"MODE %@", conversation.name]];
             channel.isJoinedByUser = YES;
             message.conversation = conversation;
             
