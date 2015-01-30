@@ -100,7 +100,6 @@
         
         UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(shareImage:)];
         [imageView addGestureRecognizer:longPressRecognizer];
-        
         i++;
     }
 
@@ -914,8 +913,12 @@ uint32_t FNV32(const char *s)
 - (void)showImage:(UITapGestureRecognizer *)recognizer
 {
 
-    [_chatViewController hideAccessories:nil];
     UIImageView *preview = (UIImageView*)recognizer.view;
+    
+    if (preview.image.size.width < 1)
+        return;
+    
+    [_chatViewController hideAccessories:nil];
     
     CGRect frame = preview.bounds;
     
