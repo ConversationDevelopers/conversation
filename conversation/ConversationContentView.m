@@ -37,17 +37,18 @@
 {
     
     if(!_posY)
-        _posY = 0.0;
+        _posY = 5.0;
     
     if (self.subviews.count > 500) {
-        int posY = 0.0;
+        CGFloat posY = 0.0;
         for (ChatMessageView *view in self.subviews) {
             if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
                 if (posY == 0.0) {
                     [view removeFromSuperview];
+                    posY = 5.0;
                     continue;
                 }
-                CGFloat height = view.frame.size.height;
+                CGFloat height = view.frameHeight;
                 view.frame = CGRectMake(0.0, posY, messageView.frame.size.width, height);
                 if (view.message.messageType != ET_PRIVMSG)
                     posY += height + 5.0;
@@ -56,6 +57,7 @@
             }
         }
         _posY = posY;
+        self.contentSize = CGSizeMake(self.frame.size.width, _posY);
     }
     
     CGFloat height = messageView.frameHeight;
