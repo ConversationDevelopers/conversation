@@ -40,6 +40,7 @@
     CGSize _size;    
     CATextLayer *_messageLayer;
     CATextLayer *_timeLayer;
+    ConversationListViewController *_controller;
 }
 
 - (id)initWithFrame:(CGRect)frame message:(IRCMessage *)message conversation:(IRCConversation *)conversation;

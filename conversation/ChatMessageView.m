@@ -79,6 +79,8 @@
     [self.layer addSublayer:_messageLayer];
     [self.layer addSublayer:_timeLayer];
     
+    _controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    
     int i=0;
     for (NSURL *url in _images) {
         DLImageView *imageView = [[DLImageView alloc] initWithFrame:CGRectMake(20, _size.height+10, 200, 120)];
@@ -88,7 +90,12 @@
         imageView.layer.cornerRadius = 5;
         imageView.backgroundColor = [UIColor blackColor];
         imageView.userInteractionEnabled = YES;
-        [imageView displayImageFromUrl:url.absoluteString];
+        
+        if ([_controller.currentConversation isEqual:message.conversation])
+            [imageView displayImageFromUrl:url.absoluteString];
+        else
+            imageView.image = nil;
+            
         _size.height += 130;
         [self addSubview:imageView];
 
@@ -879,14 +886,13 @@ uint32_t FNV32(const char *s)
 - (void)hideImage:(UITapGestureRecognizer *)recognizer
 {
     // Get absolute frame of preview image
-    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     CGRect frame;
     CGFloat aspect = 0.0;
     UIImageView *view;
     for (int i=0; i < self.subviews.count; i++) {
         if ([NSStringFromClass([self.subviews[i] class]) isEqualToString:@"DLImageView"] && i == (int)recognizer.view.tag) {
             view = self.subviews[i];
-            frame = [self.subviews[i] convertRect:[self.subviews[i] bounds] toView:controller.navigationController.view];
+            frame = [self.subviews[i] convertRect:[self.subviews[i] bounds] toView:_controller.navigationController.view];
             aspect = view.image.size.height / view.image.size.width;
         }
     }
