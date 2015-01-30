@@ -110,6 +110,16 @@ BOOL popoverDidDismiss = NO;
     
     [self setView:view];
     
+    UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideAccessories:)];
+    [singleTapRecogniser setDelegate:self];
+    singleTapRecogniser.numberOfTouchesRequired = 1;
+    singleTapRecogniser.numberOfTapsRequired = 1;
+    [_container addGestureRecognizer:singleTapRecogniser];
+    
+    UIScreenEdgePanGestureRecognizer *swipeLeftRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
+    [swipeLeftRecognizer setEdges:UIRectEdgeRight];
+    [swipeLeftRecognizer setDelegate:self];
+    [_container addGestureRecognizer:swipeLeftRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -133,17 +143,6 @@ BOOL popoverDidDismiss = NO;
         }
     }
     
-    UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideAccessories:)];
-    [singleTapRecogniser setDelegate:self];
-    singleTapRecogniser.numberOfTouchesRequired = 1;
-    singleTapRecogniser.numberOfTapsRequired = 1;
-    [_conversation.contentView addGestureRecognizer:singleTapRecogniser];
-    
-    UIScreenEdgePanGestureRecognizer *swipeLeftRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
-    [swipeLeftRecognizer setEdges:UIRectEdgeRight];
-    [swipeLeftRecognizer setDelegate:self];
-    [_conversation.contentView addGestureRecognizer:swipeLeftRecognizer];
-    
     // Not sure why but sometimes the view is higher as expected
     CGRect frame = CGRectMake(self.container.frame.origin.x,
                               self.container.frame.origin.y,
@@ -154,8 +153,7 @@ BOOL popoverDidDismiss = NO;
     
     [self.container addSubview:_conversation.contentView];
     
-    // Update userlist
-    [_userListView.tableview reloadData];
+    [self scrollToBottom:NO];
     
 }
 
@@ -183,8 +181,6 @@ BOOL popoverDidDismiss = NO;
         
         //[self.navigationController performSegueWithIdentifier:@"modal" sender:nil];
     });
-
-    [self scrollToBottom:NO];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
