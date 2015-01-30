@@ -42,6 +42,18 @@
     for (NSString *line in lines) {
         if ([line length] > 0) {
             [client.connection send:[NSString stringWithFormat:@"PRIVMSG %@ :%@", recipient, line]];
+            [IRCConversation getConversationOrCreate:recipient onClient:client withCompletionHandler:^(IRCConversation *conversation) {
+                IRCMessage *message = [[IRCMessage alloc] initWithMessage:line
+                                                                   OfType:ET_PRIVMSG
+                                                           inConversation:conversation
+                                                                 bySender:client.currentUserOnConnection
+                                                                   atTime:[NSDate date]
+                                                                 withTags:[[NSDictionary alloc] init]
+                                                          isServerMessage:NO
+                                                                 onClient:client];
+                
+                [conversation addMessageToConversation:message];
+            }];
         }
     }
 }
@@ -49,21 +61,69 @@
 + (void)sendCTCPMessage:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client
 {
     [client.connection send:[NSString stringWithFormat:@"PRIVMSG %@ :\001%@\001", recipient, message]];
+    [IRCConversation getConversationOrCreate:recipient onClient:client withCompletionHandler:^(IRCConversation *conversation) {
+        IRCMessage *messageObj = [[IRCMessage alloc] initWithMessage:message
+                                                           OfType:ET_CTCP
+                                                   inConversation:conversation
+                                                         bySender:client.currentUserOnConnection
+                                                           atTime:[NSDate date]
+                                                         withTags:[[NSDictionary alloc] init]
+                                                  isServerMessage:NO
+                                                         onClient:client];
+        
+        [conversation addMessageToConversation:messageObj];
+    }];
 }
 
 + (void)sendACTIONMessage:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client
 {
-    [self sendCTCPMessage:[@"ACTION " stringByAppendingString:message] toRecipient:recipient onClient:client];
+    [client.connection send:[NSString stringWithFormat:@"PRIVMSG %@ :\001ACTION %@\001", recipient, message]];
+    [IRCConversation getConversationOrCreate:recipient onClient:client withCompletionHandler:^(IRCConversation *conversation) {
+        IRCMessage *messageObj = [[IRCMessage alloc] initWithMessage:message
+                                                           OfType:ET_ACTION
+                                                   inConversation:conversation
+                                                         bySender:client.currentUserOnConnection
+                                                           atTime:[NSDate date]
+                                                         withTags:[[NSDictionary alloc] init]
+                                                  isServerMessage:NO
+                                                         onClient:client];
+        
+        [conversation addMessageToConversation:messageObj];
+    }];
 }
 
 + (void)sendNotice:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client
 {
     [client.connection send:[NSString stringWithFormat:@"NOTICE %@ :%@", recipient, message]];
+    [IRCConversation getConversationOrCreate:recipient onClient:client withCompletionHandler:^(IRCConversation *conversation) {
+        IRCMessage *messageObj = [[IRCMessage alloc] initWithMessage:message
+                                                           OfType:ET_NOTICE
+                                                   inConversation:conversation
+                                                         bySender:client.currentUserOnConnection
+                                                           atTime:[NSDate date]
+                                                         withTags:[[NSDictionary alloc] init]
+                                                  isServerMessage:NO
+                                                         onClient:client];
+        
+        [conversation addMessageToConversation:messageObj];
+    }];
 }
 
 + (void)sendCTCPReply:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client
 {
     [client.connection send:[NSString stringWithFormat:@"NOTICE %@ :\001%@\001", recipient, message]];
+    [IRCConversation getConversationOrCreate:recipient onClient:client withCompletionHandler:^(IRCConversation *conversation) {
+        IRCMessage *messageObj = [[IRCMessage alloc] initWithMessage:message
+                                                              OfType:ET_CTCPREPLY
+                                                      inConversation:conversation
+                                                            bySender:client.currentUserOnConnection
+                                                              atTime:[NSDate date]
+                                                            withTags:[[NSDictionary alloc] init]
+                                                     isServerMessage:NO
+                                                            onClient:client];
+        
+        [conversation addMessageToConversation:messageObj];
+    }];
 }
 
 + (void)changeNicknameToNick:(NSString *)nickname onClient:(IRCClient *)client

@@ -385,17 +385,6 @@ BOOL popoverDidDismiss = NO;
                     _conversation.client.currentUserOnConnection = user;
             }
         }
-        
-        IRCMessage *ircmsg = [[IRCMessage alloc] initWithMessage:message
-                                                          OfType:ET_PRIVMSG
-                                                  inConversation:_conversation
-                                                        bySender:_conversation.client.currentUserOnConnection
-                                                          atTime:[NSDate date]
-                                                        withTags:[[NSMutableDictionary alloc] init]
-                                                 isServerMessage:NO
-                                                        onClient:_conversation.client];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:ircmsg];
     }
     
     [_popOver removeFromSuperview];
