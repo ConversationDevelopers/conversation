@@ -431,7 +431,7 @@ BOOL popoverDidDismiss = NO;
     
     if (string.length > 0) {
         // Channels
-        if ([[string substringToIndex:1] isEqualToString:@"#"]) {
+        if ([string isValidChannelName:_conversation.client]) {
             IRCClient *client = _conversation.client;
             for (IRCChannel *channel in client.channels)
                 if([[channel.name lowercaseString] hasPrefix:[string lowercaseString]])
