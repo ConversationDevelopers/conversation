@@ -750,7 +750,7 @@
     NSUInteger indexOfObject = [self.queries indexOfObject:query];
     if (indexOfObject != NSNotFound) {
         if ([self.ircv3CapabilitiesSupportedByServer indexOfObject:@"znc.in/playback"] != NSNotFound) {
-            [IRCCommands sendMessage:[NSString stringWithFormat:@"CLEAR %@", query.name] toRecipient:@"*PLAYBACK" onClient:self];
+            [self.connection send:[NSString stringWithFormat:@"PRIVMSG *playback :CLEAR %@", query.name]];
         }
         [self.queries removeObjectAtIndex:indexOfObject];
         
