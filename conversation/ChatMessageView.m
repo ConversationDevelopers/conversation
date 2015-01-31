@@ -659,6 +659,8 @@ uint32_t FNV32(const char *s)
                            value:[self colorForNick:user.nick]
                            range:NSMakeRange(0, string.length)];
             
+            if ([_conversation isKindOfClass:[IRCChannel class]])
+                [self getMentions:msg];
             
             break;
         }

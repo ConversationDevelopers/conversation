@@ -155,7 +155,7 @@ BOOL popoverDidDismiss = NO;
     [self.container addSubview:_conversation.contentView];
     
     [self scrollToBottom:NO];
-    
+
     // Load images
     int i=0;
     ChatMessageView *messageView;
