@@ -591,6 +591,7 @@
 
         if (channel.isJoinedByUser) {
             [IRCCommands leaveChannel:channel.name withMessage:[[NSUserDefaults standardUserDefaults] stringForKey:@"partmsg_preference"] onClient:client];
+            channel.isJoinedByUser = NO;
             [tableView reloadData];
             return;
         } else {
