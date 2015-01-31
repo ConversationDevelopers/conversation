@@ -491,13 +491,9 @@ BOOL popoverDidDismiss = NO;
             
             // Emoticons
             NSDictionary *emos = [[AppPreferences sharedPrefs] getEmoticons];
-            BOOL enableEmoji = [[NSUserDefaults standardUserDefaults] boolForKey:@"emoji_preference"];
             for (NSString *emo in [emos allKeys]) {
                 if([emo.lowercaseString hasPrefix:string.lowercaseString]) {
-                    if (enableEmoji)
-                        [_suggestions addObject:emos[emo]];
-                    else
-                        [_suggestions addObject:emo];
+                    [_suggestions addObject:emo];
                 }
             }
         }
