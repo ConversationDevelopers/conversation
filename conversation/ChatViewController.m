@@ -34,6 +34,7 @@
 #import "UserListView.h"
 #import "InputCommands.h"
 #import "ChannelInfoViewController.h"
+#import "AppPreferences.h"
 #import <UIActionSheet+Blocks/UIActionSheet+Blocks.h>
 #import <ImgurAnonymousAPIClient/ImgurAnonymousAPIClient.h>
 #import <DLImageLoader/DLImageView.h>
@@ -480,8 +481,24 @@ BOOL popoverDidDismiss = NO;
             if (_isChannel) {
                 IRCChannel *channel = (IRCChannel *)_conversation;
                 for (IRCUser *user in channel.users)
-                    if([[user.nick lowercaseString] hasPrefix:[string lowercaseString]])
-                        [_suggestions addObject:user.nick];
+                    if([[user.nick lowercaseString] hasPrefix:[string lowercaseString]]) {
+                        if (args.count == 1)
+                            [_suggestions addObject:[NSString stringWithFormat:@"%@:", user.nick]];
+                        else
+                            [_suggestions addObject:user.nick];
+                    }
+            }
+            
+            // Emoticons
+            NSDictionary *emos = [[AppPreferences sharedPrefs] getEmoticons];
+            BOOL enableEmoji = [[NSUserDefaults standardUserDefaults] boolForKey:@"emoji_preference"];
+            for (NSString *emo in [emos allKeys]) {
+                if([emo.lowercaseString hasPrefix:string.lowercaseString]) {
+                    if (enableEmoji)
+                        [_suggestions addObject:emos[emo]];
+                    else
+                        [_suggestions addObject:emo];
+                }
             }
         }
     }
@@ -702,8 +719,6 @@ BOOL popoverDidDismiss = NO;
     if (args.count == 1) {
         if ([[string substringToIndex:1] isEqualToString:@"/"])
             replace = [NSString stringWithFormat:@"/%@", replace];
-        else if ([[string substringToIndex:1] isEqualToString:@"#"] == NO)
-            replace = [NSString stringWithFormat:@"%@:", replace];
 
     }
     
