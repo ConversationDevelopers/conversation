@@ -965,7 +965,8 @@
                 notification.image = [UIImage imageNamed:@"Userlist"];
                 [[MCNotificationManager sharedInstance] showNotification:notification];
                 
-                [self showNotificationWithMessage:message];
+                if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
+                    [self showNotificationWithMessage:message];
             }
             
         } else {
@@ -993,7 +994,8 @@
                     notification.image = [UIImage imageNamed:@"ChannelIcon_Light"];
                     [[MCNotificationManager sharedInstance] showNotification:notification];
 
-                    [self showNotificationWithMessage:message];
+                    if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
+                        [self showNotificationWithMessage:message];
                 }
             }
             
