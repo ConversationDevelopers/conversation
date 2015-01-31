@@ -149,12 +149,21 @@ static unsigned short ModesTableSection = 1;
     return 0;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0 && indexPath.row == 0)
+        return 80.0;
+    return 50.0;
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.section == TopicTableSection) {
         UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleDefault];
-        UITextView *textView = [[UITextView alloc] initWithFrame:cell.bounds];
+        UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 80)];
+        
+        textView.font = [UIFont systemFontOfSize:16.0];
+        textView.contentInset = UIEdgeInsetsZero;
         
         if (_channel.topic != nil)
             textView.text = _channel.topic;
