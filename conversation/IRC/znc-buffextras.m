@@ -59,6 +59,7 @@
         // MODE
     } else if ([type isEqualToString:@"joined"]) {
         // JOIN
+        message.message = message.conversation.name;
         [Messages userReceivedJoinOnChannel:message];
     } else if ([type isEqualToString:@"parted"]) {
         // PART
