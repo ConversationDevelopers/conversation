@@ -46,20 +46,13 @@
             [IRCConversation getConversationOrCreate:recipient onClient:client withCompletionHandler:^(IRCConversation *conversation) {
                 
                 // Workaround to set channel status
-                IRCUser *user = client.currentUserOnConnection;
-                if ([conversation isKindOfClass:[IRCChannel class]]) {
-                    IRCChannel *channel = (IRCChannel*)conversation;
-                    for (IRCUser *u in channel.users) {
-                        if ([u.nick isEqualToString:client.currentUserOnConnection.nick]) {
-                            user = u;
-                        }
-                    }
-                }
+                IRCChannel *channel = (IRCChannel *)conversation;
+                IRCUser *userOnChannel = [IRCUser fromNickname:client.currentUserOnConnection.nick onChannel:channel];
                 
                 IRCMessage *message = [[IRCMessage alloc] initWithMessage:line
                                                                    OfType:ET_PRIVMSG
                                                            inConversation:conversation
-                                                                 bySender:user
+                                                                 bySender:userOnChannel
                                                                    atTime:[NSDate date]
                                                                  withTags:[[NSDictionary alloc] init]
                                                           isServerMessage:NO
