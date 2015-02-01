@@ -300,12 +300,15 @@
     
     editController.conversationsController = self;
     
-    
     UINavigationController *navigationController = [[UINavigationController alloc]
-                                                    
                                                     initWithRootViewController:editController];
+
+    if(!self.navigationController.presentedViewController.isBeingDismissed) {
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
+
+    [self.navigationController presentViewController:navigationController animated:YES completion: nil];
     
-    [self presentViewController:navigationController animated:YES completion: nil];
 }
 
 - (void)addItemWithTag:(NSInteger)tag
@@ -320,8 +323,11 @@
         addController.addChannel = NO;
         
     UINavigationController *navigationController = [[UINavigationController alloc]
-                                                    
                                                     initWithRootViewController:addController];
+    
+    if(!self.navigationController.presentedViewController.isBeingDismissed) {
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
     
     [self presentViewController:navigationController animated:YES completion: nil];
 }

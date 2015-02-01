@@ -53,6 +53,8 @@
 CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 BOOL popoverDidDismiss = NO;
 
+#define IPAD UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
+
 @implementation ChatViewController
 
 - (id)init
@@ -500,7 +502,12 @@ BOOL popoverDidDismiss = NO;
     }
     
     [_popOver removeFromSuperview];
-    [_popOver presentPopoverFromRect:CGRectMake(15.0, 15.0, 0.0, 0.0) inView:textView withStrings:_suggestions];
+    
+    CGRect frame = CGRectMake(15.0, 15.0, 0.0, 0.0);
+    if (IPAD && UIInterfaceOrientationIsLandscape([self interfaceOrientation])) {
+        frame.origin.y = -20.0;
+    }
+    [_popOver presentPopoverFromRect:frame inView:textView withStrings:_suggestions];
 
 }
 
@@ -741,7 +748,7 @@ BOOL popoverDidDismiss = NO;
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-    [self hideAccessories:nil];
+    [self hideUserList];
 }
 
 @end
