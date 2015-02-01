@@ -375,8 +375,9 @@ BOOL popoverDidDismiss = NO;
     channelInfoViewController.channel = (IRCChannel *)_conversation;
     
     UINavigationController *navigationController = [[UINavigationController alloc]
-                                                    
                                                     initWithRootViewController:channelInfoViewController];
+    
+    navigationController.modalPresentationStyle = UIModalPresentationFormSheet;    
     
     [self presentViewController:navigationController animated:YES completion: nil];
 }

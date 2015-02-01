@@ -260,6 +260,7 @@
     UINavigationController *navigationController = [[UINavigationController alloc]
                                                     initWithRootViewController:settingsController];
     
+    navigationController.modalPresentationStyle = UIModalPresentationFormSheet;    
     navigationController.navigationBar.tintColor = [UIColor lightGrayColor];
     navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
     navigationController.navigationBar.translucent = NO;
@@ -302,7 +303,9 @@
     
     UINavigationController *navigationController = [[UINavigationController alloc]
                                                     initWithRootViewController:editController];
-
+    
+    navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+    
     if(!self.navigationController.presentedViewController.isBeingDismissed) {
         [self dismissViewControllerAnimated:NO completion:nil];
     }
@@ -324,6 +327,8 @@
         
     UINavigationController *navigationController = [[UINavigationController alloc]
                                                     initWithRootViewController:addController];
+    
+    navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
     
     if(!self.navigationController.presentedViewController.isBeingDismissed) {
         [self dismissViewControllerAnimated:NO completion:nil];
