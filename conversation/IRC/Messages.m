@@ -348,10 +348,11 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [controller reloadClient:message.client];
             });
+        } else {
+            [[channel users] addObject:[message sender]];            
         }
         
         message.messageType = ET_JOIN;
-        [[channel users] addObject:[message sender]];
         message.conversation = channel;
         
         [[message conversation] addMessageToConversation:message];

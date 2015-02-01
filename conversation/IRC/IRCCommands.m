@@ -41,12 +41,25 @@
     NSArray *lines = [message componentsSeparatedByString:@"\n"];
     for (NSString *line in lines) {
         if ([line length] > 0) {
+            
             [client.connection send:[NSString stringWithFormat:@"PRIVMSG %@ :%@", recipient, line]];
             [IRCConversation getConversationOrCreate:recipient onClient:client withCompletionHandler:^(IRCConversation *conversation) {
+                
+                // Workaround to set channel status
+                IRCUser *user = client.currentUserOnConnection;
+                if ([conversation isKindOfClass:[IRCChannel class]]) {
+                    IRCChannel *channel = (IRCChannel*)conversation;
+                    for (IRCUser *u in channel.users) {
+                        if ([u.nick isEqualToString:client.currentUserOnConnection.nick]) {
+                            user = u;
+                        }
+                    }
+                }
+                
                 IRCMessage *message = [[IRCMessage alloc] initWithMessage:line
                                                                    OfType:ET_PRIVMSG
                                                            inConversation:conversation
-                                                                 bySender:client.currentUserOnConnection
+                                                                 bySender:user
                                                                    atTime:[NSDate date]
                                                                  withTags:[[NSDictionary alloc] init]
                                                           isServerMessage:NO

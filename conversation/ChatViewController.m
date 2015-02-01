@@ -414,20 +414,10 @@ BOOL popoverDidDismiss = NO;
 
 - (void)sendMessage:(NSString *)message
 {
-    if ([message hasPrefix:@"/"]) {
+    if ([message hasPrefix:@"/"])
         [InputCommands performCommand:[message substringFromIndex:1] inConversation:_conversation];
-    } else {
+    else
         [InputCommands sendMessage:message toRecipient:_conversation.name onClient:_conversation.client];
-        
-        // Workaround to set channel status mode of local user
-        if ([_conversation isKindOfClass:[IRCChannel class]]) {
-            IRCChannel *channel = (IRCChannel*)_conversation;
-            for (IRCUser *user in channel.users) {
-                if ([user.nick isEqualToString:_conversation.client.currentUserOnConnection.nick])
-                    _conversation.client.currentUserOnConnection = user;
-            }
-        }
-    }
     
     [_popOver removeFromSuperview];
     [_composeBarView setText:@"" animated:YES];
