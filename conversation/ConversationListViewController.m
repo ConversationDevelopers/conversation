@@ -831,7 +831,8 @@
     
     [self createContentViewForConversation:(IRCConversation*)channel];
     
-    [self.tableView reloadData];
+    if (self.tableView.isEditing == NO)
+        [self.tableView reloadData];
     
     [[AppPreferences sharedPrefs] addChannelConfiguration:configuration forConnectionConfiguration:client.configuration];
     [[AppPreferences sharedPrefs] save];
@@ -851,8 +852,9 @@
     [client addQuery:query];
 
     [self createContentViewForConversation:query];
-    
-    [self.tableView reloadData];
+
+    if (self.tableView.isEditing == NO)
+        [self.tableView reloadData];
     
     [[AppPreferences sharedPrefs] addQueryConfiguration:configuration forConnectionConfiguration:client.configuration];
     [[AppPreferences sharedPrefs] save];
@@ -1004,10 +1006,8 @@
         
     }
     
-    if ([self.tableView isEditing])
-        return;
-    
-    [self.tableView reloadData];
+    if (self.tableView.isEditing == NO)
+        [self.tableView reloadData];
     
 }
 
