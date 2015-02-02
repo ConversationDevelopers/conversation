@@ -429,6 +429,7 @@ BOOL popoverDidDismiss = NO;
     if (textView.text.length == 0) {
         [_popOver removeFromSuperview];
         _popOver = nil;
+        popoverDidDismiss = NO;
         return;
     }
     
