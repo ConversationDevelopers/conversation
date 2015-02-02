@@ -586,6 +586,15 @@ BOOL popoverDidDismiss = NO;
     CGFloat progress = [recognizer translationInView:_conversation.contentView].x;
 
     __block CGRect frame = userlist.frame;
+    
+    if (UIInterfaceOrientationIsLandscape([self interfaceOrientation])) {
+        frame.size.height = self.view.bounds.size.height - 10.0;
+        frame.origin.y = 5.0;
+    } else {
+        frame.size.height = _conversation.contentView.frame.size.height + 30.0;
+        frame.origin.y = 30.0;
+    }
+    
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         [self.navigationController.view addSubview:userlist];
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
