@@ -448,6 +448,8 @@ BOOL popoverDidDismiss = NO;
     // Initialise suggestions array
     if (!_suggestions)
         _suggestions = [[NSMutableArray alloc] init];
+    else
+        [_suggestions removeAllObjects];        
     
     
     // Commands
@@ -502,7 +504,6 @@ BOOL popoverDidDismiss = NO;
     }
 
     [_popOver presentPopoverFromRect:frame inView:textView withStrings:_suggestions];
-    [_suggestions removeAllObjects];
 
 }
 
