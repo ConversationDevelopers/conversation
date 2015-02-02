@@ -446,7 +446,8 @@ BOOL popoverDidDismiss = NO;
     }
     
     // Initialise suggestions array
-    _suggestions = [[NSMutableArray alloc] init];
+    if (!_suggestions)
+        _suggestions = [[NSMutableArray alloc] init];
     
     
     // Commands
@@ -499,7 +500,9 @@ BOOL popoverDidDismiss = NO;
     if (IPAD && UIInterfaceOrientationIsLandscape([self interfaceOrientation])) {
         frame.origin.y = -20.0;
     }
+
     [_popOver presentPopoverFromRect:frame inView:textView withStrings:_suggestions];
+    [_suggestions removeAllObjects];
 
 }
 
