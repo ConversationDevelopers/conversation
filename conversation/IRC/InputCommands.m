@@ -175,9 +175,10 @@
                     
                 } else {
                     IRCChannel *channel = (IRCChannel *)conversation;
-                    if ([channel isKindOfClass:[channel class]])
+                    if ([channel isKindOfClass:[channel class]]) {
+                        channel.configuration.autoJoin = NO;
                         [InputCommands performCommand:[NSString stringWithFormat:@"ZNC DETACH %@", channel.name] inConversation:conversation];
-                    else
+                    } else
                         [InputCommands incompleteParametersError:command withParameters:@"<channel1> <channel2> etc.."];
                 }
                 break;
