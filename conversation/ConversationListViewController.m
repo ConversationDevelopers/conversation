@@ -353,18 +353,20 @@
     IRCClient *client;
     IRCConversation *conversation;
     for (client in _connections) {
-        for (conversation in client.queries) {
-            if ([conversation.configuration.uniqueIdentifier isEqualToString:identifier]) {
+        for (IRCConversation *convo in client.queries) {
+            if ([convo.configuration.uniqueIdentifier isEqualToString:identifier]) {
                 _chatViewController.isChannel = NO;
-                _chatViewController.conversation = conversation;
+                _chatViewController.conversation = convo;
+                conversation = convo;
                 break;
             }
         }
         if (conversation == nil) {
-            for (conversation in client.channels) {
-                if ([conversation.configuration.uniqueIdentifier isEqualToString:identifier]) {
+            for (IRCConversation *convo in client.channels) {
+                if ([convo.configuration.uniqueIdentifier isEqualToString:identifier]) {
                     _chatViewController.isChannel = YES;
-                    _chatViewController.conversation = conversation;
+                    _chatViewController.conversation = convo;
+                    conversation = convo;
                     break;
                 }
             }
