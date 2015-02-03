@@ -198,7 +198,22 @@
                     [IRCCommands rejoinChannel:[conversation name] withMessage:nil onClient:conversation.client];
                 }
                 break;
-                
+            case CMD_IGNORE: {
+                if ([messageComponents count] > 1) {
+                    NSString *mask = messageComponents[1];
+                    if ([mask isValidUsername]) {
+                        mask = [NSString stringWithFormat:@"%@!*@*", mask];
+                    }
+                    if ([mask isValidWildcardIgnoreMask]) {
+                        NSMutableArray *array = [[NSMutableArray alloc] initWithArray:conversation.client.configuration.ignores];
+                        [array addObject:mask];
+                        conversation.client.configuration.ignores = [array copy];
+                    }
+                } else {
+                    [InputCommands incompleteParametersError:command withParameters:@"<hostmask>"];
+                }
+                break;
+            }
             case CMD_J:
             case CMD_JOIN:
                 if ([messageComponents count] > 1) {
@@ -391,7 +406,6 @@
                     [InputCommands incompleteParametersError:command withParameters:@"<command>"];
                 }
                 break;
-                
             case CMD_TIMER:
                 if ([messageComponents count] > 2) {
                     float seconds = [messageComponents[1] floatValue];
@@ -434,7 +448,26 @@
                 
             case CMD_UNBAN:
                 break;
+            case CMD_UNIGNORE: {
+                if ([messageComponents count] > 1) {
+                    NSString *mask = messageComponents[1];
+                    if ([mask isValidUsername]) {
+                        mask = [NSString stringWithFormat:@"%@!*@*", mask];
+                    }
+                    if ([mask isValidWildcardIgnoreMask]) {
+                        NSMutableArray *array = [[NSMutableArray alloc] init];
+                        for (NSString *string in array) {
+                            if ([string isEqualToString:mask] == NO)
+                                [array addObject:string];
+                        }
+                        conversation.client.configuration.ignores = [array copy];
+                    }
+                } else {
+                    [InputCommands incompleteParametersError:command withParameters:@"<hostmask>"];
+                }
+                break;
                 
+            }
             case CMD_VOICE:
                 if ([messageComponents count] > 1) {
                     IRCChannel *channel = (IRCChannel *)conversation;
@@ -485,6 +518,7 @@
         @"DEOWNER",
         @"HALFOP",
         @"HOP",
+        @"IGNORE",
         @"J",
         @"JOIN",
         @"K",
@@ -508,6 +542,7 @@
         @"REJOIN",
         @"TIMER",
         @"TOPIC",
+        @"UNIGNORE",        
         @"VOICE",
         @"UMODE",
         @"UNBAN"
