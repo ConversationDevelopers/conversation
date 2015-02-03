@@ -855,10 +855,8 @@ BOOL popoverDidDismiss = NO;
 
     }
     
-    textView.text = [textView.text stringByReplacingOccurrencesOfString:string
-                                                             withString:[replace stringByAppendingString:@" "]
-                                                                options:NSCaseInsensitiveSearch
-                                                                  range:NSMakeRange(textView.text.length-string.length, string.length)];
+    textView.text = [textView.text stringByReplacingCharactersInRange:NSMakeRange(textView.text.length-string.length, string.length)
+                                                           withString:[replace stringByAppendingString:@" "]];
 }
 
 - (void)popoverViewDidDismiss:(MenuPopOverView *)popoverView
