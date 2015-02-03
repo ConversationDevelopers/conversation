@@ -683,6 +683,22 @@
     });
 }
 
++ (void)clientReceivedWHOISReply:(IRCMessage *)message
+{
+    message.messageType = ET_WHOIS;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+    });
+}
+
++ (void)clientReceivedWHOISEndReply:(IRCMessage *)message
+{
+    message.messageType = ET_WHOISEND;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+    });
+}
+
 + (void)clientReceivedServerPasswordMismatchError:(IRCClient *)client
 {
     ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;

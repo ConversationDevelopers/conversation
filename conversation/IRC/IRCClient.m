@@ -412,6 +412,17 @@
             [Messages clientReceivedLISTEndReply:messageObject];
             break;
             
+        case RPL_WHOISUSER:
+        case RPL_WHOISCHANNELS:
+        case RPL_WHOISSERVER:
+        case RPL_WHOISIDLE:
+            [Messages clientReceivedWHOISReply:rawMessage];
+            break;
+        
+        case RPL_ENDOFWHOIS:
+            [Messages clientReceivedWHOISEndReply:rawMessage];
+            break;
+            
         case ERR_ERRONEUSNICKNAME:
         case ERR_UNAVAILRESOURCE:
         case ERR_NICKNAMEINUSE:

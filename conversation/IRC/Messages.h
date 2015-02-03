@@ -83,6 +83,10 @@
 
 + (void)clientReceivedLISTEndReply:(IRCMessage *)message;
 
++ (void)clientReceivedWHOISReply:(IRCMessage *)message;
+
++ (void)clientReceivedWHOISEndReply:(IRCMessage *)message;
+
 + (void)clientReceivedServerPasswordMismatchError:(IRCClient *)client;
 
 + (void)clientReceivedModesForChannel:(IRCMessage *)message;

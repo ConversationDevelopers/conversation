@@ -66,7 +66,9 @@ typedef NS_ENUM(NSUInteger, EventType) {
     ET_AWAY,
     ET_ERROR,
     ET_LIST,
-    ET_LISTEND
+    ET_LISTEND,
+    ET_WHOIS,
+    ET_WHOISEND
 };
 
 @end
