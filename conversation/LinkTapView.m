@@ -29,6 +29,7 @@
  */
 
 #import "LinkTapView.h"
+#import <UIActionSheet+Blocks/UIActionSheet+Blocks.h>
 
 @implementation LinkTapView
 
@@ -48,13 +49,27 @@
 
 - (void)handleTap: (UITapGestureRecognizer*)sender  {
     
-    UIApplication *application = [UIApplication sharedApplication];
+    [UIActionSheet showInView:self
+                    withTitle:_url.absoluteString
+            cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+       destructiveButtonTitle:nil
+            otherButtonTitles:@[NSLocalizedString(@"Open", @"Open"), NSLocalizedString(@"Copy", @"Copy")]
+                     tapBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex) {
+                         if (buttonIndex == 0) {
+                             UIApplication *application = [UIApplication sharedApplication];
+                             if ([application canOpenURL:_url])   {
+                                 [[UIApplication sharedApplication] openURL:_url];
+                             } else {
+                                 NSLog(@"Unable to open URL: %@", [_url absoluteString]);
+                             }
+                         } else if(buttonIndex == 1) {
+                             UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+                             [pasteboard setValue:_url.absoluteString forPasteboardType:@"public.plain-text"];
+                         }
+                         
+                     }];
     
-    if ([application canOpenURL:_url])   {
-        [[UIApplication sharedApplication] openURL:_url];
-    } else {
-        NSLog(@"Unable to open URL: %@", [_url absoluteString]);
-    }
+
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
