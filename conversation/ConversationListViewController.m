@@ -905,7 +905,7 @@
     IRCMessage *message = notification.object;
     
     // Don't handle raw messages
-    if (message.messageType == ET_RAW)
+    if (message.messageType == ET_RAW || message.messageType == ET_LIST || message.messageType == ET_LISTEND)
         return;
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"hideevents_preference"] == YES &&

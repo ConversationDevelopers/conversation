@@ -28,22 +28,17 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <UIKit/UIKit.h>
 
-@interface ConversationItemView : UITableViewCell {
-    UIView *_overlayView;
+#import <UIKit/UIKit.h>
+#import "IRCClient.h"
+#import "IRCConversation.h"
+#import "IRCConnection.h"
+
+@interface ChannelListViewController : UITableViewController {
+    
 }
 
-@property (nonatomic) UILabel *firstDetailLabel;
-@property (nonatomic) UILabel *secondDetailLabel;
-@property (nonatomic) BOOL isChannel;
-@property (nonatomic) BOOL isConsole;
-@property (nonatomic) BOOL enabled;
-@property (nonatomic) UIImage *image;
-@property (nonatomic) NSString *name;
-@property (nonatomic) NSMutableArray *previewMessages;
-@property (nonatomic) NSInteger unreadCount;
-@property (nonatomic) UILabel *nameLabel;
-@property (nonatomic) UILabel *unreadCountLabel;
+- (id)init;
+@property (nonatomic) IRCClient *client;
 
 @end

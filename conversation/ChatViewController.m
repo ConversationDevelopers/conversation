@@ -35,6 +35,7 @@
 #import "InputCommands.h"
 #import "ChannelInfoViewController.h"
 #import "AppPreferences.h"
+#import "ChannelListViewController.h"
 #import <UIActionSheet+Blocks/UIActionSheet+Blocks.h>
 #import <ImgurAnonymousAPIClient/ImgurAnonymousAPIClient.h>
 #import <DLImageLoader/DLImageView.h>
@@ -425,10 +426,23 @@ BOOL popoverDidDismiss = NO;
 
 - (void)sendMessage:(NSString *)message
 {
-    if ([message hasPrefix:@"/"])
-        [InputCommands performCommand:[message substringFromIndex:1] inConversation:_conversation];
-    else
+    if ([message hasPrefix:@"/"]) {
+        NSString *command = [[[message substringFromIndex:1] lowercaseString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        if ([command isEqualToString:@"list"]) {
+            ChannelListViewController *channelList = [[ChannelListViewController alloc] init];
+            channelList.client = _conversation.client;
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:channelList];
+            navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+            navigationController.navigationBar.tintColor = [UIColor lightGrayColor];
+            navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
+            navigationController.navigationBar.translucent = NO;
+            [self.navigationController presentViewController:navigationController animated:YES completion:nil];
+        } else {
+            [InputCommands performCommand:[message substringFromIndex:1] inConversation:_conversation];
+        }
+    } else {
         [InputCommands sendMessage:message toRecipient:_conversation.name onClient:_conversation.client];
+    }
     
     [_popOver removeFromSuperview];
     [_composeBarView setText:@"" animated:YES];

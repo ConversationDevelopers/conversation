@@ -773,6 +773,7 @@ uint32_t FNV32(const char *s)
             
         }
         default: {
+            NSLog(@"MESSAGE TYPE: %i", (int)_message.messageType);
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"Message not handled yet"]];
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;

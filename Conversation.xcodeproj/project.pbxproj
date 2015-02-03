@@ -33,6 +33,7 @@
 		DA7B687D1A00C55500D82B4C /* UIBarButtonItem+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7B687C1A00C55500D82B4C /* UIBarButtonItem+Methods.m */; };
 		DA7B68801A01504100D82B4C /* CertificateInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7B687F1A01504100D82B4C /* CertificateInfoViewController.m */; };
 		DA96223F19EDE217008D42EB /* networks.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA96223E19EDE217008D42EB /* networks.plist */; };
+		DA9938271A8085F5001C452C /* ChannelListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA9938261A8085F5001C452C /* ChannelListViewController.m */; };
 		DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */; };
 		DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */; };
 		DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322AB19E5DE490068E2B6 /* PreferencesTextCell.m */; };
@@ -141,6 +142,8 @@
 		DA7B68A11A02BE6900D82B4C /* libPods-conversation-DLImageLoader.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-conversation-DLImageLoader.a"; path = "Pods/build/Debug-iphoneos/libPods-conversation-DLImageLoader.a"; sourceTree = "<group>"; };
 		DA7B68A31A02BEE100D82B4C /* libPods-conversation-PHFComposeBarView.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-conversation-PHFComposeBarView.a"; path = "Pods/build/Debug-iphoneos/libPods-conversation-PHFComposeBarView.a"; sourceTree = "<group>"; };
 		DA96223E19EDE217008D42EB /* networks.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = networks.plist; path = Resources/networks.plist; sourceTree = "<group>"; };
+		DA9938251A8085F5001C452C /* ChannelListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelListViewController.h; sourceTree = "<group>"; };
+		DA9938261A8085F5001C452C /* ChannelListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelListViewController.m; sourceTree = "<group>"; };
 		DAA3229C19E56CBF0068E2B6 /* EditConnectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = EditConnectionViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EditConnectionViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		DAA322A819E5DE490068E2B6 /* PreferencesSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesSwitchCell.h; sourceTree = "<group>"; };
@@ -394,6 +397,8 @@
 				DA41794A19FAF9FF007784F0 /* ChatMessageView.m */,
 				DA656B371A13866500C214BD /* ConsoleViewController.h */,
 				DA656B381A13866500C214BD /* ConsoleViewController.m */,
+				DA9938251A8085F5001C452C /* ChannelListViewController.h */,
+				DA9938261A8085F5001C452C /* ChannelListViewController.m */,
 				DA7B68751A00A43500D82B4C /* LinkTapView.h */,
 				DA7B68761A00A43500D82B4C /* LinkTapView.m */,
 				DA7B687E1A01504100D82B4C /* CertificateInfoViewController.h */,
@@ -803,6 +808,7 @@
 				FAFF19A619FDC35300F8C071 /* IRCKickMessage.m in Sources */,
 				DA1A4ABD19E1770700565763 /* main.m in Sources */,
 				DA656B361A12C97000C214BD /* UserListItemCell.m in Sources */,
+				DA9938271A8085F5001C452C /* ChannelListViewController.m in Sources */,
 				DAE830591A0F47E10022F512 /* DisclosureView.m in Sources */,
 				FA109B3719E419040068DC29 /* IRCConnectionConfiguration.m in Sources */,
 				FAD7CFFB1A7BF49500F6B203 /* Conversation.m in Sources */,
