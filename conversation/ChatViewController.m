@@ -120,10 +120,21 @@ BOOL popoverDidDismiss = NO;
     singleTapRecogniser.numberOfTapsRequired = 1;
     [_container addGestureRecognizer:singleTapRecogniser];
     
-    UIScreenEdgePanGestureRecognizer *swipeLeftRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
+    UIScreenEdgePanGestureRecognizer *swipeLeftRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToShowUserlist:)];
     [swipeLeftRecognizer setEdges:UIRectEdgeRight];
     [swipeLeftRecognizer setDelegate:self];
     [_container addGestureRecognizer:swipeLeftRecognizer];
+    
+    
+    UISwipeGestureRecognizer *recognizer;
+    recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
+    [recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
+    [_container addGestureRecognizer:recognizer];
+    
+    recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
+    [recognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
+    [_container addGestureRecognizer:recognizer];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -575,7 +586,106 @@ BOOL popoverDidDismiss = NO;
     
 }
 
-- (void)swipeLeft:(UIScreenEdgePanGestureRecognizer *)recognizer
+- (void)swipeLeft:(UISwipeGestureRecognizer *)recognizer
+{
+    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    IRCConversation *conversation;
+    
+    int i=0;
+    for (IRCConversation *convo in _conversation.client.channels) {
+        if ([convo isEqual:_conversation]) {
+            if (_conversation.client.channels.count-1 > i)
+                conversation = _conversation.client.channels[i+1];
+            
+            if (_conversation.client.channels.count-1 == i) {
+                
+                if (_conversation.client.queries.count > 0)
+                    conversation = _conversation.client.queries[0];
+                else
+                    conversation = _conversation.client.channels[0];
+            }
+            
+            [controller selectConversationWithIdentifier:conversation.configuration.uniqueIdentifier];
+            break;
+        }
+        i++;
+    }
+    
+    i = 0;
+    if (conversation == nil) {
+        for (IRCConversation *convo in _conversation.client.queries) {
+            if ([convo isEqual:_conversation]) {
+                if (_conversation.client.queries.count-1 > i) {
+                    conversation = _conversation.client.queries[i+1];
+                
+                }
+                
+                if (i == _conversation.client.queries.count-1) {
+                    if (_conversation.client.channels.count > 0)
+                        conversation = _conversation.client.channels[0];
+                    else
+                        conversation = _conversation.client.queries[_conversation.client.channels.count-1];
+                }
+                
+                [controller selectConversationWithIdentifier:conversation.configuration.uniqueIdentifier];
+                break;
+            }
+            i++;
+        }
+    }
+    
+}
+
+- (void)swipeRight:(UISwipeGestureRecognizer *)recognizer
+{
+    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    IRCConversation *conversation;
+    
+    int i=0;
+    for (IRCConversation *convo in _conversation.client.channels) {
+        if ([convo isEqual:_conversation]) {
+
+            if (i > 0 && _conversation.client.channels.count > 1)
+                conversation = _conversation.client.channels[i-1];
+            
+            if (i == 0) {
+                if (_conversation.client.queries.count > 0)
+                    conversation = _conversation.client.queries[0];
+                else
+                    conversation = _conversation.client.channels[_conversation.client.channels.count-1];
+            }
+            
+            [controller selectConversationWithIdentifier:conversation.configuration.uniqueIdentifier];
+            break;
+        }
+        i++;
+    }
+    
+    i = 0;
+    if (conversation == nil) {
+        for (IRCConversation *convo in _conversation.client.queries) {
+            if ([convo isEqual:_conversation]) {
+
+                if (i > 0 && _conversation.client.queries.count > 1)
+                    conversation = _conversation.client.queries[i-1];
+
+                if (i == 0) {
+                    if (_conversation.client.channels.count > 0)
+                        conversation = _conversation.client.channels[_conversation.client.channels.count-1];
+                    else
+                        conversation = _conversation.client.queries[_conversation.client.channels.count-1];
+                }
+                
+                [controller selectConversationWithIdentifier:conversation.configuration.uniqueIdentifier];
+                break;
+            }
+            i++;
+        }
+    }
+    
+}
+
+- (void)swipeToShowUserlist:(UIScreenEdgePanGestureRecognizer *)recognizer
 {
     
     UserListView *userlist = [self userListView];
