@@ -844,8 +844,9 @@ BOOL popoverDidDismiss = NO;
 {
     
     UITextView *textView = _composeBarView.textView;
-    NSArray *args = [textView.text componentsSeparatedByString:@" "];
-    NSString *string = args[args.count-1];
+    NSString *string = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSArray *args = [string componentsSeparatedByString:@" "];
+    string = args[args.count-1];
     NSString *replace = _suggestions[index];
     
     if (args.count == 1) {
@@ -854,13 +855,18 @@ BOOL popoverDidDismiss = NO;
 
     }
     
-    textView.text = [textView.text stringByReplacingOccurrencesOfString:args[args.count-1] withString:[replace stringByAppendingString:@" "]];
-    _popOver = nil;
+    textView.text = [textView.text stringByReplacingOccurrencesOfString:string
+                                                             withString:[replace stringByAppendingString:@" "]
+                                                                options:NSCaseInsensitiveSearch
+                                                                  range:NSMakeRange(textView.text.length-string.length, string.length)];
 }
 
 - (void)popoverViewDidDismiss:(MenuPopOverView *)popoverView
 {
-    popoverDidDismiss = YES;
+    UITextView *textView = _composeBarView.textView;
+    if ([[textView.text substringFromIndex:textView.text.length-1] isEqualToString:@" "] == NO)
+       popoverDidDismiss = YES;
+    
     _popOver = nil;
 }
 
