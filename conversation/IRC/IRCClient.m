@@ -243,7 +243,7 @@
     }
     
     NSString *recipient = nil;
-    if ([lineComponents count] > 1 && messageWithoutRecipient == NO) {
+    if ([lineComponents count] > 0 && messageWithoutRecipient == NO) {
         if ([[lineComponents objectAtIndex:0] hasPrefix:@":"] == NO) {
             recipient = [lineComponents objectAtIndex:0];
             [lineComponents removeObjectAtIndex:0];
@@ -281,7 +281,6 @@
     if (user == nil) {
         user = [[IRCUser alloc] initWithNickname:nickname andUsername:username andHostname:hostname andRealname:nil onClient:self];
     }
-    
     
     IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:message
                                                              OfType:NSNotFound
