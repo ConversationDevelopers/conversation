@@ -168,6 +168,20 @@
                 }
                 break;
                 
+            case CMD_DETACH:
+                if ([messageComponents count] > 1) {
+                    [messageComponents removeObjectAtIndex:0];
+                    [InputCommands performCommand:[NSString stringWithFormat:@"ZNC DETACH %@", [messageComponents componentsJoinedByString:@" "]] inConversation:conversation];
+                    
+                } else {
+                    IRCChannel *channel = (IRCChannel *)conversation;
+                    if ([channel isKindOfClass:[channel class]])
+                        [InputCommands performCommand:[NSString stringWithFormat:@"ZNC DETACH %@", channel.name] inConversation:conversation];
+                    else
+                        [InputCommands incompleteParametersError:command withParameters:@"<channel1> <channel2> etc.."];
+                }
+                break;
+                
             case CMD_HALFOP:
                 if ([messageComponents count] > 1) {
                     IRCChannel *channel = (IRCChannel *)conversation;
@@ -516,6 +530,7 @@
         @"DEHOP",
         @"DEVOICE",
         @"DEOWNER",
+        @"DETACH",
         @"HALFOP",
         @"HOP",
         @"IGNORE",

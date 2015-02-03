@@ -57,6 +57,7 @@ typedef NS_ENUM(NSUInteger, InputCommand) {
     CMD_DEOP,
     CMD_DEVOICE,
     CMD_DEOWNER,
+    CMD_DETACH,
     CMD_HALFOP,
     CMD_HOP,
     CMD_IGNORE,
