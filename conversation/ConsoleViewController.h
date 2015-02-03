@@ -31,6 +31,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ConsoleViewController : UIViewController <UITextViewDelegate>
-
+@interface ConsoleViewController : UIViewController
+@property (nonatomic) UITextView *contentView;
 @end

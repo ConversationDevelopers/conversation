@@ -557,6 +557,7 @@
         cell.name = NSLocalizedString(@"Console", @"Console");
         cell.isConsole = YES;
         cell.unreadCount = 0;
+        cell.previewMessages = nil;
     } else {
         IRCChannel *channel = [client.channels objectAtIndex:(int)indexPath.row - offset];
         cell.accessoryView = disclosure;
@@ -905,8 +906,12 @@
     IRCMessage *message = notification.object;
     
     // Don't handle raw messages
-    if (message.messageType == ET_RAW || message.messageType == ET_LIST || message.messageType == ET_LISTEND)
+    if (message.messageType == ET_LIST || message.messageType == ET_LISTEND)
         return;
+    
+    if (message.messageType == ET_RAW && message.client.showConsole) {
+        message.client.console.contentView.text = [message.client.console.contentView.text stringByAppendingFormat:@"%@\n", message.message];
+    }
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"hideevents_preference"] == YES &&
         (message.messageType == ET_JOIN || message.messageType == ET_PART || message.messageType == ET_QUIT ||

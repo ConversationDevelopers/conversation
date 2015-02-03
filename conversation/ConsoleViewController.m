@@ -33,8 +33,6 @@
 #import "IRCMessage.h"
 
 @interface ConsoleViewController ()
-@property (readonly, nonatomic) UIView *container;
-@property (readonly, nonatomic) UITextView *contentView;
 @property (nonatomic) UIBarButtonItem *backButton;
 @end
 
@@ -45,41 +43,18 @@
     if (!(self = [super init]))
         return nil;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(messageReceived:)
-                                                 name:@"messageReceived"
-                                               object:nil];
-    
     _backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ChannelIcon_Light"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
     
     self.navigationItem.leftBarButtonItem = _backButton;
     
-    return self;
-}
-
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:@"messageReceived"
-                                                  object:nil];
-}
-
-- (void)loadView
-{
-    
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 480.0f)];
-    [view setBackgroundColor:[UIColor whiteColor]];
-    
-    UIView *container = [self container];
-    [container addSubview:[self contentView]];
-    
-    [view addSubview:container];
+    _contentView = [[UITextView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 480.0f)];
+    _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    _contentView.editable = NO;
+    [view addSubview:_contentView];
     self.view = view;
     
-    [self setEdgesForExtendedLayout:UIRectEdgeNone];
-    
-    [self setView:view];
-    
+    return self;
 }
 
 - (void)didReceiveMemoryWarning
@@ -88,49 +63,9 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)messageReceived:(NSNotification *)notification
-{
-    IRCMessage *message = notification.object;
-    if (message.messageType == ET_RAW) {
-        _contentView.text = [_contentView.text stringByAppendingFormat:@"%@\n", message.message];
-    }
-}
-
 - (void)goBack:(id)sender
 {
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
-
-- (void)textViewDidBeginEditing:(UITextView *)textView
-{
-    [_contentView resignFirstResponder];
-}
-
-@synthesize container = _container;
-- (UIView *)container {
-    if (!_container) {
-        _container = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 480.0f)];
-        _container.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    }
-    
-    return _container;
-}
-
-@synthesize contentView = _contentView;
-- (UITextView *)contentView {
-    
-    if(!_contentView) {
-        CGRect frame = CGRectMake(0.0,
-                                  0.0,
-                                  _container.bounds.size.width,
-                                  _container.bounds.size.height);
-        _contentView = [[UITextView alloc] initWithFrame:frame];
-        _contentView.editable = NO;        
-        _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-
-    }
-    return _contentView;
-}
-
 
 @end
