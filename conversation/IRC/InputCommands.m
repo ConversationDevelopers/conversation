@@ -526,6 +526,7 @@
         @"KICK",
         @"KICKBAN",
         @"LEAVE",
+        @"LIST",
         @"ME",
         @"MODE",
         @"MSG",

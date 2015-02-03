@@ -67,6 +67,7 @@ typedef NS_ENUM(NSUInteger, InputCommand) {
     CMD_KICK,
     CMD_KICKBAN,
     CMD_LEAVE,
+    CMD_LIST,
     CMD_ME,
     CMD_MODE,
     CMD_MSG,
