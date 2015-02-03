@@ -106,9 +106,10 @@ BOOL _isAwaitingListResponse;
         cell = [[ConversationItemView alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
     
+
     DisclosureView *disclosure = [[DisclosureView alloc] initWithFrame:CGRectMake(-5, -10, 15, 15)];
-    disclosure.color = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
-    
+    disclosure.color = [UIColor whiteColor];
+
     cell.backgroundColor = [UIColor whiteColor];
     cell.nameLabel.textColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
     cell.unreadCountLabel.textColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
