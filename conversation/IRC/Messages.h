@@ -79,6 +79,10 @@
 
 + (void)clientReceivedWHOReply:(IRCMessage *)message;
 
++ (void)clientReceivedLISTReply:(IRCMessage *)message;
+
++ (void)clientReceivedLISTEndReply:(IRCMessage *)message;
+
 + (void)clientReceivedServerPasswordMismatchError:(IRCClient *)client;
 
 + (void)clientReceivedModesForChannel:(IRCMessage *)message;

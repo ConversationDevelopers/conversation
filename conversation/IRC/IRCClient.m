@@ -405,6 +405,14 @@
             [Messages clientReceivedWHOReply:messageObject];
             break;
             
+        case RPL_LIST:
+            [Messages clientReceivedLISTReply:messageObject];
+            break;
+            
+        case RPL_LISTEND:
+            [Messages clientReceivedLISTEndReply:messageObject];
+            break;
+            
         case ERR_ERRONEUSNICKNAME:
         case ERR_UNAVAILRESOURCE:
         case ERR_NICKNAMEINUSE:

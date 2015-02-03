@@ -667,6 +667,22 @@
     [ircChannel sortUserlist];
 }
 
++ (void)clientReceivedLISTReply:(IRCMessage *)message
+{
+    message.messageType = ET_LIST;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+    });
+}
+
++ (void)clientReceivedLISTEndReply:(IRCMessage *)message
+{
+    message.messageType = ET_LISTEND;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+    });
+}
+
 + (void)clientReceivedServerPasswordMismatchError:(IRCClient *)client
 {
     ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
