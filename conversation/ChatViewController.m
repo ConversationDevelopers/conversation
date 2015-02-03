@@ -36,6 +36,7 @@
 #import "ChannelInfoViewController.h"
 #import "AppPreferences.h"
 #import "ChannelListViewController.h"
+#import "UserInfoViewController.h"
 #import <UIActionSheet+Blocks/UIActionSheet+Blocks.h>
 #import <ImgurAnonymousAPIClient/ImgurAnonymousAPIClient.h>
 #import <DLImageLoader/DLImageView.h>
@@ -383,14 +384,24 @@ BOOL popoverDidDismiss = NO;
 
 - (void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView
 {
-    ChannelInfoViewController *channelInfoViewController = [[ChannelInfoViewController alloc] init];
-    channelInfoViewController.channel = (IRCChannel *)_conversation;
+    UINavigationController *navigationController;
     
-    UINavigationController *navigationController = [[UINavigationController alloc]
-                                                    initWithRootViewController:channelInfoViewController];
+    if (self.isChannel) {
+        ChannelInfoViewController *infoViewController = [[ChannelInfoViewController alloc] init];
+        infoViewController.channel = (IRCChannel *)_conversation;
     
-    navigationController.modalPresentationStyle = UIModalPresentationFormSheet;    
+        navigationController = [[UINavigationController alloc]
+                                                    initWithRootViewController:infoViewController];
     
+    } else {
+        UserInfoViewController *infoViewController = [[UserInfoViewController alloc] init];
+        infoViewController.nickname = _conversation.name;
+        infoViewController.client = _conversation.client;
+        navigationController = [[UINavigationController alloc]
+                                                        initWithRootViewController:infoViewController];
+    }
+    
+    navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:navigationController animated:YES completion: nil];
 }
 

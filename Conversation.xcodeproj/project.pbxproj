@@ -37,6 +37,7 @@
 		DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */; };
 		DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */; };
 		DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322AB19E5DE490068E2B6 /* PreferencesTextCell.m */; };
+		DAC0CB951A80E4CC00A7A2E7 /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC0CB941A80E4CC00A7A2E7 /* UserInfoViewController.m */; };
 		DAC65A4419EAA2ED00E00A73 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A3B19EAA2ED00E00A73 /* LaunchScreen.xib */; };
 		DAC65A4519EAA2ED00E00A73 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A3D19EAA2ED00E00A73 /* Localizable.strings */; };
 		DAC65A4819EAA2ED00E00A73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A4219EAA2ED00E00A73 /* Images.xcassets */; };
@@ -150,6 +151,8 @@
 		DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesSwitchCell.m; sourceTree = "<group>"; };
 		DAA322AA19E5DE490068E2B6 /* PreferencesTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesTextCell.h; sourceTree = "<group>"; };
 		DAA322AB19E5DE490068E2B6 /* PreferencesTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesTextCell.m; sourceTree = "<group>"; };
+		DAC0CB931A80E4CC00A7A2E7 /* UserInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoViewController.h; sourceTree = "<group>"; };
+		DAC0CB941A80E4CC00A7A2E7 /* UserInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoViewController.m; sourceTree = "<group>"; };
 		DAC65A3C19EAA2ED00E00A73 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		DAC65A3E19EAA2ED00E00A73 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Localizable.strings; sourceTree = "<group>"; };
 		DAC65A4219EAA2ED00E00A73 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = conversation/Resources/Images.xcassets; sourceTree = "<group>"; };
@@ -415,6 +418,8 @@
 				DA6F61D619FD1A6600F22F78 /* ILTranslucentView.m */,
 				DADA8AC41A0D3AC20085A130 /* ChannelInfoViewController.h */,
 				DADA8AC51A0D3AC20085A130 /* ChannelInfoViewController.m */,
+				DAC0CB931A80E4CC00A7A2E7 /* UserInfoViewController.h */,
+				DAC0CB941A80E4CC00A7A2E7 /* UserInfoViewController.m */,
 				DAC65A3519EAA24300E00A73 /* Resources */,
 				DA1A4ABA19E1770700565763 /* Supporting Files */,
 			);
@@ -817,6 +822,7 @@
 				DA379D4719FB35E80031E30B /* ChatViewController.m in Sources */,
 				FACFC1911A02BD6E0012CED9 /* znc-buffextras.m in Sources */,
 				DA41794B19FAF9FF007784F0 /* ChatMessageView.m in Sources */,
+				DAC0CB951A80E4CC00A7A2E7 /* UserInfoViewController.m in Sources */,
 				FAC0E4121A00665D001CFB48 /* IRCCertificateTrust.m in Sources */,
 				FA109B3E19E420320068DC29 /* IRCChannel.m in Sources */,
 				DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */,
