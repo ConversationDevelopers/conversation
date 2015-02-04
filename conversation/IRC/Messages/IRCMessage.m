@@ -29,6 +29,7 @@
  */
 
 #import "IRCMessage.h"
+#import "AppPreferences.h"
 
 @implementation IRCMessage
 
@@ -62,6 +63,84 @@
                                                   onClient:self.client];
     
     return copy;
+}
+
+- (id)serializedDatabaseRepresentationOfValue:(id)instanceValue forPropertyNamed:(NSString *)propertyName
+{
+//    [super serializedDatabaseRepresentationOfValue:instanceValue forPropertyNamed:propertyName];
+    
+    if ([instanceValue isKindOfClass:IRCClient.class]) {
+        IRCClient *client = (IRCClient *)instanceValue;
+        return client.configuration.uniqueIdentifier;
+        
+    } else if ([instanceValue isKindOfClass:IRCConversation.class]) {
+        IRCConversation *conversaiton = (IRCConversation*)instanceValue;
+        return conversaiton.configuration.uniqueIdentifier;
+    } else if ([instanceValue isKindOfClass:IRCUser.class]) {
+        IRCUser *user = (IRCUser *)instanceValue;
+        return user.fullhostmask;
+    }
+
+    return instanceValue;
+}
+
+- (id)unserializedRepresentationOfDatabaseValue:(id)databaseValue forPropertyNamed:(NSString *)propertyName
+{
+//    [super unserializedRepresentationOfDatabaseValue:databaseValue forPropertyNamed:propertyName];
+    
+    if ([propertyName isEqualToString:@"client"]) {
+        NSDictionary *prefs = [[AppPreferences sharedPrefs] preferences];
+        NSArray *connections = prefs[@"configurations"];
+        for (NSDictionary *dict in connections) {
+            if ([dict[@"uniqueIdentifier"] isEqualToString:databaseValue]) {
+                IRCConnectionConfiguration *config = [[IRCConnectionConfiguration alloc] initWithDictionary:dict];
+                return [[IRCClient alloc] initWithConfiguration:config];
+            }
+        }
+        
+    }
+    
+    if ([propertyName isEqualToString:@"conversation"]) {
+        NSDictionary *prefs = [[AppPreferences sharedPrefs] preferences];
+        NSArray *connections = prefs[@"configurations"];
+        for (NSDictionary *dict in connections) {
+            for (NSDictionary *channel in dict[@"channels"]) {
+                if ([channel[@"uniqueIdentifier"] isEqualToString:databaseValue]) {
+//                    IRCConnectionConfiguration *connection = [[IRCConnectionConfiguration alloc] initWithDictionary:dict];
+//                    IRCClient *client = [[IRCClient alloc] initWithConfiguration:connection];
+                    IRCChannelConfiguration *config = [[IRCChannelConfiguration alloc] initWithDictionary:channel];
+                    return [[IRCChannel alloc] initWithConfiguration:config withClient:self.client];
+                }
+                
+            }
+            for (NSDictionary *query in dict[@"queries"]) {
+                if ([query[@"uniqueIdentifier"] isEqualToString:databaseValue]) {
+//                    IRCConnectionConfiguration *connection = [[IRCConnectionConfiguration alloc] initWithDictionary:dict];
+//                    IRCClient *client = [[IRCClient alloc] initWithConfiguration:connection];
+                    IRCChannelConfiguration *config = [[IRCChannelConfiguration alloc] initWithDictionary:query];
+                    return [[IRCConversation alloc] initWithConfiguration:config withClient:self.client];
+                }
+            }
+
+        }
+    }
+    
+    if ([propertyName isEqualToString:@"sender"]) {
+        NSString *fullhost = (NSString *)databaseValue;
+        if (fullhost.length) {
+            NSArray *components = [fullhost componentsSeparatedByString:@"@"];
+            NSString *nick = [components[0] componentsSeparatedByString:@"!"][0];
+            NSString *user = [components[0] componentsSeparatedByString:@"!"][0];
+            NSString *host = components[1];
+            return [[IRCUser alloc] initWithNickname:nick andUsername:user andHostname:host andRealname:@"" onClient:self.client];
+        }
+    }
+
+    if ([propertyName isEqualToString:@"timestamp"]) {
+        return [NSDate dateWithTimeIntervalSince1970:[databaseValue doubleValue]];
+    }
+    
+    return databaseValue;
 }
 
 @end

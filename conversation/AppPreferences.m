@@ -280,7 +280,7 @@
     self.preferences = [dict copy];
 }
 
-- (void)save
+- (void)savePrefs
 {
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     [userDefault setObject:self.preferences forKey:@"preferences"];

@@ -61,7 +61,7 @@
 - (void)setLastConversation:(NSString *)identifier;
 - (void)deleteLastConversation;
 
-- (void)save;
+- (void)savePrefs;
 
 @property (nonatomic, retain) NSDictionary *preferences;
 

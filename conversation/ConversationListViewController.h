@@ -56,6 +56,7 @@
 - (void)setAway;
 - (void)setBack;
 - (void)disconnect;
+- (void)saveHistoricMessages;
 
 @end
 

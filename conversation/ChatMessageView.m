@@ -335,6 +335,10 @@ uint32_t FNV32(const char *s)
 - (NSArray *)getMentions:(NSString *)string
 {
     IRCChannel *channel = (IRCChannel*)_conversation;
+
+    if (!channel.users.count)
+        return nil;
+    
     NSMutableArray *ranges = [[NSMutableArray alloc] init];
     NSCharacterSet *wordBoundries = [[NSCharacterSet letterCharacterSet] invertedSet];
     NSError *error = NULL;

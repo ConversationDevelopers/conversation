@@ -125,11 +125,16 @@
             }
         }
     }
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageReceived:) name:@"messageReceived" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateClientState:) name:@"clientDidConnect" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateClientState:) name:@"clientDidDisconnect" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clientWillConnect:) name:@"clientWillConnect" object:nil];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self loadHistoricMessages];
+    });
+    
     _backgroundTask = UIBackgroundTaskInvalid;
 
     [self.navigationController SH_setAnimationDuration:0.5 withPreparedTransitionBlock:^(UIView *containerView, UIViewController *fromVC, UIViewController *toVC, NSTimeInterval duration, id<SHViewControllerAnimatedTransitioning> transitionObject, SHTransitionAnimationCompletionBlock transitionDidComplete) {
@@ -224,7 +229,7 @@
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         //[self.navigationController performSegueWithIdentifier:@"modal" sender:nil];
     });
-    
+
 }
 
 - (void)viewDidUnload
@@ -792,7 +797,7 @@
     client.configuration = config;
     
     [self.tableView reloadData];
-    [[AppPreferences sharedPrefs] save];
+    [[AppPreferences sharedPrefs] savePrefs];
     
 }
 
@@ -849,7 +854,7 @@
         [self.tableView reloadData];
     
     [[AppPreferences sharedPrefs] addChannelConfiguration:configuration forConnectionConfiguration:client.configuration];
-    [[AppPreferences sharedPrefs] save];
+    [[AppPreferences sharedPrefs] savePrefs];
     return channel;
 }
 
@@ -871,7 +876,7 @@
         [self.tableView reloadData];
     
     [[AppPreferences sharedPrefs] addQueryConfiguration:configuration forConnectionConfiguration:client.configuration];
-    [[AppPreferences sharedPrefs] save];
+    [[AppPreferences sharedPrefs] savePrefs];
 
     return query;
 }
@@ -895,7 +900,7 @@
         [_connections setObject:client atIndexedSubscript:i];
         i++;
     }
-    [[AppPreferences sharedPrefs] save];
+    [[AppPreferences sharedPrefs] savePrefs];
     
     if ([_currentConversation.configuration.uniqueIdentifier isEqualToString:identifier])
         [self.navigationController popToRootViewControllerAnimated:YES];
@@ -965,13 +970,17 @@
         [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, message.sender.nick.length+1)];
     }
     
+    if (message.isConversationHistory) {
+        [self.tableView reloadData];
+        return;
+    }
+    
     [message.conversation addPreviewMessage:string];
     
     // Dont set highlight if source conversation is currently visible
-    if ([message.conversation isEqual:_currentConversation] == NO) {
+    if ([message.conversation.configuration isEqual:_currentConversation] == NO) {
         
-        // Private Message
-        if ([message.conversation isKindOfClass:[IRCChannel class]] == NO) {
+        if ([NSStringFromClass(message.conversation.class) isEqualToString:@"IRCChannel"]) {
             message.conversation.unreadCount++;
             if (message.conversation.isHighlighted == NO) {
                 message.conversation.isHighlighted = YES;
@@ -1227,4 +1236,61 @@
     
     [[UIApplication sharedApplication] presentLocalNotificationNow:localNotif];
 }
+
+- (void)loadHistoricMessages
+{
+    
+    NSMutableArray *messages = [[IRCMessage instancesOrderedBy:@"timestamp"] mutableCopy];
+    if (messages.count > 50) {
+        [messages removeObjectsInRange:NSMakeRange(50, messages.count-1)];
+    }
+    for (IRCMessage *message in messages) {
+        for (IRCClient *client in _connections) {
+            for (IRCChannel *channel in client.channels) {
+                if ([channel.configuration.uniqueIdentifier isEqualToString:message.conversation.configuration.uniqueIdentifier]) {
+                    message.conversation = channel;
+                    break;
+                }
+            }
+            for (IRCConversation *query in client.queries) {
+                if ([query.configuration.uniqueIdentifier isEqualToString:message.conversation.configuration.uniqueIdentifier]) {
+                    message.conversation = query;
+                    break;
+                }
+            }
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+    }
+
+}
+
+- (void)saveHistoricMessages
+{
+    
+    for (IRCClient *client in _connections) {
+        for (IRCChannel *conversation in client.channels) {
+            for (UIView *view in conversation.contentView.subviews) {
+                if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
+                    ChatMessageView *messageView = (ChatMessageView *)view;
+                    IRCMessage *message = messageView.message;
+                    message.isConversationHistory = YES;
+                    message.conversation.contentView = nil;
+                    [message save];
+                }
+            }
+        }
+        for (IRCConversation *conversation in client.queries) {
+            for (UIView *view in conversation.contentView.subviews) {
+                if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
+                    ChatMessageView *messageView = (ChatMessageView *)view;
+                    IRCMessage *message = messageView.message;
+                    message.isConversationHistory = YES;
+                    message.conversation.contentView = nil;
+                    [message save];
+                }
+            }
+        }
+    }
+}
+
 @end

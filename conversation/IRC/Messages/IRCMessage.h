@@ -31,11 +31,13 @@
 #import <Foundation/Foundation.h>
 #import "IRCConversation.h"
 #import "IRCChannel.h"
+#import <FCModel/FCModel.h>
 
 @class IRCUser;
 
-@interface IRCMessage : NSObject <NSCopying>
+@interface IRCMessage : FCModel <NSCopying>
 
+@property (nonatomic) int64_t id;
 @property (nonatomic) IRCClient *client;
 @property (nonatomic) IRCUser *sender;
 @property (nonatomic) NSString *message;
@@ -70,5 +72,8 @@ typedef NS_ENUM(NSUInteger, EventType) {
     ET_WHOIS,
     ET_WHOISEND
 };
+
+- (id)serializedDatabaseRepresentationOfValue:(id)instanceValue forPropertyNamed:(NSString *)propertyName;
+- (id)unserializedRepresentationOfDatabaseValue:(id)databaseValue forPropertyNamed:(NSString *)propertyName;
 
 @end

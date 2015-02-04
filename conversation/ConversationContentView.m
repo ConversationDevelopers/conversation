@@ -35,7 +35,6 @@
 
 - (void)addMessageView:(ChatMessageView *)messageView
 {
-    
     if(!_posY)
         _posY = 5.0;
     

@@ -162,7 +162,7 @@ static unsigned short EncodingTableSection = 4;
     }
     
     [self.conversationsController.tableView reloadData];
-    [[AppPreferences sharedPrefs] save];
+    [[AppPreferences sharedPrefs] savePrefs];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

@@ -31,6 +31,8 @@
 #import "AppDelegate.h"
 #import "ChatViewController.h"
 #import "AppPreferences.h"
+#import "ChatMessageView.h"
+#import <FCModel/FCModel.h>
 
 @interface AppDelegate () <UISplitViewControllerDelegate>
 
@@ -101,6 +103,47 @@
     
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     
+    
+    // Database stuff
+
+    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    _dbPath = [documentsPath stringByAppendingPathComponent:@"messages.sqlite3"];
+    
+    [FCModel openDatabaseAtPath:_dbPath withSchemaBuilder:^(FMDatabase *db, int *schemaVersion) {
+        [db beginTransaction];
+        
+        // My custom failure handling. Yours may vary.
+        void (^failedAt)(int statement) = ^(int statement){
+            int lastErrorCode = db.lastErrorCode;
+            NSString *lastErrorMessage = db.lastErrorMessage;
+            [db rollback];
+            NSAssert3(0, @"Migration statement %d failed, code %d: %@", statement, lastErrorCode, lastErrorMessage);
+        };
+        
+        if (*schemaVersion < 1) {
+            if (! [db executeUpdate:
+                   @"CREATE TABLE IRCMessage ("
+                   @"    id                     INTEGER PRIMARY KEY,"
+                   @"    client                 TEXT NOT NULL DEFAULT '',"
+                   @"    sender                 TEXT NOT NULL DEFAULT '',"
+                   @"    message                TEXT NOT NULL DEFAULT '',"
+                   @"    timestamp              REAL NOT NULL,"
+                   @"    conversation           TEXT NOT NULL,"
+                   @"    messageType            INTEGER NOT NULL DEFAULT 0,"
+                   @"    tags                   TEXT NOT NULL DEFAULT '',"
+                   @"    isServerMessage        NUMERIC NOT NULL DEFAULT 0,"
+                   @"    isConversationHistory  NUMERIC NOT NULL DEFAULT 1"
+                   @");"
+                   ]) failedAt(1);
+            
+//            if (! [db executeUpdate:@"CREATE INDEX IF NOT EXISTS name ON IRCMessage (name);"]) failedAt(2);
+            
+            *schemaVersion = 1;
+        }
+        
+        [db commit];
+    }];
+    
     return YES;
 }
 
@@ -147,7 +190,9 @@
         [[AppPreferences sharedPrefs] deleteLastConversation];
     
     _conversationsController.currentConversation = nil;
-    [[AppPreferences sharedPrefs] save];
+    [[AppPreferences sharedPrefs] savePrefs];
+    
+    [_conversationsController saveHistoricMessages];    
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -166,6 +211,8 @@
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:
     [_conversationsController disconnect];
+    
+    [_conversationsController saveHistoricMessages];
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
@@ -241,7 +288,7 @@
     }
     
     [self.conversationsController.tableView reloadData];
-    [[AppPreferences sharedPrefs] save];
+    [[AppPreferences sharedPrefs] savePrefs];
     
     /* Connect automatically if this is a new or disconnected connection */
     if ([client isConnected] == NO) {
@@ -249,6 +296,7 @@
     }
     return YES;
 }
+
 
 #pragma mark - Split view
 
