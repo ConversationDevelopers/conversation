@@ -517,6 +517,7 @@
                         IRCUser *user = [IRCUser fromNickname:nickname onChannel:channel];
                         if (user != nil) {
                             [user setPrivilegeMode:modes granted:isGrantedMode];
+                            [channel sortUserlist];                            
                         }
                     }
                     componentIndex++;
