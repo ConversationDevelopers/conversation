@@ -65,11 +65,6 @@
 		FAC0E50C1A018AC2001CFB48 /* CertificateItemRow.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC0E50B1A018AC2001CFB48 /* CertificateItemRow.m */; };
 		FAC1679119F84268009856F0 /* IRCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC1679019F84268009856F0 /* IRCMessage.m */; };
 		FACFC1911A02BD6E0012CED9 /* znc-buffextras.m in Sources */ = {isa = PBXBuildFile; fileRef = FACFC1901A02BD6E0012CED9 /* znc-buffextras.m */; };
-		FAD7CFF11A7BEEFB00F6B203 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD7CFF01A7BEEFB00F6B203 /* CoreData.framework */; };
-		FAD7CFF41A7BF0B500F6B203 /* HistoryModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FAD7CFF21A7BF0B500F6B203 /* HistoryModel.xcdatamodeld */; };
-		FAD7CFF81A7BF49400F6B203 /* Sender.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD7CFF71A7BF49400F6B203 /* Sender.m */; };
-		FAD7CFFB1A7BF49500F6B203 /* Conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD7CFFA1A7BF49500F6B203 /* Conversation.m */; };
-		FAD7CFFE1A7BF49500F6B203 /* HistoryMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD7CFFD1A7BF49500F6B203 /* HistoryMessage.m */; };
 		FADD2E6819F9BC86004B86AE /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = FADD2E6619F9BC86004B86AE /* GCDAsyncSocket.m */; };
 		FAEE1E6019EBEA040041439F /* Messages.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEE1E5F19EBEA040041439F /* Messages.m */; };
 		FAEE1E6319EBFBA20041439F /* IRCConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEE1E6219EBFBA20041439F /* IRCConversation.m */; };
@@ -275,14 +270,6 @@
 		FAC1679019F84268009856F0 /* IRCMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IRCMessage.m; path = Messages/IRCMessage.m; sourceTree = "<group>"; };
 		FACFC18F1A02BD6E0012CED9 /* znc-buffextras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "znc-buffextras.h"; sourceTree = "<group>"; };
 		FACFC1901A02BD6E0012CED9 /* znc-buffextras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "znc-buffextras.m"; sourceTree = "<group>"; };
-		FAD7CFF01A7BEEFB00F6B203 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		FAD7CFF31A7BF0B500F6B203 /* HistoryModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HistoryModel.xcdatamodel; sourceTree = "<group>"; };
-		FAD7CFF61A7BF49400F6B203 /* Sender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sender.h; path = Managed/Sender.h; sourceTree = "<group>"; };
-		FAD7CFF71A7BF49400F6B203 /* Sender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Sender.m; path = Managed/Sender.m; sourceTree = "<group>"; };
-		FAD7CFF91A7BF49500F6B203 /* Conversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Conversation.h; path = Managed/Conversation.h; sourceTree = "<group>"; };
-		FAD7CFFA1A7BF49500F6B203 /* Conversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Conversation.m; path = Managed/Conversation.m; sourceTree = "<group>"; };
-		FAD7CFFC1A7BF49500F6B203 /* HistoryMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HistoryMessage.h; path = Managed/HistoryMessage.h; sourceTree = "<group>"; };
-		FAD7CFFD1A7BF49500F6B203 /* HistoryMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HistoryMessage.m; path = Managed/HistoryMessage.m; sourceTree = "<group>"; };
 		FADD2E6619F9BC86004B86AE /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
 		FADD2E6719F9BC86004B86AE /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
 		FAEE1E5E19EBEA040041439F /* Messages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Messages.h; sourceTree = "<group>"; };
@@ -298,7 +285,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAD7CFF11A7BEEFB00F6B203 /* CoreData.framework in Frameworks */,
 				FAC0E4B31A0073C4001CFB48 /* libcrypto.a in Frameworks */,
 				DA1A4AF019E181C400565763 /* CFNetwork.framework in Frameworks */,
 				FAC0E4B41A0073C4001CFB48 /* libssl.a in Frameworks */,
@@ -331,7 +317,6 @@
 		61A17986DD1BE8C1197DA32E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FAD7CFF01A7BEEFB00F6B203 /* CoreData.framework */,
 				DA7B68A31A02BEE100D82B4C /* libPods-conversation-PHFComposeBarView.a */,
 				DA7B68A11A02BE6900D82B4C /* libPods-conversation-DLImageLoader.a */,
 				DA7B689F1A02BE0100D82B4C /* libPods-conversation-DLImageLoader.a */,
@@ -344,7 +329,6 @@
 		DA1A4AAE19E1770700565763 = {
 			isa = PBXGroup;
 			children = (
-				FAD7CFF21A7BF0B500F6B203 /* HistoryModel.xcdatamodeld */,
 				DA1A4AEF19E181C400565763 /* CFNetwork.framework */,
 				DA1A4AB919E1770700565763 /* conversation */,
 				DA1A4AD619E1770700565763 /* conversationTests */,
@@ -366,7 +350,6 @@
 		DA1A4AB919E1770700565763 /* conversation */ = {
 			isa = PBXGroup;
 			children = (
-				FAD7CFF51A7BF46500F6B203 /* Managed */,
 				FA109B2519E3E6D60068DC29 /* IRC */,
 				DA79EA2D19E923870027A370 /* Helpers */,
 				FAC0E4631A0072EF001CFB48 /* include */,
@@ -653,19 +636,6 @@
 			name = Messages;
 			sourceTree = "<group>";
 		};
-		FAD7CFF51A7BF46500F6B203 /* Managed */ = {
-			isa = PBXGroup;
-			children = (
-				FAD7CFFC1A7BF49500F6B203 /* HistoryMessage.h */,
-				FAD7CFFD1A7BF49500F6B203 /* HistoryMessage.m */,
-				FAD7CFF91A7BF49500F6B203 /* Conversation.h */,
-				FAD7CFFA1A7BF49500F6B203 /* Conversation.m */,
-				FAD7CFF61A7BF49400F6B203 /* Sender.h */,
-				FAD7CFF71A7BF49400F6B203 /* Sender.m */,
-			);
-			name = Managed;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -796,11 +766,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA7B68801A01504100D82B4C /* CertificateInfoViewController.m in Sources */,
-				FAD7CFF81A7BF49400F6B203 /* Sender.m in Sources */,
 				FA109B2B19E3E6D60068DC29 /* IRCConnection.m in Sources */,
 				DA1A4AC019E1770700565763 /* AppDelegate.m in Sources */,
 				FA00A39C19E6AD1200E7B4D7 /* NSString+Methods.m in Sources */,
-				FAD7CFF41A7BF0B500F6B203 /* HistoryModel.xcdatamodeld in Sources */,
 				DADA8AC61A0D3AC20085A130 /* ChannelInfoViewController.m in Sources */,
 				FA00A39319E5DD3D00E7B4D7 /* SSKeychainQuery.m in Sources */,
 				DA79EA2619E909CD0027A370 /* AddConversationViewController.m in Sources */,
@@ -816,7 +784,6 @@
 				DA9938271A8085F5001C452C /* ChannelListViewController.m in Sources */,
 				DAE830591A0F47E10022F512 /* DisclosureView.m in Sources */,
 				FA109B3719E419040068DC29 /* IRCConnectionConfiguration.m in Sources */,
-				FAD7CFFB1A7BF49500F6B203 /* Conversation.m in Sources */,
 				DA79EA2C19E9237A0027A370 /* UITableView+Methods.m in Sources */,
 				DA79EA3019E92AF20027A370 /* PreferencesListViewController.m in Sources */,
 				DA379D4719FB35E80031E30B /* ChatViewController.m in Sources */,
@@ -846,7 +813,6 @@
 				FA36D2FA1A0446BD00AEDB20 /* InputCommands.m in Sources */,
 				FA00A39219E5DD3D00E7B4D7 /* SSKeychain.m in Sources */,
 				DA7B68771A00A43500D82B4C /* LinkTapView.m in Sources */,
-				FAD7CFFE1A7BF49500F6B203 /* HistoryMessage.m in Sources */,
 				DA6F61DA19FD1B2800F22F78 /* UserListView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1146,19 +1112,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		FAD7CFF21A7BF0B500F6B203 /* HistoryModel.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				FAD7CFF31A7BF0B500F6B203 /* HistoryModel.xcdatamodel */,
-			);
-			currentVersion = FAD7CFF31A7BF0B500F6B203 /* HistoryModel.xcdatamodel */;
-			path = HistoryModel.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = DA1A4AAF19E1770700565763 /* Project object */;
 }
