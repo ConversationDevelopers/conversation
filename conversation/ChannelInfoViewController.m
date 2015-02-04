@@ -164,6 +164,7 @@ static unsigned short ModesTableSection = 1;
         
         textView.font = [UIFont systemFontOfSize:16.0];
         textView.contentInset = UIEdgeInsetsZero;
+        textView.returnKeyType = UIReturnKeyDone;
         
         if (_channel.topic != nil)
             textView.text = _channel.topic;
@@ -228,6 +229,12 @@ static unsigned short ModesTableSection = 1;
 }
 
 - (BOOL) textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+
+    if ([text isEqualToString:@"\n"]) {
+        [textView resignFirstResponder];
+        return NO;
+    }
+    
     _topic = textView.text;
     return YES;
 }
@@ -339,4 +346,5 @@ static unsigned short ModesTableSection = 1;
         _limit = @"";
     }
 }
+
 @end
