@@ -186,21 +186,21 @@ BOOL _isAwaitingWhoisResponse;
             
             NSDate *date = [NSDate date];
             if (_infoDict[@"idle"][1])
-                date = [NSDate dateWithTimeIntervalSince1970:[_infoDict[@"idle"][1] integerValue]];
+                date = [NSDate dateWithTimeIntervalSince1970:[_infoDict[@"idle"][1] longLongValue]];
             
-            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-            [dateFormatter setDateFormat:@"HH:MM:SS"];
-            [dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
-            NSString *dte = [dateFormatter stringFromDate:date];
-            cell.textField.text = dte;
+            NSDateFormatter *dateFormatter = [NSDateFormatter new];
+            dateFormatter.timeZone = [NSTimeZone localTimeZone];
+            dateFormatter.dateFormat = @"dd MMM yyyy HH:mm:ss zzz";
+            cell.textField.text = [dateFormatter stringFromDate:date];
             
         } else {
             cell.textLabel.text = NSLocalizedString(@"Idle", @"Idle");
-            NSDate *date = [NSDate date];
+            double seconds = 0.0;
                 if (_infoDict[@"idle"][0])
-                    date = [NSDate dateWithTimeIntervalSinceNow:[_infoDict[@"idle"][0] doubleValue]];
+                    seconds = [_infoDict[@"idle"][0] longLongValue];
             
-            cell.textField.text = [NSString stringWithFormat:@"%.f seconds", [date timeIntervalSinceDate:_refDate]];
+            NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:_refDate];
+            cell.textField.text = [NSString stringWithFormat:@"%.f seconds", seconds + interval];
         }
     }
 
@@ -272,6 +272,7 @@ BOOL _isAwaitingWhoisResponse;
 - (void)refresh:(id)sender
 {
     _isAwaitingWhoisResponse = YES;
+    _refDate = [NSDate date];
     [_client.connection send:[NSString stringWithFormat:@"WHOIS %@", _nickname]];
 }
 
