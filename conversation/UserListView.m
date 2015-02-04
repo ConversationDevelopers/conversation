@@ -33,6 +33,8 @@
 #import "UITableView+Methods.m"
 #import "IRCUser.h"
 #import "UserListItemCell.h"
+#import "UserInfoViewController.h"
+#import <UIActionSheet+Blocks/UIActionSheet+Blocks.h>
 
 @interface UserListView ()
 @property (nonatomic) ILTranslucentView *translucentView;
@@ -94,12 +96,44 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self removeFromSuperview];
-    [tableView deselectRowAtIndexPath:indexPath animated:NO];    
-    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
-    IRCConversation *conversation = [controller createConversationWithName:[_channel.users[indexPath.row] nick] onClient:_channel.client];
-    [controller.tableView reloadData];
-    [controller.navigationController popToRootViewControllerAnimated:YES];
-    [controller selectConversationWithIdentifier:conversation.configuration.uniqueIdentifier];
+    
+    IRCUser *user = _channel.users[indexPath.row];
+    
+    __block ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    
+    [UIActionSheet showInView:self.tableview
+                    withTitle:user.nick
+            cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+       destructiveButtonTitle:nil
+            otherButtonTitles:@[NSLocalizedString(@"Private Message (Query)", @"Query"),
+                                NSLocalizedString(@"Get Info (Whois)", @"Whois"),
+                                NSLocalizedString(@"Ignore", @"Ignore")]
+     
+                     tapBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex) {
+                         switch (buttonIndex) {
+                             case 0: {
+                                 IRCConversation *conversation = [controller createConversationWithName:[_channel.users[indexPath.row] nick] onClient:_channel.client];
+                                 [controller.tableView reloadData];
+                                 [controller.navigationController popToRootViewControllerAnimated:YES];
+                                 [controller selectConversationWithIdentifier:conversation.configuration.uniqueIdentifier];
+                                 break;
+                             }
+                             case 1: {
+                                 UserInfoViewController *infoViewController = [[UserInfoViewController alloc] init];
+                                 infoViewController.nickname = user.nick;
+                                 infoViewController.client = _channel.client;
+                                 UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:infoViewController];
+                                 navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+                                 [controller.navigationController presentViewController:navigationController animated:YES completion:nil];
+                                 break;
+                             }
+                             case 2:
+                                 [InputCommands performCommand:[NSString stringWithFormat:@"IGNORE %@", user.nick] inConversation:_channel];
+                                 break;
+                             default:
+                                 break;
+                         }
+                     }];
 }
 
 @end
