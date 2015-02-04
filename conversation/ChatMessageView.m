@@ -43,7 +43,7 @@
 #define FNV_PRIME_32 16777619
 #define FNV_OFFSET_32 2166136261U
 
-#define hasHighlight() ([_message.message.lowercaseString rangeOfString:_conversation.client.currentUserOnConnection.nick.lowercaseString].location != NSNotFound)
+#define hasHighlight() (_conversation.client.currentUserOnConnection && [_message.message.lowercaseString rangeOfString:_conversation.client.currentUserOnConnection.nick.lowercaseString].location != NSNotFound)
 
 @implementation ChatMessageView
 
