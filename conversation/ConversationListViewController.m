@@ -58,6 +58,8 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <MCNotificationManager/MCNotificationManager.h>
 
+#define IPAD UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
+
 @implementation ConversationListViewController
 
 - (id)init
@@ -1267,6 +1269,10 @@
     NSMutableArray *messages = [[NSMutableArray alloc] init];
     NSMutableArray *allMessages = [[NSMutableArray alloc] init];
     
+    int limit = 50;
+    if (IPAD)
+        limit = 100;
+    
     int i=0;
     for (IRCClient *client in _connections) {
         for (IRCChannel *conversation in client.channels) {
@@ -1282,8 +1288,8 @@
                     i++;
                 }
             }
-            if ((int)messages.count > 50)
-                [messages removeObjectsInRange:NSMakeRange(0, (int)messages.count-50)];
+            if ((int)messages.count > limit)
+                [messages removeObjectsInRange:NSMakeRange(0, (int)messages.count-limit)];
             
             [allMessages addObjectsFromArray:messages];
         }
@@ -1300,8 +1306,8 @@
                     i++;
                 }
             }
-            if ((int)messages.count > 50)
-                [messages removeObjectsInRange:NSMakeRange(0, (int)messages.count-50)];
+            if ((int)messages.count > limit)
+                [messages removeObjectsInRange:NSMakeRange(0, (int)messages.count-limit)];
             
             [allMessages addObjectsFromArray:messages];
         }
