@@ -1241,9 +1241,6 @@
 {
     
     NSMutableArray *messages = [[IRCMessage instancesOrderedBy:@"timestamp"] mutableCopy];
-    if (messages.count > 50) {
-        [messages removeObjectsInRange:NSMakeRange(50, messages.count-1)];
-    }
     for (IRCMessage *message in messages) {
         for (IRCClient *client in _connections) {
             for (IRCChannel *channel in client.channels) {
@@ -1267,29 +1264,52 @@
 - (void)saveHistoricMessages
 {
     
+    NSMutableArray *messages = [[NSMutableArray alloc] init];
+    NSMutableArray *allMessages = [[NSMutableArray alloc] init];
+    
+    int i=0;
     for (IRCClient *client in _connections) {
         for (IRCChannel *conversation in client.channels) {
+            i=0;
+            [messages removeAllObjects];
             for (UIView *view in conversation.contentView.subviews) {
                 if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
                     ChatMessageView *messageView = (ChatMessageView *)view;
                     IRCMessage *message = messageView.message;
                     message.isConversationHistory = YES;
                     message.conversation.contentView = nil;
-                    [message save];
+                    [messages addObject:message];
+                    i++;
                 }
             }
+            if ((int)messages.count > 50)
+                [messages removeObjectsInRange:NSMakeRange(0, (int)messages.count-50)];
+            
+            [allMessages addObjectsFromArray:messages];
         }
         for (IRCConversation *conversation in client.queries) {
+            i=0;
+            [messages removeAllObjects];
             for (UIView *view in conversation.contentView.subviews) {
                 if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
                     ChatMessageView *messageView = (ChatMessageView *)view;
                     IRCMessage *message = messageView.message;
                     message.isConversationHistory = YES;
                     message.conversation.contentView = nil;
-                    [message save];
+                    [messages addObject:message];
+                    i++;
                 }
             }
+            if ((int)messages.count > 50)
+                [messages removeObjectsInRange:NSMakeRange(0, (int)messages.count-50)];
+            
+            [allMessages addObjectsFromArray:messages];
         }
+        
+    }
+    
+    for (IRCMessage *message in allMessages) {
+        [message save];
     }
 }
 
