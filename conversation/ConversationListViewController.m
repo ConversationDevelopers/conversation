@@ -980,9 +980,9 @@
     [message.conversation addPreviewMessage:string];
     
     // Dont set highlight if source conversation is currently visible
-    if ([message.conversation.configuration isEqual:_currentConversation] == NO) {
+    if ([message.conversation isEqual:_currentConversation] == NO) {
         
-        if ([NSStringFromClass(message.conversation.class) isEqualToString:@"IRCChannel"]) {
+        if ([message.conversation isKindOfClass:IRCChannel.class] == NO) {
             message.conversation.unreadCount++;
             if (message.conversation.isHighlighted == NO) {
                 message.conversation.isHighlighted = YES;
