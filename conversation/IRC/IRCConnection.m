@@ -178,19 +178,52 @@
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)socket withError:(NSError *)err
 {
-    if (err == nil) return;
+    if (err == nil || [err code] == errSSLClosedGraceful) {
+        [self.client clientDidDisconnect];
+    }
     
     NSString *errorMessage = nil;
+    if ([self badSSLCertificateErrorFound:err]) {
+        errorMessage = @"Disconnected from server because of an untrusted SSL certificate";
+    } else {
+        
+    }
+    
     if ([err.domain isEqualToString:NSPOSIXErrorDomain]) {
         const char *error = strerror((int)err.domain);
         errorMessage = [NSString stringWithCString:error encoding:NSUTF8StringEncoding];
     } else {
         errorMessage = [err.userInfo objectForKey:@"NSLocalizedDescription"];
         if (errorMessage == nil) {
-            errorMessage = [err localizedFailureReason];
+            errorMessage = [err localizedDescription];
         }
     }
     [self.client clientDidDisconnectWithError:errorMessage];
+}
+
+- (BOOL)badSSLCertificateErrorFound:(NSError *)error
+{
+    if ([error.domain isEqualToString:@"kCFStreamErrorDomainSSL"]) {
+        NSArray *errorCodes = @[
+                                @(errSSLBadCert),
+                                @(errSSLNoRootCert),
+                                @(errSSLCertExpired),
+                                @(errSSLPeerBadCert),
+                                @(errSSLPeerCertRevoked),
+                                @(errSSLPeerCertExpired),
+                                @(errSSLPeerCertUnknown),
+                                @(errSSLUnknownRootCert),
+                                @(errSSLCertNotYetValid),
+                                @(errSSLXCertChainInvalid),
+                                @(errSSLPeerUnsupportedCert),
+                                @(errSSLPeerUnknownCA),
+                                @(errSSLHostNameMismatch
+                                )];
+        
+        return [errorCodes containsObject:@([error code])];
+    }
+    
+    return NO;
 }
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock
