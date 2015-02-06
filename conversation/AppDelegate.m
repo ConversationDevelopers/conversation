@@ -32,11 +32,8 @@
 #import "ChatViewController.h"
 #import "AppPreferences.h"
 #import "ChatMessageView.h"
+#import "IRCConnection.h"
 #import <FCModel/FCModel.h>
-
-@interface AppDelegate () <UISplitViewControllerDelegate>
-
-@end
 
 @implementation AppDelegate
 
@@ -73,7 +70,8 @@
 
     // Load default defaults
     [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"]]];
-
+    
+    
     // other setup tasks here....
     UIUserNotificationType types = UIUserNotificationTypeBadge |
     UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
@@ -86,8 +84,9 @@
         [application registerForRemoteNotifications];
     } else {
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
-        (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+         (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     }
+
     
     UILocalNotification *notify;
     notify = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
@@ -107,9 +106,9 @@
     // Database stuff
 
     NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    _dbPath = [documentsPath stringByAppendingPathComponent:@"messages.sqlite3"];
+    NSString *dbPath = [documentsPath stringByAppendingPathComponent:@"messages.sqlite3"];
     
-    [FCModel openDatabaseAtPath:_dbPath withSchemaBuilder:^(FMDatabase *db, int *schemaVersion) {
+    [FCModel openDatabaseAtPath:dbPath withSchemaBuilder:^(FMDatabase *db, int *schemaVersion) {
         [db beginTransaction];
         
         // My custom failure handling. Yours may vary.
@@ -147,9 +146,13 @@
     return YES;
 }
 
+
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken
 {
-    NSLog(@"DEVICE TOKEN: %@", devToken);
+    const unsigned *tokenData = devToken.bytes;
+    
+    _tokenString = [NSString stringWithFormat:@"%08x%08x%08x%08x%08x%08x%08x%08x", ntohl(tokenData[0]), ntohl(tokenData[1]), ntohl(tokenData[2]), ntohl(tokenData[3]), ntohl(tokenData[4]), ntohl(tokenData[5]), ntohl(tokenData[6]), ntohl(tokenData[7])];
+    
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err

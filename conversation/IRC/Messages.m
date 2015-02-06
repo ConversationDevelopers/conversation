@@ -77,6 +77,7 @@
     /* Our password has bene accepted by SASL and we can end the authentication process and continue registration */
     message.client.isAwaitingAuthenticationResponse = NO;
     [message.client.connection send:@"CAP END"];
+
 }
 
 + (void)clientreceivedAuthenticationAborted:(IRCMessage *)message

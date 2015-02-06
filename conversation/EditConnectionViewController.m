@@ -580,6 +580,13 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             cell.textLabel.text = NSLocalizedString(@"Show Console", @"Show debug console on connect");
             return cell;
         } else if (indexPath.row == 2) {
+            PreferencesSwitchCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesSwitchCell class])];
+            if(_configuration.pushEnabled)
+                cell.on = YES;
+            cell.switchAction = @selector(pushChanged:);
+            cell.textLabel.text = NSLocalizedString(@"Push Notifications", @"Push Notifications");
+            return cell;
+        } else if (indexPath.row == 3) {
             UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];
             cell.textLabel.text = NSLocalizedString(@"Join Channels", @"Title of auto join channels view");
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -595,7 +602,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
                 cell.detailTextLabel.text = NSLocalizedString(@"None", @"No entries");
             }
             return cell;
-        } else if (indexPath.row == 3) {
+        } else if (indexPath.row == 4) {
             UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];
             cell.textLabel.text = NSLocalizedString(@"Connect Commands", @"Connect Commands");
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -813,6 +820,11 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 - (void) autoconnectChanged:(PreferencesSwitchCell *)sender
 {
     _configuration.automaticallyConnect = sender.on;
+}
+
+- (void) pushChanged:(PreferencesSwitchCell *)sender
+{
+    _configuration.pushEnabled = sender.on;
 }
 
 - (void) showconsoleChanged:(PreferencesSwitchCell *)sender

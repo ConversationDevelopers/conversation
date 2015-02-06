@@ -40,7 +40,7 @@
 @property (nonatomic) ConversationListViewController *conversationsController;
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic) IRCCharacterSets *ircCharacterSets;
-@property (nonatomic) NSString *dbPath;
+@property (nonatomic) NSString *tokenString;
 
 @end
 

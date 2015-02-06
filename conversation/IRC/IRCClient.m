@@ -355,13 +355,24 @@
             
         case RPL_WELCOME:
             self.isAttemptingRegistration = NO;
-            
+
             /* The user might have some queries open from last time. Check if any of these users
              are currently online, and update their list items */
             [self validateQueryStatusOnAllItems];
             
             /* At this point we will enable the flood control. */
             [self.connection enableFloodControl];
+            
+            /* Register For Push Notifications */
+            if (self.configuration.pushEnabled) {
+                AppDelegate *appDelegate = ((AppDelegate *)[UIApplication sharedApplication].delegate);
+                if (appDelegate.tokenString)
+                    [self.connection send:[NSString stringWithFormat:@"CONVERSATION add-device %@ 127.0.0.1 8080 :%@",
+                                           appDelegate.tokenString,
+                                           self.configuration.connectionName]];
+
+                
+            }
             
             /* This server supports the ZNC advanced playback module. We will request all messages since the
              last time we received a message. Or from the start of the ZNC logs if we don't have a time on record. */
