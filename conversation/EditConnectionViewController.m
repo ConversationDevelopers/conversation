@@ -205,7 +205,7 @@ static unsigned short EncodingTableSection = 4;
      
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
     if (section == ServerTableSection)
-        return 5;
+        return 6;
     if (section == IdentityTableSection)
         return 5;
     if (section == AutomaticTableSection)
@@ -467,6 +467,13 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             cell.switchControl.on = _configuration.connectUsingSecureLayer;
             cell.textLabel.text = NSLocalizedString(@"Use SSL", @"Use ssl encrypted connection");
             return cell;
+        } else if (indexPath.row == 5) {
+            PreferencesSwitchCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesSwitchCell class])];
+            if(_configuration.pushEnabled)
+                cell.on = YES;
+            cell.switchAction = @selector(pushChanged:);
+            cell.textLabel.text = NSLocalizedString(@"Push Notifications", @"Push Notifications");
+            return cell;
         }
     } else if (indexPath.section == IdentityTableSection) {
         if (indexPath.row == 0) {
@@ -580,13 +587,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             cell.textLabel.text = NSLocalizedString(@"Show Console", @"Show debug console on connect");
             return cell;
         } else if (indexPath.row == 2) {
-            PreferencesSwitchCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesSwitchCell class])];
-            if(_configuration.pushEnabled)
-                cell.on = YES;
-            cell.switchAction = @selector(pushChanged:);
-            cell.textLabel.text = NSLocalizedString(@"Push Notifications", @"Push Notifications");
-            return cell;
-        } else if (indexPath.row == 3) {
             UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];
             cell.textLabel.text = NSLocalizedString(@"Join Channels", @"Title of auto join channels view");
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -602,7 +602,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
                 cell.detailTextLabel.text = NSLocalizedString(@"None", @"No entries");
             }
             return cell;
-        } else if (indexPath.row == 4) {
+        } else if (indexPath.row == 3) {
             UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];
             cell.textLabel.text = NSLocalizedString(@"Connect Commands", @"Connect Commands");
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
