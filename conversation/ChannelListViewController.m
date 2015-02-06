@@ -64,7 +64,7 @@ BOOL _isAwaitingListResponse;
                                                object:nil];
     UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStylePlain target:self action:@selector(close:)];
     
-    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithTitle:@"Refresh" style:UIBarButtonItemStylePlain target:self action:@selector(refresh:)];
+    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresh:)];
     
     self.navigationItem.leftBarButtonItem = closeButton;
     self.navigationItem.rightBarButtonItem = refreshButton;
