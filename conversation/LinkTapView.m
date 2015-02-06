@@ -118,7 +118,7 @@
                                  break;
                              }
                              case 2:
-                                 [InputCommands performCommand:[NSString stringWithFormat:@"IGNORE %@", self.nick] inConversation:_conversation];
+                                 [InputCommands performCommand:[NSString stringWithFormat:@"IGNORE %@", _nick] inConversation:_conversation];
                                  break;
                              default:
                                  break;
