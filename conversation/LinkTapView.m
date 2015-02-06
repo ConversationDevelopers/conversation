@@ -88,9 +88,6 @@
 }
 
 - (void)handleNick: (UITapGestureRecognizer*)sender  {
-
-    NSLog(@"CONVERSATION: %@", _conversation.name);
-    NSLog(@"NICK: %@", _nick);
     
     __block ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     
