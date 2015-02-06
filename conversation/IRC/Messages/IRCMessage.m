@@ -86,7 +86,6 @@
 
 - (id)unserializedRepresentationOfDatabaseValue:(id)databaseValue forPropertyNamed:(NSString *)propertyName
 {
-//    [super unserializedRepresentationOfDatabaseValue:databaseValue forPropertyNamed:propertyName];
     
     if ([propertyName isEqualToString:@"client"]) {
         NSDictionary *prefs = [[AppPreferences sharedPrefs] preferences];
@@ -97,7 +96,8 @@
                 return [[IRCClient alloc] initWithConfiguration:config];
             }
         }
-        
+        [self delete];
+        return nil;
     }
     
     if ([propertyName isEqualToString:@"conversation"]) {
@@ -106,8 +106,6 @@
         for (NSDictionary *dict in connections) {
             for (NSDictionary *channel in dict[@"channels"]) {
                 if ([channel[@"uniqueIdentifier"] isEqualToString:databaseValue]) {
-//                    IRCConnectionConfiguration *connection = [[IRCConnectionConfiguration alloc] initWithDictionary:dict];
-//                    IRCClient *client = [[IRCClient alloc] initWithConfiguration:connection];
                     IRCChannelConfiguration *config = [[IRCChannelConfiguration alloc] initWithDictionary:channel];
                     return [[IRCChannel alloc] initWithConfiguration:config withClient:self.client];
                 }
@@ -115,14 +113,14 @@
             }
             for (NSDictionary *query in dict[@"queries"]) {
                 if ([query[@"uniqueIdentifier"] isEqualToString:databaseValue]) {
-//                    IRCConnectionConfiguration *connection = [[IRCConnectionConfiguration alloc] initWithDictionary:dict];
-//                    IRCClient *client = [[IRCClient alloc] initWithConfiguration:connection];
                     IRCChannelConfiguration *config = [[IRCChannelConfiguration alloc] initWithDictionary:query];
                     return [[IRCConversation alloc] initWithConfiguration:config withClient:self.client];
                 }
             }
 
         }
+        [self delete];
+        return nil;
     }
     
     if ([propertyName isEqualToString:@"sender"]) {
