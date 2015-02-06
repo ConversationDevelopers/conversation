@@ -246,8 +246,15 @@
                 else
                     runBounds.origin.y = self.frame.size.height - origins[idx].y - runBounds.size.height + 3.0;
                 
+                LinkTapView *linkTapView;
                 // Create a view which will open up the URL when the user taps on it
-                LinkTapView *linkTapView = [[LinkTapView alloc] initWithFrame:runBounds url:[attributes objectForKey:@"NSLink"]];
+                if ([[attributes objectForKey:@"NSLink"] isKindOfClass:NSURL.class])
+                    linkTapView = [[LinkTapView alloc] initWithFrame:runBounds url:[attributes objectForKey:@"NSLink"]];
+                else {
+                    linkTapView = [[LinkTapView alloc] initWithFrame:runBounds nick:[attributes objectForKey:@"NSLink"]];
+                    linkTapView.conversation = self.message.conversation;
+                }
+                
                 linkTapView.backgroundColor = [UIColor clearColor];
                 [self addSubview:linkTapView];
             }
@@ -690,6 +697,12 @@ uint32_t FNV32(const char *s)
             [string addAttribute:NSFontAttributeName
                            value:[UIFont systemFontOfSize:12.0]
                            range:NSMakeRange(user.nick.length+1, msg.length)];
+            
+            // Mark sender's nick so we can respond to tap actions
+            [string addAttribute:NSLinkAttributeName
+                           value:user.nick
+                           range:NSMakeRange(0, status.length+user.nick.length)];
+            
             break;
         }
         case ET_PRIVMSG: {
@@ -714,6 +727,11 @@ uint32_t FNV32(const char *s)
             [string addAttribute:NSFontAttributeName
                            value:[UIFont systemFontOfSize:12.0]
                            range:NSMakeRange(status.length+user.nick.length+1, string.length-status.length-user.nick.length-1)];
+            
+            // Mark sender's nick so we can respond to tap actions
+            [string addAttribute:NSLinkAttributeName
+                           value:user.nick
+                           range:NSMakeRange(0, status.length+user.nick.length)];
 
             if ([_conversation isKindOfClass:[IRCChannel class]]) {
                 NSArray *mentions = [self getMentions:msg];

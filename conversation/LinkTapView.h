@@ -29,10 +29,15 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "IRCConversation.h"
 
 @interface LinkTapView : UIView
 
 - (id)initWithFrame:(CGRect)frame url:(NSURL *)url;
+- (id)initWithFrame:(CGRect)frame nick:(NSString *)url;
+
 @property (nonatomic) NSURL *url;
+@property (nonatomic) NSString *nick;
+@property (nonatomic) IRCConversation *conversation;
 
 @end

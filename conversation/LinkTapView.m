@@ -29,6 +29,8 @@
  */
 
 #import "LinkTapView.h"
+#import "UserInfoViewController.h"
+#import "InputCommands.h"
 #import <UIActionSheet+Blocks/UIActionSheet+Blocks.h>
 
 @implementation LinkTapView
@@ -41,13 +43,26 @@
     self.url = url;
     self.alpha = 0.5;
     
-    UITapGestureRecognizer *tapGesture =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    UITapGestureRecognizer *tapGesture =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleLink:)];
     [self addGestureRecognizer:tapGesture];
     
     return self;
 }
 
-- (void)handleTap: (UITapGestureRecognizer*)sender  {
+- (id)initWithFrame:(CGRect)frame nick:(NSString *)nick
+{
+    if (!(self = [super initWithFrame:frame]))
+        return nil;
+    self.nick = nick;
+    self.alpha = 0.5;
+    
+    UITapGestureRecognizer *tapGesture =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleNick:)];
+    [self addGestureRecognizer:tapGesture];
+    
+    return self;
+}
+
+- (void)handleLink: (UITapGestureRecognizer*)sender  {
     
     [UIActionSheet showInView:self
                     withTitle:_url.absoluteString
@@ -69,6 +84,47 @@
                          
                      }];
     
+
+}
+
+- (void)handleNick: (UITapGestureRecognizer*)sender  {
+
+    __block ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    
+    [UIActionSheet showInView:self.superview
+                    withTitle:self.nick
+            cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+       destructiveButtonTitle:nil
+            otherButtonTitles:@[NSLocalizedString(@"Private Message (Query)", @"Query"),
+                                NSLocalizedString(@"Get Info (Whois)", @"Whois"),
+                                NSLocalizedString(@"Ignore", @"Ignore")]
+     
+                     tapBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex) {
+                         switch (buttonIndex) {
+                             case 0: {
+                                 IRCConversation *conversation = [controller createConversationWithName:_nick onClient:_conversation.client];
+                                 [controller.tableView reloadData];
+                                 [controller.navigationController popToRootViewControllerAnimated:YES];
+                                 [controller selectConversationWithIdentifier:conversation.configuration.uniqueIdentifier];
+                                 break;
+                             }
+                             case 1: {
+                                 UserInfoViewController *infoViewController = [[UserInfoViewController alloc] init];
+                                 infoViewController.nickname = _nick;
+                                 infoViewController.client = _conversation.client;
+                                 UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:infoViewController];
+                                 navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+                                 [controller.navigationController presentViewController:navigationController animated:YES completion:nil];
+                                 break;
+                             }
+                             case 2:
+                                 [InputCommands performCommand:[NSString stringWithFormat:@"IGNORE %@", self.nick] inConversation:_conversation];
+                                 break;
+                             default:
+                                 break;
+                         }
+                     }];
+
 
 }
 
