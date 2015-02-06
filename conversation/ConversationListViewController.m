@@ -955,7 +955,7 @@
     messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     // The stuff below is only for the preview
-    if ((message.messageType != ET_PRIVMSG && message.messageType != ET_ACTION) ||
+    if ((message.messageType != ET_PRIVMSG && message.messageType != ET_ACTION && message.messageType != ET_NOTICE) ||
         [message.sender.nick isEqualToString:message.client.currentUserOnConnection.nick])
         return;
     
