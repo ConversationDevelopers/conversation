@@ -89,17 +89,26 @@
 
 - (void)handleNick: (UITapGestureRecognizer*)sender  {
 
+    NSLog(@"CONVERSATION: %@", _conversation.name);
+    NSLog(@"NICK: %@", _nick);
+    
     __block ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     
+    NSMutableArray *buttonTitles = [[NSMutableArray alloc] initWithArray:@[NSLocalizedString(@"Private Message (Query)", @"Query"),
+                                                                          NSLocalizedString(@"Get Info (Whois)", @"Whois"),
+                                                                           NSLocalizedString(@"Ignore", @"Ignore")]];
+    if ([_conversation.name isEqualToString:_nick]) {
+        [buttonTitles removeObjectAtIndex:0];
+    }
     [UIActionSheet showInView:self.superview
                     withTitle:self.nick
             cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
        destructiveButtonTitle:nil
-            otherButtonTitles:@[NSLocalizedString(@"Private Message (Query)", @"Query"),
-                                NSLocalizedString(@"Get Info (Whois)", @"Whois"),
-                                NSLocalizedString(@"Ignore", @"Ignore")]
-     
+            otherButtonTitles:buttonTitles
                      tapBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex) {
+                         if ([_conversation.name isEqualToString:_nick])
+                             buttonIndex++;
+                             
                          switch (buttonIndex) {
                              case 0: {
                                  IRCConversation *conversation = [controller createConversationWithName:_nick onClient:_conversation.client];
