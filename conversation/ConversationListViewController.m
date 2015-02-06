@@ -292,7 +292,6 @@
 
 - (void)updateClientState:(id)sender
 {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [self.tableView reloadData];
 }
 
@@ -391,7 +390,6 @@
 - (void)clientWillConnect:(NSNotification *)notification
 {
     [UIApplication sharedApplication].idleTimerDisabled = [self shouldDisableIdleTimer];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 
     if (_backgroundTask == UIBackgroundTaskInvalid)
         _backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{ [self _backgroundTaskExpired]; }];
