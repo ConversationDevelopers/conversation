@@ -41,6 +41,7 @@
         self.conversation = conversation;
         self.sender = sender;
         self.timestamp = timestamp;
+        self.kickedUser = nil;
         self.tags = tags;
         self.isServerMessage = isServerMessage;
         self.client = client;
