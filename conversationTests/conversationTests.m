@@ -76,9 +76,13 @@
     
     
     self.testClient = [[IRCClient alloc] initWithConfiguration:testConnection];
-    IRCUser *user = [[IRCUser alloc] initWithNickname:@"John" andUsername:@"jappleseed" andHostname:@"apple.com" andRealname:@"John AppleSeed" onClient:self.testClient];
     IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:testChannel withClient:self.testClient];
+    
+    IRCUser *user = [[IRCUser alloc] initWithNickname:@"John" andUsername:@"jappleseed" andHostname:@"apple.com" andRealname:@"John AppleSeed" onClient:self.testClient];
     [channel.users addObject:user];
+    IRCUser *kickUser = [[IRCUser alloc] initWithNickname:@"Clinteger" andUsername:@"~Clinteger" andHostname:@"unaffiliated/clinteger" andRealname:@"" onClient:self.testClient];
+    [channel.users addObject:kickUser];
+    
     [self.testClient addChannel:channel];
     
     self.testClient.currentUserOnConnection = [[IRCUser alloc] initWithNickname:testConnection.primaryNickname andUsername:testConnection.usernameForRegistration andHostname:@"test.com" andRealname:@"Unit Test" onClient:self.testClient];
@@ -328,10 +332,10 @@
     [self waitForExpectationsWithTimeout:5.0 handler:nil];
 }
 
-/*
+
 - (void)testParserWithKick {
     [[NSNotificationCenter defaultCenter] addObserverForName:@"messageReceived" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
-        IRCKickMessage *parserResult = notification.object;
+        IRCMessage *parserResult = notification.object;
         
         if (parserResult.messageType == ET_KICK) {
             XCTAssertEqualObjects(parserResult.sender.nick, @"John");
@@ -349,7 +353,7 @@
     NSString *testMessage = @":John!jappleseed@apple.com KICK #conversation Clinteger :Your attitude is not conducive to the desired environment.";
     [self.testClient clientDidReceiveData:[testMessage UTF8String]];
     [self waitForExpectationsWithTimeout:5.0 handler:nil];
-}*/
+}
 
 - (void)testParserWithQuitMessage {
     [[NSNotificationCenter defaultCenter] addObserverForName:@"messageReceived" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
