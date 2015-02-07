@@ -1165,7 +1165,7 @@
     return NO;
 }
 
-- (void) _backgroundTaskExpired {
+- (void) _backgroundTaskExpired {   
     dispatch_async(dispatch_get_main_queue(), ^{
         [self saveHistoricMessages];
     });

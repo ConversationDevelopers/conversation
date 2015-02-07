@@ -40,6 +40,7 @@
 @property (nonatomic) int64_t id;
 @property (nonatomic) IRCClient *client;
 @property (nonatomic) IRCUser *sender;
+@property (nonatomic) IRCUser *kickedUser;
 @property (nonatomic) NSString *message;
 @property (nonatomic) NSDate *timestamp;
 @property (nonatomic) IRCConversation* conversation;
@@ -47,6 +48,8 @@
 @property (nonatomic) NSDictionary *tags;
 @property (nonatomic) BOOL isServerMessage;
 @property (nonatomic) BOOL isConversationHistory;
+
+- (instancetype) initWithMessage:(NSString *)message inConversation:(IRCConversation *)conversation kickedUser:(IRCUser *)user bySender:(IRCUser *)sender atTime:(NSDate *)timestamp withTags:(NSDictionary *)tags isServerMessage:(BOOL)isServerMessage onClient:(IRCClient *)client;
 
 - (instancetype) initWithMessage:(NSString *)message OfType:(NSUInteger)type inConversation:(IRCConversation *)conversation bySender:(IRCUser *)sender atTime:(NSDate *)timestamp withTags:(NSDictionary *)tags isServerMessage:(BOOL)isServerMessage onClient:(IRCClient *)client;
 

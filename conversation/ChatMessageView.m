@@ -38,7 +38,6 @@
 #import "LinkTapView.h"
 #import "NSString+Methods.h"
 #import "AppPreferences.h"
-#import "IRCKickMessage.h"
 
 #define FNV_PRIME_32 16777619
 #define FNV_OFFSET_32 2166136261U
@@ -597,12 +596,11 @@ uint32_t FNV32(const char *s)
         }
         case ET_KICK: {
 
-            IRCKickMessage *kickmsg = (IRCKickMessage *)_message;
-            msg = [NSString stringWithFormat:NSLocalizedString(@"kick message", nil), kickmsg.sender.nick, kickmsg.kickedUser.nick, kickmsg.message];
+            msg = [NSString stringWithFormat:NSLocalizedString(@"kick message", nil), _message.sender.nick, _message.kickedUser.nick, _message.message];
             
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"← %@", msg]];
 
-            NSRange range = [[string.string substringFromIndex:kickmsg.sender.nick.length + 2] rangeOfString:kickmsg.kickedUser.nick];
+            NSRange range = [[string.string substringFromIndex:_message.sender.nick.length + 2] rangeOfString:_message.kickedUser.nick];
             
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
@@ -621,11 +619,11 @@ uint32_t FNV32(const char *s)
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:10.0]
-                           range:NSMakeRange(0, kickmsg.sender.nick.length + 2)];
+                           range:NSMakeRange(0, _message.sender.nick.length + 2)];
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:10.0]
-                           range:NSMakeRange(range.location + kickmsg.sender.nick.length + 2, range.location)];
+                           range:NSMakeRange(range.location + _message.sender.nick.length + 2, range.location)];
             
 
             break;

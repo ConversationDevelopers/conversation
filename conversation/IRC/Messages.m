@@ -33,7 +33,6 @@
 #import "IRCClient.h"
 #import "IRCConnection.h"
 #import "IRCMessage.h"
-#import "IRCKickMessage.h"
 #import "ConversationListViewController.h"
 #import "znc-buffextras.h"
 #import "AppPreferences.h"
@@ -448,7 +447,7 @@
         [[channel users] removeObject:channel];
     }
     
-    IRCKickMessage *kick = [[IRCKickMessage alloc] initWithMessage:kickMessage
+    IRCMessage *kick = [[IRCMessage alloc] initWithMessage:kickMessage
                                                     inConversation:channel
                                                         kickedUser:kickedUser
                                                           bySender:message.sender

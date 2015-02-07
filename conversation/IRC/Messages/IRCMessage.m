@@ -50,6 +50,24 @@
     return nil;
 }
 
+- (instancetype) initWithMessage:(NSString *)message inConversation:(IRCConversation *)conversation kickedUser:(IRCUser *)user bySender:(IRCUser *)sender atTime:(NSDate *)timestamp withTags:(NSDictionary *)tags isServerMessage:(BOOL)isServerMessage onClient:(IRCClient *)client;
+{
+    if ((self = [super init])) {
+        self.message = message;
+        self.conversation = conversation;
+        self.sender = sender;
+        self.timestamp = timestamp;
+        self.kickedUser = user;
+        self.tags = tags;
+        self.isServerMessage = isServerMessage;
+        self.client = client;
+        self.messageType = ET_KICK;
+        return self;
+    }
+    return nil;
+}
+
+
 
 -(id)copyWithZone:(NSZone *)zone
 {
@@ -121,7 +139,7 @@
         return nil;
     }
     
-    if ([propertyName isEqualToString:@"sender"]) {
+    if ([propertyName isEqualToString:@"sender"] || [propertyName isEqualToString:@"kickedUser"]) {
         NSString *fullhost = (NSString *)databaseValue;
         if (fullhost.length) {
             NSArray *components = [fullhost componentsSeparatedByString:@"@"];
