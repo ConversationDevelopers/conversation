@@ -232,6 +232,14 @@
 			<key>Key</key>
 			<string>support_preference</string>
 		</dict>
+        <dict>
+		<key>Type</key>
+			<string>IASKButtonSpecifier</string>
+			<key>Title</key>
+			<string>@ConversationIRC on Twitter</string>
+			<key>Key</key>
+			<string>twitter_preference</string>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>

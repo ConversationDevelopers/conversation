@@ -1219,6 +1219,9 @@
     if ([specifier.key isEqualToString:@"support_preference"]) {
         [self dismissViewControllerAnimated:YES completion:nil];        
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"irc://chat.freenode.com:6667/#conversation"]];
+    } else if ([specifier.key isEqualToString:@"twitter_preference"]) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/ConversationIRC"]];
     }
 }
 
