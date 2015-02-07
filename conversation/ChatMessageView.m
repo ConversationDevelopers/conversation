@@ -174,7 +174,7 @@
         if (_message.timestamp) {
             NSDate *date = _message.timestamp;
             NSDateFormatter *format = [[NSDateFormatter alloc] init];
-            [format setLocale:[NSLocale systemLocale]];
+            [format setLocale:[NSLocale currentLocale]];
             [format setTimeStyle:NSDateFormatterShortStyle];
             time = [format stringFromDate:date];
         }

@@ -243,7 +243,7 @@
             } else if (isCTCPCommand(@"TIME")) {
                 NSDate* now = [NSDate date];
                 NSDateFormatter* df = [[NSDateFormatter alloc] init];
-                [df setLocale:[NSLocale autoupdatingCurrentLocale]];
+                [df setLocale:[NSLocale currentLocale]];
                 [df setDateStyle:NSDateFormatterFullStyle];
                 [df setTimeStyle:NSDateFormatterFullStyle];
                 [IRCCommands sendCTCPReply:[NSString stringWithFormat:@"TIME %@",
