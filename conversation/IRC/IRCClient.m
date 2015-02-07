@@ -350,6 +350,15 @@
             [Messages userReceivedInviteToChannel:messageObject];
             break;
             
+        case CONVERSATION: {
+            /* Register For Push Notifications */
+            AppDelegate *appDelegate = ((AppDelegate *)[UIApplication sharedApplication].delegate);
+            if (appDelegate.tokenString)
+                [self.connection send:[NSString stringWithFormat:@"CONVERSATION add-device %@ 127.0.0.1 8080 :%@",
+                                           appDelegate.tokenString,
+                                           self.configuration.connectionName]];
+            break;
+        }
         case RPL_WELCOME:
             self.isAttemptingRegistration = NO;
 
@@ -359,17 +368,6 @@
             
             /* At this point we will enable the flood control. */
             [self.connection enableFloodControl];
-            
-            /* Register For Push Notifications */
-            if (self.configuration.pushEnabled) {
-                AppDelegate *appDelegate = ((AppDelegate *)[UIApplication sharedApplication].delegate);
-                if (appDelegate.tokenString)
-                    [self.connection send:[NSString stringWithFormat:@"CONVERSATION add-device %@ 127.0.0.1 8080 :%@",
-                                           appDelegate.tokenString,
-                                           self.configuration.connectionName]];
-
-                
-            }
             
             /* This server supports the ZNC advanced playback module. We will request all messages since the
              last time we received a message. Or from the start of the ZNC logs if we don't have a time on record. */

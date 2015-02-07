@@ -205,7 +205,7 @@ static unsigned short EncodingTableSection = 4;
      
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
     if (section == ServerTableSection)
-        return 6;
+        return 5;
     if (section == IdentityTableSection)
         return 5;
     if (section == AutomaticTableSection)
@@ -466,13 +466,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             cell.switchAction = @selector(secureChanged:);
             cell.switchControl.on = _configuration.connectUsingSecureLayer;
             cell.textLabel.text = NSLocalizedString(@"Use SSL", @"Use ssl encrypted connection");
-            return cell;
-        } else if (indexPath.row == 5) {
-            PreferencesSwitchCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesSwitchCell class])];
-            if(_configuration.pushEnabled)
-                cell.on = YES;
-            cell.switchAction = @selector(pushChanged:);
-            cell.textLabel.text = NSLocalizedString(@"Push Notifications", @"Push Notifications");
             return cell;
         }
     } else if (indexPath.section == IdentityTableSection) {
@@ -820,11 +813,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 - (void) autoconnectChanged:(PreferencesSwitchCell *)sender
 {
     _configuration.automaticallyConnect = sender.on;
-}
-
-- (void) pushChanged:(PreferencesSwitchCell *)sender
-{
-    _configuration.pushEnabled = sender.on;
 }
 
 - (void) showconsoleChanged:(PreferencesSwitchCell *)sender

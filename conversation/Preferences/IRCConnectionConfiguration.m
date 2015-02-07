@@ -57,7 +57,6 @@
         self.useServerAuthenticationService =   NO;
         self.showConsoleOnConnect =             NO;
         self.automaticallyReconnect =           YES;
-        self.pushEnabled =                      NO;
         
         self.lastMessageTime = 0;
         
@@ -99,7 +98,6 @@
         self.connectUsingSecureLayer = [dict[@"connectUsingSecureLayer"] boolValue];
         self.useServerAuthenticationService = [dict[@"useServerAuthenticationService"] boolValue];
         self.showConsoleOnConnect = [dict[@"showConsoleOnConnect"] boolValue];
-        self.pushEnabled = [dict[@"pushEnabled"] boolValue];
         
         self.messageEncoding = (unsigned long) [dict[@"messageEncoding"] integerValue];
         
