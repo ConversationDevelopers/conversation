@@ -1170,6 +1170,7 @@
         [self saveHistoricMessages];
     });
     
+    [self disconnect];
     [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
     _backgroundTask = UIBackgroundTaskInvalid;
     
