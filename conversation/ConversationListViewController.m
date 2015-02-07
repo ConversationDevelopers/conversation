@@ -1247,7 +1247,7 @@
 
 - (void)loadHistoricMessages
 {
-    
+
     NSMutableArray *messages = [[IRCMessage instancesOrderedBy:@"timestamp"] mutableCopy];
     for (IRCMessage *message in messages) {
         for (IRCClient *client in _connections) {
@@ -1289,7 +1289,6 @@
                     ChatMessageView *messageView = (ChatMessageView *)view;
                     IRCMessage *message = messageView.message;
                     message.isConversationHistory = YES;
-                    message.conversation.contentView = nil;
                     [messages addObject:message];
                     i++;
                 }
@@ -1307,7 +1306,6 @@
                     ChatMessageView *messageView = (ChatMessageView *)view;
                     IRCMessage *message = messageView.message;
                     message.isConversationHistory = YES;
-                    message.conversation.contentView = nil;
                     [messages addObject:message];
                     i++;
                 }
