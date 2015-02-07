@@ -301,7 +301,7 @@
      the flood gates are open. */
     @synchronized(self) {
         
-        if ([self.messageQueue count] == 0) {
+        if ([self.messageQueue count] == 0 || self.client.isConnected == NO) {
             return NO;
         }
         
