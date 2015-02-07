@@ -125,6 +125,7 @@
                    @"    id                     INTEGER PRIMARY KEY,"
                    @"    client                 TEXT NOT NULL DEFAULT '',"
                    @"    sender                 TEXT NOT NULL DEFAULT '',"
+                   @"    kickedUser             TEXT NULL,"
                    @"    message                TEXT NOT NULL DEFAULT '',"
                    @"    timestamp              REAL NOT NULL,"
                    @"    conversation           TEXT NOT NULL,"
