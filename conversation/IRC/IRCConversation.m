@@ -58,10 +58,10 @@
                 /* We don't have a query for this message, we need to create one */
                 ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
                 channel = [controller joinChannelWithName:name onClient:client];
-                if (completionHandler) completionHandler(conversation);
+                if (completionHandler) completionHandler(channel);
             });
         } else {
-            completionHandler(channel);
+            if (completionHandler) completionHandler(channel);
         }
     } else {
         __block IRCConversation *conversation = [IRCConversation fromString:name withClient:client];
@@ -73,7 +73,7 @@
                 if (completionHandler) completionHandler(conversation);
             });
         } else {
-            completionHandler(conversation);
+            if (completionHandler) completionHandler(conversation);
         }
     }
 }
