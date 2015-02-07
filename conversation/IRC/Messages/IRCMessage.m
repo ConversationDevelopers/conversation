@@ -96,7 +96,6 @@
                 return [[IRCClient alloc] initWithConfiguration:config];
             }
         }
-        [self delete];
         return nil;
     }
     
@@ -119,7 +118,6 @@
             }
 
         }
-        [self delete];
         return nil;
     }
     
