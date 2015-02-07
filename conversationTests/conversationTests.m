@@ -35,7 +35,6 @@
 #import "IRCConversation.h"
 #import "IRCChannel.h"
 #import "IRCMessage.h"
-#import "IRCKickMessage.h"
 
 @interface conversationTests : XCTestCase
 
