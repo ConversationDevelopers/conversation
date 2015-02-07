@@ -581,6 +581,9 @@
 + (void)clientReceivedISONResponse:(IRCMessage *)message
 {
     NSArray *users = [message.message componentsSeparatedByString:@" "];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedISONResponse" object:users];
+    });
     
     ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     

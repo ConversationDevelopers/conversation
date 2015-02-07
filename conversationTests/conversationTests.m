@@ -55,6 +55,7 @@
 @property __weak XCTestExpectation *receivedQuitExpectation;
 @property __weak XCTestExpectation *receivedChannelModesExpectation;
 @property __weak XCTestExpectation *receivedTopicExpectation;
+@property __weak XCTestExpectation *receivedISONExpectation;
 
 @end
 
@@ -407,6 +408,21 @@
     
     self.receivedTopicExpectation = [self expectationWithDescription:@"receivedChannelTopic"];
     NSString *testMessage = @":John!jappleseed@apple.com TOPIC #conversation :Channel for awesome people";
+    [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+}
+
+- (void)testParserWithISONResponse {
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"receivedISONResponse" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        NSArray *parserResult = notification.object;
+        
+        XCTAssertGreaterThan([parserResult count], 0);
+        XCTAssertEqualObjects([parserResult objectAtIndex:0], @"John");
+        [self.receivedISONExpectation fulfill];
+    }];
+    
+    self.receivedISONExpectation = [self expectationWithDescription:@"receivedISON"];
+    NSString *testMessage = @":holmes.freenode.net 303 UnitTest :John";
     [self.testClient clientDidReceiveData:[testMessage UTF8String]];
     [self waitForExpectationsWithTimeout:5.0 handler:nil];
 }
