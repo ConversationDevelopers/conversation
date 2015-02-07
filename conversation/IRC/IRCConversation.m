@@ -58,7 +58,7 @@
                 /* We don't have a query for this message, we need to create one */
                 ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
                 channel = [controller joinChannelWithName:name onClient:client];
-                completionHandler(channel);
+                if (completionHandler) completionHandler(conversation);
             });
         } else {
             completionHandler(channel);
@@ -70,7 +70,7 @@
                 /* We don't have a query for this message, we need to create one */
                 ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
                 conversation = [controller createConversationWithName:name onClient:client];
-                completionHandler(conversation);
+                if (completionHandler) completionHandler(conversation);
             });
         } else {
             completionHandler(conversation);
