@@ -75,7 +75,13 @@
     NSArray *channels = [[NSMutableArray alloc] initWithObjects:testChannel, nil];
     testConnection.channels = channels;
     
+    
     self.testClient = [[IRCClient alloc] initWithConfiguration:testConnection];
+    IRCUser *user = [[IRCUser alloc] initWithNickname:@"John" andUsername:@"jappleseed" andHostname:@"apple.com" andRealname:@"John AppleSeed" onClient:self.testClient];
+    IRCChannel *channel = [[IRCChannel alloc] initWithConfiguration:testChannel withClient:self.testClient];
+    [channel.users addObject:user];
+    [self.testClient addChannel:channel];
+    
     self.testClient.currentUserOnConnection = [[IRCUser alloc] initWithNickname:testConnection.primaryNickname andUsername:testConnection.usernameForRegistration andHostname:@"test.com" andRealname:@"Unit Test" onClient:self.testClient];
 }
 
