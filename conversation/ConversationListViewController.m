@@ -416,6 +416,7 @@
         conversation = client.queries[index];
         _chatViewController.isChannel = NO;
     } else if (client.showConsole && indexPath.row == 0) {
+        client.console.title = client.configuration.connectionName;
         [self.navigationController pushViewController:client.console animated:YES];
         return;
     } else {
@@ -757,6 +758,7 @@
         }
     }
 }
+
 
 - (void)conversationAdded:(AddConversationViewController *)sender
 {
