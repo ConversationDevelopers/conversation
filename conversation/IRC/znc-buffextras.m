@@ -39,6 +39,8 @@
 {
     NSMutableArray *messageComponents = [[message.message componentsSeparatedByString:@" "] mutableCopy];
     
+    message.isConversationHistory = YES;
+    
     NSString *nickname = @"";
     NSString *username = @"";
     NSString *hostname = @"";

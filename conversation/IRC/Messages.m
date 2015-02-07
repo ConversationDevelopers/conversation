@@ -340,7 +340,7 @@
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         
         IRCChannel *channel = (IRCChannel *)conversation;
-        if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
+        if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame && message.isConversationHistory == NO) {
             [message.client.connection send:[NSString stringWithFormat:@"WHO %@", conversation.name]];
             [message.client.connection send:[NSString stringWithFormat:@"MODE %@", conversation.name]];
             channel.isJoinedByUser = YES;
@@ -363,7 +363,7 @@
 + (void)userReceivedPartChannel:(IRCMessage *)message
 {
     IRCChannel *channel = (IRCChannel *)message.conversation;
-    if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
+    if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame && message.isConversationHistory == NO) {
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         
         /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
@@ -384,7 +384,7 @@
 
 + (void)userReceivedNickChange:(IRCMessage *)message
 {
-    if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
+    if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame && message.isConversationHistory == NO) {
         message.client.currentUserOnConnection.nick     = message.message;
         message.client.currentUserOnConnection.username = message.sender.username;
         message.client.currentUserOnConnection.hostname = message.sender.hostname;
