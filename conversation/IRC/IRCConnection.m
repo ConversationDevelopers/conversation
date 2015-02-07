@@ -180,22 +180,21 @@
 {
     if (err == nil || [err code] == errSSLClosedGraceful) {
         [self.client clientDidDisconnect];
+        return;
     }
     
     NSString *errorMessage = nil;
     if ([self badSSLCertificateErrorFound:err]) {
         errorMessage = @"Disconnected from server because of an untrusted SSL certificate";
     } else {
-        
-    }
-    
-    if ([err.domain isEqualToString:NSPOSIXErrorDomain]) {
-        const char *error = strerror((int)err.domain);
-        errorMessage = [NSString stringWithCString:error encoding:NSUTF8StringEncoding];
-    } else {
-        errorMessage = [err.userInfo objectForKey:@"NSLocalizedDescription"];
-        if (errorMessage == nil) {
-            errorMessage = [err localizedDescription];
+        if ([err.domain isEqualToString:NSPOSIXErrorDomain]) {
+            const char *error = strerror((int)err.domain);
+            errorMessage = [NSString stringWithCString:error encoding:NSUTF8StringEncoding];
+        } else {
+            errorMessage = [err.userInfo objectForKey:@"NSLocalizedDescription"];
+            if (errorMessage == nil) {
+                errorMessage = [err localizedDescription];
+            }
         }
     }
     [self.client clientDidDisconnectWithError:errorMessage];
