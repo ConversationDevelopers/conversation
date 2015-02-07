@@ -242,12 +242,16 @@
         [lineComponents removeObjectAtIndex:0];
     }
     
-    NSString *recipient = nil;
+    NSString *recipient = [lineComponents objectAtIndex:0];
+    
     if ([lineComponents count] > 1 && messageWithoutRecipient == NO) {
         if ([[lineComponents objectAtIndex:0] hasPrefix:@":"] == NO) {
-            recipient = [lineComponents objectAtIndex:0];
             [lineComponents removeObjectAtIndex:0];
         }
+    }
+    
+    if ([recipient hasPrefix:@":"]) {
+        recipient = [recipient substringFromIndex:1];
     }
     
     NSString *message = [lineComponents componentsJoinedByString:@" "];
@@ -258,18 +262,17 @@
     /* Get the timestamp from the message or create one if it is not available. */
     NSDate* datetime = [IRCClient getTimestampFromMessageTags:tagsList];
     IRCConversation *conversation = nil;
-    if (recipient != nil) {
-        conversation = [IRCConversation fromString:recipient withClient:self];
-        if (conversation == nil) {
-            if ([recipient isValidChannelName:self]) {
-                IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
-                configuration.name = recipient;
-                conversation = [[IRCChannel alloc] initWithConfiguration:configuration withClient:self];
-            } else {
-                IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
-                configuration.name = recipient;
-                conversation = [[IRCConversation alloc] initWithConfiguration:configuration withClient:self];
-            }
+    
+    conversation = [IRCConversation fromString:recipient withClient:self];
+    if (conversation == nil) {
+        if ([recipient isValidChannelName:self]) {
+            IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
+            configuration.name = recipient;
+            conversation = [[IRCChannel alloc] initWithConfiguration:configuration withClient:self];
+        } else {
+            IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
+            configuration.name = recipient;
+            conversation = [[IRCConversation alloc] initWithConfiguration:configuration withClient:self];
         }
     }
     
