@@ -1166,8 +1166,13 @@
 }
 
 - (void) _backgroundTaskExpired {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self saveHistoricMessages];
+    });
+    
     [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
     _backgroundTask = UIBackgroundTaskInvalid;
+    
 }
 
 - (void)setAway
