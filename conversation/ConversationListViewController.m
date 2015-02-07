@@ -1279,10 +1279,8 @@
     if (IPAD)
         limit = 100;
     
-    int i=0;
     for (IRCClient *client in _connections) {
         for (IRCChannel *conversation in client.channels) {
-            i=0;
             [messages removeAllObjects];
             for (UIView *view in conversation.contentView.subviews) {
                 if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
@@ -1290,7 +1288,6 @@
                     IRCMessage *message = messageView.message;
                     message.isConversationHistory = YES;
                     [messages addObject:message];
-                    i++;
                 }
             }
             if ((int)messages.count > limit)
@@ -1299,7 +1296,6 @@
             [allMessages addObjectsFromArray:messages];
         }
         for (IRCConversation *conversation in client.queries) {
-            i=0;
             [messages removeAllObjects];
             for (UIView *view in conversation.contentView.subviews) {
                 if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
@@ -1307,7 +1303,6 @@
                     IRCMessage *message = messageView.message;
                     message.isConversationHistory = YES;
                     [messages addObject:message];
-                    i++;
                 }
             }
             if ((int)messages.count > limit)
