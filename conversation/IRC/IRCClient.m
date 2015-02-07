@@ -174,24 +174,17 @@
 {
     NSString *line = [NSString stringWithCString:cline usingEncodingPreference:self.configuration];
     NSLog(@"<< %@", line);
-    
-    BOOL isServerMessage = NO;
-    
     IRCMessage *rawMessage = [[IRCMessage alloc] initWithMessage:line
                                                           OfType:ET_RAW
                                                   inConversation:nil
                                                         bySender:nil
                                                           atTime:[NSDate date]
                                                         withTags:nil
-                                                        isServerMessage:YES
+                                                 isServerMessage:YES
                                                         onClient:self];
     
+    BOOL isServerMessage = NO;
     line = [line removeIRCFormatting];
-    
-    /* Notify the client of the message */
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:rawMessage];
-    });
     
     NSMutableArray *lineComponents = [[line componentsSeparatedByString:@" "] mutableCopy];
     
@@ -239,6 +232,7 @@
     NSInteger numericReplyAsNumber = [command integerValue];
     
     if (numericReplyAsNumber != 0 && [[lineComponents objectAtIndex:1] hasPrefix:@":"] == NO) {
+        
         [lineComponents removeObjectAtIndex:0];
     }
     
@@ -287,7 +281,7 @@
     
     
     IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:message
-                                                             OfType:NSNotFound
+                                                             OfType:ET_RAW
                                                      inConversation:conversation
                                                            bySender:user
                                                              atTime:datetime
@@ -481,7 +475,21 @@
             [Messages clientReceivedAuthenticationError:messageObject];
             break;
             
+        case RPL_NAMREPLY:
+        case RPL_CREATIONTIME:
+        case RPL_MOTDSTART:
+        case RPL_ENDOFMOTD:
+        case RPL_ENDOFNAMES:
+        case RPL_ENDOFWHO:
+        case RPL_TOPICWHOTIME:
+            break;
+            
         default:
+            /* Notify the client of the message */
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:messageObject];
+            });
+            
             break;
     }
     

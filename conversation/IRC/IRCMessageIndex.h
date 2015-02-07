@@ -109,8 +109,10 @@ typedef NS_ENUM(NSUInteger, MessageType) {
     RPL_LISTEND,            /* 323 */
     RPL_CHANNELMODEIS,      /* 324 */
     RPL_UNIQOPIS,           /* 325 */
+    RPL_CREATIONTIME,       /* 329 */
     RPL_NOTOPIC,            /* 331 */
     RPL_TOPIC,              /* 332 */
+    RPL_TOPICWHOTIME,       /* 333 */
     RPL_INVITING,           /* 341 */
     RPL_INVITELIST,         /* 346 */
     RPL_ENDOFINVITELIST,    /* 347 */
