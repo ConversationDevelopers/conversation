@@ -49,6 +49,7 @@
 @class IRCConversation;
 @class ConversationListViewController;
 @class ConsoleViewController;
+@class IRCMessage;
 
 @interface IRCClient : NSObject
 
@@ -80,7 +81,7 @@
 - (void)clientDidDisconnect;
 - (BOOL)isConnectedAndCompleted;
 - (void)clientDidDisconnectWithError:(NSString *)error;
-- (void)clientDidReceiveData:(const char *)decodedData;
+- (IRCMessage *)clientDidReceiveData:(const char *)decodedData;
 - (void)clientDidSendData;
 + (NSString *)getChannelPrefixCharacters:(IRCClient *)client;
 - (void)validateQueryStatusOnAllItems;

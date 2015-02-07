@@ -32,11 +32,29 @@
 #import <XCTest/XCTest.h>
 #import "AppPreferences.h"
 #import "IRCClient.h"
+#import "IRCConversation.h"
+#import "IRCChannel.h"
+#import "IRCMessage.h"
+#import "IRCKickMessage.h"
 
 @interface conversationTests : XCTestCase
 
 @property IRCClient *testClient;
-@property XCTestExpectation *didConnectToServerExpectation;
+@property __weak XCTestExpectation *receivedCTCPRequestExpectation;
+@property __weak XCTestExpectation *receivedActionExpectation;
+@property __weak XCTestExpectation *receivedNoticeExpectation;
+@property __weak XCTestExpectation *receivedCTCPReplyExpectation;
+@property __weak XCTestExpectation *receivedJoinExpectation;
+@property __weak XCTestExpectation *receivedExtendedJoinExpectation;
+@property __weak XCTestExpectation *receivedJoinNGIRCDExpectation;
+@property __weak XCTestExpectation *receivedPartExpectation;
+@property __weak XCTestExpectation *receivedPartWithoutMessageExpectation;
+@property __weak XCTestExpectation *receivedNickChangeExpectation;
+@property __weak XCTestExpectation *receivedNickChangeNGIRCDExpectation;
+@property __weak XCTestExpectation *receivedKickExpectation;
+@property __weak XCTestExpectation *receivedQuitExpectation;
+@property __weak XCTestExpectation *receivedChannelModesExpectation;
+@property __weak XCTestExpectation *receivedTopicExpectation;
 
 @end
 
@@ -57,8 +75,7 @@
     testConnection.channels = channels;
     
     self.testClient = [[IRCClient alloc] initWithConfiguration:testConnection];
-    
-    [self.testClient connect];
+    self.testClient.currentUserOnConnection = [[IRCUser alloc] initWithNickname:testConnection.primaryNickname andUsername:testConnection.usernameForRegistration andHostname:@"test.com" andRealname:@"Unit Test" onClient:self.testClient];
 }
 
 - (void)tearDown {
@@ -66,10 +83,332 @@
     [super tearDown];
 }
 
-- (void)testClientDidConnect {
-    // This is an example of a functional test case.
-    self.didConnectToServerExpectation = [self expectationForNotification:@"clientDidConnect" object:self.testClient handler:nil];
-    [self waitForExpectationsWithTimeout:10.0 handler:nil];
+- (void)testParserWithPRIVMSG {
+    NSString *testMessage = @":John!jappleseed@apple.com PRIVMSG #conversation :Good day";
+    IRCMessage *parserResult = [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    
+    XCTAssertEqualObjects(parserResult.conversation.name, @"#conversation");
+    XCTAssertEqualObjects(parserResult.sender.nick, @"John");
+    XCTAssertEqualObjects(parserResult.sender.username, @"jappleseed");
+    XCTAssertEqualObjects(parserResult.sender.hostname, @"apple.com");
+    XCTAssertEqualObjects(parserResult.message, @"Good day");
+}
+
+- (void)testParserWithCTCPRequest {
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"messageReceived" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        IRCMessage *parserResult = notification.object;
+        
+        if (parserResult.messageType == ET_CTCP) {
+            XCTAssertEqualObjects(parserResult.conversation.name, @"John");
+            XCTAssertEqualObjects(parserResult.sender.nick, @"John");
+            XCTAssertEqualObjects(parserResult.sender.username, @"jappleseed");
+            XCTAssertEqualObjects(parserResult.sender.hostname, @"apple.com");
+            XCTAssertEqualObjects(parserResult.message, @"VERSION");
+            
+            [self.receivedCTCPRequestExpectation fulfill];
+        }
+    }];
+    
+    self.receivedCTCPRequestExpectation = [self expectationWithDescription:@"receivedCTCPRequest"];
+    NSString *testMessage = [NSString stringWithFormat:@":John!jappleseed@apple.com PRIVMSG %@ :\001VERSION\001", self.testClient.configuration.primaryNickname];
+    [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+}
+
+- (void)testParserWithACTION {
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"messageReceived" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        IRCMessage *parserResult = notification.object;
+        
+        if (parserResult.messageType == ET_ACTION) {
+            XCTAssertEqualObjects(parserResult.conversation.name, @"#conversation");
+            XCTAssertEqualObjects(parserResult.sender.nick, @"John");
+            XCTAssertEqualObjects(parserResult.sender.username, @"jappleseed");
+            XCTAssertEqualObjects(parserResult.sender.hostname, @"apple.com");
+            XCTAssertEqualObjects(parserResult.message, @"hates unit tests");
+            
+            [self.receivedActionExpectation fulfill];
+        }
+    }];
+    
+    self.receivedActionExpectation = [self expectationWithDescription:@"receivedACTION"];
+    NSString *testMessage = @":John!jappleseed@apple.com PRIVMSG #conversation :\001ACTION hates unit tests\001";
+    [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+}
+
+- (void)testParserWithNOTICE {
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"messageReceived" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        IRCMessage *parserResult = notification.object;
+        
+        if (parserResult.messageType == ET_NOTICE) {
+            XCTAssertEqualObjects(parserResult.conversation.name, @"John");
+            XCTAssertEqualObjects(parserResult.sender.nick, @"John");
+            XCTAssertEqualObjects(parserResult.sender.username, @"jappleseed");
+            XCTAssertEqualObjects(parserResult.sender.hostname, @"apple.com");
+            XCTAssertEqualObjects(parserResult.message, @"good day");
+            
+            [self.receivedNoticeExpectation fulfill];
+        }
+    }];
+    
+    self.receivedNoticeExpectation = [self expectationWithDescription:@"receivedNOTICE"];
+    NSString *testMessage = [NSString stringWithFormat:@":John!jappleseed@apple.com NOTICE %@ :good day", self.testClient.configuration.primaryNickname];
+    [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+}
+
+- (void)testParserWithCTCPReply {
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"messageReceived" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        IRCMessage *parserResult = notification.object;
+        
+        if (parserResult.messageType == ET_CTCPREPLY) {
+            XCTAssertEqualObjects(parserResult.conversation.name, @"John");
+            XCTAssertEqualObjects(parserResult.sender.nick, @"John");
+            XCTAssertEqualObjects(parserResult.sender.username, @"jappleseed");
+            XCTAssertEqualObjects(parserResult.sender.hostname, @"apple.com");
+            XCTAssertEqualObjects(parserResult.message, @"TIME Saturday, 7 February 2015 09:42:49 Central Europe");
+            
+            [self.receivedCTCPReplyExpectation fulfill];
+        }
+    }];
+    
+    self.receivedCTCPReplyExpectation = [self expectationWithDescription:@"receivedCTCPReply"];
+    NSString *testMessage = [NSString stringWithFormat:@":John!jappleseed@apple.com NOTICE %@ :\001TIME Saturday, 7 February 2015 09:42:49 Central Europe\001", self.testClient.configuration.primaryNickname];
+    [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+}
+
+- (void)testParserWithJoin {
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"messageReceived" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        IRCMessage *parserResult = notification.object;
+        
+        if (parserResult.messageType == ET_JOIN) {
+            XCTAssertEqualObjects(parserResult.conversation.name, @"#conversation");
+            XCTAssertEqualObjects(parserResult.sender.nick, @"John");
+            XCTAssertEqualObjects(parserResult.sender.username, @"jappleseed");
+            XCTAssertEqualObjects(parserResult.sender.hostname, @"apple.com");
+            
+            [self.receivedJoinExpectation fulfill];
+        }
+    }];
+    
+    self.receivedJoinExpectation = [self expectationWithDescription:@"receivedJoin"];
+    NSString *testMessage = @":John!jappleseed@apple.com JOIN #conversation";
+    [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+}
+
+- (void)testParserWithJoinNGIRCD {
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"messageReceived" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        IRCMessage *parserResult = notification.object;
+        
+        if (parserResult.messageType == ET_JOIN) {
+            XCTAssertEqualObjects(parserResult.conversation.name, @"#conversation");
+            XCTAssertEqualObjects(parserResult.sender.nick, @"John");
+            XCTAssertEqualObjects(parserResult.sender.username, @"jappleseed");
+            XCTAssertEqualObjects(parserResult.sender.hostname, @"apple.com");
+            
+            [self.receivedJoinNGIRCDExpectation fulfill];
+        }
+    }];
+    
+    self.receivedJoinNGIRCDExpectation = [self expectationWithDescription:@"receivedJoinNGIRCD"];
+    NSString *testMessage = @":John!jappleseed@apple.com JOIN :#conversation";
+    [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+}
+
+- (void)testParserWithExtendedJoin {
+    self.testClient.ircv3CapabilitiesSupportedByServer = @[@"extended-join"].mutableCopy;
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"messageReceived" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        IRCMessage *parserResult = notification.object;
+        
+        if (parserResult.messageType == ET_JOIN) {
+            XCTAssertEqualObjects(parserResult.conversation.name, @"#conversation");
+            XCTAssertEqualObjects(parserResult.sender.nick, @"John");
+            XCTAssertEqualObjects(parserResult.sender.username, @"jappleseed");
+            XCTAssertEqualObjects(parserResult.sender.hostname, @"apple.com");
+            XCTAssertEqualObjects(parserResult.sender.realname, @"John Appleseed");
+            
+            [self.receivedExtendedJoinExpectation fulfill];
+        }
+    }];
+    
+    self.receivedExtendedJoinExpectation = [self expectationWithDescription:@"receivedExtendedJoin"];
+    NSString *testMessage = @":John!jappleseed@apple.com JOIN #conversation * :John Appleseed";
+    [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+}
+
+- (void)testParserWithPartWithMessage {
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"messageReceived" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        IRCMessage *parserResult = notification.object;
+        
+        if (parserResult.messageType == ET_PART) {
+            XCTAssertEqualObjects(parserResult.conversation.name, @"#conversation");
+            XCTAssertEqualObjects(parserResult.sender.nick, @"John");
+            XCTAssertEqualObjects(parserResult.sender.username, @"jappleseed");
+            XCTAssertEqualObjects(parserResult.sender.hostname, @"apple.com");
+            XCTAssertEqualObjects(parserResult.message, @"Good bye");
+            
+            [self.receivedPartExpectation fulfill];
+        }
+    }];
+    
+    self.receivedPartExpectation = [self expectationWithDescription:@"receivedPart"];
+    NSString *testMessage = @":John!jappleseed@apple.com PART #conversation :Good bye";
+    [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+}
+
+- (void)testParserWithPartWithoutMessage {
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"messageReceived" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        IRCMessage *parserResult = notification.object;
+        
+        if (parserResult.messageType == ET_PART) {
+            XCTAssertEqualObjects(parserResult.conversation.name, @"#conversation");
+            XCTAssertEqualObjects(parserResult.sender.nick, @"John");
+            XCTAssertEqualObjects(parserResult.sender.username, @"jappleseed");
+            XCTAssertEqualObjects(parserResult.sender.hostname, @"apple.com");
+            
+            [self.receivedPartWithoutMessageExpectation fulfill];
+        }
+    }];
+    
+    self.receivedPartWithoutMessageExpectation = [self expectationWithDescription:@"receivedPartNoMessage"];
+    NSString *testMessage = @":John!jappleseed@apple.com PART :#conversation";
+    [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+}
+
+- (void)testParserWithNickChange {
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"messageReceived" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        IRCMessage *parserResult = notification.object;
+        
+        if (parserResult.messageType == ET_NICK) {
+            XCTAssertEqualObjects(parserResult.sender.nick, @"John");
+            XCTAssertEqualObjects(parserResult.sender.username, @"jappleseed");
+            XCTAssertEqualObjects(parserResult.sender.hostname, @"apple.com");
+            XCTAssertEqualObjects(parserResult.message, @"John|Away");
+            
+            [self.receivedNickChangeExpectation fulfill];
+        }
+    }];
+    
+    self.receivedNickChangeExpectation = [self expectationWithDescription:@"receivedNickChange"];
+    NSString *testMessage = @":John!jappleseed@apple.com NICK John|Away";
+    [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+}
+
+- (void)testParserWithNickChangeNGIRCD {
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"messageReceived" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        IRCMessage *parserResult = notification.object;
+        
+        if (parserResult.messageType == ET_NICK) {
+            XCTAssertEqualObjects(parserResult.sender.nick, @"John");
+            XCTAssertEqualObjects(parserResult.sender.username, @"jappleseed");
+            XCTAssertEqualObjects(parserResult.sender.hostname, @"apple.com");
+            XCTAssertEqualObjects(parserResult.message, @"John|Away");
+            
+            [self.receivedNickChangeNGIRCDExpectation fulfill];
+        }
+    }];
+    
+    self.receivedNickChangeNGIRCDExpectation = [self expectationWithDescription:@"receivedNickChangeNGIRCD"];
+    NSString *testMessage = @":John!jappleseed@apple.com NICK :John|Away";
+    [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+}
+
+/*
+- (void)testParserWithKick {
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"messageReceived" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        IRCKickMessage *parserResult = notification.object;
+        
+        if (parserResult.messageType == ET_KICK) {
+            XCTAssertEqualObjects(parserResult.sender.nick, @"John");
+            XCTAssertEqualObjects(parserResult.sender.username, @"jappleseed");
+            XCTAssertEqualObjects(parserResult.sender.hostname, @"apple.com");
+            XCTAssertEqualObjects(parserResult.message, @"Your attitude is not conducive to the desired environment.");
+            XCTAssertEqualObjects(parserResult.conversation.name, @"#conversation");
+            XCTAssertEqualObjects(parserResult.kickedUser.nick, @"Clinteger");
+            
+            [self.receivedKickExpectation fulfill];
+        }
+    }];
+    
+    self.receivedKickExpectation = [self expectationWithDescription:@"receivedKick"];
+    NSString *testMessage = @":John!jappleseed@apple.com KICK #conversation Clinteger :Your attitude is not conducive to the desired environment.";
+    [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+}*/
+
+- (void)testParserWithQuitMessage {
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"messageReceived" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        IRCMessage *parserResult = notification.object;
+        
+        if (parserResult.messageType == ET_QUIT) {
+            XCTAssertEqualObjects(parserResult.sender.nick, @"John");
+            XCTAssertEqualObjects(parserResult.sender.username, @"jappleseed");
+            XCTAssertEqualObjects(parserResult.sender.hostname, @"apple.com");
+            XCTAssertEqualObjects(parserResult.message, @"Ping Timeout");
+            
+            [self.receivedQuitExpectation fulfill];
+        }
+    }];
+    
+    self.receivedQuitExpectation = [self expectationWithDescription:@"receivedQuitMessage"];
+    NSString *testMessage = @":John!jappleseed@apple.com QUIT :Ping Timeout";
+    [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+}
+
+- (void)testParserWithChannelModes {
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"messageReceived" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        IRCMessage *parserResult = notification.object;
+        
+        if (parserResult.messageType == ET_MODE) {
+            IRCChannel *channel = (IRCChannel *)parserResult.conversation;
+            
+            XCTAssertEqualObjects(parserResult.sender.nick, @"John");
+            XCTAssertEqualObjects(parserResult.sender.username, @"jappleseed");
+            XCTAssertEqualObjects(parserResult.sender.hostname, @"apple.com");
+            XCTAssertEqualObjects(parserResult.conversation.name, @"#conversation");
+            XCTAssertEqualObjects(channel.channelModes, @[@"m"]);
+            
+            [self.receivedChannelModesExpectation fulfill];
+        }
+    }];
+    
+    self.receivedChannelModesExpectation = [self expectationWithDescription:@"receivedChannelModes"];
+    NSString *testMessage = @":John!jappleseed@apple.com MODE #conversation :+m";
+    [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+}
+
+- (void)testParserWithTopicMessage {
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"messageReceived" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        IRCMessage *parserResult = notification.object;
+        
+        if (parserResult.messageType == ET_TOPIC) {
+            IRCChannel *channel = (IRCChannel *)parserResult.conversation;
+            
+            XCTAssertEqualObjects(parserResult.sender.nick, @"John");
+            XCTAssertEqualObjects(parserResult.sender.username, @"jappleseed");
+            XCTAssertEqualObjects(parserResult.sender.hostname, @"apple.com");
+            XCTAssertEqualObjects(parserResult.conversation.name, @"#conversation");
+            XCTAssertEqualObjects(channel.topic, @"Channel for awesome people");
+            
+            [self.receivedTopicExpectation fulfill];
+        }
+    }];
+    
+    self.receivedTopicExpectation = [self expectationWithDescription:@"receivedChannelTopic"];
+    NSString *testMessage = @":John!jappleseed@apple.com TOPIC #conversation :Channel for awesome people";
+    [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
 }
 
 @end

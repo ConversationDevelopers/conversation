@@ -170,7 +170,7 @@
     });
 }
 
-- (void)clientDidReceiveData:(const char*)cline
+- (IRCMessage *)clientDidReceiveData:(const char*)cline
 {
     NSString *line = [NSString stringWithCString:cline usingEncodingPreference:self.configuration];
     NSLog(@"<< %@", line);
@@ -485,6 +485,8 @@
     if (numericReplyAsNumber >= 400 && numericReplyAsNumber < 600) {
         [Messages clientReceivedRecoverableErrorFromServer:messageObject];
     }
+    
+    return messageObject;
 }
 
 - (void)updateServerSupportedFeatures:(NSString *)data
