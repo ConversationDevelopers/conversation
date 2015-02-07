@@ -505,7 +505,7 @@ BOOL popoverDidDismiss = NO;
         // Channels
         if ([string isValidChannelName:_conversation.client]) {
             IRCClient *client = _conversation.client;
-            for (IRCChannel *channel in client.channels)
+            for (IRCChannel *channel in [client.channels copy])
                 if([[channel.name lowercaseString] hasPrefix:[string lowercaseString]])
                     [_suggestions addObject:channel.name];
             
@@ -513,7 +513,7 @@ BOOL popoverDidDismiss = NO;
             // Users
             if (_isChannel) {
                 IRCChannel *channel = (IRCChannel *)_conversation;
-                for (IRCUser *user in channel.users)
+                for (IRCUser *user in [channel.users copy])
                     if([[user.nick lowercaseString] hasPrefix:[string lowercaseString]]) {
                         if (args.count == 1)
                             [_suggestions addObject:[NSString stringWithFormat:@"%@:", user.nick]];
