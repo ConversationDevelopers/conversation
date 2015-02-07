@@ -34,6 +34,7 @@
 #import "IRCChannel.h"
 #import "IRCConversation.h"
 #import "IRCCommands.h"
+#import "ConversationListViewController.h"
 
 @implementation InputCommands
 
@@ -399,6 +400,16 @@
                 break;
                 
             case CMD_QUERY:
+                if ([messageComponents count] > 1) {
+                    [messageComponents removeObjectAtIndex:0];
+                    NSString *name = [messageComponents componentsJoinedByString:@" "];
+                    [IRCConversation getConversationOrCreate:name onClient:conversation.client withCompletionHandler:^(IRCConversation *conversation) {
+                        ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+                        [controller selectConversationWithIdentifier:conversation.configuration.uniqueIdentifier];
+                    }];
+                } else {
+                    [InputCommands incompleteParametersError:command withParameters:@"<user>"];
+                }
                 break;
                 
             case CMD_QUIT:
