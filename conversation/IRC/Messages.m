@@ -313,9 +313,6 @@
     /* Check that the message contains both CTCP characters and at least one other character */
     if ([[message message] length] > 3) {
         message.message = [[message message] substringWithRange:NSMakeRange(1, [[message message] length] - 2)];
-        NSMutableArray *messageComponents = [[[message message] componentsSeparatedByString:@" "] mutableCopy];
-        
-        message.message = [messageComponents objectAtIndex:0];
         message.messageType = ET_CTCPREPLY;
         
         [IRCConversation getConversationOrCreate:[[message conversation] name] onClient:[message client] withCompletionHandler:^(IRCConversation *conversation) {
