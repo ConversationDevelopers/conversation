@@ -37,6 +37,7 @@
 
 + (void)sendMessage:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client
 {
+    
     /* The message may be multiple lines, we will split them by their line break and send them as inividual messages. */
     NSArray *lines = [message componentsSeparatedByString:@"\n"];
     for (NSString *line in lines) {
@@ -44,6 +45,18 @@
             
             [client.connection send:[NSString stringWithFormat:@"PRIVMSG %@ :%@", recipient, line]];
             [IRCConversation getConversationOrCreate:recipient onClient:client withCompletionHandler:^(IRCConversation *conversation) {
+                if (client.isConnected == NO) {
+                    IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:@"Cannot send message (Not connected)"
+                                                                             OfType:ET_ERROR
+                                                                     inConversation:conversation
+                                                                           bySender:nil
+                                                                             atTime:[NSDate date]
+                                                                           withTags:nil
+                                                                    isServerMessage:YES
+                                                                           onClient:client];
+                    [Messages clientReceivedRecoverableErrorFromServer:messageObject];
+                    return;
+                }
                 
                 IRCUser *user = client.currentUserOnConnection;
                 
@@ -52,6 +65,8 @@
                     IRCChannel *channel = (IRCChannel *)conversation;
                     user = [IRCUser fromNickname:client.currentUserOnConnection.nick onChannel:channel];
                 }
+                
+                
                 IRCMessage *message = [[IRCMessage alloc] initWithMessage:line
                                                                    OfType:ET_PRIVMSG
                                                            inConversation:conversation
