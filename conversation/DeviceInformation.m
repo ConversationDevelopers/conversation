@@ -115,7 +115,7 @@
     
     float batteryLevel = [[UIDevice currentDevice] batteryLevel];
 
-    return [[NSString stringWithFormat:@"%.1f", batteryLevel] stringByAppendingString:@"%"];
+    return [[NSString stringWithFormat:@"%.f", batteryLevel*100] stringByAppendingString:@"%"];
     
 }
 
