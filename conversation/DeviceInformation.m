@@ -98,14 +98,10 @@
 
 + (NSString *)orientation
 {
-    NSInteger orientation = [[UIDevice currentDevice] orientation];
-    
-    if (orientation == UIDeviceOrientationPortrait || orientation == UIDeviceOrientationPortraitUpsideDown)
-        return @"Portrait";
-    else if (orientation == UIDeviceOrientationLandscapeLeft || orientation == UIDeviceOrientationLandscapeRight)
+    if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
         return @"Landscape";
     
-    return @"Unknown";
+    return @"Portrait";
 }
 
 + (NSString *)batteryLevel
