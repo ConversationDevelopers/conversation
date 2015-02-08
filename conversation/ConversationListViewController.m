@@ -990,7 +990,7 @@
                 
                 // Show notification
                 MCNotification *notification = [MCNotification notification];
-                notification.backgroundColor = [UIColor colorWithRed:0.176 green:0.2 blue:0.29 alpha:1];
+                notification.backgroundColor = [UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0];
                 notification.tintColor = [UIColor whiteColor];
                 notification.text = message.sender.nick;
                 notification.detailText = message.message;
@@ -1019,7 +1019,7 @@
                     
                     // Show notification
                     MCNotification *notification = [MCNotification notification];
-                    notification.backgroundColor = [UIColor colorWithRed:0.176 green:0.2 blue:0.29 alpha:1];
+                    notification.backgroundColor = [UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0];
                     notification.tintColor = [UIColor whiteColor];
                     notification.text = message.sender.nick;
                     notification.detailText = message.message;
