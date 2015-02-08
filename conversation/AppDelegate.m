@@ -42,11 +42,11 @@
     // Customize Statusbar and navigation bar application wide
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0]];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:0.11 green:0.129 blue:0.188 alpha:1]];
     [[UINavigationBar appearance] setTintColor:[UIColor lightGrayColor]];
-    [[UINavigationBar appearance] setBackgroundColor:[UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0]];
+    [[UINavigationBar appearance] setBackgroundColor:[UIColor colorWithRed:0.11 green:0.129 blue:0.188 alpha:1]];
     [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor lightGrayColor]} forState:UIControlStateNormal];
-    [[UITableView appearance] setTintColor:[UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0]];
+    [[UITableView appearance] setTintColor:[UIColor colorWithRed:0.11 green:0.129 blue:0.188 alpha:1]];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     

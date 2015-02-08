@@ -53,7 +53,7 @@ static PreferencesTextCell *currentEditingCell;
     _textField.font = [UIFont systemFontOfSize:17.];
     _textField.adjustsFontSizeToFitWidth = YES;
     _textField.minimumFontSize = 14.;
-    _textField.textColor = [UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0];
+    _textField.textColor = [UIColor colorWithRed:0.11 green:0.129 blue:0.188 alpha:1];
     _textField.enablesReturnKeyAutomatically = NO;
     _textField.returnKeyType = UIReturnKeyDone;
     
@@ -118,7 +118,7 @@ static PreferencesTextCell *currentEditingCell;
 - (void) layoutSubviews {
     [super layoutSubviews];
     
-    _textField.textColor = [UIColor colorWithRed:0.13 green:0.14 blue:0.17 alpha:1.0];
+    _textField.textColor = [UIColor colorWithRed:0.11 green:0.129 blue:0.188 alpha:1];
     
     CGRect contentRect = self.contentView.frame;
     
