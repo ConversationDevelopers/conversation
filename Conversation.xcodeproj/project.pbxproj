@@ -638,6 +638,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DA1A4ADD19E1770700565763 /* Build configuration list for PBXNativeTarget "conversation" */;
 			buildPhases = (
+				DA50A43B1A86DD0300A24F2F /* ShellScript */,
 				DA1A4AB319E1770700565763 /* Sources */,
 				DA1A4AB419E1770700565763 /* Frameworks */,
 				DA1A4AB519E1770700565763 /* Resources */,
@@ -752,6 +753,19 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
+		};
+		DA50A43B1A86DD0300A24F2F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\n\ncd \"${PROJECT_DIR}/conversation\"\n\nbundleVersion=$(/usr/libexec/PlistBuddy -c \"Print \\\"CFBundleShortVersionString\\\"\" Info.plist)\nbundleName=$(/usr/libexec/PlistBuddy -c \"Print \\\"CFBundleName\\\"\" Info.plist)\ngitRef=$(echo \"$(git describe --tags)\" | grep -oE \"([0-9]{1,3})\\-([a-zA-Z0-9]{8})\")\nbuildDate=`date`\n\ncd \"${PROJECT_DIR}/conversation/include/\"\n\necho \"\" > BuildConfig.h\necho \"#define ConversationBundleName        @\\\"$bundleName\\\"\" >> BuildConfig.h\necho \"#define ConversationVersion           @\\\"$bundleVersion\\\"\" >> BuildConfig.h\necho \"#define ConversationBuildRef          @\\\"$gitRef\\\"\" >> BuildConfig.h\necho \"#define ConversationBuildDate         @\\\"$buildDate\\\"\" >> BuildConfig.h";
 		};
 /* End PBXShellScriptBuildPhase section */
 

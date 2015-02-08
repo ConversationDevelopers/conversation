@@ -6,5 +6,6 @@
 *.xcuserstate
 .tmp
 xcuserdata
+BuildConfig.h
 build/*
 Pods/build/*

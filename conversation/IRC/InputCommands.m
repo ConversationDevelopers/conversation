@@ -35,6 +35,7 @@
 #import "IRCConversation.h"
 #import "IRCCommands.h"
 #import "ConversationListViewController.h"
+#import "BuildConfig.h"
 
 @implementation InputCommands
 
@@ -346,10 +347,13 @@
             }
                 
             case CMD_MYVERSION:
-                [IRCCommands sendMessage:[NSString stringWithFormat:@"%cCurrent Version:%c Conversation %@ (https://github.com/ConversationDevelopers/conversation)",
+                [IRCCommands sendMessage:[NSString stringWithFormat:@"%cCurrent Version:%c %@ %@-%@ (Build Date: %@)",
                                           IRC_BOLD,
                                           IRC_BOLD,
-                                          [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]]
+                                          ConversationBundleName,
+                                          ConversationVersion,
+                                          ConversationBuildRef,
+                                          ConversationBuildDate]
                   toRecipient:[conversation name] onClient:[conversation client]];
                 break;
                 
