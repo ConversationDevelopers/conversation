@@ -33,12 +33,16 @@
 #import "AppPreferences.h"
 #import "ChatMessageView.h"
 #import "IRCConnection.h"
+#import "AnalyticsController.h"
 #import <FCModel/FCModel.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    [AnalyticsController setup];
+    
     // Customize Statusbar and navigation bar application wide
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];

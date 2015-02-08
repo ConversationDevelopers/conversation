@@ -15,6 +15,7 @@ target 'conversation' do
 	pod 'InAppSettingsKit'
 	pod 'FCModel'
 	pod 'MenuPopOverView'
+	pod 'GoogleAnalytics-iOS-SDK'
 end
 
 target 'conversationTests' do
@@ -29,6 +30,7 @@ target 'conversationTests' do
     pod 'InAppSettingsKit'
     pod 'FCModel'
     pod 'MenuPopOverView'
+	pod 'GoogleAnalytics-iOS-SDK'
 end
 
 post_install do |installer_representation|

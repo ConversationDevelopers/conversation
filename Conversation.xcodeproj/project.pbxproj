@@ -38,6 +38,7 @@
 		DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */; };
 		DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */; };
 		DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322AB19E5DE490068E2B6 /* PreferencesTextCell.m */; };
+		DAB3FDE51A87AB4200E4CA7A /* AnalyticsController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAB3FDE41A87AB4200E4CA7A /* AnalyticsController.m */; };
 		DAC0CB951A80E4CC00A7A2E7 /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC0CB941A80E4CC00A7A2E7 /* UserInfoViewController.m */; };
 		DAC65A4419EAA2ED00E00A73 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A3B19EAA2ED00E00A73 /* LaunchScreen.xib */; };
 		DAC65A4519EAA2ED00E00A73 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A3D19EAA2ED00E00A73 /* Localizable.strings */; };
@@ -148,6 +149,8 @@
 		DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesSwitchCell.m; sourceTree = "<group>"; };
 		DAA322AA19E5DE490068E2B6 /* PreferencesTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesTextCell.h; sourceTree = "<group>"; };
 		DAA322AB19E5DE490068E2B6 /* PreferencesTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesTextCell.m; sourceTree = "<group>"; };
+		DAB3FDE31A87AB4200E4CA7A /* AnalyticsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalyticsController.h; sourceTree = "<group>"; };
+		DAB3FDE41A87AB4200E4CA7A /* AnalyticsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnalyticsController.m; sourceTree = "<group>"; };
 		DAC0CB931A80E4CC00A7A2E7 /* UserInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoViewController.h; sourceTree = "<group>"; };
 		DAC0CB941A80E4CC00A7A2E7 /* UserInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoViewController.m; sourceTree = "<group>"; };
 		DAC65A3C19EAA2ED00E00A73 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = LaunchScreen.xib; sourceTree = "<group>"; };
@@ -355,6 +358,8 @@
 				FAC0E4631A0072EF001CFB48 /* include */,
 				FAC0E4B01A0073C4001CFB48 /* lib */,
 				FA109B3819E4190C0068DC29 /* Preferences */,
+				DAB3FDE31A87AB4200E4CA7A /* AnalyticsController.h */,
+				DAB3FDE41A87AB4200E4CA7A /* AnalyticsController.m */,
 				DA6355AC1A8789F500B4F65D /* DeviceInformation.h */,
 				DA6355AD1A8789F500B4F65D /* DeviceInformation.m */,
 				DA1A4ABE19E1770700565763 /* AppDelegate.h */,
@@ -770,7 +775,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\ncd \"${PROJECT_DIR}/conversation\"\n\nbundleVersion=$(/usr/libexec/PlistBuddy -c \"Print \\\"CFBundleShortVersionString\\\"\" Info.plist)\nbundleName=$(/usr/libexec/PlistBuddy -c \"Print \\\"CFBundleName\\\"\" Info.plist)\ngitRef=$(echo \"$(git describe --tags)\" | grep -oE \"([0-9]{1,3})\\-([a-zA-Z0-9]{8})\")\nbuildDate=`date`\n\ncd \"${PROJECT_DIR}/conversation/include/\"\n\necho \"\" > BuildConfig.h\necho \"#define ConversationBundleName        @\\\"$bundleName\\\"\" >> BuildConfig.h\necho \"#define ConversationVersion           @\\\"$bundleVersion\\\"\" >> BuildConfig.h\necho \"#define ConversationBuildRef          @\\\"$gitRef\\\"\" >> BuildConfig.h\necho \"#define ConversationBuildDate         @\\\"$buildDate\\\"\" >> BuildConfig.h";
+			shellScript = "#!/bin/sh\n\ncd \"${PROJECT_DIR}/conversation\"\n\nbundleVersion=$(/usr/libexec/PlistBuddy -c \"Print \\\"CFBundleShortVersionString\\\"\" Info.plist)\nbundleName=$(/usr/libexec/PlistBuddy -c \"Print \\\"CFBundleName\\\"\" Info.plist)\ngitRef=$(echo \"$(git describe --tags)\" | grep -oE \"([0-9]{1,3})\\-([a-zA-Z0-9]{8})\")\nbuildDate=`date`\n\nbuildType=\"personal\"\n\nif [[ \"$BUILD_STYLE\" == \"Distribution\" ]]; then\n    buildType=\"official\"\nfi\n\ncd \"${PROJECT_DIR}/conversation/include/\"\n\necho \"\" > BuildConfig.h\necho \"#define ConversationBundleName        @\\\"$bundleName\\\"\" >> BuildConfig.h\necho \"#define ConversationBuildType         @\\\"$buildType\\\"\" >> BuildConfig.h\necho \"#define ConversationVersion           @\\\"$bundleVersion\\\"\" >> BuildConfig.h\necho \"#define ConversationBuildRef          @\\\"$gitRef\\\"\" >> BuildConfig.h\necho \"#define ConversationBuildDate         @\\\"$buildDate\\\"\" >> BuildConfig.h\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -817,6 +822,7 @@
 				DA2F9A081A0726E60028B2BD /* AddStringItemViewController.m in Sources */,
 				FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */,
 				DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */,
+				DAB3FDE51A87AB4200E4CA7A /* AnalyticsController.m in Sources */,
 				DAE1BFB31A722FFA00A66276 /* ConversationContentView.m in Sources */,
 				FAC0E50C1A018AC2001CFB48 /* CertificateItemRow.m in Sources */,
 				FAEE1E6019EBEA040041439F /* Messages.m in Sources */,

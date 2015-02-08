@@ -28,6 +28,9 @@ PODS:
   - FMDB/common (2.5)
   - FMDB/standard (2.5):
     - FMDB/common
+  - GoogleAnalytics-iOS-SDK (3.10):
+    - GoogleAnalytics-iOS-SDK/Core
+  - GoogleAnalytics-iOS-SDK/Core (3.10)
   - ImgurAnonymousAPIClient (0.2):
     - AFNetworking (>= 2.3.1)
   - InAppSettingsKit (2.3.3)
@@ -44,6 +47,7 @@ PODS:
 DEPENDENCIES:
   - DLImageLoader (from `https://github.com/AndreyLunevich/DLImageLoader-iOS.git`)
   - FCModel
+  - GoogleAnalytics-iOS-SDK
   - ImgurAnonymousAPIClient (from `https://github.com/nolanw/ImgurAnonymousAPIClient.git`, tag `v0.2`)
   - InAppSettingsKit
   - MCNotificationManager
@@ -68,6 +72,7 @@ SPEC CHECKSUMS:
   DLImageLoader: ed4a058375bcef56e2493769d375612715189659
   FCModel: 1f01fdcb5b469d3ab3c307ee90cb1b743cc3adfd
   FMDB: 0efa188cf0dd1ce82c27a478cd5f5fa245308677
+  GoogleAnalytics-iOS-SDK: f422062075d9ccb1ea8d783fc5ba3829461e9502
   ImgurAnonymousAPIClient: 34d68a1f5549b3dbe64028a44b8074bf44da2e82
   InAppSettingsKit: c870cb6095a85656ff4df42845af5c26eede4c8d
   MCNotificationManager: 0be8eb1535c914b5f5b8b8c0ffc1d1a7fb6be90b

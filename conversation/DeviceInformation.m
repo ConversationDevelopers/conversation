@@ -44,7 +44,6 @@
     NSString* code = [NSString stringWithCString:systemInfo.machine
                                         encoding:NSUTF8StringEncoding];
     
-    NSLog(@"CODE: %@", code);
     static NSDictionary* deviceNamesByCode = nil;
     
     if (!deviceNamesByCode) {
