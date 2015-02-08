@@ -30,66 +30,11 @@
 
 #import <Foundation/Foundation.h>
 
-@class IRCConversation;
-@class IRCClient;
+@interface DeviceInformation : NSObject
 
-@interface InputCommands : NSObject
-
-+ (void)performCommand:(NSString *)message inConversation:(IRCConversation *)conversation;
-
-+ (NSUInteger)indexValueFromString:(NSString *)key;
-
-+ (void)sendMessage:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client;
-
-+ (NSArray *)inputCommandReference;
-
-typedef NS_ENUM(NSUInteger, InputCommand) {
-    CMD_ADMIN,
-    CMD_BAN,
-    CMD_CLEAR,
-    CMD_CLEARALL,
-    CMD_CLOSE,
-    CMD_CTCP,
-    CMD_CTCPREPLY,
-    CMD_CYCLE,
-    CMD_DEADMIN,
-    CMD_DEHALFOP,
-    CMD_DEOP,
-    CMD_DEVOICE,
-    CMD_DEOWNER,
-    CMD_DETACH,
-    CMD_HALFOP,
-    CMD_HOP,
-    CMD_IGNORE,
-    CMD_J,
-    CMD_JOIN,
-    CMD_KB,
-    CMD_K,
-    CMD_KICK,
-    CMD_KICKBAN,
-    CMD_LEAVE,
-    CMD_LIST,
-    CMD_ME,
-    CMD_MODE,
-    CMD_MSG,
-    CMD_MYVERSION,
-    CMD_NICK,
-    CMD_OP,
-    CMD_NOTICE,
-    CMD_OWNER,
-    CMD_PART,
-    CMD_QUERY,
-    CMD_QUIT,
-    CMD_QUOTE,
-    CMD_RAW,
-    CMD_REJOIN,
-    CMD_SYSINFO,
-    CMD_TIMER,
-    CMD_TOPIC,
-    CMD_UMODE,
-    CMD_UNBAN,
-    CMD_UNIGNORE,
-    CMD_VOICE    
-};
++ (NSString *)deviceName;
++ (NSString *)firmwareVersion;
++ (NSString *)orientation;
++ (NSString *)batteryLevel;
 
 @end

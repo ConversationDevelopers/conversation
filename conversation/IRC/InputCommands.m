@@ -36,6 +36,7 @@
 #import "IRCCommands.h"
 #import "ConversationListViewController.h"
 #import "BuildConfig.h"
+#import "DeviceInformation.h"
 
 @implementation InputCommands
 
@@ -436,6 +437,24 @@
                     [InputCommands incompleteParametersError:command withParameters:@"<command>"];
                 }
                 break;
+            case CMD_SYSINFO: {
+                NSString *infoString = [NSString stringWithFormat:@"System Information: %cModel:%c %@ %cOS%c: iOS %@ %cOrientation:%c %@ %cBattery Level:%c %@",
+                                        IRC_BOLD,
+                                        IRC_BOLD,
+                                        [DeviceInformation deviceName],
+                                        IRC_BOLD,
+                                        IRC_BOLD,
+                                        [DeviceInformation firmwareVersion],
+                                        IRC_BOLD,
+                                        IRC_BOLD,
+                                        [DeviceInformation orientation],
+                                        IRC_BOLD,
+                                        IRC_BOLD,
+                                        [DeviceInformation batteryLevel]
+                                        ];
+                [IRCCommands sendMessage:infoString toRecipient:[conversation name] onClient:conversation.client];
+                break;
+            }
             case CMD_TIMER:
                 if ([messageComponents count] > 2) {
                     float seconds = [messageComponents[1] floatValue];
@@ -572,6 +591,7 @@
         @"QUOTE",
         @"RAW",
         @"REJOIN",
+        @"SYSINFO",
         @"TIMER",
         @"TOPIC",
         @"UNIGNORE",        

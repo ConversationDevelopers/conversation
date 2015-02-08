@@ -18,6 +18,7 @@
 		DA379D4719FB35E80031E30B /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA379D4619FB35E80031E30B /* ChatViewController.m */; };
 		DA41794B19FAF9FF007784F0 /* ChatMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA41794A19FAF9FF007784F0 /* ChatMessageView.m */; };
 		DA5FB8F81A6EF577004CA1C8 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DA5FB8F71A6EF577004CA1C8 /* Settings.bundle */; };
+		DA6355AE1A8789F500B4F65D /* DeviceInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = DA6355AD1A8789F500B4F65D /* DeviceInformation.m */; };
 		DA656B361A12C97000C214BD /* UserListItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DA656B351A12C97000C214BD /* UserListItemCell.m */; };
 		DA656B391A13866500C214BD /* ConsoleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA656B381A13866500C214BD /* ConsoleViewController.m */; };
 		DA6F61D719FD1A6600F22F78 /* ILTranslucentView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA6F61D619FD1A6600F22F78 /* ILTranslucentView.m */; };
@@ -105,6 +106,8 @@
 		DA41794919FAF9FF007784F0 /* ChatMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ChatMessageView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		DA41794A19FAF9FF007784F0 /* ChatMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ChatMessageView.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		DA5FB8F71A6EF577004CA1C8 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = conversation/Resources/Settings.bundle; sourceTree = "<group>"; };
+		DA6355AC1A8789F500B4F65D /* DeviceInformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceInformation.h; sourceTree = "<group>"; };
+		DA6355AD1A8789F500B4F65D /* DeviceInformation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceInformation.m; sourceTree = "<group>"; };
 		DA656B341A12C97000C214BD /* UserListItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserListItemCell.h; sourceTree = "<group>"; };
 		DA656B351A12C97000C214BD /* UserListItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserListItemCell.m; sourceTree = "<group>"; };
 		DA656B371A13866500C214BD /* ConsoleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ConsoleViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -352,6 +355,8 @@
 				FAC0E4631A0072EF001CFB48 /* include */,
 				FAC0E4B01A0073C4001CFB48 /* lib */,
 				FA109B3819E4190C0068DC29 /* Preferences */,
+				DA6355AC1A8789F500B4F65D /* DeviceInformation.h */,
+				DA6355AD1A8789F500B4F65D /* DeviceInformation.m */,
 				DA1A4ABE19E1770700565763 /* AppDelegate.h */,
 				DA1A4ABF19E1770700565763 /* AppDelegate.m */,
 				DA2F9A061A0726E60028B2BD /* AddStringItemViewController.h */,
@@ -820,6 +825,7 @@
 				FABE6B841A6C75B5003C7E11 /* IRCCharacterSets.m in Sources */,
 				FA36D2FA1A0446BD00AEDB20 /* InputCommands.m in Sources */,
 				FA00A39219E5DD3D00E7B4D7 /* SSKeychain.m in Sources */,
+				DA6355AE1A8789F500B4F65D /* DeviceInformation.m in Sources */,
 				DA7B68771A00A43500D82B4C /* LinkTapView.m in Sources */,
 				DA6F61DA19FD1B2800F22F78 /* UserListView.m in Sources */,
 			);
