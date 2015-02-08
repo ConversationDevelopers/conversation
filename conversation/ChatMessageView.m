@@ -336,6 +336,10 @@ uint32_t FNV32(const char *s)
 
 - (UIColor *)colorForNick:(NSString *)nick
 {
+    // This is a temporal workaround
+    if (!nick)
+        return [UIColor blueColor];
+    
     return [self.userColors objectAtIndex:(int)floor(FNV32(nick.UTF8String) / 300000000)];
 }
 
