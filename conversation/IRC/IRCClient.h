@@ -88,6 +88,7 @@
 - (void)disconnect;
 - (void)disconnectWithMessage:(NSString *)message;
 - (void)autojoin;
+- (void)outputToConsole:(NSString *)output;
 
 - (BOOL)addChannel:(IRCChannel *)channel;
 - (BOOL)removeChannel:(IRCChannel *)channel;

@@ -227,7 +227,7 @@
         if (password != nil && [password length] > 0) {
             [client.connection send:[NSString stringWithFormat:@"PASS %@", password]];
         } else {
-            NSLog(@"A server password reference was found but no password: %@", client.configuration.serverPasswordReference);
+            [client outputToConsole:[NSString stringWithFormat:@"A server password reference was found but no password: %@", client.configuration.serverPasswordReference]];
         }
     }
 }

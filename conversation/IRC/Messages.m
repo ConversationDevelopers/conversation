@@ -63,7 +63,7 @@
             } else {
                 /* We had a reference to an item in keychain but the keychain item didn't exist for some reason.
                  We will act like there is no password saved and abort authentication. */
-                NSLog(@"An authentication password reference was found but no password: %@", message.client.configuration.authenticationPasswordReference);
+                [message.client outputToConsole:[NSString stringWithFormat:@"An authentication password reference was found but no password: %@", message.client.configuration.authenticationPasswordReference]];
             }
         }
     }

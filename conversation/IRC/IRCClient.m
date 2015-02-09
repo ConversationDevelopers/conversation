@@ -125,8 +125,6 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"clientWillConnect" object:self];
     });
     
-    NSLog(@"Connecting to %@ on %ld", self.configuration.serverAddress, (long)self.configuration.connectionPort);
-    
     [self.connection connectToHost:self.configuration.serverAddress onPort:self.configuration.connectionPort useSSL:self.configuration.connectUsingSecureLayer];
 }
 
@@ -151,7 +149,7 @@
         if (password != nil && [password length] > 0) {
             [self.connection send:[NSString stringWithFormat:@"PASS %@", password]];
         } else {
-            NSLog(@"A server password reference was found but no password: %@", self.configuration.serverPasswordReference);
+            [self outputToConsole:[NSString stringWithFormat:@"A server password reference was found but no password: %@", self.configuration.serverPasswordReference]];
         }
     }
     
@@ -448,7 +446,7 @@
                         [IRCCommands changeNicknameToNick:newNickName onClient:self];
                         self.currentUserOnConnection.nick = newNickName;
                     } else {
-                        NSLog(@"Registration failed. Disconnecting..");
+                        [self outputToConsole:@"Registration failed. Disconnecting.."];
                         [self disconnect];
                     }
                 }
@@ -561,7 +559,7 @@
 }
 
 - (void)clientDidDisconnect {
-    NSLog(@"Disconnected");
+    [self outputToConsole:@"Disconnected"];
     [self clearStatus];
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"clientDidDisonnect" object:self];
@@ -571,13 +569,13 @@
 
 - (void)clientDidDisconnectWithError:(NSString *)error
 {
-    NSLog(@"Disconnected: %@", error);
+    [self outputToConsole:[NSString stringWithFormat:@"Disconnected: %@", error]];
     [self clearStatus];
     if ([self.configuration automaticallyReconnect]) {
         if (self.connectionRetries == CONNECTION_RETRY_ATTEMPTS) {
-            NSLog(@"Connection attempt failed %i times. Connection aborted.", self.connectionRetries);
+            [self outputToConsole:[NSString stringWithFormat:@"Connection attempt failed %i times. Connection aborted.", self.connectionRetries]];
         } else {
-            NSLog(@"Retrying in 5 seconds..");
+            [self outputToConsole:@"Retrying in 5 seconds.."];
             [NSTimer scheduledTimerWithTimeInterval:5.0
                                              target:self
                                            selector:@selector(attemptClientReconnect)
@@ -818,6 +816,25 @@
             [self.connection send:[NSString stringWithFormat:@"JOIN %@", channel.name]];
         }
     }
+}
+
+- (void)outputToConsole:(NSString *)output
+{
+    #ifdef DEBUG
+    NSLog(@"%@", output);
+    #endif
+    
+    IRCMessage *message = [[IRCMessage alloc] initWithMessage:output
+                                                             OfType:ET_RAW
+                                                     inConversation:nil
+                                                           bySender:nil
+                                                             atTime:[NSDate date]
+                                                            withTags:@{}
+                                                            isServerMessage:YES
+                                                           onClient:self];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
+    });
 }
 
 - (void)performUserDefinedConnectCommands

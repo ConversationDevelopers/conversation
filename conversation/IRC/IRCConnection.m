@@ -79,15 +79,15 @@
     
     /* Establish a TCP connection */
     if (![socket connectToHost:host onPort:port withTimeout:15.0 error:&err]) {
-        NSLog(@"Error: %@", err);
+        [self.client outputToConsole:[NSString stringWithFormat:@"Could not connect: %@", err]];
     } else {
-        NSLog(@"Connecting..");
+        [self.client outputToConsole:[NSString stringWithFormat:@"Connecting to [%@] on port %d", host, port]];
     }
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
 {
-    NSLog(@"onSocket:%p didConnectToHost:%@ port:%hu", sock, host, port);
+    [self.client outputToConsole:[NSString stringWithFormat:@"Connection to host at [%@] established.", host]];
     
     /* Start SSL/TLS handshake if appropriate */
     if (self.client.configuration.connectUsingSecureLayer) {
@@ -164,7 +164,7 @@
         if (message) {
             [self.client clientDidReceiveData:message];
         } else {
-            NSLog(@"Read msg error: %s",message);
+            [self.client outputToConsole:[NSString stringWithFormat:@"Unable to decode message: %s", message]];
         }
         [socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:1];
         free(message);
@@ -174,6 +174,7 @@
 - (void)socketDidSecure:(GCDAsyncSocket *)sock
 {
     NSLog(@"onSocketDidSecure:%p", sock);
+    [self.client outputToConsole:[NSString stringWithFormat:@"Connection secured using %@", [IRCConnection getSSLProtocolAsString:sock]]];
 }
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)socket withError:(NSError *)err
@@ -185,7 +186,7 @@
     
     NSString *errorMessage = nil;
     if ([self badSSLCertificateErrorFound:err]) {
-        errorMessage = @"Disconnected from server because of an untrusted SSL certificate";
+        [self.client outputToConsole:@"Disconnected from server due to an untrusted SSL certificate"];
     } else {
         if ([err.domain isEqualToString:NSPOSIXErrorDomain]) {
             const char *error = strerror((int)err.domain);
@@ -321,6 +322,31 @@
         [self sendData:queueItemToSend];
         [self.messageQueue removeObjectAtIndex:0];
         return YES;
+    }
+}
+
++ (NSString *) getSSLProtocolAsString:(GCDAsyncSocket*)socket
+{
+    __block SSLProtocol protocol;
+    
+    OSStatus status = SSLGetNegotiatedProtocolVersion(socket.sslContext, &protocol);
+    #pragma unused(status)
+    
+    switch (protocol) {
+        case kSSLProtocol2:
+            return @"Secure Sockets Layer (SSL) version 2.0";
+        case kSSLProtocol3:
+        case kSSLProtocol3Only:
+            return @"Secure Sockets Layer (SSL) version 3.0";
+        case kTLSProtocol1:
+        case kTLSProtocol1Only:
+            return @"Transport Layer Security (TLS) version 1.0";
+        case kTLSProtocol11:
+            return @"Transport Layer Security (TLS) version 1.1";
+        case kTLSProtocol12:
+            return @"Transport Layer Security (TLS) version 1.2";
+        default:
+            return @"unknown security layer";
     }
 }
 

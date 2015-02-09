@@ -152,7 +152,6 @@
             self.voice = granted;
             break;
     }
-    NSLog(@"%d", self.channelPrivilege);
 }
 
 
