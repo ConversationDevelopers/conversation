@@ -40,9 +40,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
-    [AnalyticsController setup];
-    
     // Customize Statusbar and navigation bar application wide
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
@@ -147,6 +144,8 @@
         
         [db commit];
     }];
+    
+    [AnalyticsController setup];    
     
     return YES;
 }
