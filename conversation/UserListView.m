@@ -95,13 +95,12 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self removeFromSuperview];
     
     IRCUser *user = _channel.users[indexPath.row];
     
     __block ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     
-    [UIActionSheet showInView:self.tableview
+    [UIActionSheet showInView:self.superview
                     withTitle:user.nick
             cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
        destructiveButtonTitle:nil
@@ -110,11 +109,15 @@
                                 NSLocalizedString(@"Ignore", @"Ignore")]
      
                      tapBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex) {
+                         [self removeFromSuperview];
                          switch (buttonIndex) {
                              case 0: {
                                  IRCConversation *conversation = [controller createConversationWithName:[_channel.users[indexPath.row] nick] onClient:_channel.client];
-                                 [controller.tableView reloadData];
-                                 [controller.navigationController popToRootViewControllerAnimated:YES];
+
+                                 if(!actionSheet.isHidden)
+                                     [controller dismissViewControllerAnimated:NO completion:nil];
+                                 
+                                 [controller.navigationController popToRootViewControllerAnimated:NO];
                                  [controller selectConversationWithIdentifier:conversation.configuration.uniqueIdentifier];
                                  break;
                              }
@@ -124,6 +127,11 @@
                                  infoViewController.client = _channel.client;
                                  UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:infoViewController];
                                  navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+                                 
+                                 if(!controller.navigationController.presentedViewController.isBeingDismissed) {
+                                     [controller dismissViewControllerAnimated:NO completion:nil];
+                                 }
+                                 
                                  [controller.navigationController presentViewController:navigationController animated:YES completion:nil];
                                  break;
                              }
