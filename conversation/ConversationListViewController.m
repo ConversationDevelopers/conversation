@@ -1250,6 +1250,7 @@
 
 - (void)loadHistoricMessages
 {
+
     NSMutableArray *messages = [[IRCMessage instancesOrderedBy:@"timestamp"] mutableCopy];
     ChatMessageView *messageView;
     for (IRCMessage *message in messages) {
@@ -1283,50 +1284,48 @@
 - (void)saveHistoricMessages
 {
     
-    NSMutableArray *messages = [[NSMutableArray alloc] init];
-    NSMutableArray *allMessages = [[NSMutableArray alloc] init];
-    
-    int limit = 50;
+    int limit = 25;
     if (IPAD)
-        limit = 100;
+        limit = 50;
     
+    int i=0;
     for (IRCClient *client in _connections) {
         for (IRCChannel *conversation in client.channels) {
-            [messages removeAllObjects];
+            i=0;
             for (UIView *view in conversation.contentView.subviews) {
                 if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
                     ChatMessageView *messageView = (ChatMessageView *)view;
                     IRCMessage *message = messageView.message;
+                    i++;
+                    if (i > limit) {
+                        [message delete];
+                        continue;
+                    }
                     message.isConversationHistory = YES;
-                    [messages addObject:message];
+                    [message save];
                 }
             }
-            if ((int)messages.count > limit)
-                [messages removeObjectsInRange:NSMakeRange(0, (int)messages.count-limit)];
-            
-            [allMessages addObjectsFromArray:messages];
         }
+        
         for (IRCConversation *conversation in client.queries) {
-            [messages removeAllObjects];
+            i=0;
             for (UIView *view in conversation.contentView.subviews) {
                 if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
                     ChatMessageView *messageView = (ChatMessageView *)view;
                     IRCMessage *message = messageView.message;
+                    i++;
+                    if (i > limit) {
+                        [message delete];
+                        continue;
+                    }
                     message.isConversationHistory = YES;
-                    [messages addObject:message];
+                    [message save];
                 }
             }
-            if ((int)messages.count > limit)
-                [messages removeObjectsInRange:NSMakeRange(0, (int)messages.count-limit)];
-            
-            [allMessages addObjectsFromArray:messages];
         }
         
     }
-    
-    for (IRCMessage *message in allMessages) {
-        [message save];
-    }
+
 }
 
 @end

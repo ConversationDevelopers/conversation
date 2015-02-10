@@ -137,11 +137,11 @@
                    @");"
                    ]) failedAt(1);
             
-//            if (! [db executeUpdate:@"CREATE INDEX IF NOT EXISTS name ON IRCMessage (name);"]) failedAt(2);
+            if (! [db executeUpdate:@"CREATE INDEX IF NOT EXISTS IDX_1 ON IRCMessage (timestamp, sender, message);"]) failedAt(2);
             
             *schemaVersion = 1;
         }
-        
+    
         [db commit];
     }];
     
