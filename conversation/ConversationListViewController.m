@@ -972,6 +972,11 @@
         [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, message.sender.nick.length+1)];
     }
     
+    if (message.isConversationHistory) {
+        [self.tableView reloadData];
+        return;
+    }
+    
     [message.conversation addPreviewMessage:string];
     
     // Dont set highlight if source conversation is currently visible
@@ -1246,6 +1251,7 @@
 - (void)loadHistoricMessages
 {
     NSMutableArray *messages = [[IRCMessage instancesOrderedBy:@"timestamp"] mutableCopy];
+    ChatMessageView *messageView;
     for (IRCMessage *message in messages) {
         for (IRCClient *client in _connections) {
             for (IRCChannel *channel in client.channels) {
@@ -1262,7 +1268,7 @@
             }
         }
         
-        ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, 0, message.conversation.contentView.frame.size.width, 15.0)
+        messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, 0, message.conversation.contentView.frame.size.width, 15.0)
                                                                       message:message
                                                                  conversation:message.conversation];
         
@@ -1271,7 +1277,7 @@
         messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         
     }
-    
+
 }
 
 - (void)saveHistoricMessages
