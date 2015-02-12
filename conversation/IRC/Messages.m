@@ -188,7 +188,7 @@
         return;
     }
     
-    if ([message.sender.nick isEqualToString:@"nickserv"]) {
+    if ([[message.sender.nick lowercaseString] isEqualToString:@"nickserv"]) {
         if ([message.message rangeOfString:@"authenticate"].location != NSNotFound ||
             [message.message rangeOfString:@"choose a different nickname"].location != NSNotFound ||
             [message.message rangeOfString:@"please choose a different nick"].location != NSNotFound ||
