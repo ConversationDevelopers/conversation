@@ -1234,7 +1234,7 @@
     if (localNotif == nil)
         return;
     
-    localNotif.alertBody = [NSString stringWithFormat:NSLocalizedString(@"<%@> %@", nil),
+    localNotif.alertBody = [NSString stringWithFormat:NSLocalizedString(@"[%@] %@", nil),
                             message.sender.nick, message.message];
     
     localNotif.alertAction = NSLocalizedString(@"View Details", nil);
