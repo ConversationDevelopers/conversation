@@ -35,6 +35,7 @@
 #import "IRCConversation.h"
 #import "IRCChannel.h"
 #import "IRCMessage.h"
+#import "WHOIS.h"
 
 @interface conversationTests : XCTestCase
 
@@ -55,6 +56,7 @@
 @property __weak XCTestExpectation *receivedChannelModesExpectation;
 @property __weak XCTestExpectation *receivedTopicExpectation;
 @property __weak XCTestExpectation *receivedISONExpectation;
+@property __weak XCTestExpectation *receivedWHOISExpectation;
 
 @end
 
@@ -433,6 +435,35 @@
     self.receivedISONExpectation = [self expectationWithDescription:@"receivedISON"];
     NSString *testMessage = @":holmes.freenode.net 303 UnitTest :John";
     [self.testClient clientDidReceiveData:[testMessage UTF8String]];
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+}
+
+- (void)testParserWithWHOISResponse {
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"whois" object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification) {
+        WHOIS *parserResult = notification.object;
+        
+        XCTAssertEqualObjects(parserResult.nickname, @"John");
+        XCTAssertEqualObjects(parserResult.username, @"jappleseed");
+        XCTAssertEqualObjects(parserResult.hostname, @"apple.com");
+        XCTAssertEqualObjects(parserResult.realname, @"John Appleseed");
+        
+        XCTAssertEqualObjects(parserResult.server, @"card.freenode.net");
+        XCTAssertEqualObjects(parserResult.serverDescription, @"Washington DC, USA");
+        
+        XCTAssertEqual(parserResult.connectedUsingASecureConnection, YES);
+        
+        XCTAssertEqualObjects(parserResult.account, @"John");
+        [self.receivedWHOISExpectation fulfill];
+    }];
+    
+    self.receivedWHOISExpectation = [self expectationWithDescription:@"receivedWHOIS"];
+    [self.testClient clientDidReceiveData:[@":holmes.freenode.net 311 UnitTest John jappleseed apple.com * :John Appleseed" UTF8String]];
+    [self.testClient clientDidReceiveData:[@":holmes.freenode.net 319 UnitTest John :#conversation" UTF8String]];
+    [self.testClient clientDidReceiveData:[@":holmes.freenode.net 312 UnitTest John card.freenode.net :Washington DC, USA" UTF8String]];
+    [self.testClient clientDidReceiveData:[@":holmes.freenode.net 671 UnitTest John :is using a secure connection" UTF8String]];
+    [self.testClient clientDidReceiveData:[@":holmes.freenode.net 317 UnitTest John 11265 1423320547 :seconds idle, signon time" UTF8String]];
+    [self.testClient clientDidReceiveData:[@":holmes.freenode.net 330 UnitTest John John :is logged in as" UTF8String]];
+    [self.testClient clientDidReceiveData:[@":holmes.freenode.net 318 UnitTest John :End of /WHOIS list." UTF8String]];
     [self waitForExpectationsWithTimeout:5.0 handler:nil];
 }
 
