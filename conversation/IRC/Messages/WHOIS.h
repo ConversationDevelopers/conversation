@@ -34,19 +34,19 @@
 
 - (instancetype) initWithNickname:(NSString *)nickname;
 
-@property NSString *nickname;
-@property NSString *username;
-@property NSString *hostname;
-@property NSString *realname;
-@property NSString *account;
-@property NSString *server;
-@property NSString *serverDescription;
-@property NSArray *channels;
+@property (nonatomic) NSString *nickname;
+@property (nonatomic) NSString *username;
+@property (nonatomic) NSString *hostname;
+@property (nonatomic) NSString *realname;
+@property (nonatomic) NSString *account;
+@property (nonatomic) NSString *server;
+@property (nonatomic) NSString *serverDescription;
+@property (nonatomic) NSArray *channels;
 
-@property BOOL connectedUsingASecureConnection;
-@property BOOL isAway;
+@property (assign) BOOL connectedUsingASecureConnection;
+@property (assign) BOOL isAway;
 
-@property NSDate *idleSinceTime;
-@property NSDate *signedInAtTime;
+@property (nonatomic) NSDate *idleSinceTime;
+@property (nonatomic) NSDate *signedInAtTime;
 
 @end

@@ -37,7 +37,9 @@
 @interface UserInfoViewController ()
 @property (nonatomic) WHOIS *user;
 @property (nonatomic) NSDate *refDate;
+@property (nonatomic) NSTimer *timer;
 @end
+
 
 BOOL _isAwaitingWhoisResponse;
 
@@ -48,46 +50,45 @@ BOOL _isAwaitingWhoisResponse;
     if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
         return nil;
     
+    self.refDate = nil;
+    
     return self;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+ 
     self.navigationController.navigationBar.tintColor = [UIColor lightGrayColor];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
     self.navigationController.navigationBar.translucent = NO;
-    
-    self.title = _nickname;
     
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = cancelButton;
     
     UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresh:)];
-
+    
     [refreshButton setTintColor:[UIColor lightGrayColor]];
     
     self.navigationItem.rightBarButtonItem = refreshButton;
+    
+    self.title = _nickname;
 
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageReceived:) name:@"whois" object:nil];
     _isAwaitingWhoisResponse = YES;
+    _refDate = [NSDate date];
     [_client.connection send:[NSString stringWithFormat:@"WHOIS %@ %@", _nickname, _nickname]];
-
-    [NSTimer scheduledTimerWithTimeInterval:1.0
-                                     target:self
-                                   selector:@selector(update:)
-                                   userInfo:nil
-                                    repeats:YES];
-}
-
--(void)update:(NSTimer *)timer
-{
-    [self.tableView reloadData];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageReceived:) name:@"whois" object:nil];
+    
+    _timer = [NSTimer scheduledTimerWithTimeInterval:1.0
+                                              target:self
+                                            selector:@selector(update:)
+                                            userInfo:nil
+                                             repeats:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -95,8 +96,16 @@ BOOL _isAwaitingWhoisResponse;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"messageReceived"
                                                   object:nil];
-    self.user = nil;
+    [_timer invalidate];
+    _timer = nil;
+    _user = nil;
 }
+
+-(void)update:(NSTimer *)timer
+{
+    [self.tableView reloadData];
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -112,7 +121,7 @@ BOOL _isAwaitingWhoisResponse;
             return NSLocalizedString(@"User Info", @"User Info");
             break;
         case 1: {
-            if ([self.user.channels count] > 0)
+            if ([_user.channels count] > 0)
                 return NSLocalizedString(@"Channels", @"Channels");
             else
                 return @"";
@@ -133,8 +142,8 @@ BOOL _isAwaitingWhoisResponse;
     if (section == 0)
         return 4;
     else if (section == 1) {
-        if ([self.user.channels count] > 0)
-            return [self.user.channels count];
+        if ([_user.channels count] > 0)
+            return [_user.channels count];
         else
             return 0;
     }
@@ -153,29 +162,29 @@ BOOL _isAwaitingWhoisResponse;
         switch (indexPath.row) {
             case 0:
                 cell.textLabel.text = NSLocalizedString(@"Nick Name", @"Nick Name");
-                cell.textField.text = self.user.nickname;
+                cell.textField.text = _user.nickname;
                 break;
             case 1:
                 cell.textLabel.text = NSLocalizedString(@"User Name", @"Nick Name");
-                cell.textField.text = self.user.username;
+                cell.textField.text = _user.username;
                 break;
             case 2:
                 cell.textLabel.text = NSLocalizedString(@"Host Name", @"Host Name");
-                cell.textField.text = self.user.hostname;
+                cell.textField.text = _user.hostname;
                 break;
             case 3:
                 cell.textLabel.text = NSLocalizedString(@"Real Name", @"Real Name");
-                cell.textField.text = self.user.realname;
+                cell.textField.text = _user.realname;
                 break;
         }
     } else if (indexPath.section == 1) {
         
-        cell.textLabel.text = self.user.channels[indexPath.row];
+        cell.textLabel.text = _user.channels[indexPath.row];
 
     } else if (indexPath.section == 2) {
         if (indexPath.row == 0) {
             cell.textLabel.text = NSLocalizedString(@"Server", @"Server");
-            cell.textField.text = self.user.server;
+            cell.textField.text = _user.server;
         } else if (indexPath.row == 1) {
             cell.textLabel.text = NSLocalizedString(@"Connected", @"Connected");
             
@@ -183,11 +192,11 @@ BOOL _isAwaitingWhoisResponse;
             [df setLocale:[NSLocale currentLocale]];
             [df setDateStyle:NSDateFormatterMediumStyle];
             [df setTimeStyle:NSDateFormatterMediumStyle];
-            cell.textField.text = [df stringFromDate:self.user.idleSinceTime];
+            cell.textField.text = [df stringFromDate:_user.idleSinceTime];
             
         } else {
             cell.textLabel.text = NSLocalizedString(@"Idle", @"Idle");
-            cell.textField.text = [self formattedTimeSinceEvent:self.user.idleSinceTime];
+            cell.textField.text = [self formattedTimeSinceEvent:_user.idleSinceTime];
         }
     }
 
@@ -238,7 +247,7 @@ BOOL _isAwaitingWhoisResponse;
         return;
     
     WHOIS *whoisMessage = notification.object;
-    self.user = whoisMessage;
+    _user = whoisMessage;
     
     _isAwaitingWhoisResponse = NO;
     [self.tableView reloadData];
