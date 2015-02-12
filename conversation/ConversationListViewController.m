@@ -221,6 +221,10 @@
         [self selectConversationWithIdentifier:lastConversationId];
     }
     
+    // Show "Add connection" dialog if we have no saved connections
+    if (_connections.count == 0) {
+        [self performSelector:@selector(editConnection:) withObject:nil afterDelay:1.0];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
