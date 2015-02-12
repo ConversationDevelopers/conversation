@@ -521,14 +521,6 @@ BOOL popoverDidDismiss = NO;
                             [_suggestions addObject:user.nick];
                     }
             }
-            
-            // Emoticons
-            NSDictionary *emos = [[AppPreferences sharedPrefs] getEmoticons];
-            for (NSString *emo in [emos allKeys]) {
-                if([emo.lowercaseString hasPrefix:string.lowercaseString]) {
-                    [_suggestions addObject:emo];
-                }
-            }
         }
     }
     
