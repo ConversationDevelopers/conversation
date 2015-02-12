@@ -132,6 +132,7 @@ static NSArray *IRCMessageIndexReference = nil;
         @"324",
         @"325",
         @"329",
+        @"330",
         @"331",
         @"332",
         @"333",

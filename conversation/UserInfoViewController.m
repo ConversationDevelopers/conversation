@@ -30,12 +30,12 @@
 
 
 #import "UserInfoViewController.h"
-#import "IRCMessage.h"
+#import "WHOIS.h"
 #import "PreferencesTextCell.h"
 #import "UITableView+Methods.h"
 
 @interface UserInfoViewController ()
-@property (nonatomic) NSMutableDictionary *infoDict;
+@property (nonatomic) WHOIS *user;
 @property (nonatomic) NSDate *refDate;
 @end
 
@@ -69,17 +69,14 @@ BOOL _isAwaitingWhoisResponse;
     [refreshButton setTintColor:[UIColor lightGrayColor]];
     
     self.navigationItem.rightBarButtonItem = refreshButton;
-    
-    _infoDict = [[NSMutableDictionary alloc] init];
-    _refDate = [NSDate date];
 
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageReceived:) name:@"messageReceived" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageReceived:) name:@"whois" object:nil];
     _isAwaitingWhoisResponse = YES;
-    [_client.connection send:[NSString stringWithFormat:@"WHOIS %@", _nickname]];
+    [_client.connection send:[NSString stringWithFormat:@"WHOIS %@ %@", _nickname, _nickname]];
 
     [NSTimer scheduledTimerWithTimeInterval:1.0
                                      target:self
@@ -98,7 +95,7 @@ BOOL _isAwaitingWhoisResponse;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"messageReceived"
                                                   object:nil];
-    [_infoDict removeAllObjects];
+    self.user = nil;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -115,7 +112,7 @@ BOOL _isAwaitingWhoisResponse;
             return NSLocalizedString(@"User Info", @"User Info");
             break;
         case 1: {
-            if ([_infoDict[@"channels"] count] > 0)
+            if ([self.user.channels count] > 0)
                 return NSLocalizedString(@"Channels", @"Channels");
             else
                 return @"";
@@ -136,8 +133,8 @@ BOOL _isAwaitingWhoisResponse;
     if (section == 0)
         return 4;
     else if (section == 1) {
-        if ([_infoDict[@"channels"] count] > 0)
-            return [_infoDict[@"channels"] count];
+        if ([self.user.channels count] > 0)
+            return [self.user.channels count];
         else
             return 0;
     }
@@ -156,49 +153,41 @@ BOOL _isAwaitingWhoisResponse;
         switch (indexPath.row) {
             case 0:
                 cell.textLabel.text = NSLocalizedString(@"Nick Name", @"Nick Name");
-                cell.textField.text = _infoDict[@"user"][0];
+                cell.textField.text = self.user.nickname;
                 break;
             case 1:
                 cell.textLabel.text = NSLocalizedString(@"User Name", @"Nick Name");
-                cell.textField.text = _infoDict[@"user"][1];
+                cell.textField.text = self.user.username;
                 break;
             case 2:
                 cell.textLabel.text = NSLocalizedString(@"Host Name", @"Host Name");
-                cell.textField.text = _infoDict[@"user"][2];
+                cell.textField.text = self.user.hostname;
                 break;
             case 3:
                 cell.textLabel.text = NSLocalizedString(@"Real Name", @"Real Name");
-                cell.textField.text = _infoDict[@"user"][3];
+                cell.textField.text = self.user.realname;
                 break;
         }
     } else if (indexPath.section == 1) {
         
-        cell.textLabel.text = _infoDict[@"channels"][indexPath.row];
+        cell.textLabel.text = self.user.channels[indexPath.row];
 
     } else if (indexPath.section == 2) {
         if (indexPath.row == 0) {
             cell.textLabel.text = NSLocalizedString(@"Server", @"Server");
-            cell.textField.text = _infoDict[@"server"][0];
+            cell.textField.text = self.user.server;
         } else if (indexPath.row == 1) {
             cell.textLabel.text = NSLocalizedString(@"Connected", @"Connected");
             
-            NSDate *date = [NSDate date];
-            if (_infoDict[@"idle"][1])
-                date = [NSDate dateWithTimeIntervalSince1970:[_infoDict[@"idle"][1] longLongValue]];
-            
-            NSDateFormatter *dateFormatter = [NSDateFormatter new];
-            dateFormatter.timeZone = [NSTimeZone localTimeZone];
-            dateFormatter.dateFormat = @"dd MMM yyyy HH:mm:ss zzz";
-            cell.textField.text = [dateFormatter stringFromDate:date];
+            NSDateFormatter* df = [[NSDateFormatter alloc] init];
+            [df setLocale:[NSLocale currentLocale]];
+            [df setDateStyle:NSDateFormatterMediumStyle];
+            [df setTimeStyle:NSDateFormatterMediumStyle];
+            cell.textField.text = [df stringFromDate:self.user.idleSinceTime];
             
         } else {
             cell.textLabel.text = NSLocalizedString(@"Idle", @"Idle");
-            double seconds = 0.0;
-                if (_infoDict[@"idle"][0])
-                    seconds = [_infoDict[@"idle"][0] longLongValue];
-            
-            NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:_refDate];
-            cell.textField.text = [NSString stringWithFormat:@"%.f seconds", seconds + interval];
+            cell.textField.text = [self formattedTimeSinceEvent:self.user.idleSinceTime];
         }
     }
 
@@ -207,59 +196,52 @@ BOOL _isAwaitingWhoisResponse;
     return cell;
 }
 
+- (NSString *)formattedTimeSinceEvent:(NSDate *)date {
+    double interval = [[NSDate date] timeIntervalSinceDate:date];
+    
+    NSArray *formats = @[
+        [NSNumber numberWithInt:31556900],
+        [NSNumber numberWithInt:2629740],
+        [NSNumber numberWithInt:604800],
+        [NSNumber numberWithInt:86400],
+        [NSNumber numberWithInt:3600],
+        [NSNumber numberWithInt:60]
+    ];
+    
+    NSArray *formatStrings = @[
+                         @"Year",
+                         @"Month",
+                         @"Week",
+                         @"Day",
+                         @"Hour",
+                         @"Minute"
+    ];
+    
+    for (NSString *format in formatStrings) {
+        float count = interval / [[formats objectAtIndex:[formatStrings indexOfObject:format]] intValue];
+        if (count >= 1) {
+            NSString *suffix = [NSString stringWithFormat:@"%@%@", format, count > 1 ? @"s" : @""];
+            return [NSString stringWithFormat:@"%d %@", (int)count, suffix];
+        }
+    }
+    
+    if (interval > 0) {
+        return [NSString stringWithFormat:@"%d Second%@", (int)interval, interval > 1 ? @"s" : @""];
+    } else {
+        return @"";
+    }
+}
+
 - (void)messageReceived:(NSNotification *)notification
 {
     if (!_isAwaitingWhoisResponse)
         return;
-
-    IRCMessage *message = notification.object;
-    if (message.messageType == ET_WHOIS) {
-        NSMutableArray *components = [[message.message componentsSeparatedByString:@" "] mutableCopy];
-        [components removeObjectAtIndex:0];
-        
-        NSString *command = components[0];
-        [components removeObjectAtIndex:0];
-        
-        NSMutableArray *infoArray = [[NSMutableArray alloc] init];
-        
-        if ([command isEqualToString:@"311"]) {
-            [components removeObjectAtIndex:0];
-            for (NSString *info in components) {
-                if ([info hasPrefix:@":"]) {
-                    [infoArray addObject:[info substringFromIndex:1]];
-                    continue;
-                }
-                [infoArray addObject:info];
-                
-            }
-            [infoArray removeObjectAtIndex:3];
-            _infoDict[@"user"] = [infoArray copy];
-            
-        } else if ([command isEqualToString:@"319"]) {
-            NSString *channels = [message.message componentsSeparatedByString:@":"][2];
-            for (NSString *info in [channels componentsSeparatedByString:@" "]) {
-                if (info.length > 0)
-                    [infoArray addObject:info];
-            }
-            _infoDict[@"channels"] = [infoArray copy];
-        } else if ([command isEqualToString:@"312"]) {
-            [components removeObjectAtIndex:0];
-            [components removeObjectAtIndex:0];
-            [infoArray addObject:components[0]];
-            _infoDict[@"server"] = [infoArray copy];
-        } else if ([command isEqualToString:@"317"]) {
-            [components removeObjectAtIndex:0];
-            [components removeObjectAtIndex:0];
-            [infoArray addObject:components[0]];
-            [infoArray addObject:components[1]];
-            _infoDict[@"idle"] = [infoArray copy];
-        }
-    }
     
-    if (message.messageType == ET_WHOISEND) {
-        _isAwaitingWhoisResponse = NO;
-        [self.tableView reloadData];
-    }
+    WHOIS *whoisMessage = notification.object;
+    self.user = whoisMessage;
+    
+    _isAwaitingWhoisResponse = NO;
+    [self.tableView reloadData];
 }
 
 - (void)cancel:(id)sender
@@ -271,7 +253,7 @@ BOOL _isAwaitingWhoisResponse;
 {
     _isAwaitingWhoisResponse = YES;
     _refDate = [NSDate date];
-    [_client.connection send:[NSString stringWithFormat:@"WHOIS %@", _nickname]];
+    [_client.connection send:[NSString stringWithFormat:@"WHOIS %@ %@", _nickname, _nickname]];
 }
 
 @end

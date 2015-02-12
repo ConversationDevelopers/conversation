@@ -72,6 +72,7 @@
 @property (nonatomic, strong) NSMutableDictionary *userModeCharacters;
 @property (nonatomic, retain) NSMutableArray *channels;
 @property (nonatomic, retain) NSMutableArray *queries;
+@property (nonatomic, strong) NSMutableDictionary *whoisRequests;
 
 + (NSArray *) IRCv3CapabilitiesSupportedByApplication;
 

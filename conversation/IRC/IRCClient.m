@@ -35,6 +35,7 @@
 #import "IRCConversation.h"
 #import "IRCCommands.h"
 #import "ConversationListViewController.h"
+#import "WHOIS.h"
 
 #define CONNECTION_RETRY_INTERVAL       30
 #define CONNECTION_RETRY_ATTEMPTS       10
@@ -107,6 +108,7 @@
         self.queries                            = [[NSMutableArray alloc] init];
         self.featuresSupportedByServer          = [[NSMutableDictionary alloc] init];
         self.ircv3CapabilitiesSupportedByServer = [[NSMutableArray alloc] init];
+        self.whoisRequests                      = [[NSMutableDictionary alloc] init];
         
         return self;
     }
@@ -172,14 +174,6 @@
 {
     NSString *line = [NSString stringWithCString:cline usingEncodingPreference:self.configuration];
     NSLog(@"<< %@", line);
-    IRCMessage *rawMessage = [[IRCMessage alloc] initWithMessage:line
-                                                          OfType:ET_RAW
-                                                  inConversation:nil
-                                                        bySender:nil
-                                                          atTime:[NSDate date]
-                                                        withTags:nil
-                                                 isServerMessage:YES
-                                                        onClient:self];
     
     BOOL isServerMessage = NO;
     line = [line removeIRCFormatting];
@@ -417,16 +411,84 @@
             [Messages clientReceivedLISTEndReply:messageObject];
             break;
             
-        case RPL_WHOISUSER:
-        case RPL_WHOISCHANNELS:
-        case RPL_WHOISSERVER:
-        case RPL_WHOISIDLE:
-            [Messages clientReceivedWHOISReply:rawMessage];
+        case RPL_WHOISUSER: {
+            WHOIS *whoisUser = [self.whoisRequests objectForKey:recipient];
+            if (whoisUser == nil) {
+                whoisUser = [[WHOIS alloc] initWithNickname:recipient];
+            }
+            
+            NSMutableArray *components = [[messageObject.message componentsSeparatedByString:@" "] mutableCopy];
+            whoisUser.username = [components objectAtIndex:0];
+            whoisUser.hostname = [components objectAtIndex:1];
+            
+            [components removeObjectsInRange:NSMakeRange(0,3)];
+            whoisUser.realname = [[components componentsJoinedByString:@" "] substringFromIndex:1];
+            [self.whoisRequests setObject:whoisUser forKey:recipient];
             break;
+        }
+            
+        case RPL_WHOISCHANNELS: {
+            WHOIS *whoisUser = [self.whoisRequests objectForKey:recipient];
+            if (whoisUser == nil) {
+                whoisUser = [[WHOIS alloc] initWithNickname:recipient];
+            }
+            
+            NSMutableArray *channels = [[messageObject.message componentsSeparatedByString:@" "] mutableCopy];
+            [channels removeObject:@""];
+            whoisUser.channels = channels;
+            
+            [self.whoisRequests setObject:whoisUser forKey:recipient];
+            break;
+        }
+        case RPL_WHOISSERVER: {
+            WHOIS *whoisUser = [self.whoisRequests objectForKey:recipient];
+            if (whoisUser == nil) {
+                whoisUser = [[WHOIS alloc] initWithNickname:recipient];
+            }
+            NSMutableArray *components = [[messageObject.message componentsSeparatedByString:@" "] mutableCopy];
+            whoisUser.server = [components objectAtIndex:0];
+            
+            [components removeObjectAtIndex:0];
+            whoisUser.serverDescription = [[components componentsJoinedByString:@" "] substringFromIndex:1];
+            
+            [self.whoisRequests setObject:whoisUser forKey:recipient];
+            break;
+        }
+        case RPL_WHOISIDLE: {
+            WHOIS *whoisUser = [self.whoisRequests objectForKey:recipient];
+            if (whoisUser == nil) {
+                whoisUser = [[WHOIS alloc] initWithNickname:recipient];
+            }
+            NSMutableArray *components = [[messageObject.message componentsSeparatedByString:@" "] mutableCopy];
+            whoisUser.idleSinceTime = [NSDate dateWithTimeIntervalSinceNow:-[[components objectAtIndex:0] integerValue]];
+            whoisUser.signedInAtTime = [NSDate dateWithTimeIntervalSince1970:[[components objectAtIndex:1] integerValue]];
+            
+            [self.whoisRequests setObject:whoisUser forKey:recipient];
+            break;
+        }
+            
+        case RPL_WHOISACCOUNT: {
+            WHOIS *whoisUser = [self.whoisRequests objectForKey:recipient];
+            if (whoisUser == nil) {
+                whoisUser = [[WHOIS alloc] initWithNickname:recipient];
+            }
+            NSMutableArray *components = [[messageObject.message componentsSeparatedByString:@" "] mutableCopy];
+            whoisUser.account = [components objectAtIndex:0];
+            
+            [self.whoisRequests setObject:whoisUser forKey:recipient];
+            break;
+        }
         
-        case RPL_ENDOFWHOIS:
-            [Messages clientReceivedWHOISEndReply:rawMessage];
+        case RPL_ENDOFWHOIS: {
+            WHOIS *whoisUser = [self.whoisRequests objectForKey:recipient];
+            if (whoisUser != nil) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"whois" object:whoisUser];
+                });
+                [self.whoisRequests removeObjectForKey:recipient];
+            }
             break;
+        }
             
         case ERR_ERRONEUSNICKNAME:
         case ERR_UNAVAILRESOURCE:
@@ -609,6 +671,7 @@
     self.alternativeNickNameAttempts = 0;
     self.featuresSupportedByServer = [[NSMutableDictionary alloc] init];
     self.ircv3CapabilitiesSupportedByServer = [[NSMutableArray alloc] init];
+    self.whoisRequests = [[NSMutableDictionary alloc] init];
     [self.connection disableFloodControl];
     
     for (IRCChannel *channel in self.channels) {
