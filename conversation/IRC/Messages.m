@@ -188,6 +188,26 @@
         return;
     }
     
+    if ([message.sender.nick isEqualToString:@"nickserv"]) {
+        if ([message.message rangeOfString:@"authenticate"].location != NSNotFound ||
+            [message.message rangeOfString:@"choose a different nickname"].location != NSNotFound ||
+            [message.message rangeOfString:@"please choose a different nick"].location != NSNotFound ||
+            [message.message rangeOfString:@"If this is your nick, identify yourself with"].location != NSNotFound ||
+            [message.message rangeOfString:@"If this is your nick, type"].location != NSNotFound ||
+            [message.message rangeOfString:@"This is a registered nickname, please identify"].location != NSNotFound ||
+            [[message.message removeIRCFormatting] rangeOfString:@"type /NickServ IDENTIFY password"].location != NSNotFound ||
+            [[message.message removeIRCFormatting] rangeOfString:@"type /msg NickServ IDENTIFY password"].location != NSNotFound) {
+
+            IRCClient *client = message.client;
+            if (client.configuration.authenticationPasswordReference.length) {
+                NSString *password = [SSKeychain passwordForService:@"conversation" account:client.configuration.authenticationPasswordReference];
+                if (password.length)
+                    [client.connection send:[NSString stringWithFormat:@"PRIVMSG NickServ IDENTIFY %@", password]];
+                return;
+            }
+        }
+    }
+
     /* Set the time of the last message received by this client. This is useful for the ZNC playback feature. */
     message.client.configuration.lastMessageTime = (long) [[NSDate date] timeIntervalSince1970];
     
