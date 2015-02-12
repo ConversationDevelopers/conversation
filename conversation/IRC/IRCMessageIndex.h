@@ -194,6 +194,7 @@ typedef NS_ENUM(NSUInteger, MessageType) {
     ERR_NOOPERHOST,         /* 491 */
     ERR_UMODEUNKNOWNFLAG,   /* 501 */
     ERR_USERSDONTMATCH,     /* 502 */
+    RPL_WHOISSECURE,        /* 671 */
     RPL_LOGGEDIN,           /* 900 */
     RPL_LOGGEDOUT,          /* 901 */
     ERR_NICKLOCKED,         /* 902 */

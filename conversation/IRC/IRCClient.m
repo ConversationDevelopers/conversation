@@ -478,6 +478,17 @@
             [self.whoisRequests setObject:whoisUser forKey:recipient];
             break;
         }
+            
+        case RPL_WHOISSECURE: {
+            WHOIS *whoisUser = [self.whoisRequests objectForKey:recipient];
+            if (whoisUser == nil) {
+                whoisUser = [[WHOIS alloc] initWithNickname:recipient];
+            }
+            whoisUser.connectedUsingASecureConnection = YES;
+            
+            [self.whoisRequests setObject:whoisUser forKey:recipient];
+            break;
+        }
         
         case RPL_ENDOFWHOIS: {
             WHOIS *whoisUser = [self.whoisRequests objectForKey:recipient];
