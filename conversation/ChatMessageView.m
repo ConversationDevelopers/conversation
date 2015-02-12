@@ -134,10 +134,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillHideNotification
                                                   object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:@"userlistWillToggle"
-                                                  object:nil];
 }
 
 - (NSURL *)getImageLink:(NSURL *)url

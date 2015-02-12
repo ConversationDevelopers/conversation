@@ -31,7 +31,7 @@
 #import <UIKit/UIKit.h>
 #import "IRCConversation.h"
 
-@interface LinkTapView : UIView
+@interface LinkTapView : UIView <UIGestureRecognizerDelegate>
 
 - (id)initWithFrame:(CGRect)frame url:(NSURL *)url;
 - (id)initWithFrame:(CGRect)frame nick:(NSString *)url;

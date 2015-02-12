@@ -31,6 +31,7 @@
 #import "LinkTapView.h"
 #import "UserInfoViewController.h"
 #import "InputCommands.h"
+#import "ChatViewController.h"
 #import <UIActionSheet+Blocks/UIActionSheet+Blocks.h>
 
 @implementation LinkTapView
@@ -44,6 +45,7 @@
     self.alpha = 0.5;
     
     UITapGestureRecognizer *tapGesture =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleLink:)];
+    tapGesture.delegate = self;
     [self addGestureRecognizer:tapGesture];
     
     return self;
@@ -57,6 +59,7 @@
     self.alpha = 0.5;
     
     UITapGestureRecognizer *tapGesture =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleNick:)];
+    tapGesture.delegate = self;
     [self addGestureRecognizer:tapGesture];
     
     return self;
@@ -140,6 +143,15 @@
                      }];
 
 
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    if ([gestureRecognizer.view isKindOfClass:self.class] && (controller.chatViewController.keyboardIsVisible || controller.chatViewController.userlistIsVisible)) {
+        return NO;
+    }
+    return YES;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
