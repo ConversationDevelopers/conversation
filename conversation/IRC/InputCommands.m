@@ -348,13 +348,14 @@
             }
                 
             case CMD_MYVERSION:
-                [IRCCommands sendMessage:[NSString stringWithFormat:@"%cCurrent Version:%c %@ %@-%@ (Build Date: %@)",
+                [IRCCommands sendMessage:[NSString stringWithFormat:@"%cCurrent Version:%c %@ %@-%@ (Build Date: %@) (%@)",
                                           IRC_BOLD,
                                           IRC_BOLD,
                                           ConversationBundleName,
                                           ConversationVersion,
                                           ConversationBuildRef,
-                                          ConversationBuildDate]
+                                          ConversationBuildDate,
+                                          ConversationBuildType]
                   toRecipient:[conversation name] onClient:[conversation client]];
                 break;
                 
