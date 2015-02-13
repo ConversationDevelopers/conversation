@@ -189,7 +189,7 @@
         return;
     }
     
-    if ([[message.sender.nick lowercaseString] isEqualToString:@"nickserv"]) {
+    if ([message.sender.nick isEqualToStringCaseInsensitive:@"nickserv"]) {
         if ([message.message rangeOfString:@"authenticate"].location != NSNotFound ||
             [message.message rangeOfString:@"choose a different nickname"].location != NSNotFound ||
             [message.message rangeOfString:@"please choose a different nick"].location != NSNotFound ||
@@ -213,7 +213,7 @@
     message.client.configuration.lastMessageTime = (long) [[NSDate date] timeIntervalSince1970];
     
     /* Incoming private message so the actual conversation name is sender's nick */
-    if ([message.conversation.name caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
+    if ([message.conversation.name isEqualToStringCaseInsensitive:message.client.currentUserOnConnection.nick]) {
         IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
         configuration.name = message.sender.nick;
         message.conversation = [[IRCConversation alloc] initWithConfiguration:configuration withClient:message.client];
@@ -310,7 +310,7 @@
     AssertIsNotServerMessage(message);
     
     /* Incoming private message so the actual conversation name is sender's nick */
-    if ([message.conversation.name caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
+    if ([message.conversation.name isEqualToStringCaseInsensitive:message.client.currentUserOnConnection.nick]) {
         IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
         configuration.name = message.sender.nick;
         message.conversation = [[IRCConversation alloc] initWithConfiguration:configuration withClient:message.client];
@@ -361,7 +361,7 @@
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         
         IRCChannel *channel = (IRCChannel *)conversation;
-        if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame && message.isConversationHistory == NO) {
+        if ([[[message sender] nick] isEqualToStringCaseInsensitive:message.client.currentUserOnConnection.nick] && message.isConversationHistory == NO) {
             [message.client.connection send:[NSString stringWithFormat:@"WHO %@", conversation.name]];
             [message.client.connection send:[NSString stringWithFormat:@"MODE %@", conversation.name]];
             channel.isJoinedByUser = YES;
@@ -384,7 +384,7 @@
 + (void)userReceivedPartChannel:(IRCMessage *)message
 {
     IRCChannel *channel = (IRCChannel *)message.conversation;
-    if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame && message.isConversationHistory == NO) {
+    if ([[[message sender] nick]  isEqualToStringCaseInsensitive:message.client.currentUserOnConnection.nick] && message.isConversationHistory == NO) {
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         
         /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
@@ -405,7 +405,7 @@
 
 + (void)userReceivedNickChange:(IRCMessage *)message
 {
-    if ([[[message sender] nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame && message.isConversationHistory == NO) {
+    if ([[[message sender] nick] isEqualToStringCaseInsensitive:message.client.currentUserOnConnection.nick] && message.isConversationHistory == NO) {
         message.client.currentUserOnConnection.nick     = message.message;
         message.client.currentUserOnConnection.username = message.sender.username;
         message.client.currentUserOnConnection.hostname = message.sender.hostname;
@@ -430,7 +430,7 @@
     }
     
     for (IRCConversation *conversation in [message.client queries]) {
-        if ([[conversation name] caseInsensitiveCompare:[message.sender nick]] == NSOrderedSame) {
+        if ([[conversation name] isEqualToStringCaseInsensitive:message.sender.nick]) {
             conversation.name = message.message;
             
             [message.conversation addMessageToConversation:message];
@@ -453,7 +453,7 @@
     IRCUser *kickedUser = [IRCUser fromNickname:kickedUserNickname onChannel:(IRCChannel *)message.conversation];
     IRCChannel *channel = (IRCChannel *)message.conversation;
     
-    if ([[kickedUser nick] caseInsensitiveCompare:message.client.currentUserOnConnection.nick] == NSOrderedSame) {
+    if ([[kickedUser nick] isEqualToStringCaseInsensitive:message.client.currentUserOnConnection.nick]) {
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         
         /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
@@ -501,7 +501,7 @@
     }
     
     for (IRCConversation *conversation in [message.client queries]) {
-        if ([[conversation name] caseInsensitiveCompare:message.sender.nick] == NSOrderedSame) {
+        if ([[conversation name] isEqualToStringCaseInsensitive:message.sender.nick]) {
             conversation.conversationPartnerIsOnline = NO;
             IRCMessage *quitMessage = [message copy];
             quitMessage.conversation = conversation;

@@ -867,7 +867,7 @@
 - (IRCConversation *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client
 {
     for (IRCConversation *query in client.queries) {
-        if ([query.name caseInsensitiveCompare:name] == NSOrderedSame) {
+        if ([query.name isEqualToStringCaseInsensitive:name]) {
             return query;
         }
     }

@@ -93,7 +93,7 @@
 - (BOOL) isValidServerAddress
 {
     /* "localhost" is a unix alias to 127.0.0.1 and we can accept it as valid */
-    if ([self caseInsensitiveCompare:@"localhost"] == NSOrderedSame) {
+    if ([self isEqualToStringCaseInsensitive:@"localhost"]) {
         return YES;
     }
     
@@ -222,6 +222,11 @@
     }
     
     return truncatedString;
+}
+
+- (BOOL)isEqualToStringCaseInsensitive:(NSString *)compareString
+{
+	return ([self caseInsensitiveCompare:compareString] == NSOrderedSame);
 }
 
 - (BOOL)getUserHostComponents:(NSString **)nickname username:(NSString **)username hostname:(NSString **)hostname onClient:(IRCClient *)client

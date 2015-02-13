@@ -84,13 +84,13 @@
     if ([name isValidChannelName:client]) {
         /* If this is a channel iterate through the list of channels and return one that matches */
         for (IRCChannel *channel in [client channels]) {
-            if ([channel.name caseInsensitiveCompare:name] == NSOrderedSame)
+            if ([channel.name isEqualToStringCaseInsensitive:name])
                 return channel;
         }
     } else if ([name isValidNickname:client]) {
         /* If this is a query, iterate through the list of queries and return one that matches*/
         for (IRCConversation *query in [client queries]) {
-            if ([query.name caseInsensitiveCompare:name] == NSOrderedSame) {
+            if ([query.name isEqualToStringCaseInsensitive:name]) {
                 return query;
             }
         }

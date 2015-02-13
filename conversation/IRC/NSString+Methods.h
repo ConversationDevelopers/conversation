@@ -41,6 +41,7 @@
 - (BOOL) isValidNickname:(IRCClient *)client;
 - (BOOL) isValidUsername;
 - (BOOL) isValidWildcardIgnoreMask;
+- (BOOL)isEqualToStringCaseInsensitive:(NSString *)compareString;
 
 - (NSData *)dataUsingEncodingFromConfiguration:(IRCConnectionConfiguration *)configuration;
 
