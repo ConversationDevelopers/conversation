@@ -910,7 +910,7 @@ uint32_t FNV32(const char *s)
 - (void)hideImage:(UITapGestureRecognizer *)recognizer
 {
     // Get absolute frame of preview image
-    CGRect frame;
+    CGRect frame = CGRectNull;
     CGFloat aspect = 0.0;
     UIImageView *view;
     for (int i=0; i < self.subviews.count; i++) {
