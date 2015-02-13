@@ -30,9 +30,12 @@
 
 #import <Foundation/Foundation.h>
 
+@class IRCClient;
+
 @interface WHOIS : NSObject
 
 - (instancetype) initWithNickname:(NSString *)nickname;
++ (WHOIS *)getOrCreateForName:(NSString *)name forClient:(IRCClient *)client;
 
 @property (nonatomic) NSString *nickname;
 @property (nonatomic) NSString *username;

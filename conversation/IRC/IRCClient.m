@@ -412,11 +412,8 @@
             break;
             
         case RPL_WHOISUSER: {
-            WHOIS *whoisUser = [self.whoisRequests objectForKey:recipient];
-            if (whoisUser == nil) {
-                whoisUser = [[WHOIS alloc] initWithNickname:recipient];
-            }
-            
+			WHOIS *whoisUser = [WHOIS getOrCreateForName:recipient forClient:self];
+			
             NSMutableArray *components = [[messageObject.message componentsSeparatedByString:@" "] mutableCopy];
             whoisUser.username = [components objectAtIndex:0];
             whoisUser.hostname = [components objectAtIndex:1];
@@ -427,12 +424,9 @@
             break;
         }
             
-        case RPL_WHOISCHANNELS: {
-            WHOIS *whoisUser = [self.whoisRequests objectForKey:recipient];
-            if (whoisUser == nil) {
-                whoisUser = [[WHOIS alloc] initWithNickname:recipient];
-            }
-            
+		case RPL_WHOISCHANNELS: {
+			WHOIS *whoisUser = [WHOIS getOrCreateForName:recipient forClient:self];
+			
             NSMutableArray *channels = [[messageObject.message componentsSeparatedByString:@" "] mutableCopy];
             [channels removeObject:@""];
             whoisUser.channels = channels;
@@ -440,11 +434,9 @@
             [self.whoisRequests setObject:whoisUser forKey:recipient];
             break;
         }
-        case RPL_WHOISSERVER: {
-            WHOIS *whoisUser = [self.whoisRequests objectForKey:recipient];
-            if (whoisUser == nil) {
-                whoisUser = [[WHOIS alloc] initWithNickname:recipient];
-            }
+		case RPL_WHOISSERVER: {
+			WHOIS *whoisUser = [WHOIS getOrCreateForName:recipient forClient:self];
+			
             NSMutableArray *components = [[messageObject.message componentsSeparatedByString:@" "] mutableCopy];
             whoisUser.server = [components objectAtIndex:0];
             
@@ -454,11 +446,9 @@
             [self.whoisRequests setObject:whoisUser forKey:recipient];
             break;
         }
-        case RPL_WHOISIDLE: {
-            WHOIS *whoisUser = [self.whoisRequests objectForKey:recipient];
-            if (whoisUser == nil) {
-                whoisUser = [[WHOIS alloc] initWithNickname:recipient];
-            }
+		case RPL_WHOISIDLE: {
+			WHOIS *whoisUser = [WHOIS getOrCreateForName:recipient forClient:self];
+			
             NSMutableArray *components = [[messageObject.message componentsSeparatedByString:@" "] mutableCopy];
             whoisUser.idleSinceTime = [NSDate dateWithTimeIntervalSinceNow:-[[components objectAtIndex:0] integerValue]];
             whoisUser.signedInAtTime = [NSDate dateWithTimeIntervalSince1970:[[components objectAtIndex:1] integerValue]];
@@ -467,11 +457,9 @@
             break;
         }
             
-        case RPL_WHOISACCOUNT: {
-            WHOIS *whoisUser = [self.whoisRequests objectForKey:recipient];
-            if (whoisUser == nil) {
-                whoisUser = [[WHOIS alloc] initWithNickname:recipient];
-            }
+		case RPL_WHOISACCOUNT: {
+			WHOIS *whoisUser = [WHOIS getOrCreateForName:recipient forClient:self];
+			
             NSMutableArray *components = [[messageObject.message componentsSeparatedByString:@" "] mutableCopy];
             whoisUser.account = [components objectAtIndex:0];
             
@@ -479,11 +467,9 @@
             break;
         }
             
-        case RPL_WHOISSECURE: {
-            WHOIS *whoisUser = [self.whoisRequests objectForKey:recipient];
-            if (whoisUser == nil) {
-                whoisUser = [[WHOIS alloc] initWithNickname:recipient];
-            }
+		case RPL_WHOISSECURE: {
+			WHOIS *whoisUser = [WHOIS getOrCreateForName:recipient forClient:self];
+			
             whoisUser.connectedUsingASecureConnection = YES;
             
             [self.whoisRequests setObject:whoisUser forKey:recipient];

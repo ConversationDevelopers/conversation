@@ -29,6 +29,7 @@
  */
 
 #import "WHOIS.h"
+#import "IRCClient.h"
 
 @implementation WHOIS
 
@@ -53,6 +54,15 @@
         return self;
     }
     return nil;
+}
+
++ (WHOIS *)getOrCreateForName:(NSString *)name forClient:(IRCClient *)client
+{
+	WHOIS *whoisUser = [client.whoisRequests objectForKey:name];
+	if (whoisUser == nil) {
+		whoisUser = [[WHOIS alloc] initWithNickname:name];
+	}
+	return whoisUser;
 }
 
 @end
