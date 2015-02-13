@@ -79,15 +79,15 @@
     
     /* Establish a TCP connection */
     if (![socket connectToHost:host onPort:port withTimeout:15.0 error:&err]) {
-        [self.client outputToConsole:[NSString stringWithFormat:@"Could not connect: %@", err]];
+        [self.client outputToConsole:[NSString stringWithFormat:NSLocalizedString(@"Could not connect: %@", @"Could not connect: {Error}"), err]];
     } else {
-        [self.client outputToConsole:[NSString stringWithFormat:@"Connecting to [%@] on port %d", host, port]];
+        [self.client outputToConsole:[NSString stringWithFormat:NSLocalizedString(@"Connecting to [%@] on port %d", @"Connecting to [{host name}] on port {port number}"), host, port]];
     }
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
 {
-    [self.client outputToConsole:[NSString stringWithFormat:@"Connection to host at [%@] established.", host]];
+    [self.client outputToConsole:[NSString stringWithFormat:NSLocalizedString(@"Connection to host at [%@] established.", @"Connection to host at [{host name}] established."), host]];
     
     /* Start SSL/TLS handshake if appropriate */
     if (self.client.configuration.connectUsingSecureLayer) {
@@ -164,7 +164,7 @@
         if (message) {
             [self.client clientDidReceiveData:message];
         } else {
-            [self.client outputToConsole:[NSString stringWithFormat:@"Unable to decode message: %s", message]];
+            [self.client outputToConsole:[NSString stringWithFormat:NSLocalizedString(@"Unable to decode message: %s", @"Unable to decode message: {raw message}"), message]];
         }
         [socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:1];
         free(message);
@@ -174,7 +174,7 @@
 - (void)socketDidSecure:(GCDAsyncSocket *)sock
 {
     NSLog(@"onSocketDidSecure:%p", sock);
-    [self.client outputToConsole:[NSString stringWithFormat:@"Connection secured using %@", [IRCConnection getSSLProtocolAsString:sock]]];
+    [self.client outputToConsole:[NSString stringWithFormat:NSLocalizedString(@"Connection secured using %@", @"Connection secured using {encryption scheme}"), [IRCConnection getSSLProtocolAsString:sock]]];
 }
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)socket withError:(NSError *)err
@@ -186,7 +186,8 @@
     
     NSString *errorMessage = nil;
     if ([self badSSLCertificateErrorFound:err]) {
-        [self.client outputToConsole:@"Disconnected from server due to an untrusted SSL certificate"];
+        [self.client outputToConsole:NSLocalizedString(@"Disconnected from server due to an untrusted SSL certificate",
+														@"Disconnected from server due to an untrusted SSL certificate")];
     } else {
         if ([err.domain isEqualToString:NSPOSIXErrorDomain]) {
             const char *error = strerror((int)err.domain);
@@ -334,19 +335,19 @@
     
     switch (protocol) {
         case kSSLProtocol2:
-            return @"Secure Sockets Layer (SSL) version 2.0";
+            return NSLocalizedString(@"Secure Sockets Layer (SSL) version 2.0", @"Secure Sockets Layer (SSL) version 2.0");
         case kSSLProtocol3:
         case kSSLProtocol3Only:
-            return @"Secure Sockets Layer (SSL) version 3.0";
+            return NSLocalizedString(@"Secure Sockets Layer (SSL) version 3.0", @"Secure Sockets Layer (SSL) version 3.0");
         case kTLSProtocol1:
         case kTLSProtocol1Only:
-            return @"Transport Layer Security (TLS) version 1.0";
+            return NSLocalizedString(@"Transport Layer Security (TLS) version 1.0", @"Transport Layer Security (TLS) version 1.0");
         case kTLSProtocol11:
-            return @"Transport Layer Security (TLS) version 1.1";
+            return NSLocalizedString(@"Transport Layer Security (TLS) version 1.1", @"Transport Layer Security (TLS) version 1.1");
         case kTLSProtocol12:
-            return @"Transport Layer Security (TLS) version 1.2";
+            return NSLocalizedString(@"Transport Layer Security (TLS) version 1.2", @"Transport Layer Security (TLS) version 1.2");
         default:
-            return @"unknown security layer";
+            return NSLocalizedString(@"unknown security layer", @"unknown security layer");
     }
 }
 

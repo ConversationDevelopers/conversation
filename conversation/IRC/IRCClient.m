@@ -152,7 +152,9 @@
         if (password != nil && [password length] > 0) {
             [self.connection send:[NSString stringWithFormat:@"PASS %@", password]];
         } else {
-            [self outputToConsole:[NSString stringWithFormat:@"A server password reference was found but no password: %@", self.configuration.serverPasswordReference]];
+            [self outputToConsole:[NSString stringWithFormat:NSLocalizedString(@"A server password reference was found but no password: %@",
+																			   @"A server password reference was found but no password: {Reference}"),
+								   self.configuration.serverPasswordReference]];
         }
     }
     
@@ -505,7 +507,7 @@
                         [IRCCommands changeNicknameToNick:newNickName onClient:self];
                         self.currentUserOnConnection.nick = newNickName;
                     } else {
-                        [self outputToConsole:@"Registration failed. Disconnecting.."];
+                        [self outputToConsole:NSLocalizedString(@"Registration failed. Disconnecting..", @"Registration failed. Disconnecting..")];
                         [self disconnect];
                     }
                 }
@@ -632,7 +634,8 @@
     [self clearStatus];
     if ([self.configuration automaticallyReconnect]) {
         if (self.connectionRetries == CONNECTION_RETRY_ATTEMPTS) {
-            [self outputToConsole:[NSString stringWithFormat:@"Connection attempt failed %i times. Connection aborted.", self.connectionRetries]];
+            [self outputToConsole:[NSString stringWithFormat:NSLocalizedString(@"Connection attempt failed %i times. Connection aborted.",
+																			   @"Connection attempt failed {number} times. Connection aborted."), self.connectionRetries]];
         } else {
             [self outputToConsole:@"Retrying in 5 seconds.."];
             [NSTimer scheduledTimerWithTimeInterval:5.0
