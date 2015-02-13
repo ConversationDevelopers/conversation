@@ -52,6 +52,7 @@
 - (IRCConversation *)createConversationWithName:(NSString *)name onClient:(IRCClient *)client;
 - (void)showInivitationRequiredAlertForChannel:(NSString *)channelName;
 - (void)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest;
+- (void)displayInformationForCertificate:(IRCCertificateTrust *)trustRequest;
 - (void)displayPasswordEntryDialog:(IRCClient *)client;
 - (void)setAway;
 - (void)setBack;

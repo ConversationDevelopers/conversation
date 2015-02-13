@@ -90,6 +90,8 @@
         self.isBNCConnection =                  NO;
         self.isProcessingTermination =          NO;
         self.showConsole =                      NO;
+		
+		self.certificate = nil;
         
         /* Initialise default usermode characters. All servers should send a PREFIX attribute with their initial
          RPL_ISUPPORT message, but in case some poorly designed server does not, we will attempt to use these. */
@@ -673,6 +675,7 @@
     self.ircv3CapabilitiesSupportedByServer = [[NSMutableArray alloc] init];
     self.whoisRequests = [[NSMutableDictionary alloc] init];
     [self.connection disableFloodControl];
+	self.certificate = nil;
     
     for (IRCChannel *channel in self.channels) {
         channel.users = [[NSMutableArray alloc] init];

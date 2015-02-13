@@ -107,6 +107,8 @@
     /* A TLS/SSL handshake has been initialised, let's verify the certificate. */
     SecTrustResultType trustResult;
     SecTrustEvaluate(trust, &trustResult);
+	
+	self.client.certificate = trust;
     
     switch (trustResult) {
         case kSecTrustResultProceed:

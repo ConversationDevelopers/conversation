@@ -395,6 +395,16 @@
                     [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<command>", @"<command>") inConversation:conversation];
                 }
                 break;
+				
+			case CMD_SSLCONTEXT:
+				if (conversation.client.certificate) {
+					IRCCertificateTrust *trustDialog = [[IRCCertificateTrust alloc] init:conversation.client.certificate onClient:conversation.client];
+					[trustDialog displayCertificateInformation];
+				}
+				break;
+			
+				
+				
             case CMD_SYSINFO: {
                 NSString *infoString = [NSString stringWithFormat:@"System Information: %cModel:%c %@ %cOS%c: iOS %@ %cOrientation:%c %@ %cBattery Level:%c %@",
                                         IRC_BOLD,
@@ -551,6 +561,7 @@
         @"QUOTE",
         @"RAW",
         @"REJOIN",
+		@"SSLCONTEXT",
         @"SYSINFO",
         @"TIMER",
         @"TOPIC",

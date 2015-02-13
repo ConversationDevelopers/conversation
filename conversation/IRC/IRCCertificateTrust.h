@@ -44,6 +44,7 @@
 
 - (instancetype)init:(SecTrustRef)trust onClient:(IRCClient *)client;
 - (void)requestTrustFromUser:(void (^)(BOOL shouldTrustPeer))completionHandler;
+- (void)displayCertificateInformation;
 - (void)receivedTrustFromUser:(BOOL)trust;
 
 typedef NS_ENUM(NSUInteger, CertificateTrustStatus) {

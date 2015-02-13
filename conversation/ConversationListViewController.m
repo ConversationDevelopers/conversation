@@ -1158,6 +1158,32 @@
     }];
 }
 
+
+- (void)displayInformationForCertificate:(IRCCertificateTrust *)trustRequest
+{
+	CertificateInfoViewController *certificateInfoController = [[CertificateInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];
+	certificateInfoController.title = NSLocalizedString(@"Certificate Details", @"Certificate Details");
+	
+	__block id blockself = self;
+	
+	UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Close", @"Close")
+																	style:UIBarButtonItemStylePlain
+																	block:^(__strong id object){
+																		[blockself dismissViewControllerAnimated:YES completion:nil];
+																	}];
+	
+	certificateInfoController.subjectInformation = trustRequest.subjectInformation;
+	certificateInfoController.issuerInformation = trustRequest.issuerInformation;
+	certificateInfoController.certificateInformation = trustRequest.certificateInformation;
+	
+	certificateInfoController.navigationItem.rightBarButtonItem = closeButton;
+	
+	UINavigationController *navigationController = [[UINavigationController alloc]
+													initWithRootViewController:certificateInfoController];
+	
+	[self presentViewController:navigationController animated:YES completion:nil];
+}
+
 - (BOOL)shouldDisableIdleTimer
 {
     if ([UIDevice currentDevice].batteryState >= UIDeviceBatteryStateCharging)
@@ -1173,15 +1199,15 @@
     return NO;
 }
 
-- (void) _backgroundTaskExpired {   
+- (void) _backgroundTaskExpired {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self saveHistoricMessages];
     });
-    
+	
     [self disconnect];
     [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
     _backgroundTask = UIBackgroundTaskInvalid;
-    
+	
 }
 
 - (void)setAway

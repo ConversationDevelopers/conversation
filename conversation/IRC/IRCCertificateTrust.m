@@ -50,21 +50,39 @@
     return nil;
 }
 
+
+- (void)displayCertificateInformation
+{
+	CFIndex count = SecTrustGetCertificateCount(self.trustReference);
+	if (count > 0) {
+		[self setFieldInformation];
+		
+		/* Make a request to the UI for a certificate information dialog and wait for the response */
+		ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+		[controller displayInformationForCertificate:self];
+	}
+}
+
+- (void)setFieldInformation
+{
+	/* iOS does not have any useful APIs for getting information from certificates so we will convert
+	 this into an OpenSSL X509 certificate object and parse it using the OpenSSL C library. */
+	SecCertificateRef certificate = SecTrustGetCertificateAtIndex(self.trustReference, 0);
+	NSData *certificateData = (__bridge NSData *) SecCertificateCopyData(certificate);
+	const unsigned char *certificateDataBytes = (const unsigned char *)[certificateData bytes];
+	X509 *certificateX509 = d2i_X509(NULL, &certificateDataBytes, [certificateData length]);
+	
+	/* Create dictionaries with all the fields required for the details dialog. */
+	self.subjectInformation      = [IRCCertificateTrust getCertificateSubject:certificateX509];
+	self.issuerInformation       = [IRCCertificateTrust getCertificateIssuer:certificateX509];
+	self.certificateInformation  = [IRCCertificateTrust getCertificateAlgorithmInformation:certificateX509];
+}
+
 - (void)requestTrustFromUser:(void (^)(BOOL shouldTrustPeer))completionHandler
 {
     CFIndex count = SecTrustGetCertificateCount(self.trustReference);
     if (count > 0) {
-        /* iOS does not have any useful APIs for getting information from certificates so we will convert
-         this into an OpenSSL X509 certificate object and parse it using the OpenSSL C library. */
-        SecCertificateRef certificate = SecTrustGetCertificateAtIndex(self.trustReference, 0);
-        NSData *certificateData = (__bridge NSData *) SecCertificateCopyData(certificate);
-        const unsigned char *certificateDataBytes = (const unsigned char *)[certificateData bytes];
-        X509 *certificateX509 = d2i_X509(NULL, &certificateDataBytes, [certificateData length]);
-        
-        /* Create dictionaries with all the fields required for the details dialog. */
-        self.subjectInformation      = [IRCCertificateTrust getCertificateSubject:certificateX509];
-        self.issuerInformation       = [IRCCertificateTrust getCertificateIssuer:certificateX509];
-        self.certificateInformation  = [IRCCertificateTrust getCertificateAlgorithmInformation:certificateX509];
+		[self setFieldInformation];
         
         /* The user may already have chosen to trust this certificate, in which case there is no point going further,
          we will approve the connection */

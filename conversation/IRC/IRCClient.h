@@ -73,6 +73,7 @@
 @property (nonatomic, retain) NSMutableArray *channels;
 @property (nonatomic, retain) NSMutableArray *queries;
 @property (nonatomic, strong) NSMutableDictionary *whoisRequests;
+@property (nonatomic, assign) SecTrustRef certificate;
 
 + (NSArray *) IRCv3CapabilitiesSupportedByApplication;
 
