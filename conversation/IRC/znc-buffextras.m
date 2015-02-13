@@ -32,6 +32,7 @@
 #import "IRCChannel.h"
 #import "IRCClient.h"
 #import "IRCMessage.h"
+#import "NSMutableArray+Methods.h"
 
 @implementation znc_buffextras
 
@@ -67,12 +68,8 @@
         // PART
         NSString *partMessage = @"";
         if ([messageComponents count] > 1) {
-            NSRange range;
-            range.location = 0;
-            range.length = 4;
-            [messageComponents removeObjectsInRange:range];
-            partMessage = [messageComponents componentsJoinedByString:@" "];
-            
+			partMessage = [messageComponents componentsJoinedByString:@" " fromIndex:5];
+			
             NSRange substrRange;
             substrRange.location = 1;
             substrRange.length = [partMessage length] - 2;

@@ -38,6 +38,7 @@
 #import "AppPreferences.h"
 #import "IRCCommands.h"
 #import "BuildConfig.h"
+#import "NSMutableArray+Methods.h"
 
 #define AssertIsNotServerMessage(x) if ([x isServerMessage] == YES) return;
 
@@ -648,8 +649,7 @@
     NSString *nickname  = [messageComponents objectAtIndex:3];
     NSString *modes     = [messageComponents objectAtIndex:4];
     
-    [messageComponents removeObjectsInRange:NSMakeRange(0, 5)];
-    NSString *realname  = [messageComponents componentsJoinedByString:@" "];
+	NSString *realname  = [messageComponents componentsJoinedByString:@" " fromIndex:6];
     
     IRCChannel *ircChannel = [IRCChannel fromString:message.conversation.name withClient:message.client];
     IRCUser *user = [IRCUser fromNickname:nickname onChannel:ircChannel];

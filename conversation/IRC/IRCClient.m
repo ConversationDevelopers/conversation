@@ -36,6 +36,7 @@
 #import "IRCCommands.h"
 #import "ConversationListViewController.h"
 #import "WHOIS.h"
+#import "NSMutableArray+Methods.h"
 
 #define CONNECTION_RETRY_INTERVAL       30
 #define CONNECTION_RETRY_ATTEMPTS       10
@@ -419,7 +420,7 @@
             whoisUser.hostname = [components objectAtIndex:1];
             
             [components removeObjectsInRange:NSMakeRange(0,3)];
-            whoisUser.realname = [[components componentsJoinedByString:@" "] substringFromIndex:1];
+			whoisUser.realname = [[components componentsJoinedByString:@" " fromIndex:4] substringFromIndex:1];
             [self.whoisRequests setObject:whoisUser forKey:recipient];
             break;
         }

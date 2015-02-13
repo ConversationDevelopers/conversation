@@ -37,6 +37,7 @@
 #import "ConversationListViewController.h"
 #import "BuildConfig.h"
 #import "DeviceInformation.h"
+#import "NSMutableArray+Methods.h"
 
 @implementation InputCommands
 
@@ -92,12 +93,7 @@
                 if ([messageComponents count] > 2) {
                     NSString *recipient = messageComponents[1];
                     
-                    NSRange range;
-                    range.location = 0;
-                    range.length = 2;
-                    [messageComponents removeObjectsInRange:range];
-                    
-                    NSString *message = [messageComponents componentsJoinedByString:@" "];
+					NSString *message = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     [IRCCommands sendCTCPMessage:message toRecipient:recipient onClient:conversation.client];
                 } else {
                     [InputCommands incompleteParametersError:command withParameters:@"<channel/user> <command>"];
@@ -107,13 +103,8 @@
             case CMD_CTCPREPLY:
                 if ([messageComponents count] > 3) {
                     NSString *recipient = messageComponents[1];
-                    
-                    NSRange range;
-                    range.location = 0;
-                    range.length = 2;
-                    [messageComponents removeObjectsInRange:range];
-                    
-                    NSString *message = [messageComponents componentsJoinedByString:@" "];
+					
+					NSString *message = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     [IRCCommands sendCTCPReply:message toRecipient:recipient onClient:conversation.client];
                 } else {
                     [InputCommands incompleteParametersError:command withParameters:@"<channel/user> <command> <response>"];
@@ -203,13 +194,8 @@
                     NSString *channel = messageComponents[1];
                     NSString *partMessage = nil;
                     
-                    if ([messageComponents count] > 2) {
-                        NSRange range;
-                        range.location = 0;
-                        range.length = 2;
-                        [messageComponents removeObjectsInRange:range];
-                        
-                        partMessage = [messageComponents componentsJoinedByString:@" "];
+					if ([messageComponents count] > 2) {
+						partMessage = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     }
                     [IRCCommands rejoinChannel:channel withMessage:partMessage onClient:conversation.client];
                 } else {
@@ -249,13 +235,8 @@
                     IRCChannel *channel = (IRCChannel *)conversation;
                     NSString *kickMessage = nil;
                     
-                    if ([messageComponents count] > 2) {
-                        NSRange range;
-                        range.location = 0;
-                        range.length = 2;
-                        [messageComponents removeObjectsInRange:range];
-                        
-                        kickMessage = [messageComponents componentsJoinedByString:@" "];
+					if ([messageComponents count] > 2) {
+						kickMessage = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     }
                     [IRCCommands kickUser:nickname onChannel:channel withMessage:kickMessage];
                 } else {
@@ -270,13 +251,8 @@
                     IRCChannel *channel = (IRCChannel *)conversation;
                     NSString *kickMessage = nil;
                     
-                    if ([messageComponents count] > 2) {
-                        NSRange range;
-                        range.location = 0;
-                        range.length = 2;
-                        [messageComponents removeObjectsInRange:range];
-                        
-                        kickMessage = [messageComponents componentsJoinedByString:@" "];
+					if ([messageComponents count] > 2) {
+						kickMessage = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     }
                     [IRCCommands kickBanUser:nickname onChannel:channel withMessage:kickMessage];
                 } else {
@@ -290,13 +266,8 @@
                     NSString *channel = messageComponents[1];
                     NSString *partMessage = nil;
                     
-                    if ([messageComponents count] > 2) {
-                        NSRange range;
-                        range.location = 0;
-                        range.length = 2;
-                        [messageComponents removeObjectsInRange:range];
-                        
-                        partMessage = [messageComponents componentsJoinedByString:@" "];
+					if ([messageComponents count] > 2) {
+						partMessage = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     }
                     [IRCCommands leaveChannel:channel withMessage:partMessage onClient:conversation.client];
                 } else {
@@ -317,13 +288,8 @@
             case CMD_MODE:
                 if ([messageComponents count] > 2) {
                     NSString *recipient = messageComponents[1];
-                    
-                    NSRange range;
-                    range.location = 0;
-                    range.length = 2;
-                    [messageComponents removeObjectsInRange:range];
-                    
-                    NSString *message = [messageComponents componentsJoinedByString:@" "];
+					
+					NSString *message = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     [IRCCommands setMode:message onRecepient:recipient onClient:conversation.client];
                 } else {
                     [InputCommands incompleteParametersError:command withParameters:@"<nick/channel> <modes>"];
@@ -333,13 +299,8 @@
             case CMD_MSG: {
                 if ([messageComponents count] > 2) {
                     NSString *recipient = messageComponents[1];
-                    
-                    NSRange range;
-                    range.location = 0;
-                    range.length = 2;
-                    [messageComponents removeObjectsInRange:range];
-                    
-                    NSString *message = [messageComponents componentsJoinedByString:@" "];
+					
+					NSString *message = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     [IRCCommands sendMessage:message toRecipient:recipient onClient:conversation.client];
                 } else {
                     [InputCommands incompleteParametersError:command withParameters:@"<channel/user> <message>"];
@@ -372,13 +333,8 @@
             case CMD_NOTICE:
                 if ([messageComponents count] > 2) {
                     NSString *recipient = messageComponents[1];
-                    
-                    NSRange range;
-                    range.location = 0;
-                    range.length = 2;
-                    [messageComponents removeObjectsInRange:range];
-                    
-                    NSString *message = [messageComponents componentsJoinedByString:@" "];
+					
+					NSString *message = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     [IRCCommands sendNotice:message toRecipient:recipient onClient:conversation.client];
                 } else {
                     [InputCommands incompleteParametersError:command withParameters:@"<channel/user> <message>"];
@@ -459,12 +415,8 @@
             case CMD_TIMER:
                 if ([messageComponents count] > 2) {
                     float seconds = [messageComponents[1] floatValue];
-                    
-                    NSRange range;
-                    range.location = 0;
-                    range.length = 2;
-                    [messageComponents removeObjectsInRange:range];
-                    NSString *commandMessage = [messageComponents componentsJoinedByString:@" "];
+					
+					NSString *commandMessage = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     [IRCCommands onTimer:seconds runCommand:commandMessage inConversation:conversation];
                 } else {
                     [InputCommands incompleteParametersError:command withParameters:@"<seconds> <command>"];
@@ -474,13 +426,8 @@
             case CMD_TOPIC:
                 if ([messageComponents count] > 2) {
                     NSString *recipient = messageComponents[1];
-                    
-                    NSRange range;
-                    range.location = 0;
-                    range.length = 2;
-                    [messageComponents removeObjectsInRange:range];
-                    
-                    NSString *message = [messageComponents componentsJoinedByString:@" "];
+					
+					NSString *message = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     [IRCCommands setTopic:message onChannel:recipient onClient:conversation.client];
                 } else {
                     [InputCommands incompleteParametersError:command withParameters:@"<channel> <topic>"];
