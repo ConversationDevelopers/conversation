@@ -351,8 +351,7 @@
     NSString *channelName;
     if (IRCv3CapabilityEnabled(message.client, @"extended-join") && [[message message] length] > 0) {
         channelName = message.conversation.name;
-        NSString *realname = [message message];
-        realname = [message.message substringFromIndex:3];
+        NSString *realname = [message.message substringFromIndex:3];
         message.sender.realname = realname;
     } else {
         channelName = message.message;
