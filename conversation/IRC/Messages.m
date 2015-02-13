@@ -37,6 +37,7 @@
 #import "znc-buffextras.h"
 #import "AppPreferences.h"
 #import "IRCCommands.h"
+#import "BuildConfig.h"
 
 #define AssertIsNotServerMessage(x) if ([x isServerMessage] == YES) return;
 
@@ -256,9 +257,12 @@
             message.messageType = ET_CTCP;
             
             if (isCTCPCommand(@"VERSION")) {
-                [IRCCommands sendCTCPReply:[NSString stringWithFormat:@"VERSION Conversation %@ (https://github.com/ConversationDevelopers/conversation)",
-                                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]]
+                [IRCCommands sendCTCPReply:[NSString stringWithFormat:@"VERSION %@ %@ (%@) (http://conversationapp.net)",
+                                            ConversationBundleName,
+                                            ConversationVersion,
+                                            ConversationBuildType]
                                toRecipient:[[message sender] nick] onClient:[message client]];
+                
             } else if (isCTCPCommand(@"TIME")) {
                 NSDate* now = [NSDate date];
                 NSDateFormatter* df = [[NSDateFormatter alloc] init];
