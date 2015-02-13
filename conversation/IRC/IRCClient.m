@@ -419,7 +419,6 @@
             whoisUser.username = [components objectAtIndex:0];
             whoisUser.hostname = [components objectAtIndex:1];
             
-            [components removeObjectsInRange:NSMakeRange(0,3)];
 			whoisUser.realname = [[components componentsJoinedByString:@" " fromIndex:4] substringFromIndex:1];
             [self.whoisRequests setObject:whoisUser forKey:recipient];
             break;
