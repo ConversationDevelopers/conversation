@@ -225,6 +225,9 @@ BOOL popoverDidDismiss = NO;
     [super viewWillDisappear:animated];
     [self hideAccessories:nil];
     
+    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+    controller.currentConversation = nil;
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillShowNotification
                                                   object:nil];
@@ -337,8 +340,6 @@ BOOL popoverDidDismiss = NO;
 - (void)goBack:(id)sender
 {
     [self.navigationController popToRootViewControllerAnimated:YES];
-    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
-    controller.currentConversation = nil;
 }
 
 - (void)showUserList:(id)sender
