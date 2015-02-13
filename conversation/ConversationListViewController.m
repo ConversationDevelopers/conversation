@@ -970,7 +970,7 @@
     UIFont *font = [UIFont fontWithName:@"Helvetica-Bold" size:14];
     if (message.messageType == ET_ACTION) {
         string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"· %@ %@", message.sender.nick, message.message]];
-        [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, message.sender.nick.length+message.message.length+2)];
+        [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, message.sender.nick.length+message.message.length+3)];
     } else {
         string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@", message.sender.nick, message.message]];
         [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, message.sender.nick.length+1)];
