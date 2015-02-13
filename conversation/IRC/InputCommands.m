@@ -53,7 +53,7 @@
                     [messageComponents removeObjectAtIndex:0];
                     [channel givePrivilegieToUsers:messageComponents toStatus:ADMIN onChannel:channel];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<user1> <user2> etc.."];
+					[InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<user1> <user2> etc..", @"<user1> <user2> etc..") inConversation:conversation];
                 }
                 break;
             
@@ -63,7 +63,7 @@
                     NSString *nickname = messageComponents[1];
                     [IRCCommands banUser:nickname onChannel:channel];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<nickname/host>"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<nickname/host>", @"<nickname/host>") inConversation:conversation];
                 }
                 break;
                 
@@ -96,7 +96,7 @@
 					NSString *message = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     [IRCCommands sendCTCPMessage:message toRecipient:recipient onClient:conversation.client];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<channel/user> <command>"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<channel/user> <command>", @"<channel/user> <command>") inConversation:conversation];
                 }
                 break;
                 
@@ -107,7 +107,7 @@
 					NSString *message = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     [IRCCommands sendCTCPReply:message toRecipient:recipient onClient:conversation.client];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<channel/user> <command> <response>"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<channel/user> <command> <response>", @"<channel/user> <command> <response>") inConversation:conversation];
                 }
                 break;
                 break;
@@ -118,7 +118,7 @@
                     [messageComponents removeObjectAtIndex:0];
                     [channel revokePrivilegieFromUsers:messageComponents toStatus:ADMIN onChannel:channel];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<user1> <user2> etc.."];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<user1> <user2> etc..", @"<user1> <user2> etc..") inConversation:conversation];
                 }
                 break;
                 
@@ -128,7 +128,7 @@
                     [messageComponents removeObjectAtIndex:0];
                     [channel revokePrivilegieFromUsers:messageComponents toStatus:HALFOP onChannel:channel];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<user1> <user2> etc.."];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<user1> <user2> etc..", @"<user1> <user2> etc..") inConversation:conversation];
                 }
                 break;
                 
@@ -138,7 +138,7 @@
                     [messageComponents removeObjectAtIndex:0];
                     [channel revokePrivilegieFromUsers:messageComponents toStatus:OPERATOR onChannel:channel];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<user1> <user2> etc.."];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<user1> <user2> etc..", @"<user1> <user2> etc..") inConversation:conversation];
                 }
                 break;
                 
@@ -148,7 +148,7 @@
                     [messageComponents removeObjectAtIndex:0];
                     [channel revokePrivilegieFromUsers:messageComponents toStatus:VOICE onChannel:channel];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<user1> <user2> etc.."];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<user1> <user2> etc..", @"<user1> <user2> etc..") inConversation:conversation];
                 }
                 break;
                 
@@ -158,7 +158,7 @@
                     [messageComponents removeObjectAtIndex:0];
                     [channel revokePrivilegieFromUsers:messageComponents toStatus:OWNER onChannel:channel];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<user1> <user2> etc.."];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<user1> <user2> etc..", @"<user1> <user2> etc..") inConversation:conversation];
                 }
                 break;
                 
@@ -173,7 +173,7 @@
                         channel.configuration.autoJoin = NO;
                         [InputCommands performCommand:[NSString stringWithFormat:@"ZNC DETACH %@", channel.name] inConversation:conversation];
                     } else
-                        [InputCommands incompleteParametersError:command withParameters:@"<channel1> <channel2> etc.."];
+                        [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<channel1> <channel2> etc..", @"") inConversation:conversation];
                 }
                 break;
                 
@@ -183,7 +183,7 @@
                     [messageComponents removeObjectAtIndex:0];
                     [channel givePrivilegieToUsers:messageComponents toStatus:HALFOP onChannel:channel];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<user1> <user2> etc.."];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<user1> <user2> etc..", @"") inConversation:conversation];
                 }
                 break;
                 
@@ -214,7 +214,7 @@
                         conversation.client.configuration.ignores = [array copy];
                     }
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<hostmask>"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<hostmask>", @"<hostmask>") inConversation:conversation];
                 }
                 break;
             }
@@ -224,7 +224,7 @@
                     NSString *channel = messageComponents[1];
                     [IRCCommands joinChannel:channel onClient:conversation.client];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<channel>"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<channel>", @"<channel>") inConversation:conversation];
                 }
                 break;
                 
@@ -240,7 +240,7 @@
                     }
                     [IRCCommands kickUser:nickname onChannel:channel withMessage:kickMessage];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<nickname> [<message>]"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<nickname> [message]", @"<nickname> [message]") inConversation:conversation];
                 }
                 break;
                 
@@ -256,7 +256,7 @@
                     }
                     [IRCCommands kickBanUser:nickname onChannel:channel withMessage:kickMessage];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<nickname> [<message>]"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<nickname> [message]", @"<nickname> [message]") inConversation:conversation];
                 }
                 break;
                 
@@ -281,7 +281,7 @@
                     NSString *message = [messageComponents componentsJoinedByString:@" "];
                     [IRCCommands sendACTIONMessage:message toRecipient:[conversation name] onClient:conversation.client];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<action>"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<action>", @"<action>") inConversation:conversation];
                 }
                 break;
                 
@@ -292,7 +292,7 @@
 					NSString *message = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     [IRCCommands setMode:message onRecepient:recipient onClient:conversation.client];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<nick/channel> <modes>"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<nick/channel> <modes>", @"<nick/channel> <modes>") inConversation:conversation];
                 }
                 break;
                 
@@ -303,13 +303,14 @@
 					NSString *message = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     [IRCCommands sendMessage:message toRecipient:recipient onClient:conversation.client];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<channel/user> <message>"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<channel/user> <message>", @"<channel/user> <message>") inConversation:conversation];
                 }
                 break;
             }
                 
             case CMD_MYVERSION:
-                [IRCCommands sendMessage:[NSString stringWithFormat:@"%cCurrent Version:%c %@ %@-%@ (Build Date: %@) (%@)",
+                [IRCCommands sendMessage:[NSString stringWithFormat:NSLocalizedString(@"%cCurrent Version:%c %@ %@-%@ (Build Date: %@) (%@)",
+																					  @"{bold}Current Version:{end bold} {Bundle name} {Version name}-{Build reference} (Build Date: {Build date}) ({Build Type})"),
                                           IRC_BOLD,
                                           IRC_BOLD,
                                           ConversationBundleName,
@@ -326,7 +327,7 @@
                     NSString *message = [messageComponents componentsJoinedByString:@" "];
                     [IRCCommands changeNicknameToNick:message onClient:conversation.client];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<new nickname>"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<new nickname>", @"<new nickname>") inConversation:conversation];
                 }
                 break;
                 
@@ -337,7 +338,7 @@
 					NSString *message = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     [IRCCommands sendNotice:message toRecipient:recipient onClient:conversation.client];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<channel/user> <message>"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<channel/user> <message>", @"<channel/user> <message>") inConversation:conversation];
                 }
                 break;
                 
@@ -347,7 +348,7 @@
                     [messageComponents removeObjectAtIndex:0];
                     [channel givePrivilegieToUsers:messageComponents toStatus:OPERATOR onChannel:channel];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<user1> <user2> etc.."];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<user1> <user2> etc..", @"<user1> <user2> etc..") inConversation:conversation];
                 }
                 break;
                 
@@ -357,7 +358,7 @@
                     [messageComponents removeObjectAtIndex:0];
                     [channel revokePrivilegieFromUsers:messageComponents toStatus:OWNER onChannel:channel];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<user1> <user2> etc.."];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<user1> <user2> etc..", @"<user1> <user2> etc..") inConversation:conversation];
                 }
                 break;
                 
@@ -370,7 +371,7 @@
                         [controller selectConversationWithIdentifier:conversation.configuration.uniqueIdentifier];
                     }];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<user>"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<user>", @"<user>") inConversation:conversation];
                 }
                 break;
                 
@@ -391,7 +392,7 @@
                     NSString *commandString = [messageComponents componentsJoinedByString:@" "];
                     [conversation.client.connection send:commandString];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<command>"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<command>", @"<command>") inConversation:conversation];
                 }
                 break;
             case CMD_SYSINFO: {
@@ -419,7 +420,7 @@
 					NSString *commandMessage = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     [IRCCommands onTimer:seconds runCommand:commandMessage inConversation:conversation];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<seconds> <command>"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<seconds> <command>", @"<seconds> <command>") inConversation:conversation];
                 }
                 break;
                 
@@ -430,7 +431,7 @@
 					NSString *message = [messageComponents componentsJoinedByString:@" " fromIndex:3];
                     [IRCCommands setTopic:message onChannel:recipient onClient:conversation.client];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<channel> <topic>"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<channel> <topic>", @"<channel> <topic>") inConversation:conversation];
                 }
                 break;
                 
@@ -439,7 +440,7 @@
                     NSString *modes = messageComponents[1];
                     [IRCCommands setMode:modes onRecepient:conversation.client.currentUserOnConnection.nick onClient:conversation.client];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<modes>"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<modes>", @"<modes>") inConversation:conversation];
                 }
                 break;
                 
@@ -460,7 +461,7 @@
                         conversation.client.configuration.ignores = [array copy];
                     }
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<hostmask>"];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<hostmask>", @"<hostmask>") inConversation:conversation];
                 }
                 break;
                 
@@ -471,7 +472,7 @@
                     [messageComponents removeObjectAtIndex:0];
                     [channel givePrivilegieToUsers:messageComponents toStatus:VOICE onChannel:channel];
                 } else {
-                    [InputCommands incompleteParametersError:command withParameters:@"<user1> <user2> etc.."];
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<user1> <user2> etc..", @"<user1> <user2> etc..") inConversation:conversation];
                 }
                 break;
                 
@@ -482,9 +483,20 @@
     }
 }
 
-+ (void)incompleteParametersError:(NSInteger)command withParameters:(NSString *)parameters
++ (void)incompleteParametersError:(NSInteger)command withParameters:(NSString *)parameters inConversation:conversation
 {
-    
+	IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:[NSString stringWithFormat:
+																	 NSLocalizedString(@"Command usage: /%@ %@", @"Command usage: /{Name of command} {Syntax for command}"),
+																	 [[InputCommands inputCommandReference] objectAtIndex:command],
+																	 parameters]
+															 OfType:ET_ERROR
+													 inConversation:conversation
+														   bySender:nil
+															 atTime:[NSDate date]
+														   withTags:nil
+													isServerMessage:YES
+														   onClient:[conversation client]];
+	[Messages clientReceivedRecoverableErrorFromServer:messageObject];
 }
 
 + (void)sendMessage:(NSString *)message toRecipient:(NSString *)recipient onClient:(IRCClient *)client
