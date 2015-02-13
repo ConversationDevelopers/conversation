@@ -920,8 +920,10 @@
     if (message.messageType == ET_LIST || message.messageType == ET_LISTEND)
         return;
     
-    if (message.messageType == ET_RAW && message.client.showConsole) {
-        message.client.console.contentView.text = [message.client.console.contentView.text stringByAppendingFormat:@"%@\n", message.message];
+    if (message.messageType == ET_RAW) {
+        if (message.client.showConsole)
+            message.client.console.contentView.text = [message.client.console.contentView.text stringByAppendingFormat:@"%@\n", message.message];
+        return;
     }
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"hideevents_preference"] == YES &&
