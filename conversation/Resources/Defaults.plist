@@ -9,11 +9,11 @@
 	<key>realname_preference</key>
 	<string>A Conversation IRC User</string>
 	<key>awaymsg_preference</key>
-	<string>Conversation: IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)</string>
+	<string>Conversation: IRC Client for iOS (http://conversationapp.net)</string>
 	<key>partmsg_preference</key>
-	<string>Conversation: IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)</string>
+	<string>Conversation: IRC Client for iOS (http://conversationapp.net)</string>
 	<key>quitmsg_preference</key>
-	<string>Conversation: IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)</string>
+	<string>Conversation: IRC Client for iOS (http://conversationapp.net)</string>
 	<key>rejoin_preference</key>
 	<true/>
 	<key>autoaway_preferemce</key>

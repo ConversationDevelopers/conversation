@@ -76,7 +76,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string>Conversation: IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)</string>
+			<string>Conversation: IRC Client for iOS (http://conversationapp.net)</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -94,7 +94,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string>Conversation: IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)</string>
+			<string>Conversation: IRC Client for iOS (http://conversationapp.net)</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -112,7 +112,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string>Conversation: IRC Client for iOS (https://github.com/ConversationDevelopers/conversation)</string>
+			<string>Conversation: IRC Client for iOS (http://conversationapp.net)</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -224,7 +224,7 @@
 			<key>FooterText</key>
 			<string>Copyright © 2015 Tobias Pollmann, Alex Sørlie Glomsaas</string>
 		</dict>
-        <dict>
+		<dict>
 			<key>Type</key>
 			<string>IASKButtonSpecifier</string>
 			<key>Title</key>
@@ -232,8 +232,8 @@
 			<key>Key</key>
 			<string>support_preference</string>
 		</dict>
-        <dict>
-		<key>Type</key>
+		<dict>
+			<key>Type</key>
 			<string>IASKButtonSpecifier</string>
 			<key>Title</key>
 			<string>@ConversationIRC on Twitter</string>
