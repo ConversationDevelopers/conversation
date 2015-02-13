@@ -346,7 +346,7 @@
             /* Register For Push Notifications */
             AppDelegate *appDelegate = ((AppDelegate *)[UIApplication sharedApplication].delegate);
             if (appDelegate.tokenString)
-                [self.connection send:[NSString stringWithFormat:@"CONVERSATION add-device %@ 127.0.0.1 8080 :%@",
+                [self.connection send:[NSString stringWithFormat:@"CONVERSATION add-device %@ conversationapp.net 3454 :%@",
                                            appDelegate.tokenString,
                                            self.configuration.connectionName]];
             break;
