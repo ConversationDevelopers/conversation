@@ -63,7 +63,10 @@
                 // Workaround to set channel status
                 if ([conversation isKindOfClass:IRCChannel.class]) {
                     IRCChannel *channel = (IRCChannel *)conversation;
-                    user = [IRCUser fromNickname:client.currentUserOnConnection.nick onChannel:channel];
+                    IRCUser *user2 = [IRCUser fromNickname:client.currentUserOnConnection.nick onChannel:channel];
+                    if (user2.nick.length) {
+                        user = user2;
+                    }
                 }
                 
                 
