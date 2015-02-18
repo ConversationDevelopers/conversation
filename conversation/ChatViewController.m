@@ -69,6 +69,16 @@ BOOL popoverDidDismiss = NO;
                                                  name:@"messageReceived"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillToggle:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillToggle:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    
     _backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ChannelIcon_Light"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
     
     _joinButton = [[UIBarButtonItem alloc] initWithTitle:@"Join" style:UIBarButtonItemStylePlain target:self action:@selector(join:)];
@@ -85,9 +95,19 @@ BOOL popoverDidDismiss = NO;
 
 - (void)dealloc
 {
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillShowNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillHideNotification
+                                                  object:nil];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"messageReceived"
                                                   object:nil];
+    
 }
 
 - (NSUInteger)supportedInterfaceOrientations
@@ -196,20 +216,6 @@ BOOL popoverDidDismiss = NO;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillToggle:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillToggle:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardDidShow:)
-                                                 name:UIKeyboardDidShowNotification
-                                               object:nil];
     
     double delayInSeconds = 2.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -227,18 +233,6 @@ BOOL popoverDidDismiss = NO;
     
     ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     controller.currentConversation = nil;
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillShowNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardDidShowNotification
-                                                  object:nil];
     
 
 }
@@ -319,8 +313,13 @@ BOOL popoverDidDismiss = NO;
     if (sizeChange == 0.0)
         sizeChange = heightChange;
     
+
     CGRect newContainerFrame = [[self container] frame];
     newContainerFrame.size.height += sizeChange;
+    
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    if (_keyboardIsVisible && self.container.frame.size.height < screenRect.size.height - (sizeChange*-1))
+        return;
     
     [UIView animateWithDuration:duration
                           delay:0
@@ -330,11 +329,6 @@ BOOL popoverDidDismiss = NO;
                      }
                      completion:NULL];
     [self scrollToBottom:NO];
-}
-
-- (void)keyboardDidShow:(id)sender
-{
-//    [self scrollToBottom:NO];
 }
 
 - (void)goBack:(id)sender
