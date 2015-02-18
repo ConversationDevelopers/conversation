@@ -677,7 +677,9 @@ uint32_t FNV32(const char *s)
         }
         case ET_NOTICE: {
             
-            string = [[NSMutableAttributedString alloc] initWithAttributedString:[self setLinks:[[NSString alloc] initWithFormat:@"%@\n%@", user.nick, msg]]];
+            NSString *notice = NSLocalizedString(@"[Notice]", @"[Notice]");
+            string = [[NSMutableAttributedString alloc] initWithAttributedString:[self setLinks:[[NSString alloc] initWithFormat:@"%@ %@\n%@",
+                                                                                                 notice, user.nick, msg]]];
 
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
@@ -687,15 +689,19 @@ uint32_t FNV32(const char *s)
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:16.0]
-                           range:NSMakeRange(0, user.nick.length)];
+                           range:NSMakeRange(0, notice.length + user.nick.length + 1)];
+            
+            [string addAttribute:NSForegroundColorAttributeName
+                           value:[UIColor darkGrayColor]
+                           range:NSMakeRange(0, notice.length)];
             
             [string addAttribute:NSForegroundColorAttributeName
                            value:[self colorForNick:user.nick]
-                           range:NSMakeRange(0, user.nick.length)];
+                           range:NSMakeRange(notice.length+1, user.nick.length)];
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont systemFontOfSize:12.0]
-                           range:NSMakeRange(user.nick.length+1, msg.length)];
+                           range:NSMakeRange(user.nick.length + notice.length + 2, msg.length)];
             
             // Mark sender's nick so we can respond to tap actions
             [string addAttribute:NSLinkAttributeName
