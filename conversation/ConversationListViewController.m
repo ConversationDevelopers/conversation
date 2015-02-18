@@ -52,6 +52,7 @@
 #import "CertificateInfoViewController.h"
 #import "CertificateItemRow.h"
 #import "IRCCommands.h"
+#import "ChannelListViewController.h"
 #import <SHTransitionBlocks.h>
 #import <UIViewController+SHTransitionBlocks.h>
 #import <SHNavigationControllerBlocks.h>
@@ -667,7 +668,8 @@
                                               otherButtonTitles:NSLocalizedString(@"Disconnect", @"Disconnect server"),
                  NSLocalizedString(@"Sort Conversations", "Sort Conversations"),
                  consoleButtonTitle,
-                 NSLocalizedString(@"Edit", @"Edit Connection"), nil];
+                 NSLocalizedString(@"Edit", @"Edit Connection"),
+                 NSLocalizedString(@"Channel List", @"Channel List"), nil];
         [sheet setDestructiveButtonIndex:0];
     } else {
         sheet = [[UIActionSheet alloc] initWithTitle:client.configuration.connectionName
@@ -755,6 +757,15 @@
                                                  otherButtonTitles:NSLocalizedString(@"Yes", @"yes"), nil];
                     alertView.tag = actionSheet.tag;
                     [alertView show];
+                } else {
+                    ChannelListViewController *channelList = [[ChannelListViewController alloc] init];
+                    channelList.client = client;
+                    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:channelList];
+                    navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+                    navigationController.navigationBar.tintColor = [UIColor lightGrayColor];
+                    navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
+                    navigationController.navigationBar.translucent = NO;
+                    [self.navigationController presentViewController:navigationController animated:YES completion:nil];
                 }
                 break;
             default:
