@@ -49,7 +49,7 @@
     [[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelNone];
     
     // Initialize tracker. Replace with your tracking ID.
-    id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:@"UA-59509913-1"];
+    id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:@"UA-59885279-1"];
 
 #ifdef DEBUG
     [[GAI sharedInstance] setDryRun:YES];
