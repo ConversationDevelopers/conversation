@@ -371,7 +371,8 @@
                 [controller reloadClient:message.client];
             });
         } else {
-            [[channel users] addObject:[message sender]];            
+            [[channel users] addObject:[message sender]];
+            [channel sortUserlist];
         }
         
         message.messageType = ET_JOIN;
