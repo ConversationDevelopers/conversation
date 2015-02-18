@@ -90,7 +90,8 @@ typedef NS_ENUM(NSUInteger, InputCommand) {
     CMD_UMODE,
     CMD_UNBAN,
     CMD_UNIGNORE,
-    CMD_VOICE    
+    CMD_VOICE,
+    CMD_WHOIS
 };
 
 @end

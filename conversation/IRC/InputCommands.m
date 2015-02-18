@@ -38,6 +38,7 @@
 #import "BuildConfig.h"
 #import "DeviceInformation.h"
 #import "NSMutableArray+Methods.h"
+#import "UserInfoViewController.h"
 
 @implementation InputCommands
 
@@ -486,6 +487,24 @@
                 }
                 break;
                 
+            case CMD_WHOIS: {
+                if ([messageComponents count] > 1) {
+                    [messageComponents removeObjectAtIndex:0];
+                    NSString *nick = [messageComponents objectAtIndex:0];
+                    
+                    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+                    UserInfoViewController *infoViewController = [[UserInfoViewController alloc] init];
+                    infoViewController.nickname = nick;
+                    infoViewController.client = conversation.client;
+                    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:infoViewController];
+                    
+                    navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+                    [controller presentViewController:navigationController animated:YES completion: nil];
+                    
+                }
+            }
+                break;
+                
             default:
                 [conversation.client.connection send:message];
                 break;
@@ -568,7 +587,8 @@
         @"UNIGNORE",        
         @"VOICE",
         @"UMODE",
-        @"UNBAN"
+        @"UNBAN",
+        @"WHOIS"
     ];
 }
 
