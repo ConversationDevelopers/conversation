@@ -416,6 +416,9 @@ BOOL popoverDidDismiss = NO;
                              [imagePicker.view setFrame:CGRectMake(0, 80, 320, 350)];
                              [imagePicker setSourceType:UIImagePickerControllerSourceTypeCamera];
                              [imagePicker setDelegate:(id)self];
+                             if(!self.navigationController.presentedViewController.isBeingDismissed) {
+                                 [self dismissViewControllerAnimated:NO completion:nil];
+                             }
                              [self presentViewController:imagePicker animated:YES completion:nil];
                          } else if(buttonIndex == 1) {
                              UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
@@ -423,6 +426,9 @@ BOOL popoverDidDismiss = NO;
                              [imagePicker.view setFrame:CGRectMake(0, 80, 320, 350)];
                              [imagePicker setSourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
                              [imagePicker setDelegate:(id)self];
+                             if(!self.navigationController.presentedViewController.isBeingDismissed) {
+                                 [self dismissViewControllerAnimated:NO completion:nil];
+                             }
                              [self presentViewController:imagePicker animated:YES completion:nil];
                          }
 
