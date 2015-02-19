@@ -208,7 +208,36 @@
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [self.conversationsController setBack];
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];    
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    
+    // Set current conversation
+    NSString *identifier = [[AppPreferences sharedPrefs] getLastConversation];
+    if (!identifier)
+        return;
+    
+    IRCClient *client;
+    IRCConversation *conversation;
+    for (client in self.conversationsController.connections) {
+        for (IRCConversation *convo in client.queries) {
+            if ([convo.configuration.uniqueIdentifier isEqualToString:identifier]) {
+                conversation = convo;
+                break;
+            }
+        }
+        if (conversation == nil) {
+            for (IRCConversation *convo in client.channels) {
+                if ([convo.configuration.uniqueIdentifier isEqualToString:identifier]) {
+                    conversation = convo;
+                    break;
+                }
+            }
+        }
+    }
+    
+    conversation.isHighlighted = NO;
+    conversation.unreadCount = 0;
+
+    self.conversationsController.currentConversation = conversation;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
