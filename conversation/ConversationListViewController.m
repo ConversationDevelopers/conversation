@@ -59,6 +59,8 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <MCNotificationManager/MCNotificationManager.h>
 #import <MCNotificationManager/MCNotification.h>
+#import <UIActionSheet+Blocks/UIActionSheet+Blocks.h>
+#import "UIAlertView+Methods.h"
 
 #define IPAD UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
 
@@ -286,13 +288,31 @@
     if(self.connections.count == 0) {
         [self editConnection:nil];
     } else {
-        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Add Conversation", @"Add Conversation")
-                                                           delegate:self
-                                                  cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
-                                             destructiveButtonTitle:nil
-                                                  otherButtonTitles:NSLocalizedString(@"Join a Channel", @"Join a Channel"), NSLocalizedString(@"Message a User", @"Message a User"), NSLocalizedString(@"Add Connection", @"Add Connection"), nil];
-        [sheet setTag:-1];
-        [sheet showInView:self.view];
+        [UIActionSheet showInView:self.view
+                        withTitle:NSLocalizedString(@"Add Conversation", @"Add Conversation")
+                cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+           destructiveButtonTitle:nil
+                otherButtonTitles:@[NSLocalizedString(@"Join a Channel", @"Join a Channel"),
+                                    NSLocalizedString(@"Message a User", @"Message a User"),
+                                    NSLocalizedString(@"Add Connection", @"Add Connection")]
+                         tapBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex) {
+                             switch (buttonIndex) {
+                                 case 0:
+                                     // Join a Channel
+                                     [self addItemWithTag:buttonIndex];
+                                     break;
+                                 case 1:
+                                     // Message a User
+                                     [self addItemWithTag:buttonIndex];
+                                     break;
+                                 case 2:
+                                     // Add Connection
+                                     [self editConnection:nil];
+                                     break;
+                                 default:
+                                     break;
+                             }
+                         }];
     }
 }
 
@@ -652,70 +672,35 @@
 {
     // Get relevant client
     IRCClient *client = [self.connections objectAtIndex:sender.view.tag];
-
-    UIActionSheet *sheet;
     
-    NSString *consoleButtonTitle;
-    if (client.showConsole)
-        consoleButtonTitle = NSLocalizedString(@"Hide Console", "Hide Console");
-    else
-        consoleButtonTitle = NSLocalizedString(@"Show Console", "Show Console");
+    NSMutableArray *buttonTitles = [[NSMutableArray alloc] initWithArray:@[client.isConnected ? NSLocalizedString(@"Disconnect", @"Disconnect server") : NSLocalizedString(@"Connect", @"Connect server"),
+                                                                          NSLocalizedString(@"Sort Conversations", "Sort Conversations"),
+                                                                          client.showConsole ? NSLocalizedString(@"Hide Console", "Hide Console") : NSLocalizedString(@"Show Console", "Show Console"),
+                                                                          NSLocalizedString(@"Edit", @"Edit Connection"),
+                                                                           NSLocalizedString(@"Channel List", @"Channel List")]];
     
-    if([client isConnected]) {
-        sheet = [[UIActionSheet alloc] initWithTitle:client.configuration.connectionName
-                                                       delegate:self
-                                              cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
-                                         destructiveButtonTitle:nil
-                                              otherButtonTitles:NSLocalizedString(@"Disconnect", @"Disconnect server"),
-                 NSLocalizedString(@"Sort Conversations", "Sort Conversations"),
-                 consoleButtonTitle,
-                 NSLocalizedString(@"Edit", @"Edit Connection"),
-                 NSLocalizedString(@"Channel List", @"Channel List"), nil];
-        [sheet setDestructiveButtonIndex:0];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:client.configuration.connectionName
+                                                             delegate:nil
+                                                    cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                                               destructiveButtonTitle:nil
+                                                    otherButtonTitles:nil];
+    
+    if (client.isConnected) {
+        actionSheet.destructiveButtonIndex = 1;
     } else {
-        sheet = [[UIActionSheet alloc] initWithTitle:client.configuration.connectionName
-                                        delegate:self
-                               cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
-                          destructiveButtonTitle:nil
-                               otherButtonTitles:NSLocalizedString(@"Connect", @"Connect server"),
-                 NSLocalizedString(@"Sort Conversations", "Sort Conversations"),
-                 consoleButtonTitle,
-                 NSLocalizedString(@"Edit", @"Edit Connection"),
-                 NSLocalizedString(@"Delete", @"Delete connection"), nil];
-        [sheet setDestructiveButtonIndex:4];
+        actionSheet.destructiveButtonIndex = 5;
+        [buttonTitles removeLastObject];
+        [buttonTitles addObject:NSLocalizedString(@"Delete", @"Delete")];
     }
     
-    [sheet setTag:sender.view.tag];
-    [sheet showInView:self.view];
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (actionSheet.tag == -1) {
-        // Conversations action sheet
-        switch (buttonIndex) {
-            case 0:
-                // Join a Channel
-                [self addItemWithTag:buttonIndex];
-                break;
-            case 1:
-                // Message a User
-                [self addItemWithTag:buttonIndex];
-                break;
-            case 2:
-                // Add Connection
-                [self editConnection:nil];
-                break;
-            default:
-                break;
-        }
-    } else {
-        // Connections action sheet
-        IRCClient *client = [self.connections objectAtIndex:actionSheet.tag];
+    for (NSString *button in buttonTitles) {
+        [actionSheet addButtonWithTitle:button];
+    }
+    
+    actionSheet.tapBlock = ^(UIActionSheet *actionSheet, NSInteger buttonIndex){
         UIAlertView *alertView;
-        
         switch (buttonIndex) {
-            case 0:
+            case 1:
                 // Connect or disconnect
                 if(client.isConnected) {
                     NSString *quitMsg = [[NSUserDefaults standardUserDefaults] stringForKey:@"quitmsg_preference"];
@@ -729,11 +714,11 @@
                     [self.tableView reloadData];
                 }
                 break;
-            case 1:
+            case 2:
                 // Sort Conversations
                 [self sortConversationsForClientAtIndex:actionSheet.tag];
                 break;
-            case 2:
+            case 3:
                 // Show Console
                 if (client.showConsole) {
                     client.showConsole = NO;
@@ -744,11 +729,11 @@
                 }
                 [self.tableView reloadData];
                 break;
-            case 3:
+            case 4:
                 // Edit
                 [self editConnection:client.configuration];
                 break;
-            case 4:
+            case 5:
                 // Delete
                 if(!client.isConnected) {
                     alertView = [[UIAlertView alloc] initWithTitle:client.configuration.connectionName
@@ -756,8 +741,16 @@
                                                           delegate:self
                                                  cancelButtonTitle:NSLocalizedString(@"No", @"no")
                                                  otherButtonTitles:NSLocalizedString(@"Yes", @"yes"), nil];
-                    alertView.tag = actionSheet.tag;
-                    [alertView show];
+                    [alertView showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                        if(buttonIndex == 1) {
+                            IRCClient *client = [self.connections objectAtIndex:alertView.tag];
+                            if(client.isConnected)
+                                [client disconnect];
+                            [[AppPreferences sharedPrefs] deleteConnectionWithIdentifier:client.configuration.uniqueIdentifier];
+                            [self.connections removeObjectAtIndex:alertView.tag];
+                            [self.tableView reloadData];
+                        }
+                    }];
                 } else {
                     ChannelListViewController *channelList = [[ChannelListViewController alloc] init];
                     channelList.client = client;
@@ -772,9 +765,12 @@
             default:
                 break;
         }
-    }
-}
 
+    };
+    
+    [actionSheet showInView:self.view];
+
+}
 
 - (void)conversationAdded:(AddConversationViewController *)sender
 {
@@ -816,19 +812,6 @@
     
     [self.tableView reloadData];
     
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    // Delete connection
-    if(buttonIndex == YES) {
-        IRCClient *client = [self.connections objectAtIndex:alertView.tag];
-        if(client.isConnected)
-            [client disconnect];
-        [[AppPreferences sharedPrefs] deleteConnectionWithIdentifier:client.configuration.uniqueIdentifier];
-        [self.connections removeObjectAtIndex:alertView.tag];
-        [self.tableView reloadData];
-    }
 }
 
 - (void)createContentViewForConversation:(IRCConversation *)conversation
