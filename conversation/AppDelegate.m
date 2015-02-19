@@ -196,7 +196,8 @@
     
     _conversationsController.currentConversation = nil;
     [[AppPreferences sharedPrefs] savePrefs];
-
+    
+    [_conversationsController saveHistoricMessages];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
