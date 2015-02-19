@@ -51,19 +51,11 @@
     [[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelNone];
     
     // Initialize tracker. Replace with your tracking ID.
-    id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:@"UA-59885279-1"];
+    [[GAI sharedInstance] trackerWithTrackingId:@"UA-59885279-1"];
 
 #ifdef DEBUG
     [[GAI sharedInstance] setDryRun:YES];
 #endif
-    
-    NSString *buildType = ConversationBuildType;
-    
-	if ([[[NSBundle mainBundle] infoDictionary] objectForKey:@"SignerIdentity"]) {
-        buildType = @"cracked";
-    }
-    
-    [tracker send:@{@"buildType": buildType, @"device": [DeviceInformation deviceName]}];
 
     [Fabric with:@[CrashlyticsKit]];
     
