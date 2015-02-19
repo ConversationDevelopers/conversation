@@ -185,8 +185,8 @@
     NSArray *connections = [_conversationsController connections];
     IRCClient *client;
     for (int x=0; x<connections.count; x++) {
-            client = connections[x];
-            [[AppPreferences sharedPrefs] setConnectionConfiguration:client.configuration atIndex:x];
+        client = connections[x];
+        [[AppPreferences sharedPrefs] setConnectionConfiguration:client.configuration atIndex:x];
     }
     
     if (_conversationsController.currentConversation)

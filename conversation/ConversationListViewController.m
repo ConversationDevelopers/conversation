@@ -814,7 +814,6 @@
     client.configuration = config;
     
     [self.tableView reloadData];
-    [[AppPreferences sharedPrefs] savePrefs];
     
 }
 
@@ -871,7 +870,7 @@
         [self.tableView reloadData];
     
     [[AppPreferences sharedPrefs] addChannelConfiguration:configuration forConnectionConfiguration:client.configuration];
-    [[AppPreferences sharedPrefs] savePrefs];
+
     return channel;
 }
 
@@ -893,7 +892,6 @@
         [self.tableView reloadData];
     
     [[AppPreferences sharedPrefs] addQueryConfiguration:configuration forConnectionConfiguration:client.configuration];
-    [[AppPreferences sharedPrefs] savePrefs];
 
     return query;
 }
@@ -917,7 +915,6 @@
         [_connections setObject:client atIndexedSubscript:i];
         i++;
     }
-    [[AppPreferences sharedPrefs] savePrefs];
     
     if ([_currentConversation.configuration.uniqueIdentifier isEqualToString:identifier])
         [self.navigationController popToRootViewControllerAnimated:YES];
@@ -1321,7 +1318,6 @@
         messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         
     }
-
 }
 
 - (void)saveHistoricMessages

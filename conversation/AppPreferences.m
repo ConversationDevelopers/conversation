@@ -135,6 +135,10 @@
         configurations = [[NSMutableArray alloc] init];
     }
     
+    NSMutableArray *queries = connection.queries.mutableCopy;
+    [queries addObject:configuration];
+    connection.channels = queries;
+    
     int i=0;
     for (NSDictionary *d in configurations) {
         if([d[@"uniqueIdentifier"] isEqualToString:connection.uniqueIdentifier]) {
@@ -147,6 +151,7 @@
         }
         i++;
     }
+    
     prefs[@"configurations"] = configurations;
     self.preferences = prefs;
 }
@@ -161,6 +166,10 @@
         configurations = [[NSMutableArray alloc] init];
     }
     
+    NSMutableArray *channels = connection.channels.mutableCopy;
+    [channels addObject:configuration];
+    connection.channels = channels;
+    
     int i=0;
     for (NSDictionary *d in configurations) {
         if([d[@"uniqueIdentifier"] isEqualToString:connection.uniqueIdentifier]) {
@@ -173,6 +182,7 @@
         }
         i++;
     }
+    
     prefs[@"configurations"] = configurations;
     self.preferences = prefs;
 }
