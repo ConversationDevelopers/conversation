@@ -858,9 +858,11 @@ BOOL popoverDidDismiss = NO;
             replace = [NSString stringWithFormat:@"/%@", replace];
 
     }
-    
+
     textView.text = [textView.text stringByReplacingCharactersInRange:NSMakeRange(textView.text.length-string.length, string.length)
                                                            withString:[replace stringByAppendingString:@" "]];
+    
+    [_composeBarView layoutSubviews];
 }
 
 - (void)popoverViewDidDismiss:(MenuPopOverView *)popoverView
