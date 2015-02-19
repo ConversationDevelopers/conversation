@@ -87,9 +87,9 @@ typedef NS_ENUM(NSUInteger, InputCommand) {
     CMD_SYSINFO,
     CMD_TIMER,
     CMD_TOPIC,
+    CMD_UNIGNORE,
     CMD_UMODE,
     CMD_UNBAN,
-    CMD_UNIGNORE,
     CMD_VOICE,
     CMD_WHOIS
 };

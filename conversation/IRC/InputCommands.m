@@ -584,10 +584,10 @@
         @"SYSINFO",
         @"TIMER",
         @"TOPIC",
-        @"UNIGNORE",        
-        @"VOICE",
+        @"UNIGNORE",
         @"UMODE",
         @"UNBAN",
+        @"VOICE",
         @"WHOIS"
     ];
 }

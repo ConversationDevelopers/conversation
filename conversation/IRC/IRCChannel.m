@@ -72,11 +72,14 @@
     NSString *modeSymbol = [IRCUser statusToModeSymbol:status];
     if (modeSymbol) {
         NSString *modeString = @"+";
-        int i = 1;
-        while (i <= [users count]) {
+        NSString *userString = @"";
+        int i = 0;
+        while (i < [users count]) {
             modeString = [modeString stringByAppendingString:modeSymbol];
+            userString = [userString stringByAppendingString:[NSString stringWithFormat:@" %@", [users objectAtIndex:i]]];
+            i++;
         }
-        [channel.client.connection send:[NSString stringWithFormat:@"MODE %@ %@", channel.name, modeString]];
+        [channel.client.connection send:[NSString stringWithFormat:@"MODE %@ %@%@", channel.name, modeString, userString]];
     }
 }
 
@@ -87,11 +90,14 @@
     NSString *modeSymbol = [IRCUser statusToModeSymbol:status];
     if (modeSymbol) {
         NSString *modeString = @"-";
-        int i = 1;
-        while (i <= [users count]) {
+        NSString *userString = @"";
+        int i = 0;
+        while (i < [users count]) {
             modeString = [modeString stringByAppendingString:modeSymbol];
+            userString = [userString stringByAppendingString:[NSString stringWithFormat:@" %@", [users objectAtIndex:i]]];
+            i++;
         }
-        [channel.client.connection send:[NSString stringWithFormat:@"MODE %@ %@", channel.name, modeString]];
+        [channel.client.connection send:[NSString stringWithFormat:@"MODE %@ %@%@", channel.name, modeString, userString]];
     }
 }
 
