@@ -39,6 +39,10 @@
         [hostnameCharacterSet removeCharactersInString:@"\002\003\029\031"];
         self.hostnameCharacterSet = hostnameCharacterSet;
         
+        NSMutableCharacterSet *domainCharacterSet = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
+        [domainCharacterSet addCharactersInString:@".-"];
+        self.domainCharacterSet = [domainCharacterSet invertedSet];
+        
         return self;
     }
     return nil;

@@ -33,5 +33,6 @@
 @interface IRCCharacterSets : NSObject
 
 @property (nonatomic) NSCharacterSet *hostnameCharacterSet;
+@property (nonatomic) NSCharacterSet *domainCharacterSet;
 
 @end
