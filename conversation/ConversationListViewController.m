@@ -58,6 +58,7 @@
 #import <SHNavigationControllerBlocks.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import <MCNotificationManager/MCNotificationManager.h>
+#import <MCNotificationManager/MCNotification.h>
 
 #define IPAD UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
 
@@ -1009,6 +1010,9 @@
                 notification.text = message.sender.nick;
                 notification.detailText = message.message;
                 notification.image = [UIImage imageNamed:@"Userlist"];
+                notification.userInfo = @{@"conversation": message.conversation.configuration.uniqueIdentifier};
+                [notification addTarget:self action:@selector(notificationTap:) forControlEvents:UIControlEventTouchUpInside];
+                
                 [[MCNotificationManager sharedInstance] showNotification:notification];
                 
                 if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
@@ -1038,6 +1042,9 @@
                     notification.text = message.sender.nick;
                     notification.detailText = message.message;
                     notification.image = [UIImage imageNamed:@"ChannelIcon_Light"];
+                    notification.userInfo = @{@"conversation": message.conversation.configuration.uniqueIdentifier};
+                    [notification addTarget:self action:@selector(notificationTap:) forControlEvents:UIControlEventTouchUpInside];
+                    
                     [[MCNotificationManager sharedInstance] showNotification:notification];
 
                     if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
@@ -1052,6 +1059,12 @@
     if (self.tableView.isEditing == NO)
         [self.tableView reloadData];
     
+}
+
+- (void)notificationTap:(id)sender
+{
+    NSDictionary *userInfo = [[sender notification] userInfo];
+    [self selectConversationWithIdentifier:[userInfo objectForKey:@"conversation"]];
 }
 
 - (void)displayPasswordEntryDialog:(IRCClient *)client
