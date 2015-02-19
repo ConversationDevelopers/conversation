@@ -32,6 +32,8 @@
 #import "BuildConfig.h"
 #import "DeviceInformation.h"
 #import <GoogleAnalytics-iOS-SDK/GAI.h>
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 
 @implementation AnalyticsController
@@ -62,6 +64,8 @@
     }
     
     [tracker send:@{@"buildType": buildType, @"device": [DeviceInformation deviceName]}];
+
+    [Fabric with:@[CrashlyticsKit]];
     
 }
 

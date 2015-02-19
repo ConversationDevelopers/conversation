@@ -35,6 +35,8 @@
 		DA7B68801A01504100D82B4C /* CertificateInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7B687F1A01504100D82B4C /* CertificateInfoViewController.m */; };
 		DA96223F19EDE217008D42EB /* networks.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA96223E19EDE217008D42EB /* networks.plist */; };
 		DA9938271A8085F5001C452C /* ChannelListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA9938261A8085F5001C452C /* ChannelListViewController.m */; };
+		DAA10B0F1A9667BC00E8D92E /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAA10B0D1A9667BC00E8D92E /* Crashlytics.framework */; };
+		DAA10B101A9667BD00E8D92E /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAA10B0E1A9667BC00E8D92E /* Fabric.framework */; };
 		DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */; };
 		DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */; };
 		DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322AB19E5DE490068E2B6 /* PreferencesTextCell.m */; };
@@ -145,6 +147,8 @@
 		DA96223E19EDE217008D42EB /* networks.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = networks.plist; path = Resources/networks.plist; sourceTree = "<group>"; };
 		DA9938251A8085F5001C452C /* ChannelListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelListViewController.h; sourceTree = "<group>"; };
 		DA9938261A8085F5001C452C /* ChannelListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelListViewController.m; sourceTree = "<group>"; };
+		DAA10B0D1A9667BC00E8D92E /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = conversation/Crashlytics.framework; sourceTree = "<group>"; };
+		DAA10B0E1A9667BC00E8D92E /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fabric.framework; path = conversation/Fabric.framework; sourceTree = "<group>"; };
 		DAA3229C19E56CBF0068E2B6 /* EditConnectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = EditConnectionViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EditConnectionViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		DAA322A819E5DE490068E2B6 /* PreferencesSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesSwitchCell.h; sourceTree = "<group>"; };
@@ -295,9 +299,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAC0E4B31A0073C4001CFB48 /* libcrypto.a in Frameworks */,
+				DAA10B0F1A9667BC00E8D92E /* Crashlytics.framework in Frameworks */,
 				DA1A4AF019E181C400565763 /* CFNetwork.framework in Frameworks */,
 				FAC0E4B41A0073C4001CFB48 /* libssl.a in Frameworks */,
 				48CC709806D99585ADE2BFFF /* libPods-conversation.a in Frameworks */,
+				DAA10B101A9667BD00E8D92E /* Fabric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,6 +332,8 @@
 		61A17986DD1BE8C1197DA32E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DAA10B0D1A9667BC00E8D92E /* Crashlytics.framework */,
+				DAA10B0E1A9667BC00E8D92E /* Fabric.framework */,
 				DA7B68A31A02BEE100D82B4C /* libPods-conversation-PHFComposeBarView.a */,
 				DA7B68A11A02BE6900D82B4C /* libPods-conversation-DLImageLoader.a */,
 				DA7B689F1A02BE0100D82B4C /* libPods-conversation-DLImageLoader.a */,
@@ -662,6 +670,7 @@
 				DA1A4AB319E1770700565763 /* Sources */,
 				DA1A4AB419E1770700565763 /* Frameworks */,
 				DA1A4AB519E1770700565763 /* Resources */,
+				DAA10B0C1A96675500E8D92E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -786,6 +795,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/sh\n\ncd \"${PROJECT_DIR}/conversation\"\n\nbundleVersion=$(/usr/libexec/PlistBuddy -c \"Print \\\"CFBundleShortVersionString\\\"\" Info.plist)\nbundleName=$(/usr/libexec/PlistBuddy -c \"Print \\\"CFBundleName\\\"\" Info.plist)\ngitRef=$(echo \"$(git describe --tags)\" | grep -oE \"([0-9]{1,3})\\-([a-zA-Z0-9]{8})\")\nbuildDate=`date`\n\nbuildType=\"personal\"\n\nif [[ \"${CONFIGURATION}\" == \"Release\" ]]; then\n    buildType=\"official\"\nfi\n\ncd \"${PROJECT_DIR}/conversation/include/\"\n\necho \"\" > BuildConfig.h\necho \"#define ConversationBundleName        @\\\"$bundleName\\\"\" >> BuildConfig.h\necho \"#define ConversationBuildType         @\\\"$buildType\\\"\" >> BuildConfig.h\necho \"#define ConversationVersion           @\\\"$bundleVersion\\\"\" >> BuildConfig.h\necho \"#define ConversationBuildRef          @\\\"$gitRef\\\"\" >> BuildConfig.h\necho \"#define ConversationBuildDate         @\\\"$buildDate\\\"\" >> BuildConfig.h\n";
+		};
+		DAA10B0C1A96675500E8D92E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run 23336355b5261d44f8ea24327ac3a7f517d971a3 f9f9a3e625bef034407c51ba06e526d56e3e88595e936d6a7cc28f23ffe1e37b";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -977,7 +999,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/conversation",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Applications/Xcode-Beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
@@ -1025,7 +1050,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/conversation",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Applications/Xcode-Beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
