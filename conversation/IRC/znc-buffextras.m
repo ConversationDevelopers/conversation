@@ -87,14 +87,10 @@
         [Messages userReceivedNickChange:message];
     } else if ([type isEqualToString:@"quit"]) {
         // QUIT
-        NSRange range;
-        range.location = 1;
-        range.length = 3;
-        [messageComponents removeObjectsInRange:range];
-        NSString *quitMessage = [messageComponents componentsJoinedByString:@" "];
+        NSString *quitMessage = [messageComponents componentsJoinedByString:@" " fromIndex:5];
         
         NSRange substrRange;
-        substrRange.location = 0;
+        substrRange.location = 1;
         substrRange.length = [quitMessage length] - 2;
         quitMessage = [quitMessage substringWithRange:substrRange];
         
