@@ -1289,20 +1289,29 @@
 
     NSMutableArray *messages = [[IRCMessage instancesOrderedBy:@"timestamp"] mutableCopy];
     ChatMessageView *messageView;
+    BOOL found = NO;
     for (IRCMessage *message in messages) {
+        found = NO;
         for (IRCClient *client in _connections) {
             for (IRCChannel *channel in client.channels) {
                 if ([channel.configuration.uniqueIdentifier isEqualToString:message.conversation.configuration.uniqueIdentifier]) {
                     message.conversation = channel;
+                    found = YES;
                     break;
                 }
             }
             for (IRCConversation *query in client.queries) {
                 if ([query.configuration.uniqueIdentifier isEqualToString:message.conversation.configuration.uniqueIdentifier]) {
                     message.conversation = query;
+                    found = YES;
                     break;
                 }
             }
+        }
+        
+        if (!found) {
+            [message delete];
+            continue;
         }
         
         messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, 0, message.conversation.contentView.frame.size.width, 15.0)
