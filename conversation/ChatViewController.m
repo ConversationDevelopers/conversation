@@ -230,10 +230,6 @@ BOOL popoverDidDismiss = NO;
 {
     [super viewWillDisappear:animated];
     [self hideAccessories:nil];
-    
-    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
-    controller.currentConversation = nil;
-    
 
 }
 

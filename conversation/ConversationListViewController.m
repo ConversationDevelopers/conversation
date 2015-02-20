@@ -239,7 +239,8 @@
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         //[self.navigationController performSegueWithIdentifier:@"modal" sender:nil];
     });
-
+    
+    _currentConversation = nil;
 }
 
 - (void)viewDidUnload
