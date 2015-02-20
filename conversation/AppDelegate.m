@@ -35,6 +35,7 @@
 #import "IRCConnection.h"
 #import "AnalyticsController.h"
 #import <FCModel/FCModel.h>
+#import <DLImageLoader/DLImageView.h>
 
 @implementation AppDelegate
 
@@ -181,6 +182,24 @@
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 
+    
+    // Unload images
+    if (self.conversationsController.currentConversation) {
+        ChatMessageView *messageView;
+        DLImageView *imageView;
+        for (UIView *view in self.conversationsController.currentConversation.contentView.subviews) {
+            if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
+                messageView = (ChatMessageView*)view;
+                for (UIView *view2 in messageView.subviews) {
+                    if ([NSStringFromClass(view2.class) isEqualToString:@"DLImageView"]) {
+                        imageView = (DLImageView*)view2;
+                        imageView.image = nil;
+                    }
+                }
+            }
+        }
+    }
+
     [self.conversationsController setAway];
     NSArray *connections = [_conversationsController connections];
     IRCClient *client;
@@ -202,6 +221,7 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+        
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -238,6 +258,24 @@
     conversation.unreadCount = 0;
 
     self.conversationsController.currentConversation = conversation;
+    
+    // Load images
+    int i=0;
+    ChatMessageView *messageView;
+    DLImageView *imageView;
+    for (UIView *view in self.conversationsController.currentConversation.contentView.subviews) {
+        if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
+            messageView = (ChatMessageView*)view;
+            i=0;
+            for (UIView *view2 in messageView.subviews) {
+                if ([NSStringFromClass(view2.class) isEqualToString:@"DLImageView"]) {
+                    imageView = (DLImageView*)view2;
+                    [imageView displayImageFromUrl:[messageView.images[i] absoluteString]];
+                    i++;
+                }
+            }
+        }
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
