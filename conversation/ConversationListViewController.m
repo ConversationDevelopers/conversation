@@ -473,14 +473,8 @@
     header.backgroundColor = [UIColor whiteColor];
     
     // Set image
-    CGSize size = CGSizeMake(25.0, 25.0);
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, size.width, size.height)];
-    UIImage *image = [UIImage imageNamed:@"NetworkIcon"];
-    UIGraphicsBeginImageContext(size);
-    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
-    UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    imageView.image = scaledImage;
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 25, 25)];
+    imageView.image = [UIImage imageNamed:@"NetworkIcon_small"];
     [header addSubview:imageView];
     
     // Set Label
