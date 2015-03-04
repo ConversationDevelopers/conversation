@@ -524,10 +524,6 @@ BOOL popoverDidDismiss = NO;
     
     [_popOver removeFromSuperview];
 
-
-    CGRect rect = [[UIScreen mainScreen] bounds];
-    rect.size.height -= self.container.frame.size.height;
-    
     float offset = 10.0;
     
     if(self.container.frame.size.height - self.composeBarView.frame.origin.y > 10.0 || UIInterfaceOrientationIsLandscape([self interfaceOrientation]))
