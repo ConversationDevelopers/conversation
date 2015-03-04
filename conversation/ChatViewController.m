@@ -523,13 +523,19 @@ BOOL popoverDidDismiss = NO;
     }
     
     [_popOver removeFromSuperview];
-    
-    CGRect frame = CGRectMake(15.0, 15.0, 0.0, 0.0);
-    if (IPAD && UIInterfaceOrientationIsLandscape([self interfaceOrientation])) {
-        frame.origin.y = -20.0;
-    }
 
-    [_popOver presentPopoverFromRect:frame inView:textView withStrings:_suggestions];
+
+    CGRect rect = [[UIScreen mainScreen] bounds];
+    rect.size.height -= self.container.frame.size.height;
+    
+    float offset = 10.0;
+    
+    if(self.container.frame.size.height - self.composeBarView.frame.origin.y > 10.0 || UIInterfaceOrientationIsLandscape([self interfaceOrientation]))
+        offset = -20.0;
+    
+    CGRect frame = CGRectMake(60.0, self.composeBarView.frame.origin.y + offset, 0.0, 0.0);
+
+    [_popOver presentPopoverFromRect:frame inView:self.container withStrings:_suggestions];
 
 }
 
