@@ -30,7 +30,7 @@
 
 #import "AppDelegate.h"
 #import "ChatViewController.h"
-#import "AppPreferences.h"
+#import "Preferences/AppPreferences.h"
 #import "ChatMessageView.h"
 #import "IRCConnection.h"
 #import "AnalyticsController.h"

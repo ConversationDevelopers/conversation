@@ -30,7 +30,7 @@
 
 #import "UserListView.h"
 #import "ILTranslucentView.h"
-#import "UITableView+Methods.m"
+#import "../../Helpers/UITableView+Methods.m"
 #import "IRCUser.h"
 #import "UserListItemCell.h"
 #import "UserInfoViewController.h"
