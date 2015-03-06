@@ -206,7 +206,22 @@ typedef NS_ENUM(NSUInteger, MessageType) {
     RPL_SASLMECHS           /* 908 */
 };
 
+/*!
+ *    @brief  Retrieve a MessageType enum from a string.
+ *
+ *    @param key The string with the case insensitive value associated with the enum.
+ *
+ *    @return A MessageType enumerated value.
+ */
 + (NSUInteger)indexValueFromString:(NSString *)key;
+
+/*!
+ *    @brief  Retrive a CapMessageType enum from a string.
+ *
+ *    @param key The string with the case insensitive value associated with the enum.
+ *
+ *    @return A CapMessageType enumerated value.
+ */
 + (NSUInteger)capIndexValueFromString:(NSString *)key;
 
 @end

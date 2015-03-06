@@ -85,6 +85,13 @@
     }
 }
 
+/*!
+ *    @brief  Called when a connection to the host has been established.
+ *
+ *    @param sock The GCDAsyncSocket object of the established connection.
+ *    @param host The remote hostname or IP address of the established connection.
+ *    @param port The port which the connection was established on.
+ */
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
 {
     [self.client outputToConsole:[NSString stringWithFormat:NSLocalizedString(@"Connection to host at [%@] established.", @"Connection to host at [{host name}] established."), host]];
@@ -102,9 +109,15 @@
     [socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:1];
 }
 
-- (void)socket:(GCDAsyncSocket *)sock didReceiveTrust:(SecTrustRef)trust completionHandler:(void (^)(BOOL shouldTrustPeer))completionHandler {
-    
-    /* A TLS/SSL handshake has been initialised, let's verify the certificate. */
+/*!
+ *    @brief  Called when an SSL handshake has been initialised and we have to evaluate a remote certificate.
+ *
+ *    @param sock              The GCDAsyncSocket object of the established connection.
+ *    @param trust             The SSL trust reference of this certificate.
+ *    @param completionHandler Completion handler to call with whether or not to allow this connection.
+ */
+- (void)socket:(GCDAsyncSocket *)sock didReceiveTrust:(SecTrustRef)trust completionHandler:(void (^)(BOOL shouldTrustPeer))completionHandler
+{
     SecTrustResultType trustResult;
     SecTrustEvaluate(trust, &trustResult);
 	
@@ -137,6 +150,12 @@
     }
 }
 
+/*!
+ *    @brief  Called when data has been successfully written to the socket.
+ *
+ *    @param sock The GCDAsyncSocket object of the established connection.
+ *    @param tag  An arbitrary long value which has been passed to identity the origin of this data.
+ */
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag
 {
     if (tag == 0) {
@@ -145,6 +164,13 @@
     [self.client clientDidSendData];
 }
 
+/*!
+ *    @brief  Called when the socket has read some data.
+ *
+ *    @param sock The GCDAsyncSocket object of the established connection.
+ *    @param data The data received from the socket.
+ *    @param tag  An arbitrary long value which has been passed to identity the origin of this data.
+ */
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
     dispatch_async(queue, ^{
@@ -173,15 +199,27 @@
     });
 }
 
+/*!
+ *    @brief  Called when an SSL connection has been successfuly established and the handshake is complete.
+ *
+ *    @param sock The GCDAsyncSocket object of the established connection.
+ */
 - (void)socketDidSecure:(GCDAsyncSocket *)sock
 {
     NSLog(@"onSocketDidSecure:%p", sock);
     [self.client outputToConsole:[NSString stringWithFormat:NSLocalizedString(@"Connection secured using %@", @"Connection secured using {encryption scheme}"), [IRCConnection getSSLProtocolAsString:sock]]];
 }
 
+/*!
+ *    @brief  Called when the socket was disconnected due to an error.
+ *
+ *    @param socket The GCDAsyncSocket object of the established connection.
+ *    @param err    An NSError instance representing the error.
+ */
 - (void)socketDidDisconnect:(GCDAsyncSocket *)socket withError:(NSError *)err
 {
     if (err == nil || [err code] == errSSLClosedGraceful) {
+        /* Disconnect was actually user initiated, SSL just threw an error anyway, we will treat it as a normal disconnect */
         [self.client clientDidDisconnect];
         return;
     }
@@ -204,6 +242,13 @@
     [self.client clientDidDisconnectWithError:errorMessage];
 }
 
+/*!
+ *    @brief  Check if an error is an SSL certificate validation failure state.
+ *
+ *    @param error The NSError object to check for SSL validation error codes.
+ *
+ *    @return A boolean value indicating whether this is an SSL certificate validation error.
+ */
 - (BOOL)badSSLCertificateErrorFound:(NSError *)error
 {
     if ([error.domain isEqualToString:@"kCFStreamErrorDomainSSL"]) {
@@ -229,12 +274,22 @@
     return NO;
 }
 
+/*!
+ *    @brief  Called when the socket is gracefully disconnected.
+ *
+ *    @param sock The GCDAsyncSocket object of the established connection.
+ */
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock
 {
     [self.messageQueue removeAllObjects];
     [self.client clientDidDisconnect];
 }
 
+/*!
+ *    @brief  Write data to the socket.
+ *
+ *    @param data The encoded data to write.
+ */
 - (void)writeDataToSocket:(NSData *)data
 {
     [socket writeData:data withTimeout:-1 tag:1];
@@ -281,9 +336,10 @@
     self.floodControlTimer = nil;
 }
 
+/*!
+ *    @brief  This method is activated by a time every two seconds. It will clear the message limit and send any messages currently backlogged until the limit is reached again.
+ */
 - (void)floodTimerTick {
-    /* This method is activated by a time every two seconds. It will clear the message limit
-     and send any messages currently backlogged until the limit is reached again. */
     self.messagesSentSinceLastTick = 0;
     BOOL messageQueueIsSendingItems = YES;
     while (messageQueueIsSendingItems) {
@@ -299,12 +355,15 @@
     [self continueSending];
 }
 
+/*!
+ *    @brief  Attempt to send any eventual messages in the queue to the socket.
+ *
+ *    @return A boolean indicating whether we were successful in sending data or we have reached the message limit.
+ */
 - (BOOL)continueSending
 {
-    /* There are no messages in the queue, we have nothing to do. So we will let the queue handler know
-     the flood gates are open. */
     @synchronized(self) {
-        
+        /* There are no messages in the queue, we have nothing to do. */
         if ([self.messageQueue count] == 0 || self.client.isConnected == NO) {
             return NO;
         }
@@ -328,6 +387,13 @@
     }
 }
 
+/*!
+ *    @brief  Get a human readable localised text indicating the SSL technology used for this connection.
+ *
+ *    @param socket The GCDAsyncSocket object to use for deciding the SSL connection details.
+ *
+ *    @return A localised string with the SSL technology and version used.
+ */
 + (NSString *) getSSLProtocolAsString:(GCDAsyncSocket*)socket
 {
     __block SSLProtocol protocol;

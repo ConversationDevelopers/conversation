@@ -559,6 +559,11 @@
     return messageObject;
 }
 
+/*!
+ *    @brief  Parse an ISUPPORT message and update the supported features dictionary with the retrieved information.
+ *
+ *    @param data String containing the ISUPPORT message from the server.
+ */
 - (void)updateServerSupportedFeatures:(NSString *)data
 {
     /* Split the string by spaces and iterate over the result. This will give us key value pairs seperated by '=' or
@@ -581,6 +586,9 @@
     [self setUsermodePrefixes];
 }
 
+/*!
+ *    @brief  Retrieve and update the supported user mode prefixes for this server.
+ */
 - (void)setUsermodePrefixes
 {
     NSString *prefixString = [[self featuresSupportedByServer] objectForKey:@"PREFIX"];
@@ -601,6 +609,7 @@
 
 - (void)clientDidSendData
 {
+    
 }
 
 - (void)disconnect
@@ -652,17 +661,20 @@
     });
 }
 
+/*!
+ *    @brief  Incement the recorded amount of connection retries and attempt another connection.
+ */
 - (void)attemptClientReconnect
 {
     self.connectionRetries++;
     [self connect];
 }
 
-
+/*!
+ *    @brief  Clear all information related to an active connection.
+ */
 - (void)clearStatus
 {
-    /* The client has disconnected, we must clear all information related to an active connection in case of a possible reconnection attempt.
-     Failure to do so may result in conflictin or incorrect information. */
     self.isConnected =                      NO;
     self.isAttemptingRegistration =         NO;
     self.isAttemptingConnection =           NO;
@@ -737,11 +749,21 @@
     return acceptedChannelPrefixesByServer;
 }
 
+/*!
+ *    @brief  Get a list of channels associated with this client.
+ *
+ *    @return NSArray of IRCChannel objects representing channels associated with this client.
+ */
 - (NSMutableArray *)getChannels
 {
     return self.channels;
 }
 
+/*!
+ *    @brief  Get a list of queries associated with this client.
+ *
+ *    @return NSArray of IRCConversation objects representing queries associated with this client.
+ */
 - (NSMutableArray *)getQueries
 {
     return self.queries;
@@ -903,6 +925,9 @@
     });
 }
 
+/*!
+ *    @brief  Get the list of commands the user has asked us to do on connect and perform them.
+ */
 - (void)performUserDefinedConnectCommands
 {
     IRCChannelConfiguration *config = [[IRCChannelConfiguration alloc] init];

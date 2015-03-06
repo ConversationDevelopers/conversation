@@ -43,13 +43,51 @@
 @property (nonatomic) NSMutableArray *channelModes;
 @property (nonatomic, assign) BOOL isJoinedByUser;
 
+/*!
+ *    @brief  Create an instance of an IRC Channel based on a channel configuration.
+ *
+ *    @param config A channel configuration object to use for creating the channel.
+ *    @param client An IRCClient object associated with this channel.
+ *
+ *    @return An IRCChannel in an inactive (parted) state.
+ */
 - (instancetype)initWithConfiguration:(IRCChannelConfiguration *)config withClient:(IRCClient *)client;
+
+/*!
+ *    @brief  Set the channel topic
+ *
+ *    @param topic A string containing the channel topic.
+ */
 - (void)setTopic:(NSString *)topic;
+
+/*!
+ *    @brief  Remove a user from the userlist.
+ *
+ *    @param nickname The nickname of the user to remove.
+ */
 - (void)removeUserByName:(NSString *)nickname;
 
+/*!
+ *    @brief  Give a specific channel privilegie to one or more users.
+ *
+ *    @param users   An array containing a list of users to give the privilegie to.
+ *    @param status  The privilegie to give the users (as a ChannelPrivilegie) enumerated value.
+ *    @param channel The channel to perform this action on.
+ */
 - (void)givePrivilegieToUsers:(NSArray *)users toStatus:(int)status onChannel:(IRCChannel *)channel;
+
+/*!
+ *    @brief  Revoke a specific channel privilegie from one or more users.
+ *
+ *    @param users   An array containing a list of users to revoke the privilegie from.
+ *    @param status  The privilegie to revoke from the users (as a ChannelPrivilegie) enumerated value.
+ *    @param channel The channel to perform this action on.
+ */
 - (void)revokePrivilegieFromUsers:(NSArray *)users toStatus:(int)status onChannel:(IRCChannel *)channel;
 
+/*!
+ *    @brief  Manually perform a sorting of the userlist.
+ */
 - (void)sortUserlist;
 
 @end

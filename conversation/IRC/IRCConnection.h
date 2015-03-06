@@ -40,12 +40,48 @@
     dispatch_queue_t queue;
 }
 
+
+/*!
+ *    @brief  Creates an IRCConnection based on associated IRCClient object.
+ *
+ *    @param client An IRCClient object to use for retrieving connection information and parsing.
+ *
+ *    @return An IRCConnection in an initialised disconnected state.
+ */
 - (id)initWithClient:(IRCClient *)client;
+
+
+/*!
+ *    @brief Attempt an IRC connection to a server.
+ *
+ *    @param host       The domain or IP address of the host to connect to.
+ *    @param port       The port number of the host to connect to.
+ *    @param sslEnabled Whether or not to attempt an SSL connection.
+ */
 - (void)connectToHost:(NSString *)host onPort:(UInt16)port useSSL:(BOOL)sslEnabled;
-- (void)writeDataToSocket:(NSData *)data;
+
+/*!
+ *    @brief  Close the connection and remove all pending data.
+ */
 - (void)close;
+
+/*!
+ *    @brief  Enable flood control on the socket.
+ */
 - (void)enableFloodControl;
+
+/*!
+ *    @brief  Disable flood control on the socket.
+ */
 - (void)disableFloodControl;
+
+/*!
+ *    @brief  Attempt to send a message to the server using the pre-defined encoding settings.
+ *
+ *    @warning Subject to flood control.
+ *
+ *    @param line The message to send to the server.
+ */
 - (void)send:(NSString *)line;
 
 @end

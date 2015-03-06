@@ -77,30 +77,153 @@
 
 + (NSArray *) IRCv3CapabilitiesSupportedByApplication;
 
+/*!
+ *    @brief  Create an IRCClient based on a client configuration.
+ *
+ *    @param config A client configuration with the details to use for creating and maintaining an IRC connection.
+ *
+ *    @return An IRCClient object in a disconnected ready state.
+ */
 - (instancetype)initWithConfiguration:(IRCConnectionConfiguration *)config;
+
+/*!
+ *    @brief  Try to connect to the IRC server in the configuration.
+ */
 - (void)connect;
+
+/*!
+ *    @brief Called when a connection has been successfuly established to the server
+ */
 - (void)clientDidConnect;
+
+/*!
+ *    @brief  Called when a connection has been closed gracefully.
+ */
 - (void)clientDidDisconnect;
+
+/*!
+ *    @brief  Indicates whether the connection is established and has finished its initial exchange with the server.
+ *
+ *    @return Boolean indicating whether the connection is connected and ready.
+ */
 - (BOOL)isConnectedAndCompleted;
+
+/*!
+ *    @brief  Called when the connection has been closed due to an error.
+ *
+ *    @param error A human readable error string representing the reason the connection ended.
+ */
 - (void)clientDidDisconnectWithError:(NSString *)error;
+
+/*!
+ *    @brief  Parse a message from the server.
+ *
+ *    @param decodedData A string containing the decoded message from the server.
+ *
+ *    @return An IRCMessage object with the basic parsed details of the message.
+ */
 - (IRCMessage *)clientDidReceiveData:(const char *)decodedData;
+
+/*!
+ *    @brief  Called when the client has sent a message to the server.
+ */
 - (void)clientDidSendData;
+
+/*!
+ *    @brief  Get the channel prefix characters supported by the server.
+ *
+ *    @param client The IRCClient object to retrieve the server information from.
+ *
+ *    @return A string of the characters allowed by the server.
+ */
 + (NSString *)getChannelPrefixCharacters:(IRCClient *)client;
+
+/*!
+ *    @brief  Get the connected status of the users associated with any open query windows and set the UI status accordingly.
+ */
 - (void)validateQueryStatusOnAllItems;
+
+/*!
+ *    @brief  Disconnect from the server, sending the standard pre-configured quit message.
+ */
 - (void)disconnect;
+
+/*!
+ *    @brief  Disconnect from the server with a custom quit message.
+ *
+ *    @param message The quit message to send to the server.
+ */
 - (void)disconnectWithMessage:(NSString *)message;
+
+/*!
+ *    @brief  Join all channels in our configuration with autojoin enabled.
+ */
 - (void)autojoin;
+
+/*!
+ *    @brief  Output a message to the "Console" window of the application.
+ *
+ *    @param output The message to output to the console window.
+ */
 - (void)outputToConsole:(NSString *)output;
 
+/*!
+ *    @brief  Add a channel to the channel list and join it on the server.
+ *
+ *    @param channel Channel object of the channel to add.
+ *
+ *    @return Boolean indicating whether adding the channel was successful.
+ */
 - (BOOL)addChannel:(IRCChannel *)channel;
+
+/*!
+ *    @brief  Remove a channel from the channel list and part form it on the server.
+ *
+ *    @param channel Channel object of the channel to remove.
+ *
+ *    @return Boolean indicating whether removing the channel was successful.
+ */
 - (BOOL)removeChannel:(IRCChannel *)channel;
 
+/*!
+ *    @brief  Add a query to the conversation list.
+ *
+ *    @param query Conversation object of the query to add.
+ *
+ *    @return Boolean indicating whether adding the query was successful.
+ */
 - (BOOL)addQuery:(IRCConversation *)query;
+
+/*!
+ *    @brief  Remove a query from the conversation list.
+ *
+ *    @param query Conversation object of the query to remove.
+ *
+ *    @return Boolean indicating whether removing the query was successful.
+ */
 - (BOOL)removeQuery:(IRCConversation *)query;
 
+/*!
+ *    @brief  Sort all channels in the conversation list alphabetically.
+ *
+ *    @return Sorted list of channels
+ */
 - (NSMutableArray *)sortChannelItems;
+
+/*!
+ *    @brief  Sort all queries in the conversation list alphabetically
+ *
+ *    @return Sorted list of queries.
+ */
 - (NSMutableArray *)sortQueryItems;
 
+/*!
+ *    @brief  Get the received time of a message.
+ *
+ *    @param tags An NSDictionary containing the tags that was sent with the message (if any)
+ *
+ *    @return The time from the timestamp sent with the message or the current time if none was found.
+ */
 + (NSDate *)getTimestampFromMessageTags:(NSMutableDictionary *)tags;
 
 @end
