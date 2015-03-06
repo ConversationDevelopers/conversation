@@ -95,7 +95,7 @@
         
         /* Initialise default usermode characters. All servers should send a PREFIX attribute with their initial
          RPL_ISUPPORT message, but in case some poorly designed server does not, we will attempt to use these. */
-        self.userModeCharacters = @{
+        self.userModeCharacters = [@{
             @"y": @"!",
             @"q": @"~",
             @"a": @"&",
@@ -103,7 +103,7 @@
             @"h": @"%",
             @"v": @"+"
             
-        }.mutableCopy;
+        } mutableCopy];
         
         self.alternativeNickNameAttempts = 0;
         

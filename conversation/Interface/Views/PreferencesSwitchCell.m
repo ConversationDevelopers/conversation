@@ -28,8 +28,8 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 #import "PreferencesSwitchCell.h"
+#import "InterfaceLayoutDefinitions.h"
 
 @implementation PreferencesSwitchCell
 - (id) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier
@@ -38,14 +38,10 @@
         return nil;
     
     // Workaround the font showing up larger in edit vs new. Not sure why...
-    self.textLabel.font = [UIFont systemFontOfSize:17.];
-    
+    self.textLabel.font = [UIFont systemFontOfSize:LABEL_FONT_SIZE];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
-    
     _switchControl = [[UISwitch alloc] initWithFrame:CGRectZero];
-    
     [self.contentView addSubview:_switchControl];
-    
     [_switchControl addTarget:self action:@selector(valueChanged:) forControlEvents:UIControlEventValueChanged];
     
     return self;

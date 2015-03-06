@@ -38,6 +38,7 @@
 #import "LinkTapView.h"
 #import "NSString+Methods.h"
 #import "AppPreferences.h"
+#import "InterfaceLayoutDefinitions.h"
 
 #define FNV_PRIME_32 16777619
 #define FNV_OFFSET_32 2166136261U
@@ -61,19 +62,19 @@
     _attributedString = [self attributedString];
     _size = [self frameSize];
     
-    _messageLayer = [CATextLayer layer];
-    _messageLayer.backgroundColor = [UIColor clearColor].CGColor;
-    _messageLayer.foregroundColor = [[UIColor clearColor] CGColor];
-    _messageLayer.contentsScale = [[UIScreen mainScreen] scale];
-    _messageLayer.rasterizationScale = [[UIScreen mainScreen] scale];
-    _messageLayer.wrapped = YES;
+    _messageLayer                       = [CATextLayer layer];
+    _messageLayer.backgroundColor       = [[UIColor clearColor] CGColor];
+    _messageLayer.foregroundColor       = [[UIColor clearColor] CGColor];
+    _messageLayer.contentsScale         = [[UIScreen mainScreen] scale];
+    _messageLayer.rasterizationScale    = [[UIScreen mainScreen] scale];
+    _messageLayer.wrapped               = YES;
 
     _timeLayer = [CATextLayer layer];
-    _timeLayer.backgroundColor = [UIColor clearColor].CGColor;
-    _timeLayer.foregroundColor = [[UIColor clearColor] CGColor];
-    _timeLayer.contentsScale = [[UIScreen mainScreen] scale];
-    _timeLayer.rasterizationScale = [[UIScreen mainScreen] scale];
-    _timeLayer.wrapped = YES;
+    _timeLayer.backgroundColor          = [[UIColor clearColor] CGColor];
+    _timeLayer.foregroundColor          = [[UIColor clearColor] CGColor];
+    _timeLayer.contentsScale            = [[UIScreen mainScreen] scale];
+    _timeLayer.rasterizationScale       = [[UIScreen mainScreen] scale];
+    _timeLayer.wrapped                  = YES;
     
     [self.layer addSublayer:_messageLayer];
     [self.layer addSublayer:_timeLayer];
@@ -181,7 +182,7 @@
                           range:NSMakeRange(0, timestamp.length)];
         
         [timestamp addAttribute:NSForegroundColorAttributeName
-                          value:[UIColor lightGrayColor]
+                          value:[InterfaceLayoutDefinitions labelTextColour]
                           range:NSMakeRange(0, timestamp.length)];
         
         _timeLayer.string = timestamp;
@@ -371,7 +372,7 @@ uint32_t FNV32(const char *s)
     
     // Highlight?
     if (hasHighlight()) {
-        self.backgroundColor = [UIColor colorWithRed:0.714 green:0.882 blue:0.675 alpha:1];
+        self.backgroundColor = [InterfaceLayoutDefinitions highlightedMessageBackgroundColour];
     }
     return ranges;
 }
@@ -394,10 +395,10 @@ uint32_t FNV32(const char *s)
 
 - (NSAttributedString *)setLinks:(NSString *)string
 {
-    NSMutableArray *ranges = [[NSMutableArray alloc] init];
-    NSMutableArray *offsets = [[NSMutableArray alloc] init];
-    NSMutableArray *links = [[NSMutableArray alloc] init];
-    NSDataDetector* detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
+    NSMutableArray *ranges      = [[NSMutableArray alloc] init];
+    NSMutableArray *offsets     = [[NSMutableArray alloc] init];
+    NSMutableArray *links       = [[NSMutableArray alloc] init];
+    NSDataDetector* detector    = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
     NSArray *matches = [detector matchesInString:string options:0 range:NSMakeRange(0, [string length])];
     NSString *newString = string;
 
@@ -480,7 +481,7 @@ uint32_t FNV32(const char *s)
             paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
             
             [string addAttribute:NSFontAttributeName
-                           value:[UIFont systemFontOfSize:10.0]
+                           value:[InterfaceLayoutDefinitions eventMessageFont]
                            range:NSMakeRange(0, string.length)];
 
             [string addAttribute:NSParagraphStyleAttributeName
@@ -488,7 +489,7 @@ uint32_t FNV32(const char *s)
                            range:NSMakeRange(0, string.length)];
 
             [string addAttribute:NSFontAttributeName
-                           value:[UIFont boldSystemFontOfSize:10.0]
+                           value:[InterfaceLayoutDefinitions eventMessageNicknameFont]
                            range:NSMakeRange(0, user.nick.length + 2)];
             break;
         }

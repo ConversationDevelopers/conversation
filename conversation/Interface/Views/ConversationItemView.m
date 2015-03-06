@@ -29,6 +29,7 @@
  */
 
 #import "ConversationItemView.h"
+#import "InterfaceLayoutDefinitions.h"
 
 @implementation ConversationItemView
 
@@ -41,21 +42,21 @@
     [self.textLabel removeFromSuperview];
     self.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
     
-    _nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _nameLabel.font = [UIFont boldSystemFontOfSize:18];
-    _nameLabel.textColor = [UIColor darkGrayColor];
+    _nameLabel              = [[UILabel alloc] initWithFrame:CGRectZero];
+    _nameLabel.font         = [InterfaceLayoutDefinitions largeLabelFont];
+    _nameLabel.textColor    = [InterfaceLayoutDefinitions largeLabelTextColour];
     
-    _firstDetailLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _firstDetailLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
-    _firstDetailLabel.textColor = [UIColor lightGrayColor];
+    _firstDetailLabel           = [[UILabel alloc] initWithFrame:CGRectZero];
+    _firstDetailLabel.font      = [InterfaceLayoutDefinitions standardLabelFont];
+    _firstDetailLabel.textColor = [InterfaceLayoutDefinitions labelTextColour];
 
-    _secondDetailLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _secondDetailLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
-    _secondDetailLabel.textColor = [UIColor lightGrayColor];
+    _secondDetailLabel              = [[UILabel alloc] initWithFrame:CGRectZero];
+    _secondDetailLabel.font         = [InterfaceLayoutDefinitions standardLabelFont];
+    _secondDetailLabel.textColor    = [InterfaceLayoutDefinitions labelTextColour];
     
-    _unreadCountLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _unreadCountLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
-    _unreadCountLabel.textColor = [UIColor lightGrayColor];
+    _unreadCountLabel               = [[UILabel alloc] initWithFrame:CGRectZero];
+    _unreadCountLabel.font          = [InterfaceLayoutDefinitions standardLabelFont];
+    _unreadCountLabel.textColor     = [InterfaceLayoutDefinitions labelTextColour];
     
     _overlayView = [[UIView alloc] initWithFrame:CGRectZero];
     _overlayView.backgroundColor = self.backgroundColor;
@@ -97,11 +98,11 @@
     _overlayView.frame = self.contentView.frame;
     
     if (!_enabled) {
-        _overlayView.alpha = 0.5;
-        self.imageView.alpha = 0.5;
+        _overlayView.alpha = DISABLED_OPACITY_LEVEL;
+        self.imageView.alpha = DISABLED_OPACITY_LEVEL;
     } else {
-        _overlayView.alpha = 0.0;
-        self.imageView.alpha = 1.0;
+        _overlayView.alpha = HIDDEN_OPACITY_LEVEL;
+        self.imageView.alpha = ENABLED_OPACITY_LEVEL;
     }
 
     CGSize size = [_name sizeWithAttributes:@{NSFontAttributeName: _nameLabel.font}];

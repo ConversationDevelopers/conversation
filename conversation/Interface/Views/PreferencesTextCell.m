@@ -30,6 +30,7 @@
 
 
 #import "PreferencesTextCell.h"
+#import "InterfaceLayoutDefinitions.h"
 
 static PreferencesTextCell *currentEditingCell;
 
@@ -47,15 +48,15 @@ static PreferencesTextCell *currentEditingCell;
     
     _textField = [[UITextField alloc] initWithFrame:CGRectZero];
     
-    _textField.delegate = self;
-    _textField.textAlignment = NSTextAlignmentLeft;
-    _textField.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
-    _textField.font = [UIFont systemFontOfSize:17.];
-    _textField.adjustsFontSizeToFitWidth = YES;
-    _textField.minimumFontSize = 14.;
-    _textField.textColor = [UIColor colorWithRed:0.11 green:0.129 blue:0.188 alpha:1];
-    _textField.enablesReturnKeyAutomatically = NO;
-    _textField.returnKeyType = UIReturnKeyDone;
+    _textField.delegate                         = self;
+    _textField.textAlignment                    = NSTextAlignmentLeft;
+    _textField.contentVerticalAlignment         = UIControlContentVerticalAlignmentTop;
+    _textField.font                             = [UIFont systemFontOfSize:LABEL_FONT_SIZE];
+    _textField.adjustsFontSizeToFitWidth        = YES;
+    _textField.minimumFontSize                  = LABEL_MIN_FONT_SIZE;
+    _textField.textColor                        = [InterfaceLayoutDefinitions preferenceLabelTextColour];
+    _textField.enablesReturnKeyAutomatically    = NO;
+    _textField.returnKeyType                    = UIReturnKeyDone;
     
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
@@ -85,11 +86,11 @@ static PreferencesTextCell *currentEditingCell;
         return;
     
     if (selected)
-        _textField.textColor = [UIColor whiteColor];
+        _textField.textColor = [InterfaceLayoutDefinitions textFieldSelectedColour];
     if (_enabled)
-        _textField.textColor = [UIColor colorWithRed:(64. / 255.) green:(118. / 255.) blue:(251. / 255.) alpha:.5];
+        _textField.textColor = [InterfaceLayoutDefinitions textFieldDisabledColour];
     else
-        _textField.textColor = [UIColor colorWithRed:(64. / 255.) green:(118. / 255.) blue:(251. / 255.) alpha:1.];
+        _textField.textColor = [InterfaceLayoutDefinitions textFieldColour];
 }
 
 - (void) prepareForReuse {
@@ -98,15 +99,15 @@ static PreferencesTextCell *currentEditingCell;
     _enabled = YES;
     _textEditAction = NULL;
     
-    _textField.text = @"";
-    _textField.placeholder = @"";
-    _textField.keyboardType = UIKeyboardTypeDefault;
-    _textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-    _textField.autocorrectionType = UITextAutocorrectionTypeDefault;
-    _textField.textColor = [UIColor colorWithRed:(64. / 255.) green:(118. / 255.) blue:(251. / 255.) alpha:1.];
-    _textField.clearButtonMode = UITextFieldViewModeNever;
-    _textField.enabled = YES;
-    _textField.secureTextEntry = NO;
+    _textField.text                     = @"";
+    _textField.placeholder              = @"";
+    _textField.keyboardType             = UIKeyboardTypeDefault;
+    _textField.autocapitalizationType   = UITextAutocapitalizationTypeSentences;
+    _textField.autocorrectionType       = UITextAutocorrectionTypeDefault;
+    _textField.textColor                = [InterfaceLayoutDefinitions textFieldColour];
+    _textField.clearButtonMode          = UITextFieldViewModeNever;
+    _textField.enabled                  = YES;
+    _textField.secureTextEntry          = NO;
     
     [_textField endEditing:YES];
     [_textField resignFirstResponder];
@@ -118,7 +119,7 @@ static PreferencesTextCell *currentEditingCell;
 - (void) layoutSubviews {
     [super layoutSubviews];
     
-    _textField.textColor = [UIColor colorWithRed:0.11 green:0.129 blue:0.188 alpha:1];
+    _textField.textColor = [InterfaceLayoutDefinitions descriptionLabelColour];
     
     CGRect contentRect = self.contentView.frame;
     
@@ -138,8 +139,9 @@ static PreferencesTextCell *currentEditingCell;
     
     _textField.hidden = NO;
     
-    const CGFloat leftMargin = 10.;
-    CGFloat rightMargin = 10.;
+    const CGFloat leftMargin = PREFERENCE_CELL_MARGIN_SIDE;
+    CGFloat rightMargin      = PREFERENCE_CELL_MARGIN_SIDE;
+    
     if (_textField.clearButtonMode == UITextFieldViewModeAlways)
         rightMargin = 0.;
     else if (self.accessoryType == UITableViewCellAccessoryDisclosureIndicator)
@@ -158,8 +160,8 @@ static PreferencesTextCell *currentEditingCell;
     
     _enabled = enabled;
     
-    if (!_enabled) _textField.textColor = [UIColor colorWithRed:(64. / 255.) green:(118. / 255.) blue:(251. / 255.) alpha:.5];
-    else _textField.textColor = [UIColor colorWithRed:(64. / 255.) green:(121. / 255.) blue:(251. / 255.) alpha:1.];
+    if (!_enabled) _textField.textColor = [InterfaceLayoutDefinitions textFieldDisabledColour];
+    else _textField.textColor           = [InterfaceLayoutDefinitions textFieldColour];
 }
 
 #pragma mark -
