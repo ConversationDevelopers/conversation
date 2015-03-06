@@ -200,8 +200,8 @@
 		FA93176319FB4DD200A94912 /* IRCCommands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCCommands.m; sourceTree = "<group>"; };
 		FABE6B821A6C75B5003C7E11 /* IRCCharacterSets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IRCCharacterSets.h; path = conversation/Helpers/IRCCharacterSets.h; sourceTree = "<group>"; };
 		FABE6B831A6C75B5003C7E11 /* IRCCharacterSets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IRCCharacterSets.m; path = conversation/Helpers/IRCCharacterSets.m; sourceTree = "<group>"; };
-		FAC0E4101A00665D001CFB48 /* IRCCertificateTrust.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = IRCCertificateTrust.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		FAC0E4111A00665D001CFB48 /* IRCCertificateTrust.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = IRCCertificateTrust.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		FAC0E4101A00665D001CFB48 /* IRCCertificateTrust.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = IRCCertificateTrust.h; path = Other/IRCCertificateTrust.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		FAC0E4111A00665D001CFB48 /* IRCCertificateTrust.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = IRCCertificateTrust.m; path = Other/IRCCertificateTrust.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		FAC0E4651A0072EF001CFB48 /* aes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aes.h; sourceTree = "<group>"; };
 		FAC0E4661A0072EF001CFB48 /* asn1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asn1.h; sourceTree = "<group>"; };
 		FAC0E4671A0072EF001CFB48 /* asn1_mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asn1_mac.h; sourceTree = "<group>"; };
@@ -367,6 +367,7 @@
 		DA1A4AB919E1770700565763 /* conversation */ = {
 			isa = PBXGroup;
 			children = (
+				FA90D4981AAA508F00347233 /* Other */,
 				FA90D4951AAA4D1C00347233 /* Interface */,
 				FA109B2519E3E6D60068DC29 /* IRC */,
 				DA79EA2D19E923870027A370 /* Helpers */,
@@ -475,8 +476,6 @@
 				FA6E45EC19ED65590083A326 /* IRCUser.m */,
 				FA93176219FB4DD200A94912 /* IRCCommands.h */,
 				FA93176319FB4DD200A94912 /* IRCCommands.m */,
-				FAC0E4101A00665D001CFB48 /* IRCCertificateTrust.h */,
-				FAC0E4111A00665D001CFB48 /* IRCCertificateTrust.m */,
 				FACFC18F1A02BD6E0012CED9 /* znc-buffextras.h */,
 				FACFC1901A02BD6E0012CED9 /* znc-buffextras.m */,
 				FA36D2F81A0446BD00AEDB20 /* InputCommands.h */,
@@ -571,6 +570,15 @@
 				DA6F61D619FD1A6600F22F78 /* ILTranslucentView.m */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		FA90D4981AAA508F00347233 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				FAC0E4101A00665D001CFB48 /* IRCCertificateTrust.h */,
+				FAC0E4111A00665D001CFB48 /* IRCCertificateTrust.m */,
+			);
+			name = Other;
 			sourceTree = "<group>";
 		};
 		FAC0E4631A0072EF001CFB48 /* include */ = {
