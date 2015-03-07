@@ -43,11 +43,11 @@
 #define FNV_PRIME_32 16777619
 #define FNV_OFFSET_32 2166136261U
 
-#define hasHighlight() (_conversation.client.currentUserOnConnection && [_message.message.lowercaseString rangeOfString:_conversation.client.currentUserOnConnection.nick.lowercaseString].location != NSNotFound)
+#define hasHighlight() (_message.conversation.client.currentUserOnConnection && [_message.message.lowercaseString rangeOfString:_message.conversation.client.currentUserOnConnection.nick.lowercaseString].location != NSNotFound)
 
 @implementation ChatMessageView
 
-- (id)initWithFrame:(CGRect)frame message:(IRCMessage *)message conversation:(IRCConversation *)conversation
+- (id)initWithFrame:(CGRect)frame message:(IRCMessage *)message
 {
     self = [super initWithFrame:frame];
     
@@ -56,7 +56,6 @@
     
     _images = [[NSMutableArray alloc] init];
     _message = message;
-    _conversation = conversation;
     
     self.backgroundColor = [UIColor clearColor];
     _attributedString = [self attributedString];
@@ -310,22 +309,22 @@ uint32_t FNV32(const char *s)
 {
     switch(status) {
         case VOICE:
-            return [_conversation.client.userModeCharacters objectForKey:@"v"];
+            return [_message.conversation.client.userModeCharacters objectForKey:@"v"];
             break;
         case HALFOP:
-            return [_conversation.client.userModeCharacters objectForKey:@"h"];
+            return [_message.conversation.client.userModeCharacters objectForKey:@"h"];
             break;
         case OPERATOR:
-            return [_conversation.client.userModeCharacters objectForKey:@"o"];
+            return [_message.conversation.client.userModeCharacters objectForKey:@"o"];
             break;
         case ADMIN:
-            return [_conversation.client.userModeCharacters objectForKey:@"a"];
+            return [_message.conversation.client.userModeCharacters objectForKey:@"a"];
             break;
         case OWNER:
-            return [_conversation.client.userModeCharacters objectForKey:@"q"];
+            return [_message.conversation.client.userModeCharacters objectForKey:@"q"];
             break;
         case IRCOP:
-            return [_conversation.client.userModeCharacters objectForKey:@"y"];
+            return [_message.conversation.client.userModeCharacters objectForKey:@"y"];
             break;
     }
     return @"";
@@ -342,7 +341,7 @@ uint32_t FNV32(const char *s)
 
 - (NSArray *)getMentions:(NSString *)string
 {
-    IRCChannel *channel = (IRCChannel*)_conversation;
+    IRCChannel *channel = (IRCChannel*)_message.conversation;
 
     if (!channel.users.count)
         return nil;
@@ -671,7 +670,7 @@ uint32_t FNV32(const char *s)
                            value:[self colorForNick:user.nick]
                            range:NSMakeRange(0, string.length)];
             
-            if ([_conversation isKindOfClass:[IRCChannel class]])
+            if ([_message.conversation isKindOfClass:[IRCChannel class]])
                 [self getMentions:msg];
             
             break;
@@ -739,7 +738,7 @@ uint32_t FNV32(const char *s)
                            value:user.nick
                            range:NSMakeRange(0, status.length+user.nick.length)];
 
-            if ([_conversation isKindOfClass:[IRCChannel class]]) {
+            if ([_message.conversation isKindOfClass:[IRCChannel class]]) {
                 NSArray *mentions = [self getMentions:msg];
                 for (NSValue *range in mentions) {
                     [string addAttribute:NSFontAttributeName
@@ -774,7 +773,7 @@ uint32_t FNV32(const char *s)
             
             self.backgroundColor = [UIColor colorWithRed:0.7 green:0.7 blue:0.7 alpha:1];
             
-            if ([_conversation isKindOfClass:[IRCChannel class]]) {
+            if ([_message.conversation isKindOfClass:[IRCChannel class]]) {
                 NSArray *mentions = [self getMentions:msg];
                 for (NSValue *range in mentions) {
                     [string addAttribute:NSFontAttributeName

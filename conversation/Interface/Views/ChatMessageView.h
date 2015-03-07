@@ -43,12 +43,11 @@
     ConversationListViewController *_controller;
 }
 
-- (id)initWithFrame:(CGRect)frame message:(IRCMessage *)message conversation:(IRCConversation *)conversation;
+- (id)initWithFrame:(CGRect)frame message:(IRCMessage *)message;
 - (CGFloat)frameHeight;
 
 @property (nonatomic) NSMutableArray *images;
 @property (nonatomic) ChatViewController *chatViewController;
-@property (nonatomic) IRCConversation *conversation;
 @property (nonatomic) IRCMessage *message;
 
 @end

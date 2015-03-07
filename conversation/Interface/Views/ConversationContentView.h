@@ -30,13 +30,15 @@
 
 #import <UIKit/UIKit.h>
 
-@class ChatMessageView;
+@class IRCMessage;
+@class ChatViewController;
 
 @interface ConversationContentView : UIScrollView
 
 @property (assign) CGFloat posY;
+@property (nonatomic) ChatViewController *chatViewController;
 
-- (void)addMessageView:(ChatMessageView *)messageView;
+- (void)addMessage:(IRCMessage *)message;
 - (void)clear;
 
 @end

@@ -939,15 +939,8 @@
         }
         return;
     }
-    
-    ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, 0, message.conversation.contentView.frame.size.width, 15.0)
-                                                                  message:message
-                                                             conversation:message.conversation];
 
-    messageView.chatViewController = self.chatViewController;
-    [message.conversation.contentView addMessageView:messageView];
-    
-    messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [message.conversation.contentView addMessage:message];
     
     // The stuff below is only for the preview
     if ((message.messageType != ET_PRIVMSG && message.messageType != ET_ACTION && message.messageType != ET_NOTICE) ||
@@ -1309,13 +1302,7 @@
             continue;
         }
         
-        messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, 0, message.conversation.contentView.frame.size.width, 15.0)
-                                                                      message:message
-                                                                 conversation:message.conversation];
-        
-        messageView.chatViewController = self.chatViewController;
-        [message.conversation.contentView addMessageView:messageView];
-        messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [message.conversation.contentView addMessage:message];
         
     }
 }
