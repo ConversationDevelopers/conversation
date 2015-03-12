@@ -125,33 +125,11 @@
     return self;
 }
 
-- (NSURL *)getImageLink:(NSURL *)url
+- (void)drawRect:(CGRect)rect
 {
-    if ([url.host isEqualToString:@"dropbox.com"] || [url.host isEqualToString:@"www.dropbox.com"]) {
-        return [NSURL URLWithString:
-                [[NSString stringWithFormat:@"%@://%@%@?dl=1", url.scheme, url.host, url.path] stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding]];
-    }
-    return url;
-}
-
-- (BOOL)isImageLink:(NSURL *)url
-{
-    if ([url.pathExtension isEqualToString:@"png"] ||
-        [url.pathExtension isEqualToString:@"jpg"] ||
-        [url.pathExtension isEqualToString:@"jpeg"] ||
-        [url.pathExtension isEqualToString:@"tiff"] ||
-        [url.pathExtension isEqualToString:@"gif"]) {
-        return YES;
-    }
-    return NO;
-}
-
-- (void)layoutSubviews
-{
-    _messageLayer.string = _attributedString;
+    [super drawRect:rect];
     
-    _messageLayer.frame = CGRectMake(10, 5, self.bounds.size.width-20, _size.height);
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, _size.height+10);
+    _messageLayer.string = _attributedString;
     
     if (_message.messageType == ET_PRIVMSG) {
         NSString *time = @"";
@@ -173,16 +151,9 @@
                           value:[InterfaceLayoutDefinitions labelTextColour]
                           range:NSMakeRange(0, timestamp.length)];
         
+        _timeString = timestamp;
         _timeLayer.string = timestamp;
-        _timeLayer.frame = CGRectMake(self.bounds.size.width-timestamp.size.width-5, 5, timestamp.size.width, timestamp.size.height);
-
-        // Set background color if not already set because of highlight
-        if ([self.backgroundColor isEqual:[UIColor clearColor]])
-            self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
         
-    } else {
-        _messageLayer.frame = CGRectMake(10, 0, self.bounds.size.width-20, _size.height);
-        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, _size.height);
     }
     
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)_attributedString);
@@ -245,7 +216,49 @@
             }
         }
     }
+    
+}
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    _messageLayer.frame = CGRectMake(10, 5, self.bounds.size.width-20, _size.height);
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, _size.height+10);
+
+    if (_message.messageType == ET_PRIVMSG) {
+        
+        _timeLayer.frame = CGRectMake(self.bounds.size.width-_timeString.size.width-5, 5, _timeString.size.width, _timeString.size.height);
+        
+        // Set background color if not already set because of highlight
+        if ([self.backgroundColor isEqual:[UIColor clearColor]])
+            self.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
+        
+    } else {
+        _messageLayer.frame = CGRectMake(10, 0, self.bounds.size.width-20, _size.height);
+        self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, _size.height);
+    }
+}
+
+- (NSURL *)getImageLink:(NSURL *)url
+{
+    if ([url.host isEqualToString:@"dropbox.com"] || [url.host isEqualToString:@"www.dropbox.com"]) {
+        return [NSURL URLWithString:
+                [[NSString stringWithFormat:@"%@://%@%@?dl=1", url.scheme, url.host, url.path] stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding]];
+    }
+    return url;
+}
+
+- (BOOL)isImageLink:(NSURL *)url
+{
+    if ([url.pathExtension isEqualToString:@"png"] ||
+        [url.pathExtension isEqualToString:@"jpg"] ||
+        [url.pathExtension isEqualToString:@"jpeg"] ||
+        [url.pathExtension isEqualToString:@"tiff"] ||
+        [url.pathExtension isEqualToString:@"gif"]) {
+        return YES;
+    }
+    return NO;
 }
 
 uint32_t FNV32(const char *s)
