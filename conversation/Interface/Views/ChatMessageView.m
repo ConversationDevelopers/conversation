@@ -1041,10 +1041,8 @@ uint32_t FNV32(const char *s)
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
     if ([gestureRecognizer.view isKindOfClass:self.class] && (_controller.chatViewController.keyboardIsVisible || _controller.chatViewController.userlistIsVisible)) {
-        NSLog(@"NO");
         return NO;
     }
-    NSLog(@"YES");
     return YES;
 }
 
