@@ -32,6 +32,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <CoreText/CoreText.h>
 #import "ChatMessageView.h"
+#import "ChatViewController.h"
 #import <DLImageLoader/DLImageView.h>
 #import <YLGIFImage/YLGIFImage.h>
 #import <YLGIFImage/YLImageView.h>
@@ -911,7 +912,7 @@ uint32_t FNV32(const char *s)
     UIImageView *imageView = (UIImageView *)recognizer.view;
     NSData *data = [NSData dataWithContentsOfURL:[_images objectAtIndex:imageView.tag]];
     UIActivityViewController *sharer = [[UIActivityViewController alloc] initWithActivityItems:@[data] applicationActivities:nil];
-    [self.chatViewController.navigationController presentViewController:sharer animated:YES completion:nil];
+    [_controller.navigationController presentViewController:sharer animated:YES completion:nil];
 
 }
 
@@ -956,7 +957,7 @@ uint32_t FNV32(const char *s)
     if (preview.image.size.width < 1)
         return;
     
-    [_chatViewController hideAccessories:nil];
+    [_controller.chatViewController hideAccessories:nil];
     
     CGRect frame = preview.bounds;
     
@@ -1039,9 +1040,11 @@ uint32_t FNV32(const char *s)
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    if ([gestureRecognizer.view isKindOfClass:self.class] && (_chatViewController.keyboardIsVisible || _chatViewController.userlistIsVisible)) {
+    if ([gestureRecognizer.view isKindOfClass:self.class] && (_controller.chatViewController.keyboardIsVisible || _controller.chatViewController.userlistIsVisible)) {
+        NSLog(@"NO");
         return NO;
     }
+    NSLog(@"YES");
     return YES;
 }
 

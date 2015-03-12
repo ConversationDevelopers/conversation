@@ -38,8 +38,6 @@
     
     ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, 0, message.conversation.contentView.frame.size.width, 15.0)
                                                                   message:message];
-    
-    messageView.chatViewController = self.chatViewController;
     messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     if(!_posY)

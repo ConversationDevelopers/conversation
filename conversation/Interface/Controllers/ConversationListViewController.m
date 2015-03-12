@@ -939,7 +939,7 @@
         }
         return;
     }
-
+    
     [message.conversation.contentView addMessage:message];
     
     // The stuff below is only for the preview
@@ -1300,7 +1300,7 @@
             [message delete];
             continue;
         }
-        
+    
         [message.conversation.contentView addMessage:message];
         
     }

@@ -30,7 +30,6 @@
 
 #import <UIKit/UIKit.h>
 #import "IRCMessage.h"
-#import "ChatViewController.h"
 
 @class IRCChannel;
 
@@ -48,7 +47,6 @@
 - (CGFloat)frameHeight;
 
 @property (nonatomic) NSMutableArray *images;
-@property (nonatomic) ChatViewController *chatViewController;
 @property (nonatomic) IRCMessage *message;
 
 @end
