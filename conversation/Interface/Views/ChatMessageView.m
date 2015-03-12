@@ -125,17 +125,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillShowNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
-}
-
 - (NSURL *)getImageLink:(NSURL *)url
 {
     if ([url.host isEqualToString:@"dropbox.com"] || [url.host isEqualToString:@"www.dropbox.com"]) {
