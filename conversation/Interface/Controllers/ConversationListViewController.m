@@ -1276,7 +1276,6 @@
 {
 
     NSMutableArray *messages = [[IRCMessage instancesOrderedBy:@"timestamp"] mutableCopy];
-    ChatMessageView *messageView;
     BOOL found = NO;
     for (IRCMessage *message in messages) {
         found = NO;
