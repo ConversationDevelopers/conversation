@@ -137,7 +137,7 @@
     
     NSMutableArray *queries = connection.queries.mutableCopy;
     [queries addObject:configuration];
-    connection.channels = queries;
+    connection.queries = queries;
     
     int i=0;
     for (NSDictionary *d in configurations) {
