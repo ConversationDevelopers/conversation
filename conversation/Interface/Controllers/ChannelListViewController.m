@@ -171,6 +171,9 @@ BOOL _isAwaitingListResponse;
         return;
     
     NSArray *components = [message.message componentsSeparatedByString:@" "];
+    if ([components count] < 2)
+        // TODO: Determine what this means
+        return;
     NSString *users = components[0];
     NSString *topic = components[1];
     
