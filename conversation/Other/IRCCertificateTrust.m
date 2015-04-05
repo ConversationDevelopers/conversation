@@ -68,7 +68,7 @@
 	/* iOS does not have any useful APIs for getting information from certificates so we will convert
 	 this into an OpenSSL X509 certificate object and parse it using the OpenSSL C library. */
 	SecCertificateRef certificate = SecTrustGetCertificateAtIndex(self.trustReference, 0);
-	NSData *certificateData = (__bridge NSData *) SecCertificateCopyData(certificate);
+	NSData *certificateData = (__bridge_transfer NSData *)SecCertificateCopyData(certificate);
 	const unsigned char *certificateDataBytes = (const unsigned char *)[certificateData bytes];
 	X509 *certificateX509 = d2i_X509(NULL, &certificateDataBytes, [certificateData length]);
 	
@@ -76,6 +76,7 @@
 	self.subjectInformation      = [IRCCertificateTrust getCertificateSubject:certificateX509];
 	self.issuerInformation       = [IRCCertificateTrust getCertificateIssuer:certificateX509];
 	self.certificateInformation  = [IRCCertificateTrust getCertificateAlgorithmInformation:certificateX509];
+    OPENSSL_free(certificateX509);
 }
 
 - (void)requestTrustFromUser:(void (^)(BOOL shouldTrustPeer))completionHandler

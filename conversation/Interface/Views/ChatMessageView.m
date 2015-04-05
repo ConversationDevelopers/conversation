@@ -218,6 +218,9 @@
         }
     }
     
+    CFRelease(frameref);
+    CGPathRelease(path);
+    CFRelease(framesetter);
 }
 
 - (void)layoutSubviews
