@@ -169,13 +169,6 @@
         cell.textLabel.textColor = [UIColor blackColor];
         cell.textLabel.text = _addItemText;
         cell.imageView.image = nil;
-        
-        UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editItemAtIndex:)];
-        [singleTapRecogniser setDelegate:self];
-        singleTapRecogniser.numberOfTouchesRequired = 1;
-        singleTapRecogniser.numberOfTapsRequired = 1;
-        [cell addGestureRecognizer:singleTapRecogniser];
-        
     } else {
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.textLabel.textColor = [UIColor lightGrayColor];
