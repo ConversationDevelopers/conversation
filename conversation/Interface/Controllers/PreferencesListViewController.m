@@ -267,6 +267,9 @@
 
 - (void)stringAdded:(AddStringItemViewController *)sender
 {
+    if (!sender.stringValue)
+        return;
+    
     [_items addObject:sender.stringValue];
     [self.tableView reloadData];
 }
