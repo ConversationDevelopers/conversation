@@ -36,6 +36,7 @@
 #import "IRCCommands.h"
 #import "ConversationListViewController.h"
 #import "ChatViewController.h"
+#import "ChannelListViewController.h"
 #import "BuildConfig.h"
 #import "DeviceInformation.h"
 #import "NSMutableArray+Methods.h"
@@ -263,6 +264,20 @@
                 break;
                 
             case CMD_PART:
+            case CMD_LIST: {
+                ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+                ChannelListViewController *channelList = [[ChannelListViewController alloc] init];
+                channelList.client = conversation.client;
+                UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:channelList];
+                navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+                navigationController.navigationBar.tintColor = [UIColor lightGrayColor];
+                navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
+                navigationController.navigationBar.translucent = NO;
+                [controller presentViewController:navigationController animated:YES completion:^(void){
+                    [controller.chatViewController hideAccessories:nil];
+                }];
+                break;
+            }
             case CMD_LEAVE:
                 if ([messageComponents count] > 1) {
                     NSString *channel = messageComponents[1];
