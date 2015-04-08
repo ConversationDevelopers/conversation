@@ -35,6 +35,7 @@
 #import "IRCConversation.h"
 #import "IRCCommands.h"
 #import "ConversationListViewController.h"
+#import "ChatViewController.h"
 #import "BuildConfig.h"
 #import "DeviceInformation.h"
 #import "NSMutableArray+Methods.h"
@@ -499,7 +500,9 @@
                     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:infoViewController];
                     
                     navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-                    [controller presentViewController:navigationController animated:YES completion: nil];
+                    [controller presentViewController:navigationController animated:YES completion:^(void){
+                        [controller.chatViewController hideAccessories:nil];
+                    }];
                     
                 }
             }

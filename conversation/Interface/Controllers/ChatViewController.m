@@ -226,13 +226,6 @@ BOOL popoverDidDismiss = NO;
     
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    [self hideAccessories:nil];
-
-}
-
 - (void)viewDidDisappear:(BOOL)animated
 {
     // Unload images
@@ -394,7 +387,9 @@ BOOL popoverDidDismiss = NO;
     }
     
     navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:navigationController animated:YES completion: nil];
+    [self presentViewController:navigationController animated:YES completion:^(void){
+        [self hideAccessories:nil];
+    }];
 }
 
 - (void)composeBarViewDidPressUtilityButton:(PHFComposeBarView *)composeBarView
@@ -445,7 +440,9 @@ BOOL popoverDidDismiss = NO;
             navigationController.navigationBar.tintColor = [UIColor lightGrayColor];
             navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
             navigationController.navigationBar.translucent = NO;
-            [self.navigationController presentViewController:navigationController animated:YES completion:nil];
+            [self.navigationController presentViewController:navigationController animated:YES completion:^(void){
+                [self hideAccessories:nil];
+            }];
         } else {
             [InputCommands performCommand:[message substringFromIndex:1] inConversation:_conversation];
         }
