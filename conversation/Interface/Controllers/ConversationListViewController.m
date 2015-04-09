@@ -264,7 +264,7 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    [[AppPreferences sharedPrefs] save];
+    [[AppPreferences sharedPrefs] savePrefs];
     // Dispose of any resources that can be recreated.
 }
 
