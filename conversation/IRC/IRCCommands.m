@@ -211,9 +211,9 @@
     [client.connection send:[NSString stringWithFormat:@"TOPIC %@ :%@", channel, topic]];
 }
 
-+ (void)setMode:(NSString *)topic onRecepient:(NSString *)recepient onClient:(IRCClient *)client
++ (void)setMode:(NSString *)mode onRecepient:(NSString *)recepient onClient:(IRCClient *)client
 {
-    [client.connection send:[NSString stringWithFormat:@"MODE %@ :%@", recepient, topic]];
+    [client.connection send:[NSString stringWithFormat:@"MODE %@ %@", recepient, mode]];
 }
 
 + (void)kickBanUser:(NSString *)nickname onChannel:(IRCChannel *)channel withMessage:(NSString *)message
