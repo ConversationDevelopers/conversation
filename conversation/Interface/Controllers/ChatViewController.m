@@ -258,12 +258,21 @@ BOOL popoverDidDismiss = NO;
 - (void)join:(id)sender
 {
     // Connect client if it isn't already connected
-
-    if (_conversation.client.isConnected == NO)
+    if (_conversation.client.isConnected == NO) {
         [_conversation.client connect];
-    
-    ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
-    [controller joinChannelWithName:_conversation.name onClient:_conversation.client];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(join:)
+                                                     name:@"clientDidConnect"
+                                                   object:nil];
+    } else {
+        ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
+        [controller joinChannelWithName:_conversation.name onClient:_conversation.client];
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:@"clientDidConnect"
+                                                      object:nil];
+    }
 
 }
 
