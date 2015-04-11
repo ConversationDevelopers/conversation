@@ -44,7 +44,6 @@
 @property (nonatomic, weak) id target;
 @property (nonatomic) SEL action;
 @property (nonatomic, assign) BOOL addChannel;
-@property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic) NSString *saveButtonTitle;
 
 @end

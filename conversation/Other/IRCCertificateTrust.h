@@ -38,7 +38,6 @@
 @property (nonatomic) NSArray *subjectInformation;
 @property (nonatomic) NSArray *issuerInformation;
 @property (nonatomic) NSArray *certificateInformation;
-@property (nonatomic) IRCClient *client;
 @property (nonatomic) NSUInteger trustStatus;
 @property (nonatomic) NSString *signature;
 
