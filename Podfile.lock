@@ -1,26 +1,26 @@
 PODS:
-  - AFNetworking (2.5.0):
+  - AFNetworking (2.5.2):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
     - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.5.0):
+  - AFNetworking/NSURLConnection (2.5.2):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.0):
+  - AFNetworking/NSURLSession (2.5.2):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.0)
-  - AFNetworking/Security (2.5.0)
-  - AFNetworking/Serialization (2.5.0)
-  - AFNetworking/UIKit (2.5.0):
+  - AFNetworking/Reachability (2.5.2)
+  - AFNetworking/Security (2.5.2)
+  - AFNetworking/Serialization (2.5.2)
+  - AFNetworking/UIKit (2.5.2):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - DLImageLoader (2.0.0)
+  - DLImageLoader (2.1.0)
   - FCModel (0.9.0):
     - FMDB (~> 2.1)
   - FMDB (2.5):
@@ -33,7 +33,7 @@ PODS:
   - GoogleAnalytics-iOS-SDK/Core (3.10)
   - ImgurAnonymousAPIClient (0.2):
     - AFNetworking (>= 2.3.1)
-  - InAppSettingsKit (2.3.3)
+  - InAppSettingsKit (2.5)
   - MCNotificationManager (0.1.2)
   - MenuPopOverView (0.0.3)
   - PHFComposeBarView (2.0.1):
@@ -41,7 +41,7 @@ PODS:
   - PHFDelegateChain (1.0.1)
   - SHNavigationControllerBlocks (2.1.1)
   - SHTransitionBlocks (1.0.1)
-  - UIActionSheet+Blocks (0.8.1)
+  - UIActionSheet+Blocks (0.9)
   - YLGIFImage (0.11)
 
 DEPENDENCIES:
@@ -68,20 +68,20 @@ EXTERNAL SOURCES:
     :git: https://github.com/liyong03/YLGIFImage.git
 
 SPEC CHECKSUMS:
-  AFNetworking: 0f54cb5d16ce38c1b76948faffb8d5fb705021c7
-  DLImageLoader: ed4a058375bcef56e2493769d375612715189659
-  FCModel: 1f01fdcb5b469d3ab3c307ee90cb1b743cc3adfd
-  FMDB: 0efa188cf0dd1ce82c27a478cd5f5fa245308677
-  GoogleAnalytics-iOS-SDK: f422062075d9ccb1ea8d783fc5ba3829461e9502
+  AFNetworking: fefbce9660acb17f48ae0011292d4da0f457bf36
+  DLImageLoader: d233807305a9307b9f987301bd9d7d6ffc3a0f9e
+  FCModel: 04bb289914e67f2275cb17fda869131a3529c1a5
+  FMDB: 96e8f1bcc1329e269330f99770ad4285d9003e52
+  GoogleAnalytics-iOS-SDK: 4f98a376c1d61e6ac4ca47951655820314856eef
   ImgurAnonymousAPIClient: 34d68a1f5549b3dbe64028a44b8074bf44da2e82
-  InAppSettingsKit: c870cb6095a85656ff4df42845af5c26eede4c8d
-  MCNotificationManager: 0be8eb1535c914b5f5b8b8c0ffc1d1a7fb6be90b
-  MenuPopOverView: 584cec08163a01b3d60a3514bb5364e1019077d1
-  PHFComposeBarView: 0fa52137ecb23725d219dc90cf77c4c95aa29d05
-  PHFDelegateChain: f4d5a2847960b3dd16fc2f2196833f3a66704745
-  SHNavigationControllerBlocks: 9594c2d2d836dfe4d4a833fd025026b149cda619
-  SHTransitionBlocks: 9c8e8406b82bde58fb7dac80a41f7b8c8f76ea12
-  UIActionSheet+Blocks: c8b9c02f3d08964e8f7a4202f004a639c15eab80
+  InAppSettingsKit: d872c25e20fcc7d9d33554e5be63070a07a443a7
+  MCNotificationManager: c77c63d20b968474fca9c3ab3c12e00ee56ba300
+  MenuPopOverView: 7bceaa320095b49580e383d3ba3c74deed1d8b58
+  PHFComposeBarView: ceb26dd5a1e9a262c9e0ec3fd1dc12dbfff41c75
+  PHFDelegateChain: 491f9cd8a3fb8761f390ff05f74a0e168d48d285
+  SHNavigationControllerBlocks: 5c9a1d5c1fe2c32ebb187f645b8299783494a6ef
+  SHTransitionBlocks: 3cbf25e5e67b4cb5702d857aa1c8aa899bfcb580
+  UIActionSheet+Blocks: e180b7dad0a721ab7f212ac9742af799008bb358
   YLGIFImage: bcff4a5200b060f655372f939989ddc0a0b21dde
 
 COCOAPODS: 0.34.4

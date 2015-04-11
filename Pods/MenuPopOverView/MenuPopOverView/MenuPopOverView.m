@@ -10,12 +10,12 @@
 
 // Geometry metrics
 #define kPopOverViewPadding 20.f
-#define kPopOverViewHeight 30.f
+#define kPopOverViewHeight 44.f
 #define kPopOverCornerRadius 8.f
-#define kButtonHeight 35.0f
+#define kButtonHeight 53.5f
 #define kLeftButtonWidth 30.f
 #define kRightButtonWidth 30.f
-#define kArrowHeight 0.0f
+#define kArrowHeight 9.5f
 #define kTextFont [UIFont systemFontOfSize:14]
 #define kTextEdgeInsets 10.f
 
@@ -120,6 +120,21 @@
     
     [self setupLayout:rect inView:view];
     
+    // Make the view small and transparent before animation
+    self.alpha = 0.f;
+    self.transform = CGAffineTransformMakeScale(0.1f, 0.1f);
+    
+    // animate into full size
+    // First stage animates to 1.05x normal size, then second stage animates back down to 1x size.
+    // This two-stage animation creates a little "pop" on open.
+    [UIView animateWithDuration:0.2f delay:0.f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        self.alpha = 1.f;
+        self.transform = CGAffineTransformMakeScale(1.05f, 1.05f);
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.08f delay:0.f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            self.transform = CGAffineTransformIdentity;
+        } completion:nil];
+    }];
 }
 
 - (float)reArrangeButtons:(NSArray *)buttons {
