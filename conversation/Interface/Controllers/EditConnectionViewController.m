@@ -690,8 +690,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 
 - (void) passwordChanged:(PreferencesTextCell *)sender
 {
-    sender.accessoryType = UITableViewCellAccessoryNone;
-    badInput = YES;
     
     if ([_connection.serverPasswordReference isEqualToString:_configuration.serverPasswordReference]) {
         NSString *password = [SSKeychain passwordForService:@"conversation" account:_configuration.serverPasswordReference];
@@ -706,8 +704,16 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
     
     if (sender.textField.text.length > 1) {
         _configuration.serverPasswordReference = sender.textField.text;
-        sender.accessoryType = UITableViewCellAccessoryCheckmark;
-        badInput = NO;
+
+        if(badInput == YES) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
+                sender.accessoryType = UITableViewCellAccessoryCheckmark;
+            });
+            badInput = NO;
+        }
+    } else {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = YES;
     }
     
     
@@ -789,9 +795,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
 
 - (void) nickpassChanged:(PreferencesTextCell *)sender
 {
-    sender.accessoryType = UITableViewCellAccessoryNone;
-    badInput = YES;
-    
+
     if ([_connection.authenticationPasswordReference isEqualToString:_configuration.authenticationPasswordReference]) {
         NSString *password = [SSKeychain passwordForService:@"conversation" account:_configuration.authenticationPasswordReference];
         if (password.length)
@@ -805,9 +809,18 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
     
     if (sender.textField.text.length > 1) {
         _configuration.authenticationPasswordReference = sender.textField.text;
-        sender.accessoryType = UITableViewCellAccessoryCheckmark;
-        badInput = NO;
+        
+        if(badInput == YES) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
+                sender.accessoryType = UITableViewCellAccessoryCheckmark;
+            });
+            badInput = NO;
+        }
+    } else {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        badInput = YES;
     }
+
 }
 
 - (void) autoconnectChanged:(PreferencesSwitchCell *)sender

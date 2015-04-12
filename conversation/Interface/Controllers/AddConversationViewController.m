@@ -226,6 +226,7 @@ static unsigned short ConversationTableSection = 1;
             cell.textField.placeholder = @"Optional";
             cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+            cell.textField.secureTextEntry = YES;
             cell.textEditAction = @selector(passwordChanged:);
             return cell;
         }
@@ -270,9 +271,7 @@ static unsigned short ConversationTableSection = 1;
 
 - (void) passwordChanged:(PreferencesTextCell *)sender
 {
-    sender.accessoryType = UITableViewCellAccessoryNone;
-    _badInput = YES;
-    
+
     if(sender.textField.text.length == 0) {
         _configuration.passwordReference = @"";
         _badInput = NO;
@@ -280,8 +279,17 @@ static unsigned short ConversationTableSection = 1;
     
     if(sender.textField.text.length > 1) {
         _configuration.passwordReference = sender.textField.text;
-        sender.accessoryType = UITableViewCellAccessoryCheckmark;
-        _badInput = NO;
+        
+        if(_badInput == YES) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
+                sender.accessoryType = UITableViewCellAccessoryCheckmark;
+            });
+            _badInput = NO;
+        }
+    } else {
+        sender.accessoryType = UITableViewCellAccessoryNone;
+        _badInput = YES;
     }
+
 }
 @end
