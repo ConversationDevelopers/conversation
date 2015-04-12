@@ -761,7 +761,6 @@ BOOL popoverDidDismiss = NO;
         
         _composeBarView = [[PHFComposeBarView alloc] initWithFrame:frame];
         [_composeBarView setButtonTitle:nil];
-//        [_composeBarView setMaxCharCount:160];
         [_composeBarView setButtonTintColor:[UIColor blackColor]];
         [_composeBarView setMaxLinesCount:5];
         [_composeBarView setPlaceholder:@"Type something..."];
