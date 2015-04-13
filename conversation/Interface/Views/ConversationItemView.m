@@ -78,20 +78,15 @@
     return self;
 }
 
-- (void) prepareForReuse
-{
-    [super prepareForReuse];
-}
-
 -(void)layoutSubviews
 {
     
     [super layoutSubviews];
     
-    if (!_isChannel)
-        self.imageView.image = [UIImage imageNamed:@"QueryIcon"];
-    else if (_isConsole)
+    if (_isConsole)
         self.imageView.image = [UIImage imageNamed:@"Console"];
+    else if (!_isChannel)
+        self.imageView.image = [UIImage imageNamed:@"QueryIcon"];
     else
         self.imageView.image = [UIImage imageNamed:@"ChannelIcon"];
     
