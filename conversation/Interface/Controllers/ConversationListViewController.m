@@ -1193,14 +1193,13 @@
 }
 
 - (void) _backgroundTaskExpired {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self saveHistoricMessages];
-    });
-	
     [self disconnect];
     [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
     _backgroundTask = UIBackgroundTaskInvalid;
-	
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self saveHistoricMessages];
+    });
 }
 
 - (void)setAway
@@ -1309,7 +1308,6 @@
 
 - (void)saveHistoricMessages
 {
-    
     int limit = 50;
     if (IPAD)
         limit = 100;
@@ -1318,7 +1316,7 @@
     for (IRCClient *client in _connections) {
         for (IRCChannel *conversation in client.channels) {
             i=0;
-            for (UIView *view in conversation.contentView.subviews) {
+            for (UIView *view in conversation.contentView.subviews.reverseObjectEnumerator) {
                 if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
                     ChatMessageView *messageView = (ChatMessageView *)view;
                     IRCMessage *message = messageView.message;
@@ -1335,7 +1333,7 @@
         
         for (IRCConversation *conversation in client.queries) {
             i=0;
-            for (UIView *view in conversation.contentView.subviews) {
+            for (UIView *view in conversation.contentView.subviews.reverseObjectEnumerator) {
                 if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
                     ChatMessageView *messageView = (ChatMessageView *)view;
                     IRCMessage *message = messageView.message;

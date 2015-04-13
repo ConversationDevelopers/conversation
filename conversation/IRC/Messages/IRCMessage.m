@@ -152,7 +152,9 @@
     }
 
     if ([propertyName isEqualToString:@"timestamp"]) {
-        return [NSDate dateWithTimeIntervalSince1970:[databaseValue doubleValue]];
+        if ([databaseValue respondsToSelector:@selector(doubleValue)]) {
+            return [NSDate dateWithTimeIntervalSince1970:[databaseValue doubleValue]];
+        }
     }
     
     return databaseValue;
