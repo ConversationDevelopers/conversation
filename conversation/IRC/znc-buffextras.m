@@ -81,7 +81,7 @@
         [Messages userReceivedPartChannel:message];
     } else if ([type isEqualToString:@"is"]) {
         // NICK
-        NSString *newNick = messageComponents[4];
+        NSString *newNick = messageComponents[5];
         message.message = newNick;
         
         [Messages userReceivedNickChange:message];

@@ -415,6 +415,12 @@
     message.messageType = ET_NICK;
     message.message = message.message;
     
+    // Buffextras
+    if (message.isConversationHistory == YES) {
+        [message.conversation addMessageToConversation:message.copy];
+        return;
+    }
+    
     for (IRCChannel *channel in [message.client channels]) {
         IRCUser *userOnChannel = [IRCUser fromNickname:message.sender.nick onChannel:channel];
         if (userOnChannel) {
