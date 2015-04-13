@@ -1004,7 +1004,7 @@
                 (range.location == 0 || [[msg substringWithRange:NSMakeRange(range.location-1, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound) &&
                 (range.location+range.length+1 > msg.length || [[msg substringWithRange:NSMakeRange(range.location+range.length, 1)] rangeOfCharacterFromSet:wordBoundries].location != NSNotFound)) {
                 if (message.conversation.isHighlighted == NO) {
-                    message.conversation.isHighlighted = YES;                    
+                    message.conversation.isHighlighted = YES;
                     AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
                     
                     // Show notification

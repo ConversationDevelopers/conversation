@@ -379,9 +379,6 @@ uint32_t FNV32(const char *s)
     // Highlight?
     if (hasHighlight()) {
         self.backgroundColor = [InterfaceLayoutDefinitions highlightedMessageBackgroundColour];
-
-        // This is needed for some reason, otherwise the background color doesnt update immediately.
-        [self layoutIfNeeded];
     }
     return ranges;
 }
