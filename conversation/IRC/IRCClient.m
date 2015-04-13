@@ -136,7 +136,6 @@
 - (void)clientDidConnect
 {
     self.isConnected = YES;
-    self.connectionRetries = 0;
     self.isAttemptingConnection = NO;
     self.isAttemptingRegistration = YES;
     
@@ -357,6 +356,7 @@
             break;
         }
         case RPL_WELCOME:
+            self.connectionRetries = NO;
             self.isAttemptingRegistration = NO;
 
             /* The user might have some queries open from last time. Check if any of these users
@@ -644,10 +644,14 @@
     [self outputToConsole:[NSString stringWithFormat:@"Disconnected: %@", error]];
     [self clearStatus];
     if ([self.configuration automaticallyReconnect]) {
-        if (self.connectionRetries == CONNECTION_RETRY_ATTEMPTS) {
+        
+        if (self.connectionRetries >= CONNECTION_RETRY_ATTEMPTS) {
+            self.willReconnect = NO;
+            self.connectionRetries = 0;
             [self outputToConsole:[NSString stringWithFormat:NSLocalizedString(@"Connection attempt failed %i times. Connection aborted.",
 																			   @"Connection attempt failed {number} times. Connection aborted."), self.connectionRetries]];
         } else {
+            self.willReconnect = YES;
             [self outputToConsole:@"Retrying in 5 seconds.."];
             [NSTimer scheduledTimerWithTimeInterval:5.0
                                              target:self
@@ -668,6 +672,13 @@
 {
     self.connectionRetries++;
     [self connect];
+}
+
+- (void)stopReconnectAttempts
+{
+    self.connectionRetries = CONNECTION_RETRY_ATTEMPTS;
+    self.willReconnect = NO;
+    [self disconnect];
 }
 
 /*!

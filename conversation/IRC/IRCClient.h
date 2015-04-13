@@ -57,6 +57,7 @@
 @property (nonatomic, strong) IRCConnection *connection;
 @property (nonatomic, assign) BOOL isConnected;
 @property (nonatomic, assign) BOOL isAttemptingConnection;
+@property (nonatomic, assign) BOOL willReconnect;
 @property (nonatomic, assign) BOOL hasSuccessfullyAuthenticated;
 @property (nonatomic, assign) BOOL isAwaitingAuthenticationResponse;
 @property (nonatomic, assign) BOOL isAttemptingRegistration;
@@ -100,6 +101,11 @@
  *    @brief  Called when a connection has been closed gracefully.
  */
 - (void)clientDidDisconnect;
+
+/*!
+ *    @brief  Called when user stops connecting attempts.
+ */
+- (void)stopReconnectAttempts;
 
 /*!
  *    @brief  Indicates whether the connection is established and has finished its initial exchange with the server.

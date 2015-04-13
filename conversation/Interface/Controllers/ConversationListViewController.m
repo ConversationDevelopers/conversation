@@ -669,7 +669,7 @@
     // Get relevant client
     IRCClient *client = [self.connections objectAtIndex:sender.view.tag];
     
-    NSMutableArray *buttonTitles = [[NSMutableArray alloc] initWithArray:@[client.isConnected ? NSLocalizedString(@"Disconnect", @"Disconnect server") : NSLocalizedString(@"Connect", @"Connect server"),
+    NSMutableArray *buttonTitles = [[NSMutableArray alloc] initWithArray:@[client.isConnected ? NSLocalizedString(@"Disconnect", @"Disconnect server") : client.willReconnect ? NSLocalizedString(@"Stop Reconnect Attempts", @"Stop Reconnect Attempts") : NSLocalizedString(@"Connect", @"Connect server"),
                                                                           NSLocalizedString(@"Sort Conversations", "Sort Conversations"),
                                                                           client.showConsole ? NSLocalizedString(@"Hide Console", "Hide Console") : NSLocalizedString(@"Show Console", "Show Console"),
                                                                           NSLocalizedString(@"Edit", @"Edit Connection"),
@@ -681,7 +681,7 @@
                                                destructiveButtonTitle:nil
                                                     otherButtonTitles:nil];
     
-    if (client.isConnected) {
+    if (client.isConnected || client.willReconnect) {
         actionSheet.destructiveButtonIndex = 1;
     } else {
         actionSheet.destructiveButtonIndex = 5;
@@ -701,6 +701,8 @@
                 if(client.isConnected) {
                     NSString *quitMsg = [[NSUserDefaults standardUserDefaults] stringForKey:@"quitmsg_preference"];
                     [client disconnectWithMessage:quitMsg];
+                } else if (client.willReconnect) {
+                    [client stopReconnectAttempts];
                 } else {
                     [client connect];
                     if (client.configuration.showConsoleOnConnect) {
