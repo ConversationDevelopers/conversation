@@ -739,11 +739,11 @@
                                                  otherButtonTitles:NSLocalizedString(@"Yes", @"yes"), nil];
                     [alertView showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
                         if(buttonIndex == 1) {
-                            IRCClient *client = [self.connections objectAtIndex:alertView.tag];
+                            IRCClient *client = [self.connections objectAtIndex:sender.view.tag];
                             if(client.isConnected)
                                 [client disconnect];
                             [[AppPreferences sharedPrefs] deleteConnectionWithIdentifier:client.configuration.uniqueIdentifier];
-                            [self.connections removeObjectAtIndex:alertView.tag];
+                            [self.connections removeObjectAtIndex:sender.view.tag];
                             [self.tableView reloadData];
                         }
                     }];
