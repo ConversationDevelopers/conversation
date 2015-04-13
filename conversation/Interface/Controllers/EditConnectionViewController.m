@@ -154,11 +154,16 @@ static unsigned short EncodingTableSection = 4;
     } else {
         [self.conversationsController.connections addObject:client];
         [[AppPreferences sharedPrefs] addConnectionConfiguration:_configuration];
-        [client connect];
+        [self.conversationsController.tableView reloadData];
+        [[AppPreferences sharedPrefs] savePrefs];
         if (_configuration.showConsoleOnConnect) {
             client.console = [[ConsoleViewController alloc] init];
             client.showConsole = YES;
         }
+        [self dismissViewControllerAnimated:YES completion:^(void){
+            [client connect];
+        }];
+        return;
     }
     
     [self.conversationsController.tableView reloadData];

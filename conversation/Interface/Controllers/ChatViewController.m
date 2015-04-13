@@ -123,6 +123,8 @@ BOOL popoverDidDismiss = NO;
 - (void)loadView
 {
 
+    [super loadView];
+    
     UIView *view = [[UIView alloc] initWithFrame:kInitialViewFrame];
     [view setBackgroundColor:[UIColor whiteColor]];
 
