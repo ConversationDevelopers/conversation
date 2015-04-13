@@ -347,6 +347,11 @@ uint32_t FNV32(const char *s)
 
 - (NSArray *)getMentions:(NSString *)string
 {
+    // Highlight?
+    if (hasHighlight()) {
+        self.backgroundColor = [InterfaceLayoutDefinitions highlightedMessageBackgroundColour];
+    }
+    
     IRCChannel *channel = (IRCChannel*)_message.conversation;
 
     if (!channel.users.count)
@@ -376,10 +381,6 @@ uint32_t FNV32(const char *s)
         
     }
     
-    // Highlight?
-    if (hasHighlight()) {
-        self.backgroundColor = [InterfaceLayoutDefinitions highlightedMessageBackgroundColour];
-    }
     return ranges;
 }
 
