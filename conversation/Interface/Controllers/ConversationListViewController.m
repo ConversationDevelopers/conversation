@@ -714,7 +714,7 @@
                 break;
             case 2:
                 // Sort Conversations
-                [self sortConversationsForClientAtIndex:actionSheet.tag];
+                [self sortConversationsForClientAtIndex:sender.view.tag];
                 break;
             case 3:
                 // Show Console
