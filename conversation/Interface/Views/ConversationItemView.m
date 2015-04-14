@@ -90,7 +90,10 @@
     else
         self.imageView.image = [UIImage imageNamed:@"ChannelIcon"];
     
-    _overlayView.frame = self.contentView.frame;
+    CGRect frame = self.contentView.frame;
+    frame.size.width += 30.0f;
+    
+    _overlayView.frame = frame;
     
     if (!_enabled) {
         _overlayView.alpha = DISABLED_OPACITY_LEVEL;
@@ -102,7 +105,7 @@
 
     CGSize size = [_name sizeWithAttributes:@{NSFontAttributeName: _nameLabel.font}];
     
-    CGRect frame = self.imageView.frame;
+    frame = self.imageView.frame;
     frame.origin.y -= 4;
     frame.origin.x = frame.origin.x*2+frame.size.width;
     frame.size = size;
