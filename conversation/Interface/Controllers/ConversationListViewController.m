@@ -371,17 +371,6 @@
     [self presentViewController:navigationController animated:YES completion: nil];
 }
 
-- (void)sortConversationsForClientAtIndex:(NSInteger)index
-{
-    IRCClient *client = _connections[index];
-    if(client != nil) {
-        [client sortChannelItems];
-        [client sortQueryItems];
-        [[AppPreferences sharedPrefs] setChannels:client.channels andQueries:client.queries forConnectionConfiguration:client.configuration];
-        [self.tableView reloadData];        
-    }
-}
-
 - (void)selectConversationWithIdentifier:(NSString *)identifier
 {
     IRCClient *client;
@@ -714,7 +703,10 @@
                 break;
             case 2:
                 // Sort Conversations
-                [self sortConversationsForClientAtIndex:sender.view.tag];
+                [client sortChannelItems];
+                [client sortQueryItems];
+                [[AppPreferences sharedPrefs] setChannels:client.channels andQueries:client.queries forConnectionConfiguration:client.configuration];
+                [self.tableView reloadData];
                 break;
             case 3:
                 // Show Console
