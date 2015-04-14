@@ -103,7 +103,7 @@ BOOL popoverDidDismiss = NO;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillHideNotification
                                                   object:nil];
-    
+ 
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"messageReceived"
                                                   object:nil];
@@ -280,7 +280,6 @@ BOOL popoverDidDismiss = NO;
 
 - (void)keyboardWillToggle:(NSNotification *)notification
 {
-
     if (_userlistIsVisible)
         [_userListView removeFromSuperview];
 
