@@ -34,9 +34,4 @@
  */
 - (void)displayImageFromUrl:(NSString *)urlString;
 
-/**
- Cancel started operation
- */
-- (void)cancelLoading;
-
 @end

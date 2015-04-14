@@ -59,19 +59,8 @@
                   imageView:(UIImageView *)imageView;
 
 /**
- Cancel operation
- @param url. Url of operation to stop
- */
-- (void)cancelOperation:(NSString *)url;
-
-/**
  Stop all active operations
  */
-- (void)cancelAllOperations;
-
-/**
- Clear cache of DLImageLoader
- */
-- (void)clearCache;
+- (void)stopDataLoading;
 
 @end

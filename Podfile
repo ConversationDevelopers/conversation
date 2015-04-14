@@ -5,7 +5,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 target 'conversation' do
 	pod 'PHFComposeBarView', '~> 2.0.1'
-	pod 'DLImageLoader', :git => 'https://github.com/AndreyLunevich/DLImageLoader-iOS.git'
+	pod 'DLImageLoader', '~> 2.0.0'
 	pod 'YLGIFImage', :git => 'https://github.com/liyong03/YLGIFImage.git'
 	pod 'UIActionSheet+Blocks'
 	pod 'ImgurAnonymousAPIClient', :git => 'https://github.com/nolanw/ImgurAnonymousAPIClient.git', :tag => 'v0.2'
@@ -20,7 +20,7 @@ end
 
 target 'conversationTests' do
     pod 'PHFComposeBarView', '~> 2.0.1'
-    pod 'DLImageLoader', :git => 'https://github.com/AndreyLunevich/DLImageLoader-iOS.git'
+    pod 'DLImageLoader', '~> 2.0.0'
     pod 'YLGIFImage', :git => 'https://github.com/liyong03/YLGIFImage.git'
     pod 'UIActionSheet+Blocks'
     pod 'ImgurAnonymousAPIClient', :git => 'https://github.com/nolanw/ImgurAnonymousAPIClient.git', :tag => 'v0.2'

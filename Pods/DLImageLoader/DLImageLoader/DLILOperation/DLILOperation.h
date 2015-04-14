@@ -30,6 +30,6 @@ typedef void (^CancelBlock)();
 - (void)startLoadingWithCompletion:(CompletionBlock)completed
                           canceled:(CancelBlock)canceled;
 
-- (void)cancel;
+- (void)cancelLoading;
 
 @end

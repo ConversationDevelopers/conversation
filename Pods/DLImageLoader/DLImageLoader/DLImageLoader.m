@@ -22,7 +22,7 @@
 
 @interface DLImageLoader()
 
-@property (nonatomic, strong) NSOperationQueue *queue;
+@property (nonatomic, strong) NSOperationQueue *operationQueue;
 @property (nonatomic, strong) DLILCacheManager *cacheManager;
 
 @end
@@ -35,14 +35,12 @@
     static dispatch_once_t token;
     dispatch_once(&token, ^{
         instance = [[self alloc] init];
-        instance.queue = [[NSOperationQueue alloc] init];
+        instance.operationQueue = [[NSOperationQueue alloc] init];
         instance.cacheManager = [[DLILCacheManager alloc] init];
         instance.isDLILLogEnabled = NO;
     });
     return instance;
 }
-
-#pragma mark - loading methods
 
 - (void)loadImageFromUrl:(NSString *)urlString
                completed:(void (^)(NSError *, UIImage *))completed
@@ -65,7 +63,7 @@
         if (self.isDLILLogEnabled) NSLog(@"DLImageLoader data loading canceled");
         if (canceled) canceled();
     }];
-    [self.queue addOperation:operation];
+    [self.operationQueue addOperation:operation];
 }
 
 - (void)displayImageFromUrl:(NSString *)urlString
@@ -73,41 +71,18 @@
 {
     imageView.image = nil;
     [self loadImageFromUrl:urlString completed:^(NSError *error, UIImage *image) {
-        [self updateImageView:imageView image:image];
+        imageView.image = image;
+        [imageView setNeedsDisplay];
     } canceled:^{
-        [self updateImageView:imageView image:nil];
+        imageView.image = nil;
     }];
 }
 
-- (void)updateImageView:(UIImageView *)imageView image:(UIImage *)image
+- (void)stopDataLoading
 {
-    imageView.image = image;
-    [imageView setNeedsDisplay];
-}
-
-#pragma mark - cancel methods
-
-- (void)cancelOperation:(NSString *)url
-{
-    for (DLILOperation *operation in self.queue.operations) {
-        if ([operation.url isEqualToString:url]) {
-            [operation cancel];
-        }
+    for (DLILOperation *operation in self.operationQueue.operations) {
+        [operation cancelLoading];
     }
-}
-
-- (void)cancelAllOperations
-{
-    for (DLILOperation *operation in self.queue.operations) {
-        [operation cancel];
-    }
-}
-
-#pragma mark - clear methods
-
-- (void)clearCache
-{
-    [[DLILCacheManager sharedInstance] clear];
 }
 
 @end

@@ -20,7 +20,7 @@ PODS:
   - AFNetworking/UIKit (2.5.2):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - DLImageLoader (2.1.0)
+  - DLImageLoader (2.0.0)
   - FCModel (0.9.0):
     - FMDB (~> 2.1)
   - FMDB (2.5):
@@ -45,7 +45,7 @@ PODS:
   - YLGIFImage (0.11)
 
 DEPENDENCIES:
-  - DLImageLoader (from `https://github.com/AndreyLunevich/DLImageLoader-iOS.git`)
+  - DLImageLoader (~> 2.0.0)
   - FCModel
   - GoogleAnalytics-iOS-SDK
   - ImgurAnonymousAPIClient (from `https://github.com/nolanw/ImgurAnonymousAPIClient.git`, tag `v0.2`)
@@ -59,8 +59,6 @@ DEPENDENCIES:
   - YLGIFImage (from `https://github.com/liyong03/YLGIFImage.git`)
 
 EXTERNAL SOURCES:
-  DLImageLoader:
-    :git: https://github.com/AndreyLunevich/DLImageLoader-iOS.git
   ImgurAnonymousAPIClient:
     :git: https://github.com/nolanw/ImgurAnonymousAPIClient.git
     :tag: v0.2
@@ -69,7 +67,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: fefbce9660acb17f48ae0011292d4da0f457bf36
-  DLImageLoader: d233807305a9307b9f987301bd9d7d6ffc3a0f9e
+  DLImageLoader: b78e0d61d71e0fa2a1f3d26728b4ece43de85b06
   FCModel: 04bb289914e67f2275cb17fda869131a3529c1a5
   FMDB: 96e8f1bcc1329e269330f99770ad4285d9003e52
   GoogleAnalytics-iOS-SDK: 4f98a376c1d61e6ac4ca47951655820314856eef
