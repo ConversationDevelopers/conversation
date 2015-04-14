@@ -389,7 +389,7 @@
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         
         /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
-        if (channel != nil) {
+        if (channel && [channel isKindOfClass:[IRCChannel class]]) {
             channel.isJoinedByUser = NO;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [controller reloadClient:message.client];
