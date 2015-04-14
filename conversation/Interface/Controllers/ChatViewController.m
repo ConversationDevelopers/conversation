@@ -149,7 +149,6 @@ BOOL popoverDidDismiss = NO;
     [swipeLeftRecognizer setDelegate:self];
     [_container addGestureRecognizer:swipeLeftRecognizer];
     
-    
     UISwipeGestureRecognizer *recognizer;
     recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
     [recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
@@ -696,6 +695,10 @@ BOOL popoverDidDismiss = NO;
 
 - (void)swipeToShowUserlist:(UIScreenEdgePanGestureRecognizer *)recognizer
 {
+    
+    if ([_conversation isKindOfClass:[IRCChannel class]] == NO) {
+        return;
+    }
     
     UserListView *userlist = [self userListView];
     userlist.channel = (IRCChannel*)_conversation;
