@@ -598,6 +598,8 @@ BOOL popoverDidDismiss = NO;
 {
     ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     IRCConversation *conversation;
+
+    _isChannel = YES;
     
     int i=0;
     for (IRCConversation *convo in _conversation.client.channels) {
@@ -607,13 +609,14 @@ BOOL popoverDidDismiss = NO;
             
             if (_conversation.client.channels.count-1 == i) {
                 
-                if (_conversation.client.queries.count > 0)
+                if (_conversation.client.queries.count > 0) {
                     conversation = _conversation.client.queries[0];
-                else
+                    _isChannel = NO;
+                } else {
                     conversation = _conversation.client.channels[0];
+                }
             }
             
-            [controller selectConversationWithIdentifier:conversation.configuration.uniqueIdentifier];
             break;
         }
         i++;
@@ -625,22 +628,33 @@ BOOL popoverDidDismiss = NO;
             if ([convo isEqual:_conversation]) {
                 if (_conversation.client.queries.count-1 > i) {
                     conversation = _conversation.client.queries[i+1];
-                
+                    _isChannel = NO;
                 }
                 
                 if (i == _conversation.client.queries.count-1) {
-                    if (_conversation.client.channels.count > 0)
+                    if (_conversation.client.channels.count > 0) {
                         conversation = _conversation.client.channels[0];
-                    else
+                    } else {
+                        _isChannel = NO;
                         conversation = _conversation.client.queries[_conversation.client.channels.count-1];
+                    }
                 }
                 
-                [controller selectConversationWithIdentifier:conversation.configuration.uniqueIdentifier];
                 break;
             }
             i++;
         }
     }
+    
+    if (_isChannel) {
+        self.conversation = (IRCChannel*)conversation;
+        controller.currentConversation = (IRCChannel*)conversation;
+    } else {
+        self.conversation = conversation;
+        controller.currentConversation = conversation;
+    }
+    
+    [self viewWillAppear:NO];
     
 }
 
@@ -648,6 +662,8 @@ BOOL popoverDidDismiss = NO;
 {
     ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     IRCConversation *conversation;
+    
+    _isChannel = YES;
     
     int i=0;
     for (IRCConversation *convo in _conversation.client.channels) {
@@ -657,13 +673,14 @@ BOOL popoverDidDismiss = NO;
                 conversation = _conversation.client.channels[i-1];
             
             if (i == 0) {
-                if (_conversation.client.queries.count > 0)
+                if (_conversation.client.queries.count > 0) {
+                    _isChannel = NO;
                     conversation = _conversation.client.queries[0];
-                else
+                } else  {
                     conversation = _conversation.client.channels[_conversation.client.channels.count-1];
+                }
             }
             
-            [controller selectConversationWithIdentifier:conversation.configuration.uniqueIdentifier];
             break;
         }
         i++;
@@ -674,23 +691,35 @@ BOOL popoverDidDismiss = NO;
         for (IRCConversation *convo in _conversation.client.queries) {
             if ([convo isEqual:_conversation]) {
 
-                if (i > 0 && _conversation.client.queries.count > 1)
+                if (i > 0 && _conversation.client.queries.count > 1) {
+                    _isChannel = NO;
                     conversation = _conversation.client.queries[i-1];
+                }
 
                 if (i == 0) {
-                    if (_conversation.client.channels.count > 0)
+                    if (_conversation.client.channels.count > 0) {
                         conversation = _conversation.client.channels[_conversation.client.channels.count-1];
-                    else
+                    } else {
+                        _isChannel = NO;
                         conversation = _conversation.client.queries[_conversation.client.channels.count-1];
+                    }
                 }
                 
-                [controller selectConversationWithIdentifier:conversation.configuration.uniqueIdentifier];
                 break;
             }
             i++;
         }
     }
     
+    if (_isChannel) {
+        self.conversation = (IRCChannel*)conversation;
+        controller.currentConversation = (IRCChannel*)conversation;
+    } else {
+        self.conversation = conversation;
+        controller.currentConversation = conversation;
+    }
+    
+    [self viewWillAppear:NO];
 }
 
 - (void)swipeToShowUserlist:(UIScreenEdgePanGestureRecognizer *)recognizer
