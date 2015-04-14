@@ -1309,12 +1309,18 @@
     int i=0;
     for (IRCClient *client in _connections) {
         for (IRCChannel *conversation in client.channels) {
+            if (conversation.previewMessages.count == 0)
+                continue;
+            
             i=0;
             for (UIView *view in conversation.contentView.subviews.reverseObjectEnumerator) {
                 if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
                     ChatMessageView *messageView = (ChatMessageView *)view;
                     IRCMessage *message = messageView.message;
-                    i++;
+                    if (message.isConversationHistory) {
+                        i++;
+                        continue;
+                    }
                     if (i > limit) {
                         [message delete];
                         continue;
@@ -1326,12 +1332,18 @@
         }
         
         for (IRCConversation *conversation in client.queries) {
+            if (conversation.previewMessages.count == 0)
+                continue;
+            
             i=0;
             for (UIView *view in conversation.contentView.subviews.reverseObjectEnumerator) {
                 if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
                     ChatMessageView *messageView = (ChatMessageView *)view;
                     IRCMessage *message = messageView.message;
-                    i++;
+                    if (message.isConversationHistory) {
+                        i++;
+                        continue;
+                    }
                     if (i > limit) {
                         [message delete];
                         continue;
