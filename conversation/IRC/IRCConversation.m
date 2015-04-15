@@ -42,6 +42,7 @@
         self.name = config.name;
         self.client = client;
         self.conversationPartnerIsOnline = NO;
+        self.hasNewMessages = NO;
         self.configuration = config;
         self.unreadCount = 0;        
         return self;
@@ -128,6 +129,9 @@
     if ([message.sender isIgnoredHostMask:message.conversation.client]) {
         return;
     }
+    
+    if (message.isConversationHistory == NO)
+        self.hasNewMessages = YES;
     
     /* Notify all parts of the application listening for messages that a new message has been added. */
     dispatch_async(dispatch_get_main_queue(), ^{

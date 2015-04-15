@@ -1309,7 +1309,7 @@
     int i=0;
     for (IRCClient *client in _connections) {
         for (IRCChannel *conversation in client.channels) {
-            if (conversation.previewMessages.count == 0)
+            if (conversation.hasNewMessages == NO)
                 continue;
             
             i=0;
@@ -1332,7 +1332,7 @@
         }
         
         for (IRCConversation *conversation in client.queries) {
-            if (conversation.previewMessages.count == 0)
+            if (conversation.hasNewMessages == NO)
                 continue;
             
             i=0;

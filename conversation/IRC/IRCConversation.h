@@ -39,6 +39,7 @@
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, assign) IRCClient *client;
 @property (nonatomic, assign) BOOL conversationPartnerIsOnline;
+@property (nonatomic, assign) BOOL hasNewMessages;
 @property (nonatomic, strong) IRCChannelConfiguration *configuration;
 @property (nonatomic) NSMutableArray *previewMessages;
 @property (nonatomic) NSUInteger unreadCount;
