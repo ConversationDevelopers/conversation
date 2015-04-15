@@ -361,7 +361,17 @@
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         
         IRCChannel *channel = (IRCChannel *)conversation;
-        if ([[[message sender] nick] isEqualToStringCaseInsensitive:message.client.currentUserOnConnection.nick] && message.isConversationHistory == NO) {
+        
+        message.messageType = ET_JOIN;
+        message.conversation = channel;
+        
+        [[message conversation] addMessageToConversation:message];
+        
+        /* Buffextras */
+        if (message.isConversationHistory)
+            return;
+        
+        if ([[[message sender] nick] isEqualToStringCaseInsensitive:message.client.currentUserOnConnection.nick]) {
             [message.client.connection send:[NSString stringWithFormat:@"WHO %@", conversation.name]];
             [message.client.connection send:[NSString stringWithFormat:@"MODE %@", conversation.name]];
             channel.isJoinedByUser = YES;
@@ -374,18 +384,22 @@
             [[channel users] addObject:[message sender]];
             [channel sortUserlist];
         }
-        
-        message.messageType = ET_JOIN;
-        message.conversation = channel;
-        
-        [[message conversation] addMessageToConversation:message];
+    
     }];
 }
 
 + (void)userReceivedPartChannel:(IRCMessage *)message
 {
     IRCChannel *channel = (IRCChannel *)message.conversation;
-    if ([[[message sender] nick]  isEqualToStringCaseInsensitive:message.client.currentUserOnConnection.nick] && message.isConversationHistory == NO) {
+    message.messageType = ET_PART;
+    message.conversation = channel;
+    [[message conversation] addMessageToConversation:message];
+    
+    /* Buffextras */
+    if (message.isConversationHistory)
+        return;
+    
+    if ([[[message sender] nick]  isEqualToStringCaseInsensitive:message.client.currentUserOnConnection.nick]) {
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
         
         /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
@@ -398,10 +412,6 @@
     } else {
         [channel removeUserByName:[[message sender] nick]];
     }
-    
-    message.messageType = ET_PART;
-    message.conversation = channel;
-    [[message conversation] addMessageToConversation:message];
 }
 
 + (void)userReceivedNickChange:(IRCMessage *)message
@@ -416,7 +426,7 @@
     message.message = message.message;
     
     // Buffextras
-    if (message.isConversationHistory == YES) {
+    if (message.isConversationHistory) {
         [message.conversation addMessageToConversation:message.copy];
         return;
     }
@@ -493,6 +503,12 @@
 + (void)userReceivedQuitMessage:(IRCMessage *)message
 {
     message.messageType = ET_QUIT;
+
+    // Buffextras
+    if (message.isConversationHistory) {
+        [message.conversation addMessageToConversation:message.copy];
+        return;
+    }
     
     for (IRCChannel *channel in [message.client channels]) {
         IRCUser *userOnChannel = [IRCUser fromNickname:message.sender.nick onChannel:channel];
