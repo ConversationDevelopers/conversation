@@ -470,12 +470,13 @@ BOOL popoverDidDismiss = NO;
         _popOver.delegate = self;
     }
     
+    [_popOver removeFromSuperview];
+    
     // Initialise suggestions array
     if (!_suggestions)
         _suggestions = [[NSMutableArray alloc] init];
     else
-        [_suggestions removeAllObjects];        
-    
+        [_suggestions removeAllObjects];
     
     // Commands
     if ([[textView.text substringToIndex:1] isEqualToString:@"/"] && [textView.text rangeOfString:@" "].location == NSNotFound) {
@@ -485,6 +486,15 @@ BOOL popoverDidDismiss = NO;
                 [_suggestions addObject:[command lowercaseString]];
             }
         }
+        
+        if (_suggestions.count > 0) {
+            float offset = 10.0;
+            if(self.container.frame.size.height - self.composeBarView.frame.origin.y > 10.0 || UIInterfaceOrientationIsLandscape([self interfaceOrientation]))
+                offset = -20.0;
+            CGRect frame = CGRectMake(60.0, self.composeBarView.frame.origin.y + offset, 0.0, 0.0);
+            [_popOver presentPopoverFromRect:frame inView:self.view withStrings:_suggestions];
+        }
+        return;
     }
     
     NSArray *args = [textView.text componentsSeparatedByString:@" "];
@@ -492,7 +502,7 @@ BOOL popoverDidDismiss = NO;
     
     if (string.length > 0) {
         // Channels
-        if ([string isValidChannelName:_conversation.client]) {
+        if ([string hasPrefix:@"#"]) {
             IRCClient *client = _conversation.client;
             for (IRCChannel *channel in [client.channels copy])
                 if([[channel.name lowercaseString] hasPrefix:[string lowercaseString]])
@@ -511,18 +521,18 @@ BOOL popoverDidDismiss = NO;
                     }
             }
         }
+        
+        if (_suggestions.count > 0) {
+            float offset = 10.0;
+            if(self.container.frame.size.height - self.composeBarView.frame.origin.y > 10.0 || UIInterfaceOrientationIsLandscape([self interfaceOrientation]))
+                offset = -20.0;
+            CGRect frame = CGRectMake(60.0, self.composeBarView.frame.origin.y + offset, 0.0, 0.0);
+            [_popOver presentPopoverFromRect:frame inView:self.view withStrings:_suggestions];
+            return;
+        }
     }
     
-    [_popOver removeFromSuperview];
-
-    float offset = 10.0;
-    
-    if(self.container.frame.size.height - self.composeBarView.frame.origin.y > 10.0 || UIInterfaceOrientationIsLandscape([self interfaceOrientation]))
-        offset = -20.0;
-    
-    CGRect frame = CGRectMake(60.0, self.composeBarView.frame.origin.y + offset, 0.0, 0.0);
-
-    [_popOver presentPopoverFromRect:frame inView:self.container withStrings:_suggestions];
+    [_popOver dismiss:NO];
 
 }
 
