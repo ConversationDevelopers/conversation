@@ -46,21 +46,15 @@
     NSString *username = @"";
     NSString *hostname = @"";
     [messageComponents[0] getUserHostComponents:&nickname username:&username hostname:&hostname onClient:message.client];
-    
-    IRCUser *user = nil;
-    if ([message.conversation isKindOfClass:[IRCChannel class]]) {
-        user = [IRCUser fromNickname:nickname onChannel:(IRCChannel *)message.conversation];
-    }
-    if (user == nil) {
-        user = [[IRCUser alloc] initWithNickname:nickname andUsername:username andHostname:hostname andRealname:nil onClient:message.client];
-    }
-    message.sender = user;
+
+    message.sender = [[IRCUser alloc] initWithNickname:nickname andUsername:username andHostname:hostname andRealname:nil onClient:message.client];
     
     NSString *type = messageComponents[1];
     
     if ([type isEqualToString:@"set"]) {
         // MODE
-        return;
+        message.messageType = ET_MODE;
+        message.message = [messageComponents componentsJoinedByString:@" " fromIndex:3];
     } else if ([type isEqualToString:@"joined"]) {
         // JOIN
         message.message = message.conversation.name;
@@ -95,6 +89,22 @@
         
         message.message = quitMessage;
         message.messageType = ET_QUIT;
+    } else if ([type isEqualToString:@"kicked"]) {
+        NSString *kickMessage = [messageComponents componentsJoinedByString:@" " fromIndex:5];
+        
+        NSRange substrRange;
+        substrRange.location = 1;
+        substrRange.length = [kickMessage length] - 2;
+        kickMessage = [kickMessage substringWithRange:substrRange];
+        
+        NSString *nick = messageComponents[2];
+        IRCUser *kickedUser = [[IRCUser alloc] initWithNickname:nick andUsername:nick andHostname:@"localhost" andRealname:nick onClient:message.client];
+        
+        if (kickMessage && kickedUser) {
+            message.messageType = ET_KICK;
+            message.kickedUser = kickedUser;
+            message.message = kickMessage;
+        }
     }
     
     [message.conversation addMessageToConversation:message];
