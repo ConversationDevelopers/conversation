@@ -48,7 +48,6 @@
     [[UINavigationBar appearance] setTintColor:[UIColor lightGrayColor]];
     [[UINavigationBar appearance] setBackgroundColor:[UIColor colorWithRed:0.11 green:0.129 blue:0.188 alpha:1]];
     [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor lightGrayColor]} forState:UIControlStateNormal];
-//    [[UITableView appearance] setTintColor:[UIColor colorWithRed:0.11 green:0.129 blue:0.188 alpha:1]];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
