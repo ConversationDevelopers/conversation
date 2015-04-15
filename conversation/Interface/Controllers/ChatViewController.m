@@ -773,6 +773,15 @@ BOOL popoverDidDismiss = NO;
         
 }
 
+- (void)updateJoinStatus
+{
+    if ([(IRCChannel*)_conversation isJoinedByUser]) {
+        self.navigationItem.rightBarButtonItem = _userlistButton;
+    } else {
+        self.navigationItem.rightBarButtonItem = _joinButton;
+    }
+}
+
 @synthesize container = _container;
 - (UIView *)container {
     if (!_container) {

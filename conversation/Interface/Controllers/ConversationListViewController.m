@@ -259,6 +259,9 @@
         }
         i++;
     }
+    
+    if (_currentConversation && _chatViewController.isChannel)
+        [_chatViewController updateJoinStatus];
 }
 
 - (void)didReceiveMemoryWarning

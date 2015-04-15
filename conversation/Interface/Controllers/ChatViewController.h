@@ -44,5 +44,6 @@
 @property (readonly, nonatomic) UIView *container;
 
 - (void)hideAccessories:(UIGestureRecognizer*)sender;
+- (void)updateJoinStatus;
 
 @end
