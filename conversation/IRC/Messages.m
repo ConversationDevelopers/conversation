@@ -367,10 +367,6 @@
         
         [[message conversation] addMessageToConversation:message];
         
-        /* Buffextras */
-        if (message.isConversationHistory)
-            return;
-        
         if ([[[message sender] nick] isEqualToStringCaseInsensitive:message.client.currentUserOnConnection.nick]) {
             [message.client.connection send:[NSString stringWithFormat:@"WHO %@", conversation.name]];
             [message.client.connection send:[NSString stringWithFormat:@"MODE %@", conversation.name]];
@@ -394,10 +390,6 @@
     message.messageType = ET_PART;
     message.conversation = channel;
     [[message conversation] addMessageToConversation:message];
-    
-    /* Buffextras */
-    if (message.isConversationHistory)
-        return;
     
     if ([[[message sender] nick]  isEqualToStringCaseInsensitive:message.client.currentUserOnConnection.nick]) {
         ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
@@ -424,12 +416,6 @@
     
     message.messageType = ET_NICK;
     message.message = message.message;
-    
-    // Buffextras
-    if (message.isConversationHistory) {
-        [message.conversation addMessageToConversation:message.copy];
-        return;
-    }
     
     for (IRCChannel *channel in [message.client channels]) {
         IRCUser *userOnChannel = [IRCUser fromNickname:message.sender.nick onChannel:channel];
@@ -503,12 +489,6 @@
 + (void)userReceivedQuitMessage:(IRCMessage *)message
 {
     message.messageType = ET_QUIT;
-
-    // Buffextras
-    if (message.isConversationHistory) {
-        [message.conversation addMessageToConversation:message.copy];
-        return;
-    }
     
     for (IRCChannel *channel in [message.client channels]) {
         IRCUser *userOnChannel = [IRCUser fromNickname:message.sender.nick onChannel:channel];

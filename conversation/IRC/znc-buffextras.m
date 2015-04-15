@@ -60,10 +60,11 @@
     
     if ([type isEqualToString:@"set"]) {
         // MODE
+        return;
     } else if ([type isEqualToString:@"joined"]) {
         // JOIN
         message.message = message.conversation.name;
-        [Messages userReceivedJoinOnChannel:message];
+        message.messageType = ET_JOIN;
     } else if ([type isEqualToString:@"parted"]) {
         // PART
         NSString *partMessage = @"";
@@ -77,14 +78,12 @@
         }
         
         message.message = partMessage;
-        
-        [Messages userReceivedPartChannel:message];
+        message.messageType = ET_PART;
     } else if ([type isEqualToString:@"is"]) {
         // NICK
         NSString *newNick = messageComponents[5];
         message.message = newNick;
-        
-        [Messages userReceivedNickChange:message];
+        message.messageType = ET_NICK;
     } else if ([type isEqualToString:@"quit"]) {
         // QUIT
         NSString *quitMessage = [messageComponents componentsJoinedByString:@" " fromIndex:5];
@@ -95,8 +94,10 @@
         quitMessage = [quitMessage substringWithRange:substrRange];
         
         message.message = quitMessage;
-        [Messages userReceivedQuitMessage:message];
+        message.messageType = ET_QUIT;
     }
+    
+    [message.conversation addMessageToConversation:message];
 }
 
 @end
