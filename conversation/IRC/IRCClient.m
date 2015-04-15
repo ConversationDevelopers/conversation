@@ -284,6 +284,12 @@
                                                            withTags:tagsList
                                                             isServerMessage:isServerMessage
                                                            onClient:self];
+    
+    if (numericReplyAsNumber >= 400 && numericReplyAsNumber < 600) {
+        [Messages clientReceivedRecoverableErrorFromServer:messageObject];
+        return messageObject;
+    }
+    
     MessageType commandIndexValue = [IRCMessageIndex indexValueFromString:command];
     switch (commandIndexValue) {
         case PING:
@@ -550,10 +556,6 @@
             });
             
             break;
-    }
-    
-    if (numericReplyAsNumber >= 400 && numericReplyAsNumber < 600) {
-        [Messages clientReceivedRecoverableErrorFromServer:messageObject];
     }
     
     return messageObject;
