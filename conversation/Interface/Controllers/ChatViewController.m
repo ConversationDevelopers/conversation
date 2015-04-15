@@ -115,11 +115,6 @@ BOOL popoverDidDismiss = NO;
     return UIInterfaceOrientationMaskAll;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-{
-    return YES;
-}
-
 - (void)loadView
 {
 
@@ -946,6 +941,13 @@ BOOL popoverDidDismiss = NO;
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     [self hideUserList];
+    [_conversation.contentView removeFromSuperview];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [_container addSubview:_conversation.contentView];
+    [self viewWillAppear:NO];
 }
 
 @end
