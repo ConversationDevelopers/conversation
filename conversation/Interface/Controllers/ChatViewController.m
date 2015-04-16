@@ -527,7 +527,8 @@ BOOL popoverDidDismiss = NO;
         }
     }
     
-    [_popOver dismiss:NO];
+    if (_popOver.superview)
+        [_popOver dismiss:NO];
 
 }
 
