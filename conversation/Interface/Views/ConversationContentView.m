@@ -99,6 +99,8 @@
         if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"])
             [view removeFromSuperview];
     }
+    
+    self.contentSize = self.frame.size;
     _posY = 0.0;
 }
 
