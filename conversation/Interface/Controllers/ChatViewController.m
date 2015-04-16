@@ -327,6 +327,7 @@ BOOL popoverDidDismiss = NO;
 
 - (void)goBack:(id)sender
 {
+    [self hideUserList];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
