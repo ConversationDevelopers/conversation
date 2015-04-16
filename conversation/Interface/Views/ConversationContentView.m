@@ -96,8 +96,11 @@
 - (void)clear
 {
     for (UIView *view in self.subviews) {
-        if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"])
-            [view removeFromSuperview];
+        if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
+            ChatMessageView *messageView = (ChatMessageView*)view;
+            [messageView.message delete];
+            [messageView removeFromSuperview];
+        }
     }
     
     self.contentSize = self.frame.size;
