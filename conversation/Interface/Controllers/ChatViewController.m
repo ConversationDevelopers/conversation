@@ -222,6 +222,11 @@ BOOL popoverDidDismiss = NO;
     
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self hideUserList];
+}
+
 - (void)viewDidDisappear:(BOOL)animated
 {
     // Unload images
@@ -327,7 +332,6 @@ BOOL popoverDidDismiss = NO;
 
 - (void)goBack:(id)sender
 {
-    [self hideUserList];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
@@ -661,6 +665,7 @@ BOOL popoverDidDismiss = NO;
         controller.currentConversation = conversation;
     }
     
+    [self viewWillDisappear:NO];
     [self viewWillAppear:NO];
     
 }
@@ -726,6 +731,7 @@ BOOL popoverDidDismiss = NO;
         controller.currentConversation = conversation;
     }
     
+    [self viewWillDisappear:NO];    
     [self viewWillAppear:NO];
 }
 
