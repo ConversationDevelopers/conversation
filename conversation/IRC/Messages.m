@@ -471,7 +471,7 @@
             [IRCCommands joinChannel:message.conversation.name onClient:message.client];
         }
     } else {
-        [[channel users] removeObject:channel];
+        [[channel users] removeObject:kickedUser];
     }
     
     IRCMessage *kick = [[IRCMessage alloc] initWithMessage:kickMessage
