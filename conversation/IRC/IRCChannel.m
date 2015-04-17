@@ -101,6 +101,15 @@
     }
 }
 
+- (BOOL)hasUserWithNick:(NSString *)nick
+{
+    for (IRCUser *user in self.users) {
+        if ([user.nick isEqualToString:nick])
+            return YES;
+    }
+    return NO;
+}
+
 - (void)sortUserlist
 {
     /* Sort the userlist, first by privilegie, then by name. */

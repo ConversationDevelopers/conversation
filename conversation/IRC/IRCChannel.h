@@ -86,6 +86,13 @@
 - (void)revokePrivilegieFromUsers:(NSArray *)users toStatus:(int)status onChannel:(IRCChannel *)channel;
 
 /*!
+ *    @brief  Check if channel has user with specific nick
+ *
+ *    @param nick   A String of the user's nick.
+ */
+- (BOOL)hasUserWithNick:(NSString *)nick;
+
+/*!
  *    @brief  Manually perform a sorting of the userlist.
  */
 - (void)sortUserlist;

@@ -411,7 +411,11 @@
             break;
             
         case RPL_WHOREPLY:
-            [Messages clientReceivedWHOReply:messageObject];
+            [Messages clientReceivedWHOReply:messageObject] ;
+            break;
+
+        case RPL_NAMREPLY:
+            [Messages clientReceivedNAMEReply:messageObject];
             break;
             
         case RPL_LIST:
@@ -540,7 +544,6 @@
             [Messages clientReceivedAuthenticationError:messageObject];
             break;
             
-        case RPL_NAMREPLY:
         case RPL_CREATIONTIME:
         case RPL_MOTDSTART:
         case RPL_ENDOFMOTD:

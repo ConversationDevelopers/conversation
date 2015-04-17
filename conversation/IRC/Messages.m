@@ -695,6 +695,50 @@
     [ircChannel sortUserlist];
 }
 
++ (void)clientReceivedNAMEReply:(IRCMessage *)message
+{
+    NSMutableArray *messageComponents = [[message.message componentsSeparatedByString:@" "] mutableCopy];
+    NSString *channel = [messageComponents objectAtIndex:0];
+    NSString *nicks = [[messageComponents componentsJoinedByString:@" " fromIndex:2] substringFromIndex:1];
+    
+    IRCChannel *ircChannel = [IRCChannel fromString:channel withClient:message.client];
+
+    IRCUser *user;
+    for (NSString *nick in [nicks componentsSeparatedByString:@" "]) {
+        
+        user = [[IRCUser alloc] initWithNickname:nick andUsername:@"" andHostname:@"" andRealname:@"" onClient:message.client];
+        
+        NSString *mode = [nick substringToIndex:1];
+        
+        if (matchesUserMode(message.client, @"y")) {
+            user.nick = [nick substringFromIndex:1];
+            user.ircop = YES;
+        } else if (matchesUserMode(message.client, @"q")) {
+            user.nick = [nick substringFromIndex:1];
+            user.owner = YES;
+        } else if (matchesUserMode(message.client, @"a")) {
+            user.nick = [nick substringFromIndex:1];
+            user.admin = YES;
+        } else if (matchesUserMode(message.client, @"o")) {
+            user.nick = [nick substringFromIndex:1];
+            user.op = YES;
+        } else if (matchesUserMode(message.client, @"h")) {
+            user.nick = [nick substringFromIndex:1];
+            user.halfop = YES;
+        } else if (matchesUserMode(message.client, @"v")) {
+            user.nick = [nick substringFromIndex:1];
+            user.voice = YES;
+        }
+        
+        if ([ircChannel hasUserWithNick:user.nick] == NO) {
+            [ircChannel.users  addObject:user];
+        }
+    }
+    
+    [ircChannel sortUserlist];
+    
+}
+
 + (void)clientReceivedLISTReply:(IRCMessage *)message
 {
     message.messageType = ET_LIST;

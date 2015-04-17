@@ -79,6 +79,8 @@
 
 + (void)clientReceivedWHOReply:(IRCMessage *)message;
 
++ (void)clientReceivedNAMEReply:(IRCMessage *)message;
+
 + (void)clientReceivedLISTReply:(IRCMessage *)message;
 
 + (void)clientReceivedLISTEndReply:(IRCMessage *)message;
