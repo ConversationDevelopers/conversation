@@ -105,6 +105,13 @@
             message.kickedUser = kickedUser;
             message.message = kickMessage;
         }
+    } else if ([[messageComponents componentsJoinedByString:@" " fromIndex:2] hasPrefix:@"changed the topic to:"]) {
+        
+        NSString *topic = [messageComponents componentsJoinedByString:@" " fromIndex:5];
+        if (topic) {
+            message.messageType = ET_TOPIC;
+            message.message = topic;
+        }
     }
     
     [message.conversation addMessageToConversation:message];
