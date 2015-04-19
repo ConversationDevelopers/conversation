@@ -510,7 +510,7 @@ BOOL popoverDidDismiss = NO;
             
         } else {
             // Users
-            if (_isChannel) {
+            if (_isChannel && _conversation.client.isConnectedAndCompleted) {
                 IRCChannel *channel = (IRCChannel *)_conversation;
                 for (IRCUser *user in [channel.users copy])
                     if([[user.nick lowercaseString] hasPrefix:[string lowercaseString]]) {
