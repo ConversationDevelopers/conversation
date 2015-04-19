@@ -1287,9 +1287,9 @@
 
 - (void)saveHistoricMessages
 {
-    int limit = 50;
+    int limit = 20;
     if (IPAD)
-        limit = 100;
+        limit = 40;
     
     int i=0;
     for (IRCClient *client in _connections) {
