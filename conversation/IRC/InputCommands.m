@@ -606,7 +606,8 @@
         @"UMODE",
         @"UNBAN",
         @"VOICE",
-        @"WHOIS"
+        @"WHOIS",
+        @"ZNC"
     ];
 }
 
