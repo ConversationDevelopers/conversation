@@ -35,6 +35,15 @@
 
 - (void)addMessage:(IRCMessage *)message
 {
+
+    if (message.messageType == ET_LIST || message.messageType == ET_LISTEND)
+        return;
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"hideevents_preference"] == YES &&
+        (message.messageType == ET_JOIN || message.messageType == ET_PART || message.messageType == ET_QUIT ||
+         message.messageType == ET_NICK || message.messageType == ET_KICK || message.messageType == ET_MODE)) {
+            return;
+        }
     
     ChatMessageView *messageView = [[ChatMessageView alloc] initWithFrame:CGRectMake(0, 0, message.conversation.contentView.frame.size.width, 15.0)
                                                                   message:message];

@@ -901,22 +901,6 @@
 {
     IRCMessage *message = notification.object;
     
-    // Don't handle raw messages
-    if (message.messageType == ET_LIST || message.messageType == ET_LISTEND)
-        return;
-    
-    if (message.messageType == ET_RAW) {
-        if (message.client.showConsole)
-            message.client.console.contentView.text = [message.client.console.contentView.text stringByAppendingFormat:@"%@\n", message.message];
-        return;
-    }
-    
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"hideevents_preference"] == YES &&
-        (message.messageType == ET_JOIN || message.messageType == ET_PART || message.messageType == ET_QUIT ||
-         message.messageType == ET_NICK || message.messageType == ET_KICK || message.messageType == ET_MODE)) {
-            return;
-        }
-    
     if (message.messageType == ET_INVITE) {
         if ([[NSUserDefaults standardUserDefaults] integerForKey:@"invite_preference"] == 1) {
             [self joinChannelWithName:message.conversation.name onClient:message.conversation.client];
@@ -937,8 +921,6 @@
         }
         return;
     }
-    
-    [message.conversation.contentView addMessage:message];
     
     // The stuff below is only for the preview
     if ((message.messageType != ET_PRIVMSG && message.messageType != ET_ACTION && message.messageType != ET_NOTICE) ||

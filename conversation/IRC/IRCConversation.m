@@ -31,6 +31,7 @@
 #import "IRCConversation.h"
 #import "IRCClient.h"
 #import "IRCMessage.h"
+#import "ConsoleViewController.h"
 
 #define MAX_BUFFER_COUNT 3000
 
@@ -135,9 +136,15 @@
     
     /* Notify all parts of the application listening for messages that a new message has been added. */
     dispatch_async(dispatch_get_main_queue(), ^{
+        if (message.messageType == ET_RAW) {
+            if (message.client.showConsole)
+                message.client.console.contentView.text = [message.client.console.contentView.text stringByAppendingFormat:@"%@\n", message.message];
+        } else
+            [message.conversation.contentView addMessage:message];
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:object];
     });
-    
+
 }
 
 @end
