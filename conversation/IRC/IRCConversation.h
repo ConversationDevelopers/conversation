@@ -52,5 +52,6 @@
 + (id) fromString:(NSString *)name withClient:(IRCClient *)client;
 - (void)addPreviewMessage:(NSAttributedString *)message;
 - (void)addMessageToConversation:(id)object;
+- (void)clear;
 
 @end

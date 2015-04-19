@@ -71,15 +71,15 @@
                 break;
                 
             case CMD_CLEAR:
-                [conversation.contentView clear];
+                [conversation clear];
                 break;
                 
             case CMD_CLEARALL:
                 for (IRCChannel *channel in conversation.client.channels) {
-                    [channel.contentView clear];
+                    [channel clear];
                 }
                 for (IRCChannel *query in conversation.client.queries) {
-                    [query.contentView clear];
+                    [query clear];
                 }
                 break;
                 

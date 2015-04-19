@@ -32,6 +32,7 @@
 #import "IRCClient.h"
 #import "IRCMessage.h"
 #import "ConsoleViewController.h"
+#import <FCModel/FCModel.h>
 
 #define MAX_BUFFER_COUNT 3000
 
@@ -145,6 +146,18 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:object];
     });
 
+}
+
+- (void)clear
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSArray *messages = [IRCMessage instancesWhere:@"conversation = ?", self.configuration.uniqueIdentifier];
+        for (IRCMessage *message in messages) {
+            [message delete];
+        }
+        [self.contentView clear];
+    });
+    
 }
 
 @end
