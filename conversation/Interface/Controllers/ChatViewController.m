@@ -464,13 +464,10 @@ BOOL popoverDidDismiss = NO;
     
     if (popoverDidDismiss)
         return;
-        
-    if (!_popOver) {
-        _popOver = [[MenuPopOverView alloc] init];
-        _popOver.delegate = self;
-    }
-    
+
     [_popOver removeFromSuperview];
+    _popOver = [[MenuPopOverView alloc] init];
+    _popOver.delegate = self;
     
     // Initialise suggestions array
     if (!_suggestions)
