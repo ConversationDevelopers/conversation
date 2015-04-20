@@ -36,7 +36,7 @@
 #import "IRCCommands.h"
 #import "ConversationListViewController.h"
 #import "WHOIS.h"
-#import "NSMutableArray+Methods.h"
+#import "NSArray+Methods.h"
 
 #define CONNECTION_RETRY_INTERVAL       30
 #define CONNECTION_RETRY_ATTEMPTS       10

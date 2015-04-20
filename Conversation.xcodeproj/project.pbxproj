@@ -54,7 +54,7 @@
 		FA00A39219E5DD3D00E7B4D7 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A38F19E5DD3D00E7B4D7 /* SSKeychain.m */; };
 		FA00A39319E5DD3D00E7B4D7 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A39119E5DD3D00E7B4D7 /* SSKeychainQuery.m */; };
 		FA00A39C19E6AD1200E7B4D7 /* NSString+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = FA00A39B19E6AD1200E7B4D7 /* NSString+Methods.m */; };
-		FA0773341A8DFD7200671740 /* NSMutableArray+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = FA0773331A8DFD7200671740 /* NSMutableArray+Methods.m */; };
+		FA0773341A8DFD7200671740 /* NSArray+Methods.m in Sources */ = {isa = PBXBuildFile; fileRef = FA0773331A8DFD7200671740 /* NSArray+Methods.m */; };
 		FA109B2B19E3E6D60068DC29 /* IRCConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B2919E3E6D60068DC29 /* IRCConnection.m */; };
 		FA109B3419E410D80068DC29 /* IRCClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B3319E410D80068DC29 /* IRCClient.m */; };
 		FA109B3719E419040068DC29 /* IRCConnectionConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = FA109B3619E419040068DC29 /* IRCConnectionConfiguration.m */; };
@@ -179,8 +179,8 @@
 		FA00A39119E5DD3D00E7B4D7 /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSKeychainQuery.m; path = Preferences/SSKeychainQuery.m; sourceTree = "<group>"; };
 		FA00A39A19E6AD1200E7B4D7 /* NSString+Methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Methods.h"; path = "conversation/Helpers/NSString+Methods.h"; sourceTree = "<group>"; };
 		FA00A39B19E6AD1200E7B4D7 /* NSString+Methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Methods.m"; path = "conversation/Helpers/NSString+Methods.m"; sourceTree = "<group>"; };
-		FA0773321A8DFD7200671740 /* NSMutableArray+Methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSMutableArray+Methods.h"; path = "conversation/Helpers/NSMutableArray+Methods.h"; sourceTree = "<group>"; };
-		FA0773331A8DFD7200671740 /* NSMutableArray+Methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSMutableArray+Methods.m"; path = "conversation/Helpers/NSMutableArray+Methods.m"; sourceTree = "<group>"; };
+		FA0773321A8DFD7200671740 /* NSArray+Methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+Methods.h"; path = "conversation/Helpers/NSArray+Methods.h"; sourceTree = "<group>"; };
+		FA0773331A8DFD7200671740 /* NSArray+Methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+Methods.m"; path = "conversation/Helpers/NSArray+Methods.m"; sourceTree = "<group>"; };
 		FA109B2819E3E6D60068DC29 /* IRCConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCConnection.h; sourceTree = "<group>"; };
 		FA109B2919E3E6D60068DC29 /* IRCConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCConnection.m; sourceTree = "<group>"; };
 		FA109B3219E410D80068DC29 /* IRCClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCClient.h; sourceTree = "<group>"; };
@@ -428,8 +428,8 @@
 				DA7B68791A00A66D00D82B4C /* UIAlertView+Methods.m */,
 				DA7B687B1A00C55500D82B4C /* UIBarButtonItem+Methods.h */,
 				DA7B687C1A00C55500D82B4C /* UIBarButtonItem+Methods.m */,
-				FA0773321A8DFD7200671740 /* NSMutableArray+Methods.h */,
-				FA0773331A8DFD7200671740 /* NSMutableArray+Methods.m */,
+				FA0773321A8DFD7200671740 /* NSArray+Methods.h */,
+				FA0773331A8DFD7200671740 /* NSArray+Methods.m */,
 			);
 			name = Helpers;
 			path = ..;
@@ -901,7 +901,7 @@
 				DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */,
 				FABE6B841A6C75B5003C7E11 /* IRCCharacterSets.m in Sources */,
 				FA36D2FA1A0446BD00AEDB20 /* InputCommands.m in Sources */,
-				FA0773341A8DFD7200671740 /* NSMutableArray+Methods.m in Sources */,
+				FA0773341A8DFD7200671740 /* NSArray+Methods.m in Sources */,
 				FA00A39219E5DD3D00E7B4D7 /* SSKeychain.m in Sources */,
 				DA6355AE1A8789F500B4F65D /* DeviceInformation.m in Sources */,
 				DA7B68771A00A43500D82B4C /* LinkTapView.m in Sources */,

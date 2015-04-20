@@ -28,22 +28,11 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "NSMutableArray+Methods.h"
+#import <Foundation/Foundation.h>
 
-@implementation NSMutableArray (Helpers)
+@interface NSArray (Helpers)
 
-- (NSString *)componentsJoinedByString:(NSString *)separator fromIndex:(NSInteger)index
-{
-	NSMutableArray *components = [self mutableCopy];
-	[components removeObjectsInRange:NSMakeRange(0, index - 1)];
-	return [components componentsJoinedByString:separator];
-}
-
-- (NSString *)componentsJoinedByString:(NSString *)separator toIndex:(NSInteger)index
-{
-	NSMutableArray *components = [self mutableCopy];
-	[components removeObjectsInRange:NSMakeRange(index + 1, [components count] -1)];
-	return [components componentsJoinedByString:separator];
-}
+- (NSString *)componentsJoinedByString:(NSString *)separator fromIndex:(NSInteger)index;
+- (NSString *)componentsJoinedByString:(NSString *)separator toIndex:(NSInteger)index;
 
 @end

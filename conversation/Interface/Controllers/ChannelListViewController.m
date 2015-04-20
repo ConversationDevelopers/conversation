@@ -34,6 +34,7 @@
 #import "DisclosureView.h"
 #import "ConversationItemView.h"
 #import "IRCCommands.h"
+#import "NSArray+Methods.h"
 
 
 @interface ChannelListViewController ()
@@ -175,7 +176,7 @@ BOOL _isAwaitingListResponse;
         // TODO: Determine what this means
         return;
     NSString *users = components[0];
-    NSString *topic = components[1];
+    NSString *topic = [components componentsJoinedByString:@" " fromIndex:2];
     
     if ([topic hasPrefix:@":"])
         topic = [topic substringFromIndex:1];

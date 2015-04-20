@@ -39,7 +39,7 @@
 #import "ChannelListViewController.h"
 #import "BuildConfig.h"
 #import "DeviceInformation.h"
-#import "NSMutableArray+Methods.h"
+#import "NSArray+Methods.h"
 #import "UserInfoViewController.h"
 
 @implementation InputCommands

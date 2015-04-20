@@ -38,7 +38,7 @@
 #import "AppPreferences.h"
 #import "IRCCommands.h"
 #import "BuildConfig.h"
-#import "NSMutableArray+Methods.h"
+#import "NSArray+Methods.h"
 
 #define AssertIsNotServerMessage(x) if ([x isServerMessage] == YES) return;
 

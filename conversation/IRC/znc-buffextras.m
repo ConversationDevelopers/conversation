@@ -32,7 +32,7 @@
 #import "IRCChannel.h"
 #import "IRCClient.h"
 #import "IRCMessage.h"
-#import "NSMutableArray+Methods.h"
+#import "NSArray+Methods.h"
 
 @implementation znc_buffextras
 
