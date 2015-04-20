@@ -39,11 +39,14 @@
 
 @interface ChannelListViewController ()
 @property (nonatomic) NSMutableArray *channels;
+@property (strong, nonatomic) NSTimer *timer;
 @end
 
 BOOL _isAwaitingListResponse;
 
 @implementation ChannelListViewController
+
+double timerInterval = 2.0f;
 
 - (id)init
 {
@@ -69,13 +72,27 @@ BOOL _isAwaitingListResponse;
     
     self.navigationItem.leftBarButtonItem = closeButton;
     self.navigationItem.rightBarButtonItem = refreshButton;
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
     _isAwaitingListResponse = YES;
     [_client.connection send:@"LIST"];
+    
+    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
+    
+}
+
+- (void)refreshTableView:(NSTimer*)timer
+{
+    [self.tableView reloadData];
+    if (_isAwaitingListResponse == NO) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -120,10 +137,11 @@ BOOL _isAwaitingListResponse;
     cell.accessoryView = disclosure;
 
     NSDictionary *entry = _channels[indexPath.row];
+    NSAttributedString *modes = [[NSAttributedString alloc] initWithString:entry[@"modes"] attributes:nil];
     NSAttributedString *topic = [[NSAttributedString alloc] initWithString:entry[@"topic"] attributes:nil];
     
     cell.name = entry[@"name"];
-    cell.previewMessages = [@[topic] mutableCopy];
+    cell.previewMessages = [@[modes, topic] mutableCopy];
     cell.unreadCount = [entry[@"users"] integerValue];
     
     return cell;
@@ -177,21 +195,34 @@ BOOL _isAwaitingListResponse;
         return;
     NSString *users = components[0];
     NSString *topic = [components componentsJoinedByString:@" " fromIndex:2];
-    
+
     if ([topic hasPrefix:@":"])
         topic = [topic substringFromIndex:1];
+    
+    NSString *modes = @"";
+    if ([topic hasPrefix:@"["]) {
+        NSRange range = [topic rangeOfString:@"]"];
+        modes = [topic substringToIndex:range.location+range.length];
+        topic = [topic substringFromIndex:range.location+range.length+1];
+    }
     
     NSDictionary *entry = @{
                         @"name": message.conversation.name,
                         @"users": users,
+                        @"modes": modes,
                         @"topic": topic
                         };
     
     [_channels addObject:entry];
-    [self.tableView reloadData];
+    
 }
 
-
+- (NSTimer *) timer {
+    if (!_timer) {
+        _timer = [NSTimer timerWithTimeInterval:timerInterval target:self selector:@selector(refreshTableView:) userInfo:nil repeats:YES];
+    }
+    return _timer;
+}
 
 
 
