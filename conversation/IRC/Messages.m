@@ -708,30 +708,34 @@
         
         user = [[IRCUser alloc] initWithNickname:nick andUsername:@"" andHostname:@"" andRealname:@"" onClient:message.client];
         
-        NSString *mode = [nick substringToIndex:1];
+        for (NSUInteger i = 0; i < [nick length]; i++) {
+    
+            NSString *mode = [nick substringWithRange:NSMakeRange(i, 1)];
+            
+            if (matchesUserMode(message.client, @"y")) {
+                user.nick = [user.nick substringFromIndex:1];
+                user.ircop = YES;
+            } else if (matchesUserMode(message.client, @"q")) {
+                user.nick = [user.nick substringFromIndex:1];
+                user.owner = YES;
+            } else if (matchesUserMode(message.client, @"a")) {
+                user.nick = [user.nick substringFromIndex:1];
+                user.admin = YES;
+            } else if (matchesUserMode(message.client, @"o")) {
+                user.nick = [user.nick substringFromIndex:1];
+                user.op = YES;
+            } else if (matchesUserMode(message.client, @"h")) {
+                user.nick = [user.nick substringFromIndex:1];
+                user.halfop = YES;
+            } else if (matchesUserMode(message.client, @"v")) {
+                user.nick = [user.nick substringFromIndex:1];
+                user.voice = YES;
+            }
         
-        if (matchesUserMode(message.client, @"y")) {
-            user.nick = [nick substringFromIndex:1];
-            user.ircop = YES;
-        } else if (matchesUserMode(message.client, @"q")) {
-            user.nick = [nick substringFromIndex:1];
-            user.owner = YES;
-        } else if (matchesUserMode(message.client, @"a")) {
-            user.nick = [nick substringFromIndex:1];
-            user.admin = YES;
-        } else if (matchesUserMode(message.client, @"o")) {
-            user.nick = [nick substringFromIndex:1];
-            user.op = YES;
-        } else if (matchesUserMode(message.client, @"h")) {
-            user.nick = [nick substringFromIndex:1];
-            user.halfop = YES;
-        } else if (matchesUserMode(message.client, @"v")) {
-            user.nick = [nick substringFromIndex:1];
-            user.voice = YES;
         }
         
         if ([ircChannel hasUserWithNick:user.nick] == NO) {
-            [ircChannel.users  addObject:user];
+            [ircChannel.users addObject:user];
         }
     }
     
