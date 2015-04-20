@@ -88,6 +88,9 @@ double timerInterval = 2.0f;
 
 - (void)refreshTableView:(NSTimer*)timer
 {
+    NSSortDescriptor *nameSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+    _channels = [[_channels sortedArrayUsingDescriptors:@[nameSortDescriptor]] mutableCopy];
+    
     [self.tableView reloadData];
     if (_isAwaitingListResponse == NO) {
         [self.timer invalidate];
