@@ -1259,16 +1259,9 @@
     for (IRCMessage *message in messages) {
         found = NO;
         for (IRCClient *client in _connections) {
-            for (IRCChannel *channel in client.channels) {
-                if ([channel.configuration.uniqueIdentifier isEqualToString:message.conversation.configuration.uniqueIdentifier]) {
-                    message.conversation = channel;
-                    found = YES;
-                    break;
-                }
-            }
-            for (IRCConversation *query in client.queries) {
-                if ([query.configuration.uniqueIdentifier isEqualToString:message.conversation.configuration.uniqueIdentifier]) {
-                    message.conversation = query;
+            for (IRCChannel *conversation in [client.channels arrayByAddingObjectsFromArray:client.queries]) {
+                if ([conversation.configuration.uniqueIdentifier isEqualToString:message.conversation.configuration.uniqueIdentifier]) {
+                    message.conversation = conversation;
                     found = YES;
                     break;
                 }
@@ -1279,9 +1272,7 @@
             [message delete];
             continue;
         }
-    
         [message.conversation.contentView addMessage:message];
-        
     }
 }
 
@@ -1293,7 +1284,7 @@
     
     int i=0;
     for (IRCClient *client in _connections) {
-        for (IRCChannel *conversation in client.channels) {
+        for (IRCChannel *conversation in [client.channels arrayByAddingObjectsFromArray:client.queries]) {
             if (conversation.hasNewMessages == NO)
                 continue;
             
@@ -1302,33 +1293,7 @@
                 if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
                     ChatMessageView *messageView = (ChatMessageView *)view;
                     IRCMessage *message = messageView.message;
-                    if (message.isConversationHistory) {
-                        i++;
-                        continue;
-                    }
-                    if (i > limit) {
-                        [message delete];
-                        continue;
-                    }
-                    message.isConversationHistory = YES;
-                    [message save];
-                }
-            }
-        }
-        
-        for (IRCConversation *conversation in client.queries) {
-            if (conversation.hasNewMessages == NO)
-                continue;
-            
-            i=0;
-            for (UIView *view in conversation.contentView.subviews.reverseObjectEnumerator) {
-                if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
-                    ChatMessageView *messageView = (ChatMessageView *)view;
-                    IRCMessage *message = messageView.message;
-                    if (message.isConversationHistory) {
-                        i++;
-                        continue;
-                    }
+                    i++;
                     if (i > limit) {
                         [message delete];
                         continue;
