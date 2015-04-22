@@ -1308,4 +1308,8 @@
 
 }
 
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [[MCNotificationManager sharedInstance] hideNotification];
+}
 @end

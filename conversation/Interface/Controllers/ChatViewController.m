@@ -40,6 +40,7 @@
 #import <UIActionSheet+Blocks/UIActionSheet+Blocks.h>
 #import <ImgurAnonymousAPIClient/ImgurAnonymousAPIClient.h>
 #import <DLImageLoader/DLImageView.h>
+#import <MCNotificationManager/MCNotificationManager.h>
 
 @interface ChatViewController ()
 @property (readonly, nonatomic) PHFComposeBarView *composeBarView;
@@ -945,6 +946,8 @@ BOOL popoverDidDismiss = NO;
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
+    [[MCNotificationManager sharedInstance] hideNotification];
+    
     if (_popOver)
         [_popOver removeFromSuperview];
     [self hideUserList];

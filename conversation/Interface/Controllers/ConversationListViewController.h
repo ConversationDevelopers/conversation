@@ -37,7 +37,7 @@
 @class IRCChannel;
 @class IRCCertificateTrust;
 
-@interface ConversationListViewController : UITableViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, IASKSettingsDelegate> {
+@interface ConversationListViewController : UITableViewController <UINavigationControllerDelegate, UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, IASKSettingsDelegate> {
     UIBackgroundTaskIdentifier _backgroundTask;
 }
 
