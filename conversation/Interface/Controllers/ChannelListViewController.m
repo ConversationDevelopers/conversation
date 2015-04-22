@@ -68,10 +68,7 @@ double timerInterval = 2.0f;
                                                object:nil];
     UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStylePlain target:self action:@selector(close:)];
     
-    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresh:)];
-    
     self.navigationItem.leftBarButtonItem = closeButton;
-    self.navigationItem.rightBarButtonItem = refreshButton;
     
 }
 
@@ -161,14 +158,6 @@ double timerInterval = 2.0f;
 - (void)close:(id)sender
 {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)refresh:(id)sender
-{
-    [_channels removeAllObjects];
-    _isAwaitingListResponse = YES;
-    [_client.connection send:@"LIST"];
-    [self.tableView reloadData];
 }
 
 - (void)dealloc
