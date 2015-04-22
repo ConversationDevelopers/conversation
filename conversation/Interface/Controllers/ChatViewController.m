@@ -945,6 +945,8 @@ BOOL popoverDidDismiss = NO;
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
+    if (_popOver)
+        [_popOver removeFromSuperview];
     [self hideUserList];
     [_conversation.contentView removeFromSuperview];
 }

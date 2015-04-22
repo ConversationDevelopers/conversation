@@ -75,9 +75,9 @@
     }
     
     // listen on device rotation
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceRotation:) name:UIDeviceOrientationDidChangeNotification object:nil];
-    _lastInterfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+//    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceRotation:) name:UIDeviceOrientationDidChangeNotification object:nil];
+//    _lastInterfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
     
     UIView *buttonContainer = [[UIView alloc] initWithFrame:CGRectZero];
     buttonContainer.backgroundColor = [UIColor clearColor];
