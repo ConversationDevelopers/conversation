@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2014-2015, Tobias Pollmann, Alex Sørlie Glomsaas.
+ Copyright (c) 2014-2015, Tobias Pollmann.
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modification,
