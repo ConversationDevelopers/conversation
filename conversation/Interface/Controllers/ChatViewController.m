@@ -963,4 +963,13 @@ BOOL popoverDidDismiss = NO;
     [self viewWillAppear:NO];
 }
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if ([NSStringFromClass([gestureRecognizer class]) isEqualToString:@"UITapGestureRecognizer"] &&
+        [NSStringFromClass([otherGestureRecognizer class]) isEqualToString:@"UISwipeGestureRecognizer"]) {
+        return YES;
+    }
+    return NO;
+}
+
 @end
