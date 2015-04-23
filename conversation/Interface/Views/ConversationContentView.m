@@ -31,6 +31,8 @@
 #import "ConversationContentView.h"
 #import "ChatMessageView.h"
 
+#define Message_Limit 300
+
 @implementation ConversationContentView
 
 - (void)addMessage:(IRCMessage *)message
@@ -52,7 +54,7 @@
     if(!_posY)
         _posY = 5.0;
     
-    if (self.subviews.count > 500) {
+    if (self.subviews.count > Message_Limit) {
         CGFloat posY = 0.0;
         for (ChatMessageView *view in self.subviews) {
             if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
