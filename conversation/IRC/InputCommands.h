@@ -61,6 +61,7 @@ typedef NS_ENUM(NSUInteger, InputCommand) {
     CMD_HALFOP,
     CMD_HOP,
     CMD_IGNORE,
+    CMD_INVITE,
     CMD_J,
     CMD_JOIN,
     CMD_KB,

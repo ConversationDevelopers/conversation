@@ -221,6 +221,25 @@
                 }
                 break;
             }
+            case CMD_INVITE: {
+                if ([messageComponents count] > 1) {
+                    NSString *channel;
+                    if ([messageComponents count] < 3) {
+                        if ([conversation.name isValidChannelName:conversation.client])
+                            channel = conversation.name;
+                        else
+                            [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<nick> [channel]", @"<nick> [channel]") inConversation:conversation];
+                        
+                    } else {
+                        channel = [messageComponents objectAtIndex:2];
+                    }
+                    NSString *cmd = [NSString stringWithFormat:@"INVITE %@ %@", [messageComponents objectAtIndex:1], channel];
+                    [conversation.client.connection send:cmd];
+                } else {
+                    [InputCommands incompleteParametersError:command withParameters:NSLocalizedString(@"<nickname> [channel]", @"<nickname> [channel]") inConversation:conversation];
+                }
+                break;
+            }
             case CMD_J:
             case CMD_JOIN:
                 if ([messageComponents count] > 1) {
@@ -576,6 +595,7 @@
         @"HALFOP",
         @"HOP",
         @"IGNORE",
+        @"INVITE",
         @"J",
         @"JOIN",
         @"K",
