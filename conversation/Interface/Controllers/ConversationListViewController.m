@@ -913,7 +913,7 @@
             [alertView setCancelButtonIndex:0];
             [alertView showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
                 if (buttonIndex == 1) {
-                    IRCChannel *channel = [self joinChannelWithName:message.conversation.name onClient:message.conversation.client];
+                    IRCChannel *channel = [self joinChannelWithName:message.message onClient:message.conversation.client];
                     [self selectConversationWithIdentifier:channel.configuration.uniqueIdentifier];
                 }
             }];
