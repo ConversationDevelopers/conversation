@@ -953,18 +953,19 @@
                 message.conversation.isHighlighted = YES;
                 AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
                 
-                // Show notification
-                MCNotification *notification = [MCNotification notification];
-                notification.backgroundColor = [UIColor colorWithRed:0.11 green:0.129 blue:0.188 alpha:1];
-                notification.tintColor = [UIColor whiteColor];
-                notification.text = message.sender.nick;
-                notification.detailText = message.message;
-                notification.image = [UIImage imageNamed:@"Userlist"];
-                notification.userInfo = @{@"conversation": message.conversation.configuration.uniqueIdentifier};
-                [notification addTarget:self action:@selector(notificationTap:) forControlEvents:UIControlEventTouchUpInside];
-                
-                [[MCNotificationManager sharedInstance] showNotification:notification];
-                
+                if (UIInterfaceOrientationIsLandscape([self interfaceOrientation]) == NO) {
+                    // Show notification
+                    MCNotification *notification = [MCNotification notification];
+                    notification.backgroundColor = [UIColor colorWithRed:0.11 green:0.129 blue:0.188 alpha:1];
+                    notification.tintColor = [UIColor whiteColor];
+                    notification.text = message.sender.nick;
+                    notification.detailText = message.message;
+                    notification.image = [UIImage imageNamed:@"Userlist"];
+                    notification.userInfo = @{@"conversation": message.conversation.configuration.uniqueIdentifier};
+                    [notification addTarget:self action:@selector(notificationTap:) forControlEvents:UIControlEventTouchUpInside];
+                    
+                    [[MCNotificationManager sharedInstance] showNotification:notification];
+                }
                 if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
                     [self showNotificationWithMessage:message];
             }
@@ -985,17 +986,19 @@
                     message.conversation.isHighlighted = YES;
                     AudioServicesPlaySystemSound (kSystemSoundID_Vibrate);
                     
-                    // Show notification
-                    MCNotification *notification = [MCNotification notification];
-                    notification.backgroundColor = [UIColor colorWithRed:0.11 green:0.129 blue:0.188 alpha:1];
-                    notification.tintColor = [UIColor whiteColor];
-                    notification.text = message.sender.nick;
-                    notification.detailText = message.message;
-                    notification.image = [UIImage imageNamed:@"ChannelIcon_Light"];
-                    notification.userInfo = @{@"conversation": message.conversation.configuration.uniqueIdentifier};
-                    [notification addTarget:self action:@selector(notificationTap:) forControlEvents:UIControlEventTouchUpInside];
-                    
-                    [[MCNotificationManager sharedInstance] showNotification:notification];
+                    if (UIInterfaceOrientationIsLandscape([self interfaceOrientation]) == NO) {
+                        // Show notification
+                        MCNotification *notification = [MCNotification notification];
+                        notification.backgroundColor = [UIColor colorWithRed:0.11 green:0.129 blue:0.188 alpha:1];
+                        notification.tintColor = [UIColor whiteColor];
+                        notification.text = message.sender.nick;
+                        notification.detailText = message.message;
+                        notification.image = [UIImage imageNamed:@"ChannelIcon_Light"];
+                        notification.userInfo = @{@"conversation": message.conversation.configuration.uniqueIdentifier};
+                        [notification addTarget:self action:@selector(notificationTap:) forControlEvents:UIControlEventTouchUpInside];
+                        
+                        [[MCNotificationManager sharedInstance] showNotification:notification];
+                    }
 
                     if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
                         [self showNotificationWithMessage:message];
