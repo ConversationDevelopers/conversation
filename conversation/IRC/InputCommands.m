@@ -46,7 +46,8 @@
 
 + (void)performCommand:(NSString *)message inConversation:(IRCConversation *)conversation
 {
-    NSMutableArray *messageComponents = [[message componentsSeparatedByString:@" "] mutableCopy];
+    NSString *msg = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSMutableArray *messageComponents = [[msg componentsSeparatedByString:@" "] mutableCopy];
     if ([messageComponents count] > 0) {
         InputCommand command = [InputCommands indexValueFromString:[messageComponents[0] uppercaseString]];
         switch (command) {
