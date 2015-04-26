@@ -27,6 +27,5 @@
 @property (weak, nonatomic) id<MenuPopOverViewDelegate> delegate;
 
 - (void)presentPopoverFromRect:(CGRect)rect inView:(UIView *)view withStrings:(NSArray *)stringArray;
-- (void)dismiss:(BOOL)animate;
 
 @end

@@ -533,8 +533,10 @@ BOOL popoverDidDismiss = NO;
         }
     }
     
-    if (_popOver.superview)
-        [_popOver dismiss:NO];
+    if (_popOver.superview) {
+        [_popOver removeFromSuperview];
+        _popOver = nil;
+    }
 
 }
 
