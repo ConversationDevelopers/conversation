@@ -269,10 +269,14 @@
     IRCUser *user = nil;
     if ([conversation isKindOfClass:[IRCChannel class]]) {
         user = [IRCUser fromNickname:nickname onChannel:(IRCChannel *)conversation];
+        isServerMessage = NO;
     }
     
     if (user == nil) {
-        user = [[IRCUser alloc] initWithNickname:nickname andUsername:username andHostname:hostname andRealname:nil onClient:self];
+        if (nickname.length)
+            user = [[IRCUser alloc] initWithNickname:nickname andUsername:username andHostname:hostname andRealname:nil onClient:self];
+        else
+            user = [[IRCUser alloc] initWithNickname:sendermask andUsername:@"" andHostname:@"" andRealname:@"" onClient:self];
     }
     
     
