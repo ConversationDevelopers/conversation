@@ -152,16 +152,18 @@ static unsigned short EncodingTableSection = 4;
             x++;
         }
     } else {
-        [self.conversationsController.connections addObject:client];
         [[AppPreferences sharedPrefs] addConnectionConfiguration:_configuration];
-        [[AppPreferences sharedPrefs] savePrefs];        
+        [[AppPreferences sharedPrefs] savePrefs];
+        if (_configuration.showConsoleOnConnect) {
+            client.console = [[ConsoleViewController alloc] init];
+            client.showConsole = YES;
+        }
+        [self.conversationsController.connections addObject:client];        
         [self.conversationsController.tableView reloadData];
         [self dismissViewControllerAnimated:YES completion:^(void){
-            [client connect];
-            if (_configuration.showConsoleOnConnect) {
-                client.console = [[ConsoleViewController alloc] init];
-                client.showConsole = YES;
-            }
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
+                [client connect];
+            });
         }];
         return;
     }
