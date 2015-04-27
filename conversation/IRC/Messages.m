@@ -309,6 +309,7 @@
 + (void)userReceivedNotice:(IRCMessage *)message
 {
     AssertIsNotServerMessage(message);
+    
     /* Incoming private message so the actual conversation name is sender's nick */
     if ([message.conversation.name isEqualToStringCaseInsensitive:message.client.currentUserOnConnection.nick]) {
         IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];
