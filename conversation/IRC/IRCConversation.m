@@ -137,12 +137,7 @@
     
     /* Notify all parts of the application listening for messages that a new message has been added. */
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (message.messageType == ET_RAW) {
-            if (message.client.showConsole)
-                message.client.console.contentView.text = [message.client.console.contentView.text stringByAppendingFormat:@"%@\n", message.message];
-        } else
-            [message.conversation.contentView addMessage:message];
-        
+        [_contentView addMessage:message];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:object];
     });
 

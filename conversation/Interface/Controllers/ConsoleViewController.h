@@ -30,7 +30,9 @@
 
 
 #import <UIKit/UIKit.h>
+#import "IRCMessage.h"
 
 @interface ConsoleViewController : UIViewController
 @property (nonatomic) UITextView *contentView;
+- (void)addMessage:(IRCMessage *)message;
 @end

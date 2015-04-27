@@ -35,6 +35,7 @@
 #import "IRCConversation.h"
 #import "IRCCommands.h"
 #import "ConversationListViewController.h"
+#import "ConsoleViewController.h"
 #import "WHOIS.h"
 #import "NSArray+Methods.h"
 
@@ -112,6 +113,7 @@
         self.featuresSupportedByServer          = [[NSMutableDictionary alloc] init];
         self.ircv3CapabilitiesSupportedByServer = [[NSMutableArray alloc] init];
         self.whoisRequests                      = [[NSMutableDictionary alloc] init];
+        self.console = nil;
         
         return self;
     }
@@ -940,9 +942,7 @@
                                                             withTags:@{}
                                                             isServerMessage:YES
                                                            onClient:self];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:message];
-    });
+    [self.console addMessage:message];
 }
 
 /*!

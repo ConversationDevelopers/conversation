@@ -308,10 +308,7 @@
 
 + (void)userReceivedNotice:(IRCMessage *)message
 {
-    NSLog(@"MESSAGE: %@ CONVERSATION: %@", message, message.conversation);
     AssertIsNotServerMessage(message);
-    NSLog(@"MESSAGE: %@ CONVERSATION: %@", message, message.conversation);
-    
     /* Incoming private message so the actual conversation name is sender's nick */
     if ([message.conversation.name isEqualToStringCaseInsensitive:message.client.currentUserOnConnection.nick]) {
         IRCChannelConfiguration *configuration = [[IRCChannelConfiguration alloc] init];

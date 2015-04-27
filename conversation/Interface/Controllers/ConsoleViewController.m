@@ -68,4 +68,9 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
+- (void)addMessage:(IRCMessage *)message;
+{
+    if (message.client.showConsole)
+        _contentView.text = [_contentView.text stringByAppendingFormat:@"%@\n", message.message];
+}
 @end
