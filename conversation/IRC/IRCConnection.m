@@ -219,8 +219,6 @@
 - (void)socketDidDisconnect:(GCDAsyncSocket *)socket withError:(NSError *)err
 {
     if (err == nil || [err code] == errSSLClosedGraceful) {
-        /* Disconnect was actually user initiated, SSL just threw an error anyway, we will treat it as a normal disconnect */
-        [self.client clientDidDisconnect];
         return;
     }
     

@@ -561,6 +561,7 @@
         default:
             /* Notify the client of the message */
             dispatch_async(dispatch_get_main_queue(), ^{
+                [self.console addMessage:messageObject];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"messageReceived" object:messageObject];
             });
             
