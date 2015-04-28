@@ -33,6 +33,7 @@
 #import "Preferences/AppPreferences.h"
 #import "ChatMessageView.h"
 #import "IRCConnection.h"
+#import "IRCConversation.h"
 #import "AnalyticsController.h"
 #import <FCModel/FCModel.h>
 #import <DLImageLoader/DLImageView.h>
@@ -253,10 +254,15 @@
         }
     }
     
-    conversation.isHighlighted = NO;
-    conversation.unreadCount = 0;
-
-    self.conversationsController.currentConversation = conversation;
+    if (conversation) {
+        if (conversation && _conversationsController.chatViewController.isChannel)
+            [_conversationsController.chatViewController updateJoinStatus];
+        
+        conversation.isHighlighted = NO;
+        conversation.unreadCount = 0;
+        
+        self.conversationsController.currentConversation = conversation;
+    }
     
     // Load images
     int i=0;
