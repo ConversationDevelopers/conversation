@@ -1056,7 +1056,15 @@ uint32_t FNV32(const char *s)
 
 - (void)handleTap:(UITapGestureRecognizer *)recognizer
 {
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Message", @"Message")
+    NSString *status = [self characterForStatus:self.message.sender.channelPrivilege];
+    NSString *pasteString;
+    
+    if (_message.messageType == ET_PRIVMSG)
+        pasteString = [NSString stringWithFormat:@"<%@%@> %@", status, self.message.sender.nick, self.message.message];
+    else
+        pasteString = [NSString stringWithFormat:@"· %@ %@", self.message.sender.nick, self.message.message];
+    
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:pasteString
                                                        delegate:self
                                               cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
                                          destructiveButtonTitle:nil
