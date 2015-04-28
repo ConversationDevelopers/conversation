@@ -238,18 +238,10 @@
     IRCClient *client;
     IRCConversation *conversation;
     for (client in self.conversationsController.connections) {
-        for (IRCConversation *convo in client.queries) {
+        for (IRCConversation *convo in [client.channels arrayByAddingObjectsFromArray:client.queries]) {
             if ([convo.configuration.uniqueIdentifier isEqualToString:identifier]) {
                 conversation = convo;
                 break;
-            }
-        }
-        if (conversation == nil) {
-            for (IRCConversation *convo in client.channels) {
-                if ([convo.configuration.uniqueIdentifier isEqualToString:identifier]) {
-                    conversation = convo;
-                    break;
-                }
             }
         }
     }
