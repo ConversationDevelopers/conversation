@@ -36,6 +36,7 @@
 #import <DLImageLoader/DLImageView.h>
 #import <YLGIFImage/YLGIFImage.h>
 #import <YLGIFImage/YLImageView.h>
+#import <UIActionSheet+Blocks/UIActionSheet+Blocks.h>
 #import "LinkTapView.h"
 #import "NSString+Methods.h"
 #import "AppPreferences.h"
@@ -1028,22 +1029,6 @@ uint32_t FNV32(const char *s)
 
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 0) {
-        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-        NSString *status = [self characterForStatus:self.message.sender.channelPrivilege];
-        NSString *pasteString;
-
-        if (_message.messageType == ET_PRIVMSG)
-            pasteString = [NSString stringWithFormat:@"<%@%@> %@", status, self.message.sender.nick, self.message.message];
-        else
-            pasteString = [NSString stringWithFormat:@"· %@ %@", self.message.sender.nick, self.message.message];
-        
-        [pasteboard setValue:pasteString forPasteboardType:@"public.plain-text"];
-    }
-}
-
 - (UIViewController *)viewController {
     Class vcc = [UIViewController class];
     UIResponder *responder = self;
@@ -1056,21 +1041,24 @@ uint32_t FNV32(const char *s)
 
 - (void)handleTap:(UITapGestureRecognizer *)recognizer
 {
-    NSString *status = [self characterForStatus:self.message.sender.channelPrivilege];
     NSString *pasteString;
     
     if (_message.messageType == ET_PRIVMSG)
-        pasteString = [NSString stringWithFormat:@"<%@%@> %@", status, self.message.sender.nick, self.message.message];
+        pasteString = [NSString stringWithFormat:@"<%@%@> %@", [self characterForStatus:self.message.sender.channelPrivilege], self.message.sender.nick, self.message.message];
     else
         pasteString = [NSString stringWithFormat:@"· %@ %@", self.message.sender.nick, self.message.message];
     
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:pasteString
-                                                       delegate:self
-                                              cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
-                                         destructiveButtonTitle:nil
-                                              otherButtonTitles:NSLocalizedString(@"Copy", @"Copy"), nil];
-    [sheet setTag:-1];
-    [sheet showInView:self];
+    [UIActionSheet showInView:self
+                    withTitle:pasteString
+            cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+       destructiveButtonTitle:nil
+            otherButtonTitles:@[NSLocalizedString(@"Copy", @"Copy")]
+                     tapBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex) {
+                         if (buttonIndex == 0) {
+                             UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+                             [pasteboard setValue:pasteString forPasteboardType:@"public.plain-text"];
+                         }
+                     }];
 }
 
 #pragma mark -
