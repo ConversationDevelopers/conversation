@@ -114,7 +114,6 @@
 
     UITapGestureRecognizer *singleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     [singleTapRecogniser setDelegate:self];
-    singleTapRecogniser.numberOfTouchesRequired = 1;
     singleTapRecogniser.numberOfTapsRequired = 1;
     [self addGestureRecognizer:singleTapRecogniser];
     
@@ -1045,14 +1044,6 @@ uint32_t FNV32(const char *s)
     }
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
-    if ([gestureRecognizer.view isKindOfClass:self.class] && (_controller.chatViewController.keyboardIsVisible || _controller.chatViewController.userlistIsVisible)) {
-        return NO;
-    }
-    return YES;
-}
-
 - (UIViewController *)viewController {
     Class vcc = [UIViewController class];
     UIResponder *responder = self;
@@ -1062,10 +1053,6 @@ uint32_t FNV32(const char *s)
     
     return nil;
 }
-
-
-#pragma mark -
-#pragma mark UITapGestureRecognizer delegate methods
 
 - (void)handleTap:(UITapGestureRecognizer *)recognizer
 {
@@ -1078,45 +1065,16 @@ uint32_t FNV32(const char *s)
     [sheet showInView:self];
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+#pragma mark -
+#pragma mark UITapGestureRecognizer delegate methods
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    UIView *view = [[[event touchesForView:self] allObjects][0] view];
-    view.backgroundColor = [UIColor lightGrayColor];
+    if ([gestureRecognizer.view isKindOfClass:self.class] &&
+        (_controller.chatViewController.keyboardIsVisible || _controller.chatViewController.userlistIsVisible))
+        return NO;
+    
+    return YES;
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    UIView *view = [[[event touchesForView:self] allObjects][0] view];
-    
-//    Highlight?
-    if (hasHighlight()) {
-        view.backgroundColor = [UIColor colorWithRed:0.714 green:0.882 blue:0.675 alpha:1];
-        return;
-    }
-    
-    if (_message.messageType == ET_ACTION) {
-        view.backgroundColor = [UIColor clearColor];
-        return;
-    }
-    
-    view.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
-}
-
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    UIView *view = [[[event touchesForView:self] allObjects][0] view];
-    
-//    Highlight?
-    if (hasHighlight()) {
-        view.backgroundColor = [UIColor colorWithRed:0.714 green:0.882 blue:0.675 alpha:1];
-        return;
-    }
-    
-    if (_message.messageType == ET_ACTION) {
-        view.backgroundColor = [UIColor clearColor];
-        return;
-    }
-    
-    view.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
-}
 @end
