@@ -690,7 +690,7 @@ BOOL popoverDidDismiss = NO;
             if (i == 0) {
                 if (_conversation.client.queries.count > 0) {
                     _isChannel = NO;
-                    conversation = _conversation.client.queries[0];
+                    conversation = _conversation.client.queries[_conversation.client.queries.count-1];
                 } else  {
                     conversation = _conversation.client.channels[_conversation.client.channels.count-1];
                 }
