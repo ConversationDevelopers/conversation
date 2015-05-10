@@ -365,8 +365,6 @@
         message.messageType = ET_JOIN;
         message.conversation = channel;
         
-        [[message conversation] addMessageToConversation:message];
-        
         if ([[[message sender] nick] isEqualToStringCaseInsensitive:message.client.currentUserOnConnection.nick]) {
             [message.client.connection send:[NSString stringWithFormat:@"WHO %@", conversation.name]];
             [message.client.connection send:[NSString stringWithFormat:@"MODE %@", conversation.name]];
@@ -380,6 +378,8 @@
             [[channel users] addObject:[message sender]];
             [channel sortUserlist];
         }
+
+        [[message conversation] addMessageToConversation:message];
     
     }];
 }

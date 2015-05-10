@@ -126,6 +126,9 @@
             break;
         }
     }
+    if (!userFromUserlist.username.length || !userFromUserlist.hostname.length)
+        return nil;
+    
     return userFromUserlist;
 }
 

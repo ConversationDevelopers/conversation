@@ -277,7 +277,6 @@
         user = [[IRCUser alloc] initWithNickname:nickname andUsername:username andHostname:hostname andRealname:nil onClient:self];
     }
     
-    
     IRCMessage *messageObject = [[IRCMessage alloc] initWithMessage:message
                                                              OfType:ET_RAW
                                                      inConversation:conversation
