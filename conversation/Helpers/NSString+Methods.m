@@ -214,7 +214,6 @@
             // Delete character at the middle
             [truncatedString deleteCharactersInRange:range];
             range.location = floor(truncatedString.length / 2)-floor(range.length / 2);
-            range.length++;
         }
         
         [truncatedString replaceCharactersInRange:range withString:ellipsis];
