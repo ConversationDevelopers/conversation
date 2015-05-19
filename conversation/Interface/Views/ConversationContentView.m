@@ -59,6 +59,10 @@
         for (ChatMessageView *view in self.subviews) {
             if ([NSStringFromClass(view.class) isEqualToString:@"ChatMessageView"]) {
                 if (posY == 0.0) {
+                    
+                    // Adjust scrolling position
+                    CGFloat offset = self.contentOffset.y - view.frame.size.height;
+                    self.contentOffset = CGPointMake(self.contentOffset.x, offset-5);
                     [view removeFromSuperview];
                     posY = 5.0;
                     continue;
