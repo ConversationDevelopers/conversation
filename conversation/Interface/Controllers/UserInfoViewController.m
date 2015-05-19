@@ -192,7 +192,7 @@ BOOL _isAwaitingWhoisResponse;
             [df setLocale:[NSLocale currentLocale]];
             [df setDateStyle:NSDateFormatterMediumStyle];
             [df setTimeStyle:NSDateFormatterMediumStyle];
-            cell.textField.text = [df stringFromDate:_user.idleSinceTime];
+            cell.textField.text = [df stringFromDate:_user.signedInAtTime];
             
         } else {
             cell.textLabel.text = NSLocalizedString(@"Idle", @"Idle");
