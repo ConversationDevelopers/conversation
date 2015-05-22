@@ -962,6 +962,7 @@ BOOL popoverDidDismiss = NO;
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
     [_container addSubview:_conversation.contentView];
+    [_conversation.contentView layoutIfNeeded];
     [self viewWillAppear:NO];
 }
 
