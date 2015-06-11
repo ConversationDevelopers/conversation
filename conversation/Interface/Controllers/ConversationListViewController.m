@@ -746,12 +746,18 @@
                 } else {
                     ChannelListViewController *channelList = [[ChannelListViewController alloc] init];
                     channelList.client = client;
+                
                     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:channelList];
                     navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
                     navigationController.navigationBar.tintColor = [UIColor lightGrayColor];
                     navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
                     navigationController.navigationBar.translucent = NO;
-                    [self.navigationController presentViewController:navigationController animated:YES completion:nil];
+                    
+                    if(!self.navigationController.presentedViewController.isBeingDismissed) {
+                        [self dismissViewControllerAnimated:NO completion:nil];
+                    }
+                    
+                    [self presentViewController:navigationController animated:YES completion:nil];
                 }
                 break;
             default:

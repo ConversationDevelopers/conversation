@@ -195,7 +195,7 @@ double timerInterval = 2.0f;
     if ([topic hasPrefix:@"["]) {
         NSRange range = [topic rangeOfString:@"]"];
         modes = [topic substringToIndex:range.location+range.length];
-        topic = [topic substringFromIndex:range.location+range.length+1];
+        topic = [topic substringFromIndex:range.location+range.length];
     }
     
     NSDictionary *entry = @{
