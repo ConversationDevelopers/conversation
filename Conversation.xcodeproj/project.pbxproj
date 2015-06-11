@@ -146,8 +146,6 @@
 		DA96223E19EDE217008D42EB /* networks.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = networks.plist; path = Resources/networks.plist; sourceTree = "<group>"; };
 		DA9938251A8085F5001C452C /* ChannelListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = ChannelListViewController.h; path = Interface/Controllers/ChannelListViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		DA9938261A8085F5001C452C /* ChannelListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ChannelListViewController.m; path = Interface/Controllers/ChannelListViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		DAA10B0D1A9667BC00E8D92E /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = conversation/Crashlytics.framework; sourceTree = "<group>"; };
-		DAA10B0E1A9667BC00E8D92E /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fabric.framework; path = conversation/Fabric.framework; sourceTree = "<group>"; };
 		DAA3229C19E56CBF0068E2B6 /* EditConnectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = EditConnectionViewController.h; path = Interface/Controllers/EditConnectionViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = EditConnectionViewController.m; path = Interface/Controllers/EditConnectionViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		DAA322A819E5DE490068E2B6 /* PreferencesSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesSwitchCell.h; path = Interface/Views/PreferencesSwitchCell.h; sourceTree = "<group>"; };
@@ -331,8 +329,6 @@
 		61A17986DD1BE8C1197DA32E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DAA10B0D1A9667BC00E8D92E /* Crashlytics.framework */,
-				DAA10B0E1A9667BC00E8D92E /* Fabric.framework */,
 				DA7B68A31A02BEE100D82B4C /* libPods-conversation-PHFComposeBarView.a */,
 				DA7B68A11A02BE6900D82B4C /* libPods-conversation-DLImageLoader.a */,
 				DA7B689F1A02BE0100D82B4C /* libPods-conversation-DLImageLoader.a */,

@@ -50,6 +50,9 @@
     
     // Initialize tracker. Replace with your tracking ID.
     [[GAI sharedInstance] trackerWithTrackingId:@"UA-59885279-1"];
+    
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    tracker.allowIDFACollection = NO;
 
 #ifdef DEBUG
     [[GAI sharedInstance] setDryRun:YES];
