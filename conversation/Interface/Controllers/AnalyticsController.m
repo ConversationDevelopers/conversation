@@ -32,8 +32,6 @@
 #import "BuildConfig.h"
 #import "DeviceInformation.h"
 #import <GoogleAnalytics-iOS-SDK/GAI.h>
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
 
 
 @implementation AnalyticsController
@@ -57,7 +55,6 @@
     [[GAI sharedInstance] setDryRun:YES];
 #endif
 
-    [Fabric with:@[CrashlyticsKit]];
     
 }
 

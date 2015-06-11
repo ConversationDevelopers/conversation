@@ -35,8 +35,6 @@
 		DA7B68801A01504100D82B4C /* CertificateInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7B687F1A01504100D82B4C /* CertificateInfoViewController.m */; };
 		DA96223F19EDE217008D42EB /* networks.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA96223E19EDE217008D42EB /* networks.plist */; };
 		DA9938271A8085F5001C452C /* ChannelListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA9938261A8085F5001C452C /* ChannelListViewController.m */; };
-		DAA10B0F1A9667BC00E8D92E /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAA10B0D1A9667BC00E8D92E /* Crashlytics.framework */; };
-		DAA10B101A9667BD00E8D92E /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAA10B0E1A9667BC00E8D92E /* Fabric.framework */; };
 		DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */; };
 		DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */; };
 		DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322AB19E5DE490068E2B6 /* PreferencesTextCell.m */; };
@@ -302,11 +300,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAC0E4B31A0073C4001CFB48 /* libcrypto.a in Frameworks */,
-				DAA10B0F1A9667BC00E8D92E /* Crashlytics.framework in Frameworks */,
 				DA1A4AF019E181C400565763 /* CFNetwork.framework in Frameworks */,
 				FAC0E4B41A0073C4001CFB48 /* libssl.a in Frameworks */,
 				48CC709806D99585ADE2BFFF /* libPods-conversation.a in Frameworks */,
-				DAA10B101A9667BD00E8D92E /* Fabric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -707,7 +703,6 @@
 				DA1A4AB319E1770700565763 /* Sources */,
 				DA1A4AB419E1770700565763 /* Frameworks */,
 				DA1A4AB519E1770700565763 /* Resources */,
-				DAA10B0C1A96675500E8D92E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -832,19 +827,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/sh\n\ncd \"${PROJECT_DIR}/conversation\"\n\nbundleVersion=$(/usr/libexec/PlistBuddy -c \"Print \\\"CFBundleShortVersionString\\\"\" Info.plist)\nbundleName=$(/usr/libexec/PlistBuddy -c \"Print \\\"CFBundleName\\\"\" Info.plist)\ngitRef=$(echo \"$(git describe --tags)\" | grep -oE \"([0-9]{1,3})\\-([a-zA-Z0-9]{8})\")\nbuildDate=`date`\n\nbuildType=\"personal\"\n\nif [[ \"${CONFIGURATION}\" == \"Release\" ]]; then\n    buildType=\"official\"\nfi\n\ncd \"${PROJECT_DIR}/conversation/include/\"\n\necho \"\" > BuildConfig.h\necho \"#define ConversationBundleName        @\\\"$bundleName\\\"\" >> BuildConfig.h\necho \"#define ConversationBuildType         @\\\"$buildType\\\"\" >> BuildConfig.h\necho \"#define ConversationVersion           @\\\"$bundleVersion\\\"\" >> BuildConfig.h\necho \"#define ConversationBuildRef          @\\\"$gitRef\\\"\" >> BuildConfig.h\necho \"#define ConversationBuildDate         @\\\"$buildDate\\\"\" >> BuildConfig.h\n";
-		};
-		DAA10B0C1A96675500E8D92E /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "./Fabric.framework/run 23336355b5261d44f8ea24327ac3a7f517d971a3 f9f9a3e625bef034407c51ba06e526d56e3e88595e936d6a7cc28f23ffe1e37b";
 		};
 /* End PBXShellScriptBuildPhase section */
 

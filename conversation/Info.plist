@@ -32,20 +32,6 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
-	<key>Fabric</key>
-	<dict>
-		<key>APIKey</key>
-		<string>23336355b5261d44f8ea24327ac3a7f517d971a3</string>
-		<key>Kits</key>
-		<array>
-			<dict>
-				<key>KitInfo</key>
-				<dict/>
-				<key>KitName</key>
-				<string>Crashlytics</string>
-			</dict>
-		</array>
-	</dict>
 	<key>ImgurAnonymousAPIClientID</key>
 	<string>b22b5d448393fdb</string>
 	<key>LSRequiresIPhoneOS</key>
