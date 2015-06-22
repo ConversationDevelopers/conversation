@@ -514,7 +514,7 @@
                     self.currentUserOnConnection.nick = self.configuration.secondaryNickname;
                 } else {
                     /* The secondary nickname has already been attempted, so we will add an underscore followed by a random number with 4 digits. */
-                    NSString *newNickName = [NSString stringWithFormat:@"%@_%i", self.currentUserOnConnection.nick, 1111 + arc4random_uniform(9999 - 1111 + 1)];
+                    NSString *newNickName = [NSString stringWithFormat:@"%@_%i", self.currentUserOnConnection.nick, 1111 + arc4random_uniform(8889)];
                     [IRCCommands changeNicknameToNick:newNickName onClient:self];
                     self.currentUserOnConnection.nick = newNickName;
                 }
