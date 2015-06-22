@@ -288,7 +288,6 @@
     
     if (numericReplyAsNumber >= 400 && numericReplyAsNumber < 600) {
         [Messages clientReceivedRecoverableErrorFromServer:messageObject];
-        return messageObject;
     }
     
     MessageType commandIndexValue = [IRCMessageIndex indexValueFromString:command];
@@ -505,6 +504,7 @@
         case ERR_ERRONEUSNICKNAME:
         case ERR_UNAVAILRESOURCE:
         case ERR_NICKNAMEINUSE:
+            NSLog(@"NICK IN USE");
             /* The server did not accept our nick request, let's see if this happened during initial registration. */
             if ([self isAttemptingRegistration]) {
                 /* The nick error did happen during initial registration, we will check if we have already tried the secondary nickname */
