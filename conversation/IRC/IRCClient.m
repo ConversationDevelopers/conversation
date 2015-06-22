@@ -28,6 +28,7 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <stdlib.h>
 #import "IRCClient.h"
 #import "IRCConnection.h"
 #import "IRCUser.h"
@@ -504,7 +505,6 @@
         case ERR_ERRONEUSNICKNAME:
         case ERR_UNAVAILRESOURCE:
         case ERR_NICKNAMEINUSE:
-            NSLog(@"NICK IN USE");
             /* The server did not accept our nick request, let's see if this happened during initial registration. */
             if ([self isAttemptingRegistration]) {
                 /* The nick error did happen during initial registration, we will check if we have already tried the secondary nickname */
@@ -513,16 +513,10 @@
                     [IRCCommands changeNicknameToNick:self.configuration.secondaryNickname onClient:self];
                     self.currentUserOnConnection.nick = self.configuration.secondaryNickname;
                 } else {
-                    /* The secondary nickname has already been attempted, so we will append an underscore to the nick until
-                     we find one that the server accepts. If we cannot find a nick within 25 characters, we will abort. */
-                    if ([self.currentUserOnConnection.nick length] < 25) {
-                        NSString *newNickName = [NSString stringWithFormat:@"%@_", self.currentUserOnConnection.nick];
-                        [IRCCommands changeNicknameToNick:newNickName onClient:self];
-                        self.currentUserOnConnection.nick = newNickName;
-                    } else {
-                        [self outputToConsole:NSLocalizedString(@"Registration failed. Disconnecting..", @"Registration failed. Disconnecting..")];
-                        [self disconnect];
-                    }
+                    /* The secondary nickname has already been attempted, so we will add an underscore followed by a random number with 4 digits. */
+                    NSString *newNickName = [NSString stringWithFormat:@"%@_%i", self.currentUserOnConnection.nick, 1111 + arc4random_uniform(9999 - 1111 + 1)];
+                    [IRCCommands changeNicknameToNick:newNickName onClient:self];
+                    self.currentUserOnConnection.nick = newNickName;
                 }
             }
             break;
