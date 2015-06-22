@@ -161,9 +161,7 @@ static unsigned short EncodingTableSection = 4;
         [self.conversationsController.connections addObject:client];        
         [self.conversationsController.tableView reloadData];
         [self dismissViewControllerAnimated:YES completion:^(void){
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
-                [client connect];
-            });
+            [client connect];
         }];
         return;
     }

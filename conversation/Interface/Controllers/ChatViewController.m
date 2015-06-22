@@ -70,16 +70,6 @@ BOOL popoverDidDismiss = NO;
                                                  name:@"messageReceived"
                                                object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillToggle:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillToggle:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-    
     _backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ChannelIcon_Light"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
     
     _joinButton = [[UIBarButtonItem alloc] initWithTitle:@"Join" style:UIBarButtonItemStylePlain target:self action:@selector(join:)];
@@ -96,14 +86,6 @@ BOOL popoverDidDismiss = NO;
 
 - (void)dealloc
 {
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillShowNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
  
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"messageReceived"
@@ -184,8 +166,8 @@ BOOL popoverDidDismiss = NO;
                               self.container.frame.size.height - _composeBarView.bounds.size.height);
     
     _conversation.contentView.frame = frame;
-    
     [self.container addSubview:_conversation.contentView];
+    [self.container sendSubviewToBack:_conversation.contentView];
     
     [self scrollToBottom:NO];
 
@@ -206,8 +188,7 @@ BOOL popoverDidDismiss = NO;
             }
         }
     }
-    
-    
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -224,11 +205,28 @@ BOOL popoverDidDismiss = NO;
         //[self.navigationController performSegueWithIdentifier:@"modal" sender:nil];
     });
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillToggle:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillToggle:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [self hideUserList];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillShowNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillHideNotification
+                                                  object:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
