@@ -645,6 +645,7 @@ uint32_t FNV32(const char *s)
                                                                         NSLocalizedString(@"changed the topic to", @"changed the topic to"),
                                                                         msg]]];
             
+            msg = [[self setLinks:msg] string];
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
             [string addAttribute:NSParagraphStyleAttributeName
@@ -691,6 +692,7 @@ uint32_t FNV32(const char *s)
             string = [[NSMutableAttributedString alloc] initWithAttributedString:[self setLinks:[[NSString alloc] initWithFormat:@"%@ %@\n%@",
                                                                                                  notice, user.nick, msg]]];
 
+            msg = [[self setLinks:msg] string];
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
             [string addAttribute:NSParagraphStyleAttributeName
@@ -708,12 +710,13 @@ uint32_t FNV32(const char *s)
             [string addAttribute:NSForegroundColorAttributeName
                            value:[self colorForNick:user.nick]
                            range:NSMakeRange(notice.length+1, user.nick.length)];
-            
+
             [string addAttribute:NSFontAttributeName
                            value:[UIFont systemFontOfSize:12.0]
                            range:NSMakeRange(user.nick.length + notice.length + 2, msg.length)];
-            
+
             // Mark sender's nick so we can respond to tap actions
+
             [string addAttribute:NSLinkAttributeName
                            value:user.nick
                            range:NSMakeRange(0, status.length+user.nick.length)];
