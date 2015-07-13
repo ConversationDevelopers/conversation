@@ -65,7 +65,7 @@ static unsigned short EncodingTableSection = 4;
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = cancelButton;
     
-    NSString *buttonTitle = NSLocalizedString(@"Connect", @"Connect");
+    NSString *buttonTitle = NSLocalizedString(@"Connect", @"Connect Server");
 
     
     if(_edit) {
@@ -364,7 +364,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             [encodings addObject:localizedNameOfStringEncoding(encoding.intValue)];
         }
         
-        listViewController.title = NSLocalizedString(@"Encoding", @"Encoding view title");
+        listViewController.title = NSLocalizedString(@"Encoding", @"Encoding");
         listViewController.type = Strings;
         listViewController.items = encodings;
         listViewController.selectedItem = selectedEncodingIndex;
@@ -452,7 +452,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             return cell;
         } else if (indexPath.row == 3) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
-            cell.textLabel.text = NSLocalizedString(@"Password", @"Server password");
+            cell.textLabel.text = NSLocalizedString(@"Password", @"Password");
             NSString *password = [SSKeychain passwordForService:@"conversation" account:_configuration.serverPasswordReference];
             if(password.length)
                 cell.textField.text = password;
@@ -476,7 +476,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
     } else if (indexPath.section == IdentityTableSection) {
         if (indexPath.row == 0) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
-            cell.textLabel.text = NSLocalizedString(@"Nick Name", @"Nick name to use on IRC");
+            cell.textLabel.text = NSLocalizedString(@"Nick Name", @"Nick Name");
             cell.textField.text = _configuration.primaryNickname;
             
             // Display default values as placeholder
@@ -513,7 +513,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             return cell;
         } else if (indexPath.row == 2) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
-            cell.textLabel.text = NSLocalizedString(@"User Name", @"User name to use on IRC");
+            cell.textLabel.text = NSLocalizedString(@"User Name", @"User Name");
             cell.textField.text = _configuration.usernameForRegistration;
             
             // Display default values as placeholder
@@ -532,7 +532,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             return cell;
         } else if (indexPath.row == 3) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
-            cell.textLabel.text = NSLocalizedString(@"Real Name", @"Real name to use on IRC");
+            cell.textLabel.text = NSLocalizedString(@"Real Name", @"Real Name");
             cell.textField.text = _configuration.realNameForRegistration;
             
             // Display default values as placeholder
@@ -582,7 +582,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding)
             if(_configuration.showConsoleOnConnect)
                 cell.on = YES;
             cell.switchAction = @selector(showconsoleChanged:);
-            cell.textLabel.text = NSLocalizedString(@"Show Console", @"Show debug console on connect");
+            cell.textLabel.text = NSLocalizedString(@"Show Console", @"Show Console");
             return cell;
         } else if (indexPath.row == 2) {
             UITableViewCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([UITableViewCell class]) andStyle:UITableViewCellStyleValue1];

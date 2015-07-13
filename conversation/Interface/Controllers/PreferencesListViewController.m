@@ -46,7 +46,7 @@
     _addItemText = NSLocalizedString(@"Add Item", @"Add Item");
     _saveButtonTitle = NSLocalizedString(@"Save", @"Save");
     _noItemsText = NSLocalizedString(@"No Items", @"No Items");
-    _addViewTitle = NSLocalizedString(@"Add Channel", @"Add Channel");
+    _addViewTitle = NSLocalizedString(@"Add Channel", @"Title of add channel item label");
     _addViewTextFieldLabelTitle = @"";
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
     

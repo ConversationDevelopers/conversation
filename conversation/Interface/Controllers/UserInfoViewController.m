@@ -128,7 +128,7 @@ BOOL _isAwaitingWhoisResponse;
             break;
         }
         case 2:
-            return NSLocalizedString(@"Connection", @"Conenction");
+            return NSLocalizedString(@"Connection", @"Connection");
             break;
     }
     return nil;
@@ -165,7 +165,7 @@ BOOL _isAwaitingWhoisResponse;
                 cell.textField.text = _user.nickname;
                 break;
             case 1:
-                cell.textLabel.text = NSLocalizedString(@"User Name", @"Nick Name");
+                cell.textLabel.text = NSLocalizedString(@"User Name", @"User Name");
                 cell.textField.text = _user.username;
                 break;
             case 2:

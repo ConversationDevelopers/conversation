@@ -33,8 +33,6 @@
 #import "CertificateItemRow.h"
 #import "AppPreferences.h"
 
-#define NSLocalisedString(x) NSLocalizedString(x, x)
-
 @implementation IRCCertificateTrust
 
 - (instancetype)init:(SecTrustRef)trust onClient:(IRCClient *)client {
@@ -162,13 +160,13 @@
         
         /* Retrieve the necessary information fields for the subject of this SSL certificate. */
         if (subjectX509Name != NULL) {
-            [subject addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Country") andDescription:getKeyString(NID_countryName, subjectX509Name)]];
-            [subject addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Province/State") andDescription:getKeyString(NID_stateOrProvinceName, subjectX509Name)]];
-            [subject addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Locality") andDescription:getKeyString(NID_localityName, subjectX509Name)]];
-            [subject addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Organisation") andDescription:getKeyString(NID_organizationName, subjectX509Name)]];
-            [subject addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Organisational Unit") andDescription:getKeyString(NID_organizationalUnitName, subjectX509Name)]];
-            [subject addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Common Name") andDescription:getKeyString(NID_commonName, subjectX509Name)]];
-            [subject addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Email Address") andDescription:getKeyString(NID_pkcs9_emailAddress, subjectX509Name)]];
+            [subject addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Country", @"Country") andDescription:getKeyString(NID_countryName, subjectX509Name)]];
+            [subject addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Province/State", @"Province/State") andDescription:getKeyString(NID_stateOrProvinceName, subjectX509Name)]];
+            [subject addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Locality", @"Locality") andDescription:getKeyString(NID_localityName, subjectX509Name)]];
+            [subject addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Organisation", @"Organisation") andDescription:getKeyString(NID_organizationName, subjectX509Name)]];
+            [subject addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Organisational Unit", @"Organisational Unit") andDescription:getKeyString(NID_organizationalUnitName, subjectX509Name)]];
+            [subject addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Common Name", @"Common Name") andDescription:getKeyString(NID_commonName, subjectX509Name)]];
+            [subject addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Email Address", @"Email Address") andDescription:getKeyString(NID_pkcs9_emailAddress, subjectX509Name)]];
         }
     }
     return subject;
@@ -182,13 +180,13 @@
         
         /* Retrieve the necessary information for the issuer of this SSL certificate. */
         if (issuerX509Name != NULL) {
-            [issuer addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Country") andDescription:getKeyString(NID_countryName, issuerX509Name)]];
-            [issuer addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Province/State") andDescription:getKeyString(NID_stateOrProvinceName, issuerX509Name)]];
-            [issuer addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Locality") andDescription:getKeyString(NID_localityName, issuerX509Name)]];
-            [issuer addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Organisation") andDescription:getKeyString(NID_organizationName, issuerX509Name)]];
-            [issuer addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Organisational Unit") andDescription:getKeyString(NID_organizationalUnitName, issuerX509Name)]];
-            [issuer addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Common Name") andDescription:getKeyString(NID_commonName, issuerX509Name)]];
-            [issuer addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Email Address") andDescription:getKeyString(NID_pkcs9_emailAddress, issuerX509Name)]];
+            [issuer addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Country", @"Country") andDescription:getKeyString(NID_countryName, issuerX509Name)]];
+            [issuer addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Province/State", @"Province/State") andDescription:getKeyString(NID_stateOrProvinceName, issuerX509Name)]];
+            [issuer addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Locality", @"Locality") andDescription:getKeyString(NID_localityName, issuerX509Name)]];
+            [issuer addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Organisation", @"Organisation") andDescription:getKeyString(NID_organizationName, issuerX509Name)]];
+            [issuer addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Organisational Unit", @"Organisational Unit") andDescription:getKeyString(NID_organizationalUnitName, issuerX509Name)]];
+            [issuer addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Common Name", @"Common Name") andDescription:getKeyString(NID_commonName, issuerX509Name)]];
+            [issuer addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Email Address", @"Email Address") andDescription:getKeyString(NID_pkcs9_emailAddress, issuerX509Name)]];
         }
     }
     return issuer;
@@ -209,15 +207,15 @@
         } else {
             signatureAlgorithm = @"";
         }
-        [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Algorithm") andDescription:signatureAlgorithm]];
+        [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Algorithm", @"Algorithm") andDescription:signatureAlgorithm]];
         
         /* Get the version of OpenSSL used to create this certificate */
         NSString *version = [NSString stringWithFormat:@"%ld", X509_get_version(certificateX509)];
-        [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Version") andDescription:version]];
+        [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Version", @"Version") andDescription:version]];
         
         /* Get the serial number the certificate authority assigned to this certficiate */
         long serial = ASN1_INTEGER_get(X509_get_serialNumber(certificateX509));
-        [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Serial") andDescription:[NSString stringWithFormat:@"%ld", serial]]];
+        [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Serial", @"Serial") andDescription:[NSString stringWithFormat:@"%ld", serial]]];
         
         /* Create a date formatter to be used to convert NSDate objects to the format commonly used to display
          date times in SSL certificate dialogs */
@@ -227,12 +225,12 @@
         /* Get the date and time this certficiate was created */
         NSDate *certStartTime = CertificateGetStartDate(certificateX509);
         NSString *startTimeString = [formatter stringFromDate:certStartTime];
-        [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Not Valid Before") andDescription:startTimeString]];
+        [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Not Valid Before", @"Not Valid Before") andDescription:startTimeString]];
         
         /* Get the date and time this certificate will expire */
         NSDate *certExpireTime = CertificateGetExpiryDate(certificateX509);
         NSString *expireTimeString = [formatter stringFromDate:certExpireTime];
-        [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Not Valid After") andDescription:expireTimeString]];
+        [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Not Valid After", @"Not Valid After") andDescription:expireTimeString]];
         
         /* Get the public key and display it as a string of hexadecimal pairs */
         ASN1_BIT_STRING *pubKey = X509_get0_pubkey_bitstr(certificateX509);
@@ -241,7 +239,7 @@
             publicKey = [publicKey stringByAppendingString:[NSString stringWithFormat:@"%02X ", pubKey->data[i]]];
         }
         
-        [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Public Key") andDescription:publicKey]];
+        [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Public Key", @"Public Key") andDescription:publicKey]];
         
         /* Get the signature of the certficiate and display it as a string of hexadecimal pairs */
         ASN1_BIT_STRING *signature = certificateX509->signature;
@@ -250,7 +248,7 @@
             signatureKey = [signatureKey stringByAppendingString:[NSString stringWithFormat:@"%02X ", signature->data[i]]];
         }
         
-        [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalisedString(@"Signature") andDescription:signatureKey]];
+        [algorithm addObject:[[CertificateItemRow alloc] initWithName:NSLocalizedString(@"Signature", @"Signature") andDescription:signatureKey]];
     }
     return algorithm;
 }

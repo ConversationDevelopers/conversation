@@ -660,7 +660,7 @@
     // Get relevant client
     IRCClient *client = [self.connections objectAtIndex:sender.view.tag];
     
-    NSMutableArray *buttonTitles = [[NSMutableArray alloc] initWithArray:@[client.isConnected ? NSLocalizedString(@"Disconnect", @"Disconnect server") : client.willReconnect ? NSLocalizedString(@"Stop Reconnect Attempts", @"Stop Reconnect Attempts") : NSLocalizedString(@"Connect", @"Connect server"),
+    NSMutableArray *buttonTitles = [[NSMutableArray alloc] initWithArray:@[client.isConnected ? NSLocalizedString(@"Disconnect", @"Disconnect server") : client.willReconnect ? NSLocalizedString(@"Stop Reconnect Attempts", @"Stop Reconnect Attempts") : NSLocalizedString(@"Connect", @"Connect Server"),
                                                                           NSLocalizedString(@"Sort Conversations", "Sort Conversations"),
                                                                           client.showConsole ? NSLocalizedString(@"Hide Console", "Hide Console") : NSLocalizedString(@"Show Console", "Show Console"),
                                                                           NSLocalizedString(@"Edit", @"Edit Connection"),

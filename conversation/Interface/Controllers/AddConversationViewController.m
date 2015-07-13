@@ -219,7 +219,7 @@ static unsigned short ConversationTableSection = 1;
             return cell;
         } else if (indexPath.row == 1 && self.addChannel) {
             PreferencesTextCell *cell = [tableView reuseCellWithIdentifier:NSStringFromClass([PreferencesTextCell class])];
-            cell.textLabel.text = NSLocalizedString(@"Password", @"Channel Password");
+            cell.textLabel.text = NSLocalizedString(@"Password", @"Password");
             cell.textField.text = @"";
             if(_configuration.passwordReference)
                 cell.textField.text = _configuration.passwordReference;
