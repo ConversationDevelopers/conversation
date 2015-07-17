@@ -60,7 +60,7 @@
 "Connections" = "Verbindungen";
 "Console" = "Console";
 "Continue" = "Weiter";
-"Conversation cannot verify the identity of" = "Conversation kann die Identität nicht überprüfen";
+"Conversation cannot verify the identity of %@ Would you like to continue anyway?" = "Conversation kann die Identität von %@ nicht überprüfen, möchtest du trotzdem fortsetzen?";
 "Conversations" = "Conversations";
 "Copy" = "Kopieren";
 "Could not connect: %@" = "Kann nicht verbinden: %@";
@@ -165,7 +165,6 @@
 "Western (ISO Latin 1)" = "Western (ISO Latin 1)";
 "Western (Mac OS Roman)" = "Western (Mac OS Roman)";
 "Western (Windows Latin 1)" = "Western (Windows Latin 1)";
-"Would you like to continue anyway?" = "Willst du trotzdem verbinden?";
 "YES" = "Ja";
 "Yes" = "Ja";
 "You haven't specified a password or the entered password did not match" = "Du hast kein Passwort eingegeben oder es stimmt nicht überein.";

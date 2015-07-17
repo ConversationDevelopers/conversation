@@ -1087,7 +1087,7 @@
 - (void)requestUserTrustForCertificate:(IRCCertificateTrust *)trustRequest
 {
     CertificateItemRow *commonName =  [trustRequest.issuerInformation objectAtIndex:5];
-    NSString *message = [NSString stringWithFormat:@"%@ %@ %@", NSLocalizedString(@"Conversation cannot verify the identity of", @"Conversation cannot verify the identity of"), [commonName itemDescription], NSLocalizedString(@"Would you like to continue anyway?", @"Would you like to continue anyway?")];
+    NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Conversation cannot verify the identity of %@ Would you like to continue anyway?", @"Conversation cannot verify the identity of %@ Would you like to continue anyway?"), [commonName itemDescription]];
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Cannot verify Server Identity", @"Cannot verify Server Identity")
                                                             message:message
                                                            delegate:self
