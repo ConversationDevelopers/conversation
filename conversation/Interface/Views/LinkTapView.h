@@ -30,14 +30,15 @@
 
 #import <UIKit/UIKit.h>
 #import "IRCConversation.h"
+#import "IRCUser.h"
 
 @interface LinkTapView : UIView <UIGestureRecognizerDelegate>
 
 - (id)initWithFrame:(CGRect)frame url:(NSURL *)url;
-- (id)initWithFrame:(CGRect)frame nick:(NSString *)url;
+- (id)initWithFrame:(CGRect)frame user:(NSString *)user;
 
 @property (nonatomic) NSURL *url;
-@property (nonatomic) NSString *nick;
+@property (nonatomic) IRCUser *user;
 @property (nonatomic) IRCConversation *conversation;
 
 @end

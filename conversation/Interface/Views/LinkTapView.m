@@ -51,14 +51,14 @@
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame nick:(NSString *)nick
+- (id)initWithFrame:(CGRect)frame user:(IRCUser *)user
 {
     if (!(self = [super initWithFrame:frame]))
         return nil;
-    self.nick = nick;
+    self.user = user;
     self.alpha = 0.5;
     
-    UITapGestureRecognizer *tapGesture =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleNick:)];
+    UITapGestureRecognizer *tapGesture =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleUser:)];
     tapGesture.delegate = self;
     [self addGestureRecognizer:tapGesture];
     
@@ -90,28 +90,32 @@
 
 }
 
-- (void)handleNick: (UITapGestureRecognizer*)sender  {
+- (void)handleUser: (UITapGestureRecognizer*)sender  {
     
     __block ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     
     NSMutableArray *buttonTitles = [[NSMutableArray alloc] initWithArray:@[NSLocalizedString(@"Private Message (Query)", @"Query"),
                                                                           NSLocalizedString(@"Get Info (Whois)", @"Whois"),
                                                                            NSLocalizedString(@"Ignore", @"Ignore")]];
-    if ([_conversation.name isEqualToString:_nick]) {
+    if ([_user isIgnoredHostMask:_conversation.client])
+        buttonTitles[2] = NSLocalizedString(@"Unignore", @"Unignore");
+    
+    if ([_conversation.name isEqualToString:_user.nick])
         [buttonTitles removeObjectAtIndex:0];
-    }
+    
+    
     [UIActionSheet showInView:self.superview.superview
-                    withTitle:self.nick
+                    withTitle:_user.nick
             cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
        destructiveButtonTitle:nil
             otherButtonTitles:buttonTitles
                      tapBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex) {
-                         if ([_conversation.name isEqualToString:_nick])
+                         if ([_conversation.name isEqualToString:_user.nick])
                              buttonIndex++;
                              
                          switch (buttonIndex) {
                              case 0: {
-                                 IRCConversation *conversation = [controller createConversationWithName:_nick onClient:_conversation.client];
+                                 IRCConversation *conversation = [controller createConversationWithName:_user.nick onClient:_conversation.client];
 
                                  if(!actionSheet.isHidden)
                                      [controller dismissViewControllerAnimated:NO completion:nil];
@@ -122,7 +126,7 @@
                              }
                              case 1: {
                                  UserInfoViewController *infoViewController = [[UserInfoViewController alloc] init];
-                                 infoViewController.nickname = _nick;
+                                 infoViewController.nickname = _user.nick;
                                  infoViewController.client = _conversation.client;
                                  UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:infoViewController];
                                  navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -135,7 +139,10 @@
                                  break;
                              }
                              case 2:
-                                 [InputCommands performCommand:[NSString stringWithFormat:@"IGNORE %@", _nick] inConversation:_conversation];
+                                 if ([_user isIgnoredHostMask:_conversation.client])
+                                     [InputCommands performCommand:[NSString stringWithFormat:@"UNIGNORE %@", _user.nick] inConversation:_conversation];
+                                 else
+                                     [InputCommands performCommand:[NSString stringWithFormat:@"IGNORE %@", _user.nick] inConversation:_conversation];
                                  break;
                              default:
                                  break;

@@ -210,7 +210,7 @@
                 if ([[attributes objectForKey:@"NSLink"] isKindOfClass:NSURL.class])
                     linkTapView = [[LinkTapView alloc] initWithFrame:runBounds url:[attributes objectForKey:@"NSLink"]];
                 else {
-                    linkTapView = [[LinkTapView alloc] initWithFrame:runBounds nick:[attributes objectForKey:@"NSLink"]];
+                    linkTapView = [[LinkTapView alloc] initWithFrame:runBounds user:[attributes objectForKey:@"NSLink"]];
                     linkTapView.conversation = self.message.conversation;
                 }
                 
@@ -748,7 +748,7 @@ uint32_t FNV32(const char *s)
             
             // Mark sender's nick so we can respond to tap actions
             [string addAttribute:NSLinkAttributeName
-                           value:user.nick
+                           value:user
                            range:NSMakeRange(0, status.length+user.nick.length)];
 
             if ([_message.conversation isKindOfClass:[IRCChannel class]]) {
