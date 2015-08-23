@@ -668,6 +668,7 @@ BOOL popoverDidDismiss = NO;
     
     [self viewWillDisappear:NO];
     [self viewWillAppear:NO];
+    [self viewDidAppear:NO];
     
 }
 
@@ -734,6 +735,7 @@ BOOL popoverDidDismiss = NO;
     
     [self viewWillDisappear:NO];    
     [self viewWillAppear:NO];
+    [self viewDidAppear:NO];
 }
 
 - (void)swipeToShowUserlist:(UIScreenEdgePanGestureRecognizer *)recognizer
