@@ -10,6 +10,8 @@
 	<string>Conversation</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+		<key>1F601A37F0218B98FD4991D9D51BA9E46A39A47A</key>
+		<string>github.com:erica/NSDate-Extensions.git</string>
 		<key>CD6DEC9CC5C9AE1EEB120A5EECED1E52233B8A62</key>
 		<string>github.com:ConversationDevelopers/conversation.git</string>
 	</dict>
@@ -17,6 +19,8 @@
 	<string>Conversation.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
+		<key>1F601A37F0218B98FD4991D9D51BA9E46A39A47A</key>
+		<string>../conversation/Helpers/NSDate-Extensions/</string>
 		<key>CD6DEC9CC5C9AE1EEB120A5EECED1E52233B8A62</key>
 		<string>..</string>
 	</dict>
@@ -35,6 +39,14 @@
 			<string>CD6DEC9CC5C9AE1EEB120A5EECED1E52233B8A62</string>
 			<key>IDESourceControlWCCName</key>
 			<string>conversation</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>1F601A37F0218B98FD4991D9D51BA9E46A39A47A</string>
+			<key>IDESourceControlWCCName</key>
+			<string>NSDate-Extensions</string>
 		</dict>
 	</array>
 </dict>

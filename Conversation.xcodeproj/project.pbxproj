@@ -44,6 +44,7 @@
 		DAC65A4419EAA2ED00E00A73 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A3B19EAA2ED00E00A73 /* LaunchScreen.xib */; };
 		DAC65A4519EAA2ED00E00A73 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A3D19EAA2ED00E00A73 /* Localizable.strings */; };
 		DAC65A4819EAA2ED00E00A73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A4219EAA2ED00E00A73 /* Images.xcassets */; };
+		DAD62F031B8A56AA0004FDB0 /* NSDate-Extensions in Resources */ = {isa = PBXBuildFile; fileRef = DAD62F021B8A56AA0004FDB0 /* NSDate-Extensions */; };
 		DADA8AC61A0D3AC20085A130 /* ChannelInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DADA8AC51A0D3AC20085A130 /* ChannelInfoViewController.m */; };
 		DAE1BFB01A71DAB000A66276 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = DAE1BFAF1A71DAB000A66276 /* Defaults.plist */; };
 		DAE1BFB31A722FFA00A66276 /* ConversationContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE1BFB21A722FFA00A66276 /* ConversationContentView.m */; };
@@ -161,6 +162,7 @@
 		DAC65A3C19EAA2ED00E00A73 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		DAC65A3E19EAA2ED00E00A73 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Localizable.strings; sourceTree = "<group>"; };
 		DAC65A4219EAA2ED00E00A73 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = conversation/Resources/Images.xcassets; sourceTree = "<group>"; };
+		DAD62F021B8A56AA0004FDB0 /* NSDate-Extensions */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "NSDate-Extensions"; path = "conversation/Helpers/NSDate-Extensions"; sourceTree = SOURCE_ROOT; };
 		DADA8AC41A0D3AC20085A130 /* ChannelInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = ChannelInfoViewController.h; path = Interface/Controllers/ChannelInfoViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		DADA8AC51A0D3AC20085A130 /* ChannelInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ChannelInfoViewController.m; path = Interface/Controllers/ChannelInfoViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		DAE1BFAF1A71DAB000A66276 /* Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Defaults.plist; path = conversation/Resources/Defaults.plist; sourceTree = "<group>"; };
@@ -458,6 +460,7 @@
 				FADD2E6619F9BC86004B86AE /* GCDAsyncSocket.m */,
 				FADD2E6719F9BC86004B86AE /* GCDAsyncSocket.h */,
 				FAC1678E19F84228009856F0 /* Messages */,
+				DAD62F021B8A56AA0004FDB0 /* NSDate-Extensions */,
 				FA109B2819E3E6D60068DC29 /* IRCConnection.h */,
 				FA109B2919E3E6D60068DC29 /* IRCConnection.m */,
 				FA109B3219E410D80068DC29 /* IRCClient.h */,
@@ -780,6 +783,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DAC65A4419EAA2ED00E00A73 /* LaunchScreen.xib in Resources */,
+				DAD62F031B8A56AA0004FDB0 /* NSDate-Extensions in Resources */,
 				DAE1BFB01A71DAB000A66276 /* Defaults.plist in Resources */,
 				DA96223F19EDE217008D42EB /* networks.plist in Resources */,
 				DA86625F1B59812A0037C3F3 /* German.lproj in Resources */,
