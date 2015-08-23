@@ -41,6 +41,7 @@
 #import "NSString+Methods.h"
 #import "AppPreferences.h"
 #import "InterfaceLayoutDefinitions.h"
+#import "NSDate+Utilities.h"
 
 #define FNV_PRIME_32 16777619
 #define FNV_OFFSET_32 2166136261U
@@ -141,7 +142,16 @@
             NSDateFormatter *format = [[NSDateFormatter alloc] init];
             [format setLocale:[NSLocale currentLocale]];
             [format setTimeStyle:NSDateFormatterMediumStyle];
-            time = [format stringFromDate:date];
+            
+            if (date.isYesterday) {
+                time = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"yesterday", @"yesterday"), [format stringFromDate:date]];
+            } else if (date.isToday) {
+                time = [format stringFromDate:date];
+            } else {
+                [format setDateStyle:NSDateFormatterMediumStyle];
+                time = [format stringFromDate:date];                
+            }
+
         }
         
         NSMutableAttributedString *timestamp = [[NSMutableAttributedString alloc] initWithString:time];
