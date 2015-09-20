@@ -322,7 +322,7 @@ BOOL popoverDidDismiss = NO;
     newContainerFrame.size.height += sizeChange;
     
     CGRect screenRect = [[UIScreen mainScreen] bounds];
-    if (_keyboardIsVisible && self.container.frame.size.height < screenRect.size.height - (sizeChange*-1) && endFrame.size.height == (sizeChange*-1)) {
+    if (_keyboardIsVisible && self.container.frame.size.height < screenRect.size.height - (sizeChange*-1)) {
         return;
     }
     
