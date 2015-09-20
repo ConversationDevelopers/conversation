@@ -53,7 +53,7 @@
 
 @end
 
-CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
+CGRect kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
 BOOL popoverDidDismiss = NO;
 
 #define IPAD UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
@@ -64,6 +64,8 @@ BOOL popoverDidDismiss = NO;
 {
     if (!(self = [super init]))
         return nil;
+    
+    kInitialViewFrame = [[UIScreen mainScreen] bounds];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(messageReceived:)
@@ -194,6 +196,7 @@ BOOL popoverDidDismiss = NO;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self.navigationController.view layoutSubviews];
     
     ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     controller.currentConversation = _conversation;
