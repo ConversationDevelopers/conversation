@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "CD6DEC9CC5C9AE1EEB120A5EECED1E52233B8A62",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "CD6DEC9CC5C9AE1EEB120A5EECED1E52233B8A62" : 0,
+    "1F601A37F0218B98FD4991D9D51BA9E46A39A47A" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "4ABA27BD-A7A7-4915-8BD1-1D0804B9AFE4",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "CD6DEC9CC5C9AE1EEB120A5EECED1E52233B8A62" : "conversation",
+    "1F601A37F0218B98FD4991D9D51BA9E46A39A47A" : "conversation\/conversation\/Helpers\/NSDate-Extensions"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Conversation",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Conversation.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:erica\/NSDate-Extensions.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "1F601A37F0218B98FD4991D9D51BA9E46A39A47A"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ConversationDevelopers\/conversation.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "CD6DEC9CC5C9AE1EEB120A5EECED1E52233B8A62"
+    }
+  ]
+}

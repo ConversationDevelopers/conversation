@@ -37,11 +37,11 @@
 #import <YLGIFImage/YLGIFImage.h>
 #import <YLGIFImage/YLImageView.h>
 #import <UIActionSheet+Blocks/UIActionSheet+Blocks.h>
+#import <NSDate-Extensions/NSDate-Utilities.h>
 #import "LinkTapView.h"
 #import "NSString+Methods.h"
 #import "AppPreferences.h"
 #import "InterfaceLayoutDefinitions.h"
-#import "NSDate+Utilities.h"
 
 #define FNV_PRIME_32 16777619
 #define FNV_OFFSET_32 2166136261U

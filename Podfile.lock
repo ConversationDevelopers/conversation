@@ -1,11 +1,11 @@
 PODS:
   - AFNetworking (2.5.2):
-    - AFNetworking/NSURLConnection
-    - AFNetworking/NSURLSession
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-    - AFNetworking/UIKit
+    - AFNetworking/NSURLConnection (= 2.5.2)
+    - AFNetworking/NSURLSession (= 2.5.2)
+    - AFNetworking/Reachability (= 2.5.2)
+    - AFNetworking/Security (= 2.5.2)
+    - AFNetworking/Serialization (= 2.5.2)
+    - AFNetworking/UIKit (= 2.5.2)
   - AFNetworking/NSURLConnection (2.5.2):
     - AFNetworking/Reachability
     - AFNetworking/Security
@@ -24,18 +24,19 @@ PODS:
   - FCModel (0.9.0):
     - FMDB (~> 2.1)
   - FMDB (2.5):
-    - FMDB/standard
+    - FMDB/standard (= 2.5)
   - FMDB/common (2.5)
   - FMDB/standard (2.5):
     - FMDB/common
   - GoogleAnalytics-iOS-SDK (3.10):
-    - GoogleAnalytics-iOS-SDK/Core
+    - GoogleAnalytics-iOS-SDK/Core (= 3.10)
   - GoogleAnalytics-iOS-SDK/Core (3.10)
   - ImgurAnonymousAPIClient (0.2):
     - AFNetworking (>= 2.3.1)
   - InAppSettingsKit (2.5)
   - MCNotificationManager (0.1.2)
   - MenuPopOverView (0.0.3)
+  - NSDate-Extensions (0.0.1)
   - PHFComposeBarView (2.0.1):
     - PHFDelegateChain (~> 1.0)
   - PHFDelegateChain (1.0.1)
@@ -48,10 +49,12 @@ DEPENDENCIES:
   - DLImageLoader (~> 2.0.0)
   - FCModel
   - GoogleAnalytics-iOS-SDK
-  - ImgurAnonymousAPIClient (from `https://github.com/nolanw/ImgurAnonymousAPIClient.git`, tag `v0.2`)
+  - ImgurAnonymousAPIClient (from `https://github.com/nolanw/ImgurAnonymousAPIClient.git`,
+    tag `v0.2`)
   - InAppSettingsKit
   - MCNotificationManager
   - MenuPopOverView
+  - NSDate-Extensions
   - PHFComposeBarView (~> 2.0.1)
   - SHNavigationControllerBlocks
   - SHTransitionBlocks
@@ -71,15 +74,16 @@ SPEC CHECKSUMS:
   FCModel: 04bb289914e67f2275cb17fda869131a3529c1a5
   FMDB: 96e8f1bcc1329e269330f99770ad4285d9003e52
   GoogleAnalytics-iOS-SDK: 4f98a376c1d61e6ac4ca47951655820314856eef
-  ImgurAnonymousAPIClient: 34d68a1f5549b3dbe64028a44b8074bf44da2e82
+  ImgurAnonymousAPIClient: 03ed42f7075bc374f395c5894abd599e3e2306b9
   InAppSettingsKit: d872c25e20fcc7d9d33554e5be63070a07a443a7
   MCNotificationManager: c77c63d20b968474fca9c3ab3c12e00ee56ba300
   MenuPopOverView: 7bceaa320095b49580e383d3ba3c74deed1d8b58
+  NSDate-Extensions: cbd68ecf5cf8a150644e184b4521d7734fea5ace
   PHFComposeBarView: ceb26dd5a1e9a262c9e0ec3fd1dc12dbfff41c75
   PHFDelegateChain: 491f9cd8a3fb8761f390ff05f74a0e168d48d285
   SHNavigationControllerBlocks: 5c9a1d5c1fe2c32ebb187f645b8299783494a6ef
   SHTransitionBlocks: 3cbf25e5e67b4cb5702d857aa1c8aa899bfcb580
   UIActionSheet+Blocks: e180b7dad0a721ab7f212ac9742af799008bb358
-  YLGIFImage: bcff4a5200b060f655372f939989ddc0a0b21dde
+  YLGIFImage: c0ae132fe80e5282b2762a97d14e23ba71a748ae
 
-COCOAPODS: 0.34.4
+COCOAPODS: 0.38.2

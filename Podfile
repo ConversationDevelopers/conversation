@@ -16,6 +16,7 @@ target 'conversation' do
 	pod 'FCModel'
 	pod 'MenuPopOverView'
 	pod 'GoogleAnalytics-iOS-SDK'
+	pod 'NSDate-Extensions'
 end
 
 target 'conversationTests' do
@@ -31,6 +32,7 @@ target 'conversationTests' do
     pod 'FCModel'
     pod 'MenuPopOverView'
 	pod 'GoogleAnalytics-iOS-SDK'
+	pod 'NSDate-Extensions'
 end
 
 post_install do |installer_representation|
