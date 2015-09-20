@@ -209,12 +209,12 @@ BOOL popoverDidDismiss = NO;
     });
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillToggle:)
+                                             selector:@selector(keyboardWillShow:)
                                                  name:UIKeyboardWillShowNotification
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillToggle:)
+                                             selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
     
@@ -282,20 +282,31 @@ BOOL popoverDidDismiss = NO;
 
 }
 
-- (void)keyboardWillToggle:(NSNotification *)notification
+- (void)keyboardWillShow:(NSNotification *)notification
+{
+    _keyboardIsVisible = YES;
+    [self keyboardWillToggleWithInfo:notification.userInfo];
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification
+{
+    _keyboardIsVisible = NO;
+    [self keyboardWillToggleWithInfo:notification.userInfo];
+}
+
+- (void)keyboardWillToggleWithInfo:(NSDictionary *)info
 {
     if (_userlistIsVisible)
         [_userListView removeFromSuperview];
 
-    NSDictionary* userInfo = [notification userInfo];
     NSTimeInterval duration;
     UIViewAnimationCurve animationCurve;
     CGRect startFrame;
     CGRect endFrame;
-    [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&duration];
-    [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey]    getValue:&animationCurve];
-    [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey]        getValue:&startFrame];
-    [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey]          getValue:&endFrame];
+    [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&duration];
+    [[info objectForKey:UIKeyboardAnimationCurveUserInfoKey]    getValue:&animationCurve];
+    [[info objectForKey:UIKeyboardFrameBeginUserInfoKey]        getValue:&startFrame];
+    [[info objectForKey:UIKeyboardFrameEndUserInfoKey]          getValue:&endFrame];
     
     NSInteger signCorrection = 1;
     if (startFrame.origin.y < 0 || startFrame.origin.x < 0 || endFrame.origin.y < 0 || endFrame.origin.x < 0)
@@ -303,13 +314,6 @@ BOOL popoverDidDismiss = NO;
     
     CGFloat widthChange  = (endFrame.origin.x - startFrame.origin.x) * signCorrection;
     CGFloat heightChange = (endFrame.origin.y - startFrame.origin.y) * signCorrection;
-    
-    if (duration > 0.01) {
-        if (heightChange < 0)
-            _keyboardIsVisible = YES;
-        else
-            _keyboardIsVisible = NO;
-    }
     
     CGFloat sizeChange = UIInterfaceOrientationIsLandscape([self interfaceOrientation]) ? widthChange : heightChange;
     
@@ -342,6 +346,7 @@ BOOL popoverDidDismiss = NO;
                          [[self container] setFrame:newContainerFrame];
                      }
                      completion:NULL];
+    
     [self scrollToBottom:NO];
 }
 
