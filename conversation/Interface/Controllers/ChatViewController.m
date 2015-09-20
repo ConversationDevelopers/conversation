@@ -223,6 +223,8 @@ BOOL popoverDidDismiss = NO;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [self hideUserList];
+    [self.composeBarView resignFirstResponder];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillShowNotification
                                                   object:nil];
@@ -230,6 +232,7 @@ BOOL popoverDidDismiss = NO;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillHideNotification
                                                   object:nil];
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -304,12 +307,11 @@ BOOL popoverDidDismiss = NO;
     CGFloat widthChange  = (endFrame.origin.x - startFrame.origin.x) * signCorrection;
     CGFloat heightChange = (endFrame.origin.y - startFrame.origin.y) * signCorrection;
     
-    if (duration > 0.01) {
-        if (heightChange < 0)
-            _keyboardIsVisible = YES;
-        else
-            _keyboardIsVisible = NO;
-    }
+    if (heightChange < 0)
+        _keyboardIsVisible = YES;
+    else if (heightChange > 100)
+        _keyboardIsVisible = NO;
+    
     
     CGFloat sizeChange = UIInterfaceOrientationIsLandscape([self interfaceOrientation]) ? widthChange : heightChange;
     
@@ -326,11 +328,11 @@ BOOL popoverDidDismiss = NO;
     NSArray *vComp = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
     if ([[vComp objectAtIndex:0] intValue] >= 9) {
         // iOS9 or higher
-        if (_keyboardIsVisible && self.container.frame.size.height < screenRect.size.height - (sizeChange*-1)) {
+        if (heightChange*-1 > 100 && self.container.frame.size.height < screenRect.size.height - (sizeChange*-1)) {
             return;
         }
     } else {
-        if (_keyboardIsVisible && self.container.frame.size.height < screenRect.size.height - (sizeChange*-1) && endFrame.size.height == (sizeChange*-1)) {
+        if (heightChange*-1 > 100 && self.container.frame.size.height < screenRect.size.height - (sizeChange*-1) && endFrame.size.height == (sizeChange*-1)) {
             return;
         }
     }
