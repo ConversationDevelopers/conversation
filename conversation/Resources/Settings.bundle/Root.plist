@@ -207,6 +207,10 @@
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
 			<string>Acknowledgements</string>
+			<key>FooterText</key>
+			<string>German translation by Pierre Geisel
+Dutch translation by Andreas Backx
+			</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -222,7 +226,7 @@
 			<key>Title</key>
 			<string></string>
 			<key>FooterText</key>
-			<string>Copyright © 2015 Tobias Pollmann</string>
+			<string>Copyright by Tobias Pollmann 2015</string>
 		</dict>
 		<dict>
 			<key>Type</key>
