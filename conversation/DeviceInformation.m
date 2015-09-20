@@ -60,7 +60,10 @@
                                 @"iPhone6,2"    :@"iPhone 5s",       // (model A1457, A1518, A1528 (China), A1530 | Global)
                                 @"iPhone7,1"    :@"iPhone 6 Plus",   //
                                 @"iPhone7,2"    :@"iPhone 6",        //
-                                @"iPod5,1"      :@"iPod Touch (5th Generation)",      // (Fourth Generation)
+                                @"iPhone8,1"    :@"iPhone 6S",   //
+                                @"iPhone8,2"    :@"iPhone 6S Plus",        //
+                                @"iPod5,1"      :@"iPod Touch (5th Generation)",      // (5th Generation iPod Tocuh)
+                                @"iPod7,1"      :@"iPod Touch (6th Generation)",        // (6th Generation iPod Touch)
                                 @"iPad2,1"      :@"iPad 2",          //
                                 @"iPad3,1"      :@"iPad (3rd Generation)",            // (3rd Generation)
                                 @"iPad3,4"      :@"iPad (4th Generation)",            // (4th Generation)
@@ -68,7 +71,15 @@
                                 @"iPad4,1"      :@"iPad Air",        // 5th Generation iPad (iPad Air) - Wifi
                                 @"iPad4,2"      :@"iPad Air",        // 5th Generation iPad (iPad Air) - Cellular
                                 @"iPad4,4"      :@"iPad Mini (2nd Generation)",       // (2nd Generation iPad Mini - Wifi)
-                                @"iPad4,5"      :@"iPad Mini (2nd Generation)"        // (2nd Generation iPad Mini - Cellular)
+                                @"iPad4,5"      :@"iPad Mini (2nd Generation)",        // (2nd Generation iPad Mini - Cellular)
+                                @"iPad4,6"      :@"iPad Mini (2nd Generation)",        // (2nd Generation iPad Mini - China)
+                                @"iPad4,7"      :@"iPad Mini (3rd Generation)",        // (3nd Generation iPad Mini - Wifi)
+                                @"iPad4,8"      :@"iPad Mini (3rd Generation)",        // (3nd Generation iPad Mini - Cellular)
+                                @"iPad4,9"      :@"iPad Mini (3rd Generation)",         // (3nd Generation iPad Mini - China)
+                                @"iPad5,1"      :@"iPad Mini (4th Generation)",         // (3nd Generation iPad Mini - Wifi)
+                                @"iPad5,2"      :@"iPad Mini (4th Generation)",         // (3nd Generation iPad Mini - Cellular)
+                                @"iPad5,3"      :@"iPad Air (2nd Generation)",        // (2nd Generation iPad Air - Wifi)
+                                @"iPad5,4"      :@"iPad Air (2nd Generation)"        // (2nd Generation iPad Air - Cellular)
                               };
     }
     
