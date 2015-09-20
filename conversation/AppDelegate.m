@@ -34,7 +34,6 @@
 #import "ChatMessageView.h"
 #import "IRCConnection.h"
 #import "IRCConversation.h"
-#import "AnalyticsController.h"
 #import <FCModel/FCModel.h>
 #import <DLImageLoader/DLImageView.h>
 
@@ -143,8 +142,6 @@
     
         [db commit];
     }];
-    
-    [AnalyticsController setup];    
     
     return YES;
 }

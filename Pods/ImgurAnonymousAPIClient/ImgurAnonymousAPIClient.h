@@ -3,6 +3,9 @@
 //  Public domain. https://github.com/nolanw/ImgurAnonymousAPIClient
 
 #import <Foundation/Foundation.h>
+#if __IPHONE_OS_VERSION_MIN_REQUIRED
+    #import <UIKit/UIKit.h>
+#endif
 
 /**
  * An ImgurAnonymousAPIClient anonymously uploads images to Imgur.
@@ -33,7 +36,7 @@
 /**
  * Convenient singleton. Tries to find a client ID in Info.plist under the ImgurAnonymousAPIClientInfoPlistClientIDKey; if unspecified or unwanted, be sure to set a different clientID.
  */
-+ (instancetype)client;
++ (instancetype)sharedClient;
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED
 

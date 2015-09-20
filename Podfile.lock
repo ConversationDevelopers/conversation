@@ -1,23 +1,23 @@
 PODS:
-  - AFNetworking (2.5.2):
-    - AFNetworking/NSURLConnection (= 2.5.2)
-    - AFNetworking/NSURLSession (= 2.5.2)
-    - AFNetworking/Reachability (= 2.5.2)
-    - AFNetworking/Security (= 2.5.2)
-    - AFNetworking/Serialization (= 2.5.2)
-    - AFNetworking/UIKit (= 2.5.2)
-  - AFNetworking/NSURLConnection (2.5.2):
+  - AFNetworking (2.6.0):
+    - AFNetworking/NSURLConnection (= 2.6.0)
+    - AFNetworking/NSURLSession (= 2.6.0)
+    - AFNetworking/Reachability (= 2.6.0)
+    - AFNetworking/Security (= 2.6.0)
+    - AFNetworking/Serialization (= 2.6.0)
+    - AFNetworking/UIKit (= 2.6.0)
+  - AFNetworking/NSURLConnection (2.6.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.2):
+  - AFNetworking/NSURLSession (2.6.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.2)
-  - AFNetworking/Security (2.5.2)
-  - AFNetworking/Serialization (2.5.2)
-  - AFNetworking/UIKit (2.5.2):
+  - AFNetworking/Reachability (2.6.0)
+  - AFNetworking/Security (2.6.0)
+  - AFNetworking/Serialization (2.6.0)
+  - AFNetworking/UIKit (2.6.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - DLImageLoader (2.0.0)
@@ -28,16 +28,13 @@ PODS:
   - FMDB/common (2.5)
   - FMDB/standard (2.5):
     - FMDB/common
-  - GoogleAnalytics-iOS-SDK (3.10):
-    - GoogleAnalytics-iOS-SDK/Core (= 3.10)
-  - GoogleAnalytics-iOS-SDK/Core (3.10)
-  - ImgurAnonymousAPIClient (0.2):
+  - ImgurAnonymousAPIClient (0.3.2):
     - AFNetworking (>= 2.3.1)
-  - InAppSettingsKit (2.5)
+  - InAppSettingsKit (2.6)
   - MCNotificationManager (0.1.2)
   - MenuPopOverView (0.0.3)
   - NSDate-Extensions (0.0.1)
-  - PHFComposeBarView (2.0.1):
+  - PHFComposeBarView (2.0.2):
     - PHFDelegateChain (~> 1.0)
   - PHFDelegateChain (1.0.1)
   - SHNavigationControllerBlocks (2.1.1)
@@ -48,9 +45,7 @@ PODS:
 DEPENDENCIES:
   - DLImageLoader (~> 2.0.0)
   - FCModel
-  - GoogleAnalytics-iOS-SDK
-  - ImgurAnonymousAPIClient (from `https://github.com/nolanw/ImgurAnonymousAPIClient.git`,
-    tag `v0.2`)
+  - ImgurAnonymousAPIClient (from `https://github.com/nolanw/ImgurAnonymousAPIClient.git`)
   - InAppSettingsKit
   - MCNotificationManager
   - MenuPopOverView
@@ -64,22 +59,28 @@ DEPENDENCIES:
 EXTERNAL SOURCES:
   ImgurAnonymousAPIClient:
     :git: https://github.com/nolanw/ImgurAnonymousAPIClient.git
-    :tag: v0.2
   YLGIFImage:
     :git: https://github.com/liyong03/YLGIFImage.git
 
+CHECKOUT OPTIONS:
+  ImgurAnonymousAPIClient:
+    :commit: 11722f46f5ac2f5f1945ea148759e45acdb42986
+    :git: https://github.com/nolanw/ImgurAnonymousAPIClient.git
+  YLGIFImage:
+    :commit: 9fab954e0ba2a67e089a02356e9b9af6d3a703d9
+    :git: https://github.com/liyong03/YLGIFImage.git
+
 SPEC CHECKSUMS:
-  AFNetworking: fefbce9660acb17f48ae0011292d4da0f457bf36
+  AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
   DLImageLoader: b78e0d61d71e0fa2a1f3d26728b4ece43de85b06
   FCModel: 04bb289914e67f2275cb17fda869131a3529c1a5
   FMDB: 96e8f1bcc1329e269330f99770ad4285d9003e52
-  GoogleAnalytics-iOS-SDK: 4f98a376c1d61e6ac4ca47951655820314856eef
-  ImgurAnonymousAPIClient: 03ed42f7075bc374f395c5894abd599e3e2306b9
-  InAppSettingsKit: d872c25e20fcc7d9d33554e5be63070a07a443a7
+  ImgurAnonymousAPIClient: d1887ebe11b64a44ede12928b101d1f1c0099c2b
+  InAppSettingsKit: cc56d3ec45f11352a16d5b210da8a3fa1b9d05ed
   MCNotificationManager: c77c63d20b968474fca9c3ab3c12e00ee56ba300
   MenuPopOverView: 7bceaa320095b49580e383d3ba3c74deed1d8b58
   NSDate-Extensions: cbd68ecf5cf8a150644e184b4521d7734fea5ace
-  PHFComposeBarView: ceb26dd5a1e9a262c9e0ec3fd1dc12dbfff41c75
+  PHFComposeBarView: 758c73ce54be681df97223bc61543dd8828ae0d3
   PHFDelegateChain: 491f9cd8a3fb8761f390ff05f74a0e168d48d285
   SHNavigationControllerBlocks: 5c9a1d5c1fe2c32ebb187f645b8299783494a6ef
   SHTransitionBlocks: 3cbf25e5e67b4cb5702d857aa1c8aa899bfcb580

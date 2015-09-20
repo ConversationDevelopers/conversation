@@ -287,16 +287,24 @@ static CGFloat kTextViewToSuperviewHeightDelta;
 @synthesize button = _button;
 - (UIButton *)button {
     if (!_button) {
-        _button = [UIButton buttonWithType:UIButtonTypeInfoLight];
+        _button = [PHFComposeBarView_Button buttonWithType:UIButtonTypeCustom];
         CGRect frame = CGRectMake([self bounds].size.width - kHorizontalSpacing - kButtonRightMargin - kButtonTouchableOverlap,
                                   [self bounds].size.height - kButtonBottomMargin - kButtonHeight,
                                   2 * kButtonTouchableOverlap,
                                   kButtonHeight);
         [_button setFrame:frame];
+        [_button setTitleEdgeInsets:UIEdgeInsetsMake(0.5f, 0, 0, 0)];
         [_button setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleTopMargin];
+        [_button setTitle:[self buttonTitle] forState:UIControlStateNormal];
 
+        UIColor *disabledColor = [UIColor colorWithHue:240.0f/360.0f saturation:0.03f brightness:0.58f alpha:1.0f];
+        [_button setTitleColor:disabledColor forState:UIControlStateDisabled];
+        UIColor *enabledColor = [UIColor colorWithHue:211.0f/360.0f saturation:1.0f brightness:1.0f alpha:1.0f];
+        [_button setTitleColor:enabledColor forState:UIControlStateNormal];
         [_button addTarget:self action:@selector(didPressButton) forControlEvents:UIControlEventTouchUpInside];
 
+        UILabel *label = [_button titleLabel];
+        [label setFont:[UIFont boldSystemFontOfSize:kFontSize]];
     }
 
     return _button;
@@ -625,7 +633,7 @@ static CGFloat kTextViewToSuperviewHeightDelta;
 }
 
 - (void)updateButtonEnabled {
-    BOOL enabled = [self isEnabled];
+    BOOL enabled = [self isEnabled] && [[[self textView] text] length] > 0;
     [[self button] setEnabled:enabled];
 }
 
@@ -634,8 +642,8 @@ static CGFloat kTextViewToSuperviewHeightDelta;
     [[self charCountLabel] setHidden:isHidden];
 
     if (!isHidden) {
-        NSInteger count = [[[[self textView] text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length];
-        NSString *text = [NSString stringWithFormat:@"%ld/%lu", (long)count, (unsigned long)[self maxCharCount]];
+        NSUInteger count = [[[[self textView] text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length];
+        NSString *text = [NSString stringWithFormat:@"%lu/%lu", (unsigned long)count, (unsigned long)[self maxCharCount]];
         [[self charCountLabel] setText:text];
     }
 }

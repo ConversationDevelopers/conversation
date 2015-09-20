@@ -877,7 +877,7 @@ BOOL popoverDidDismiss = NO;
     [_composeBarView addSubview:indicator];
 
     if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
-        [[ImgurAnonymousAPIClient client] uploadImage:info[UIImagePickerControllerOriginalImage] withFilename:nil completionHandler:^(NSURL *imgurURL, NSError *error) {
+        [[ImgurAnonymousAPIClient sharedClient] uploadImageFile:info[UIImagePickerControllerOriginalImage] withFilename:nil completionHandler:^(NSURL *imgurURL, NSError *error) {
             if(error)
                 NSLog(@"Error while uploading image: %@", error.description);
             NSString *string;
@@ -893,7 +893,7 @@ BOOL popoverDidDismiss = NO;
         return;
     }
  
-    [[ImgurAnonymousAPIClient client] uploadAssetWithURL:info[UIImagePickerControllerReferenceURL] filename:nil completionHandler:^(NSURL *imgurURL, NSError *error) {
+    [[ImgurAnonymousAPIClient sharedClient] uploadAssetWithURL:info[UIImagePickerControllerReferenceURL] filename:nil completionHandler:^(NSURL *imgurURL, NSError *error) {
         if(error)
             NSLog(@"Error while uploading image: %@", error.description);
         NSString *string;

@@ -1,13 +1,13 @@
 {
   "name": "ImgurAnonymousAPIClient",
-  "version": "0.2",
+  "version": "0.3.2",
   "license": "Public domain",
   "summary": "An anonymous Imgur image uploader",
   "homepage": "https://github.com/nolanw/ImgurAnonymousAPIClient",
   "authors": "Nolan Waite",
   "source": {
     "git": "https://github.com/nolanw/ImgurAnonymousAPIClient.git",
-    "tag": "v0.2"
+    "tag": "v0.3.2"
   },
   "source_files": "ImgurAnonymousAPIClient.[hm]",
   "requires_arc": true,

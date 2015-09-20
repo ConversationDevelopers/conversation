@@ -39,7 +39,6 @@
 		DAA3229E19E56CBF0068E2B6 /* EditConnectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA3229D19E56CBF0068E2B6 /* EditConnectionViewController.m */; };
 		DAA322AC19E5DE490068E2B6 /* PreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */; };
 		DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA322AB19E5DE490068E2B6 /* PreferencesTextCell.m */; };
-		DAB3FDE51A87AB4200E4CA7A /* AnalyticsController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAB3FDE41A87AB4200E4CA7A /* AnalyticsController.m */; };
 		DAC0CB951A80E4CC00A7A2E7 /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC0CB941A80E4CC00A7A2E7 /* UserInfoViewController.m */; };
 		DAC65A4419EAA2ED00E00A73 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A3B19EAA2ED00E00A73 /* LaunchScreen.xib */; };
 		DAC65A4519EAA2ED00E00A73 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAC65A3D19EAA2ED00E00A73 /* Localizable.strings */; };
@@ -154,8 +153,6 @@
 		DAA322A919E5DE490068E2B6 /* PreferencesSwitchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesSwitchCell.m; path = Interface/Views/PreferencesSwitchCell.m; sourceTree = "<group>"; };
 		DAA322AA19E5DE490068E2B6 /* PreferencesTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesTextCell.h; path = Interface/Views/PreferencesTextCell.h; sourceTree = "<group>"; };
 		DAA322AB19E5DE490068E2B6 /* PreferencesTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesTextCell.m; path = Interface/Views/PreferencesTextCell.m; sourceTree = "<group>"; };
-		DAB3FDE31A87AB4200E4CA7A /* AnalyticsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = AnalyticsController.h; path = Interface/Controllers/AnalyticsController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		DAB3FDE41A87AB4200E4CA7A /* AnalyticsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AnalyticsController.m; path = Interface/Controllers/AnalyticsController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		DAC0CB931A80E4CC00A7A2E7 /* UserInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserInfoViewController.h; path = Interface/Controllers/UserInfoViewController.h; sourceTree = "<group>"; };
 		DAC0CB941A80E4CC00A7A2E7 /* UserInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserInfoViewController.m; path = Interface/Controllers/UserInfoViewController.m; sourceTree = "<group>"; };
 		DAC65A3C19EAA2ED00E00A73 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = LaunchScreen.xib; sourceTree = "<group>"; };
@@ -515,8 +512,6 @@
 			children = (
 				DA379D4519FB35E80031E30B /* ChatViewController.h */,
 				DA379D4619FB35E80031E30B /* ChatViewController.m */,
-				DAB3FDE31A87AB4200E4CA7A /* AnalyticsController.h */,
-				DAB3FDE41A87AB4200E4CA7A /* AnalyticsController.m */,
 				DA2F9A061A0726E60028B2BD /* AddStringItemViewController.h */,
 				DA2F9A071A0726E60028B2BD /* AddStringItemViewController.m */,
 				DA79EA2E19E92AF20027A370 /* PreferencesListViewController.h */,
@@ -874,7 +869,6 @@
 				DA2F9A081A0726E60028B2BD /* AddStringItemViewController.m in Sources */,
 				FA00A38419E5A69F00E7B4D7 /* IRCMessageIndex.m in Sources */,
 				DAA322AD19E5DE490068E2B6 /* PreferencesTextCell.m in Sources */,
-				DAB3FDE51A87AB4200E4CA7A /* AnalyticsController.m in Sources */,
 				FA8070801A8CB46000D76258 /* WHOIS.m in Sources */,
 				DAE1BFB31A722FFA00A66276 /* ConversationContentView.m in Sources */,
 				FAC0E50C1A018AC2001CFB48 /* CertificateItemRow.m in Sources */,
@@ -1020,6 +1014,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/conversation",
@@ -1072,6 +1067,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/conversation",

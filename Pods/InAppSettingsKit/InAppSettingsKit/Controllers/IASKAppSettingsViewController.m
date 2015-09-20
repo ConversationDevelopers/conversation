@@ -92,7 +92,7 @@ CGRect IASKCGRectSwap(CGRect rect);
 
 - (void)setFile:(NSString *)file {
     _file = [file copy];
-    self.tableView.contentOffset = CGPointMake(0, 0);
+    self.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
     self.settingsReader = nil; // automatically initializes itself
     if (!_reloadDisabled) {
 		[self.tableView reloadData];
@@ -239,9 +239,11 @@ CGRect IASKCGRectSwap(CGRect rect);
 
 - (void)viewDidDisappear:(BOOL)animated {
 	NSNotificationCenter *dc = [NSNotificationCenter defaultCenter];
-	IASKSettingsStoreUserDefaults *udSettingsStore = (id)self.settingsStore;
-	[dc removeObserver:self name:NSUserDefaultsDidChangeNotification object:udSettingsStore.defaults];
-	[dc removeObserver:self name:kIASKAppSettingChanged object:self];
+	if ([self.settingsStore isKindOfClass:[IASKSettingsStoreUserDefaults class]]) {
+		IASKSettingsStoreUserDefaults *udSettingsStore = (id)self.settingsStore;
+		[dc removeObserver:self name:NSUserDefaultsDidChangeNotification object:udSettingsStore.defaults];
+		[dc removeObserver:self name:kIASKAppSettingChanged object:self];
+	}
 	[dc removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:[UIApplication sharedApplication]];
 	[dc removeObserver:self name:UIApplicationWillEnterForegroundNotification object:[UIApplication sharedApplication]];
 	[dc removeObserver:self name:UIApplicationWillTerminateNotification object:[UIApplication sharedApplication]];

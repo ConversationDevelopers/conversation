@@ -8,14 +8,13 @@ target 'conversation' do
 	pod 'DLImageLoader', '~> 2.0.0'
 	pod 'YLGIFImage', :git => 'https://github.com/liyong03/YLGIFImage.git'
 	pod 'UIActionSheet+Blocks'
-	pod 'ImgurAnonymousAPIClient', :git => 'https://github.com/nolanw/ImgurAnonymousAPIClient.git', :tag => 'v0.2'
+	pod 'ImgurAnonymousAPIClient', :git => 'https://github.com/nolanw/ImgurAnonymousAPIClient.git'
 	pod 'SHTransitionBlocks' 
 	pod 'SHNavigationControllerBlocks'
 	pod 'MCNotificationManager'
 	pod 'InAppSettingsKit'
 	pod 'FCModel'
 	pod 'MenuPopOverView'
-	pod 'GoogleAnalytics-iOS-SDK'
 	pod 'NSDate-Extensions'
 end
 
@@ -24,14 +23,13 @@ target 'conversationTests' do
     pod 'DLImageLoader', '~> 2.0.0'
     pod 'YLGIFImage', :git => 'https://github.com/liyong03/YLGIFImage.git'
     pod 'UIActionSheet+Blocks'
-    pod 'ImgurAnonymousAPIClient', :git => 'https://github.com/nolanw/ImgurAnonymousAPIClient.git', :tag => 'v0.2'
+    pod 'ImgurAnonymousAPIClient', :git => 'https://github.com/nolanw/ImgurAnonymousAPIClient.git'
     pod 'SHTransitionBlocks'
     pod 'SHNavigationControllerBlocks'
     pod 'MCNotificationManager'
     pod 'InAppSettingsKit'
     pod 'FCModel'
     pod 'MenuPopOverView'
-	pod 'GoogleAnalytics-iOS-SDK'
 	pod 'NSDate-Extensions'
 end
 
