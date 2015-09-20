@@ -93,7 +93,7 @@ BOOL popoverDidDismiss = NO;
     
 }
 
-- (NSUInteger)supportedInterfaceOrientations
+- (enum UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskAll;
 }

@@ -202,7 +202,7 @@
         /* Get the algorithm used for this SSL certificate, for example SHA-1 with RSA Encryption */
         OBJ_obj2txt(alg, sizeof(alg), certificateX509->sig_alg->algorithm, 0);
         NSString *signatureAlgorithm;
-        if (alg) {
+        if (sizeof(alg)) {
             signatureAlgorithm = [NSString stringWithUTF8String:alg];
         } else {
             signatureAlgorithm = @"";
