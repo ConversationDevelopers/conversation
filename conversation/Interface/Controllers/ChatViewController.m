@@ -322,8 +322,17 @@ BOOL popoverDidDismiss = NO;
     newContainerFrame.size.height += sizeChange;
     
     CGRect screenRect = [[UIScreen mainScreen] bounds];
-    if (_keyboardIsVisible && self.container.frame.size.height < screenRect.size.height - (sizeChange*-1)) {
-        return;
+
+    NSArray *vComp = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
+    if ([[vComp objectAtIndex:0] intValue] >= 9) {
+        // iOS9 or higher
+        if (_keyboardIsVisible && self.container.frame.size.height < screenRect.size.height - (sizeChange*-1)) {
+            return;
+        }
+    } else {
+        if (_keyboardIsVisible && self.container.frame.size.height < screenRect.size.height - (sizeChange*-1) && endFrame.size.height == (sizeChange*-1)) {
+            return;
+        }
     }
     
     [UIView animateWithDuration:duration
