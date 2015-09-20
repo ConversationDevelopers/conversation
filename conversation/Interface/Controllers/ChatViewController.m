@@ -304,10 +304,11 @@ BOOL popoverDidDismiss = NO;
     CGFloat widthChange  = (endFrame.origin.x - startFrame.origin.x) * signCorrection;
     CGFloat heightChange = (endFrame.origin.y - startFrame.origin.y) * signCorrection;
     
-    if (heightChange < 0) {
-        _keyboardIsVisible = YES;
-    } else {
-        _keyboardIsVisible = NO;
+    if (duration > 0.01) {
+        if (heightChange < 0)
+            _keyboardIsVisible = YES;
+        else
+            _keyboardIsVisible = NO;
     }
     
     CGFloat sizeChange = UIInterfaceOrientationIsLandscape([self interfaceOrientation]) ? widthChange : heightChange;
