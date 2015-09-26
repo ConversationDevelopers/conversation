@@ -126,6 +126,7 @@
     
     frame.size = firstdetail.size;
     frame.size.width = self.contentView.frame.size.width - self.imageView.frame.size.width;
+    frame.size.height += 1;
     
     _firstDetailLabel.attributedText = firstdetail;
     _firstDetailLabel.frame = frame;
@@ -133,6 +134,7 @@
     frame.origin.y += 15;
     frame.size = seconddetail.size;
     frame.size.width = self.contentView.frame.size.width - self.imageView.frame.size.width;
+    frame.size.height += 1;
     
     _secondDetailLabel.attributedText = seconddetail;
     _secondDetailLabel.frame = frame;
