@@ -251,10 +251,10 @@ static inline BOOL checkForOpenDatabaseFatal(BOOL fatal)
         } else if (propertyClass == NSDate.class) {
             return [NSDate dateWithTimeIntervalSince1970:[databaseValue doubleValue]];
         } else if (propertyClass == NSDictionary.class) {
-            NSDictionary *dict = [NSPropertyListSerialization propertyListWithData:databaseValue options:kCFPropertyListImmutable format:NULL error:NULL];
+            NSDictionary *dict = [NSPropertyListSerialization propertyListWithData:databaseValue options:NSPropertyListImmutable format:NULL error:NULL];
             return dict && [dict isKindOfClass:NSDictionary.class] ? dict : @{};
         } else if (propertyClass == NSArray.class) {
-            NSArray *array = [NSPropertyListSerialization propertyListWithData:databaseValue options:kCFPropertyListImmutable format:NULL error:NULL];
+            NSArray *array = [NSPropertyListSerialization propertyListWithData:databaseValue options:NSPropertyListImmutable format:NULL error:NULL];
             return array && [array isKindOfClass:NSArray.class] ? array : @[];
         }
     }
