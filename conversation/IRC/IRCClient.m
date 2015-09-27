@@ -373,12 +373,6 @@
             /* At this point we will enable the flood control. */
             [self.connection enableFloodControl];
             
-            /* This server supports the ZNC advanced playback module. We will request all messages since the
-             last time we received a message. Or from the start of the ZNC logs if we don't have a time on record. */
-            if (IRCv3CapabilityEnabled(self, @"znc.in/playback")) {
-                [self.connection send:[NSString stringWithFormat:@"PRIVMSG *playback :PLAY * %ld", self.configuration.lastMessageTime]];
-            }
-            
             /* We can enable autojoin at this point as long as the user does not wish us to authenticate with nickserv.
              If this is the case we will wait until authentication is complete. */
             if (self.configuration.useServerAuthenticationService == NO) {
