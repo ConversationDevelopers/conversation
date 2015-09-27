@@ -64,6 +64,8 @@
 
 #define IPAD UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
 
+long _lastUpdateTime = 0;
+
 @implementation ConversationListViewController
 
 - (id)init
@@ -262,6 +264,7 @@
     
     if (_currentConversation && _chatViewController.isChannel)
         [_chatViewController updateJoinStatus];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -269,6 +272,20 @@
     [super didReceiveMemoryWarning];
     [[AppPreferences sharedPrefs] savePrefs];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)update
+{
+    if ([[NSDate date] timeIntervalSince1970] - _lastUpdateTime < 1) {
+        [NSTimer scheduledTimerWithTimeInterval:0.5
+                                         target:self
+                                       selector:@selector(update)
+                                       userInfo:nil
+                                        repeats:NO];
+    } else {
+        [self.tableView reloadData];
+        _lastUpdateTime = [[NSDate date] timeIntervalSince1970];
+    }
 }
 
 - (void)showSettings:(id)sender
@@ -1015,8 +1032,9 @@
         
     }
     
-    if (self.tableView.isEditing == NO)
-        [self.tableView reloadData];
+    if (self.tableView.isEditing == NO) {
+        [self update];
+    }
     
 }
 
