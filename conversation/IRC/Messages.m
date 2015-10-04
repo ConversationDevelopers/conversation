@@ -366,13 +366,6 @@
         message.conversation = channel;
         
         if ([[[message sender] nick] isEqualToStringCaseInsensitive:message.client.currentUserOnConnection.nick]) {
-            
-            /* This server supports the ZNC advanced playback module. We will request all messages for this channel since the
-             last time we received a message. Or from the start of the ZNC logs if we don't have a time on record. */
-            if (IRCv3CapabilityEnabled(message.client, @"znc.in/playback")) {
-                [message.client.connection send:[NSString stringWithFormat:@"PRIVMSG *playback :PLAY %@ %ld", conversation.name, message.client.configuration.lastMessageTime]];
-            }
-            
             [message.client.connection send:[NSString stringWithFormat:@"WHO %@", conversation.name]];
             [message.client.connection send:[NSString stringWithFormat:@"MODE %@", conversation.name]];
             channel.isJoinedByUser = YES;
