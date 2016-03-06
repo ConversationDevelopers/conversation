@@ -95,7 +95,7 @@
 "Join a Channel" = "Channel betreten";
 "Join Channels" = "Channels betreten";
 "joined the channel" = "betritt den Channel";
-"kick message" = "kick message";
+"%@ kicked %@ from the channel (%@)" = "%@ hat %@ aus dem Channel gekickt (%@)";
 "left IRC" = "verlässt IRC";
 "left the channel" = "verlässt den Channel";
 "Locality" = "Locality";

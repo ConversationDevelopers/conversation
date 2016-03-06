@@ -616,7 +616,7 @@ uint32_t FNV32(const char *s)
         }
         case ET_KICK: {
 
-            msg = [NSString stringWithFormat:NSLocalizedString(@"kick message", nil), _message.sender.nick, _message.kickedUser.nick, _message.message];
+            msg = [NSString stringWithFormat:NSLocalizedString(@"%@ kicked %@ from the channel (%@)", nil), _message.sender.nick, _message.kickedUser.nick, _message.message];
             
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"← %@", msg]];
 
