@@ -619,8 +619,6 @@ uint32_t FNV32(const char *s)
             msg = [NSString stringWithFormat:NSLocalizedString(@"%@ kicked %@ from the channel (%@)", nil), _message.sender.nick, _message.kickedUser.nick, _message.message];
             
             string = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"← %@", msg]];
-
-            NSRange range = [[string.string substringFromIndex:_message.sender.nick.length + 2] rangeOfString:_message.kickedUser.nick];
             
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
@@ -643,7 +641,7 @@ uint32_t FNV32(const char *s)
             
             [string addAttribute:NSFontAttributeName
                            value:[UIFont boldSystemFontOfSize:10.0]
-                           range:NSMakeRange(range.location + _message.sender.nick.length + 2, range.location)];
+                           range:[string.string rangeOfString:_message.kickedUser.nick]];
             
 
             break;
