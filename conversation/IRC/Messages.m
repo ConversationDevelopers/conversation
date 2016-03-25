@@ -374,10 +374,9 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [controller reloadClient:message.client];
             });
-        } else {
-            [[channel users] addObject:[message sender]];
-            [channel sortUserlist];
         }
+        [[channel users] addObject:[message sender]];
+        [channel sortUserlist];
 
         [[message conversation] addMessageToConversation:message];
     
