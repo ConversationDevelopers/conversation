@@ -32,6 +32,8 @@
 #import "IRCClient.h"
 #include <arpa/inet.h>
 
+#define specialChars [NSArray arrayWithObjects: @"\\", @"^", @"$", nil]
+
 @implementation NSString (Helpers)
 
 - (BOOL) isValidChannelName:(IRCClient *)client
@@ -196,6 +198,15 @@
         encoding = NSUTF8StringEncoding;
     }
     return [self dataUsingEncoding:encoding allowLossyConversion:NO];
+}
+
+- (NSString *)stringByEscapingCertainCharacters
+{
+    NSString *string = self;
+    for (NSString *charStr in specialChars) {
+        string = [string stringByReplacingOccurrencesOfString:charStr withString:[NSString stringWithFormat:@"\\%@", charStr]];
+    }
+    return string;
 }
 
 - (NSString*)stringByTruncatingToWidth:(CGFloat)width withAttributes:(NSDictionary *)attributes

@@ -373,9 +373,10 @@ uint32_t FNV32(const char *s)
     NSCharacterSet *wordBoundries = [[NSCharacterSet letterCharacterSet] invertedSet];
     NSError *error = NULL;
     NSArray *users = [channel.users copy];
+
     for (IRCUser *user in users) {
         
-        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:user.nick
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:[user.nick stringByEscapingCertainCharacters]
                                                   options:NSRegularExpressionCaseInsensitive
                                                     error:&error];
         

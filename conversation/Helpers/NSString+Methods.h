@@ -44,7 +44,7 @@
 - (BOOL)isEqualToStringCaseInsensitive:(NSString *)compareString;
 
 - (NSData *)dataUsingEncodingFromConfiguration:(IRCConnectionConfiguration *)configuration;
-
+- (NSString *)stringByEscapingCertainCharacters;
 - (NSString*)stringByTruncatingToWidth:(CGFloat)width withAttributes:(NSDictionary *)attributes;
 - (BOOL)getUserHostComponents:(NSString **)nickname username:(NSString **)username hostname:(NSString **)hostname onClient:(IRCClient *)client;
 
