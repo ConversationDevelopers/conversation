@@ -32,7 +32,7 @@
 #import "IRCClient.h"
 #include <arpa/inet.h>
 
-#define specialChars [NSArray arrayWithObjects: @"\\", @"^", @"$", nil]
+#define specialChars [NSArray arrayWithObjects: @"\\", @"^", @"$", @"[", @"]", nil]
 
 @implementation NSString (Helpers)
 
