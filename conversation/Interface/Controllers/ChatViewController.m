@@ -138,6 +138,16 @@ BOOL popoverDidDismiss = NO;
     [recognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
     [_container addGestureRecognizer:recognizer];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillToggle:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillToggle:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -208,30 +218,11 @@ BOOL popoverDidDismiss = NO;
         //[self.navigationController performSegueWithIdentifier:@"modal" sender:nil];
     });
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillToggle:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillToggle:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [self hideUserList];
-    [self.composeBarView resignFirstResponder];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillShowNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
     
 }
 
@@ -254,6 +245,7 @@ BOOL popoverDidDismiss = NO;
             }
         }
     }
+    [self.composeBarView resignFirstResponder];
 }
 
 - (void)scrollToBottom:(BOOL)animated
