@@ -206,6 +206,20 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
+			<string>Image Cache</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>IASKButtonSpecifier</string>
+			<key>Title</key>
+			<string>Delete Image Cache</string>
+			<key>Key</key>
+			<string>cache_preference</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
 			<string>Acknowledgements</string>
 			<key>FooterText</key>
 			<string>German translation by Pierre Geisel
@@ -232,7 +246,7 @@ Dutch translation by Andreas Backx
 			<key>Type</key>
 			<string>IASKButtonSpecifier</string>
 			<key>Title</key>
-			<string>Join support channel</string>
+			<string>Join Support Channel</string>
 			<key>Key</key>
 			<string>support_preference</string>
 		</dict>

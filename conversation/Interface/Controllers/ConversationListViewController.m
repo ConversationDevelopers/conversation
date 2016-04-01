@@ -1248,7 +1248,23 @@ long _lastUpdateTime = 0;
 
 - (void)settingsViewController:(IASKAppSettingsViewController*)sender buttonTappedForSpecifier:(IASKSpecifier*)specifier
 {
-    if ([specifier.key isEqualToString:@"support_preference"]) {
+    if ([specifier.key isEqualToString:@"cache_preference"]) {
+        NSError *error = nil;
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSString *cachePath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"net.conversationapp.conversation"];
+        if([fileManager fileExistsAtPath:cachePath]) {
+            [fileManager removeItemAtPath:cachePath error:&error];
+            if(error != nil) {
+                NSLog(@"There was an error in the file operation: %@", [error localizedDescription]);
+            }
+        }
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Cache Cleared"
+                                               message:NSLocalizedString(@"The cache has been cleared", @"The cache has been cleared")
+                                              delegate:self
+                                     cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
+                                     otherButtonTitles:nil];
+        [alertView show];
+    } else if ([specifier.key isEqualToString:@"support_preference"]) {
         [self dismissViewControllerAnimated:YES completion:nil];        
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"irc://chat.freenode.com:6667/#conversation"]];
     } else if ([specifier.key isEqualToString:@"twitter_preference"]) {
