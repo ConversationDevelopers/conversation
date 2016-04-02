@@ -1248,9 +1248,7 @@ long _lastUpdateTime = 0;
 
 - (void)settingsViewController:(IASKAppSettingsViewController*)sender buttonTappedForSpecifier:(IASKSpecifier*)specifier
 {
-    if ([specifier.key isEqualToString:@"clearmessages_preference"]) {
-        [self clearCaches];
-    } else if ([specifier.key isEqualToString:@"clearimages_preference"]) {
+    if ([specifier.key isEqualToString:@"cache_preference"]) {
         NSError *error = nil;
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSString *cachePath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"net.conversationapp.conversation"];
@@ -1260,21 +1258,18 @@ long _lastUpdateTime = 0;
                 NSLog(@"There was an error in the file operation: %@", [error localizedDescription]);
             }
         }
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Cache Cleared"
+                                               message:NSLocalizedString(@"The cache has been cleared", @"The cache has been cleared")
+                                              delegate:self
+                                     cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
+                                     otherButtonTitles:nil];
+        [alertView show];
     } else if ([specifier.key isEqualToString:@"support_preference"]) {
         [self dismissViewControllerAnimated:YES completion:nil];        
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"irc://chat.freenode.com:6667/#conversation"]];
     } else if ([specifier.key isEqualToString:@"twitter_preference"]) {
         [self dismissViewControllerAnimated:YES completion:nil];
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/ConversationIRC"]];
-    }
-    
-    if ([specifier.key isEqualToString:@"clearmessages_preference"] || [specifier.key isEqualToString:@"clearimages_preference"]) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Cache Cleared"
-                                                            message:NSLocalizedString(@"The cache has been cleared", @"The cache has been cleared")
-                                                           delegate:self
-                                                  cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
-                                                  otherButtonTitles:nil];
-        [alertView show];
     }
 }
 
@@ -1358,24 +1353,5 @@ long _lastUpdateTime = 0;
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     [[MCNotificationManager sharedInstance] hideNotification];
-}
-
-- (void)clearCaches {
-    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *dbPath = [documentsPath stringByAppendingPathComponent:@"messages.sqlite3"];
-    
-    [FCModel openDatabaseAtPath:dbPath withSchemaBuilder:^(FMDatabase *db, int *schemaVersion) {
-        [db beginTransaction];
-        
-        // My custom failure handling. Yours may vary.
-        void (^failedAt)(int statement) = ^(int statement){
-            [db rollback];
-            NSAssert3(0, @"Migration statement %d failed, code %d: %@", statement, db.lastErrorCode, db.lastErrorMessage);
-        };
-        
-        if (! [db executeUpdate:@"DELETE FROM IRCMessage;"]) failedAt(2);
-        
-        [db commit];
-    }];
 }
 @end
