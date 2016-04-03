@@ -1251,13 +1251,14 @@ long _lastUpdateTime = 0;
     if ([specifier.key isEqualToString:@"cache_preference"]) {
         NSError *error = nil;
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSString *cachePath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"net.conversationapp.conversation"];
+        NSString *cachePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"DLILCacheFolder"];
         if([fileManager fileExistsAtPath:cachePath]) {
             [fileManager removeItemAtPath:cachePath error:&error];
             if(error != nil) {
                 NSLog(@"There was an error in the file operation: %@", [error localizedDescription]);
             }
         }
+        
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Cache Cleared"
                                                message:NSLocalizedString(@"The cache has been cleared", @"The cache has been cleared")
                                               delegate:self
