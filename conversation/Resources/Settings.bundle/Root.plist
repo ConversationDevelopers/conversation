@@ -206,13 +206,13 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>Image Cache</string>
+			<string></string>
 		</dict>
 		<dict>
 			<key>Type</key>
 			<string>IASKButtonSpecifier</string>
 			<key>Title</key>
-			<string>Delete Image Cache</string>
+			<string>Clear Image Cache</string>
 			<key>Key</key>
 			<string>cache_preference</string>
 		</dict>
