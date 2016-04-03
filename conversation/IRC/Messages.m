@@ -396,6 +396,7 @@
         /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
         if (channel && [channel isKindOfClass:[IRCChannel class]]) {
             channel.isJoinedByUser = NO;
+            [channel.users removeAllObjects];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [controller reloadClient:message.client];
             });
@@ -461,6 +462,7 @@
         /* The user that left is ourselves, we need check if the item is still in our list or if it was deleted */
         if (channel != nil) {
             channel.isJoinedByUser = NO;
+            [channel.users removeAllObjects];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [controller reloadClient:message.client];
             });
@@ -688,7 +690,6 @@
             user.voice = YES;
         }
     }
-    
     [ircChannel removeUserByName:nickname];
     [[ircChannel users] addObject:user];
     [ircChannel sortUserlist];
@@ -698,7 +699,7 @@
 {
     NSMutableArray *messageComponents = [[message.message componentsSeparatedByString:@" "] mutableCopy];
     NSString *channel = [messageComponents objectAtIndex:0];
-    NSString *nicks = [[messageComponents componentsJoinedByString:@" " fromIndex:2] substringFromIndex:1];
+    NSString *nicks = [[[messageComponents componentsJoinedByString:@" " fromIndex:2] substringFromIndex:1] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
     IRCChannel *ircChannel = [IRCChannel fromString:channel withClient:message.client];
 
