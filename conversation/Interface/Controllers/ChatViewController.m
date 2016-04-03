@@ -210,13 +210,14 @@ BOOL popoverDidDismiss = NO;
     
     ConversationListViewController *controller = ((AppDelegate *)[UIApplication sharedApplication].delegate).conversationsController;
     controller.currentConversation = _conversation;
-    
+    /*
     double delayInSeconds = 2.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         
-        //[self.navigationController performSegueWithIdentifier:@"modal" sender:nil];
+        [self.navigationController performSegueWithIdentifier:@"modal" sender:nil];
     });
+    */
     
 }
 
@@ -245,7 +246,6 @@ BOOL popoverDidDismiss = NO;
             }
         }
     }
-    [self.composeBarView resignFirstResponder];
 }
 
 - (void)scrollToBottom:(BOOL)animated
