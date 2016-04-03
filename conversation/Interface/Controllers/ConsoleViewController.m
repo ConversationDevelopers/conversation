@@ -44,14 +44,17 @@
         return nil;
     
     _backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ChannelIcon_Light"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
-    
     self.navigationItem.leftBarButtonItem = _backButton;
     
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 480.0f)];
-    _contentView = [[UITextView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 480.0f)];
+    UIView *view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
+    view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    [view setAutoresizesSubviews:YES];
+    
+    _contentView = [[UITextView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
     _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     _contentView.editable = NO;
     [view addSubview:_contentView];
+    
     self.view = view;
     
     return self;
