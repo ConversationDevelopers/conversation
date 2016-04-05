@@ -78,7 +78,7 @@
 "Enter Limit" = "Limit eingeben";
 "Enter Password" = "Password eingeben";
 "Get Info (Whois)" = "Benutzerinfo (Whois)";
-"got invitation" = "Einladung bekommen";
+"got invitation" = "%@ hat dich in den Channel %@ eingeladen, möchtest du den Channel jetzt betreten?";
 "Greek (Windows)" = "Greek (Windows)";
 "Hide Console" = "Console verstecken";
 "Host Name" = "Host Name";
